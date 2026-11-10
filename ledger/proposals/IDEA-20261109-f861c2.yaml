@@ -1,0 +1,136 @@
+idea:
+  id: IDEA-20261109-f861c2
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: Cassels-Tate and Brauer-Manin pairings on N-coverings of any lift have zero component at the
+    prime above p, because the Kummer image is the maximal isotropic unramified line of order N inside
+    a local H^1 of order N^2
+  class: barrier
+  claim: Let E~ be any elliptic curve over a number field K with good reduction at a prime P above p,
+    residue curve E of prime order N with p not dividing N. Then |E~(K_P)[N]| = N, |H^1(K_P, E~[N])| =
+    N^2, the Kummer image E~(K_P)/N has order N, is unramified, and is its own annihilator under the local
+    Tate pairing. Hence for sigma, tau in the N-Selmer group the P-component of the Cassels-Tate pairing
+    vanishes, Manin's Brauer-Manin pairing on the N-coverings of E~ is independent of the local data at
+    P, and a class of Sha[N] localises to a point of E(F_p) whose F_N-coordinate relative to P is constrained
+    by no global pairing. This is a theorem-level closure with a toy consistency check and moves no exponent.
+  mechanism: Torsion of E~(K_P) injects into E(F_p) for p not dividing N, giving |E~(K_P)[N]| = N; local
+    Euler characteristic and Tate duality give |H^1| = |H^0| |H^2| = N^2 since E~[N] is self-dual by the
+    Weil pairing. The formal group is N-divisible, so E~(K_P)/N is E(F_p)/N = E(F_p), order N, and its
+    classes are unramified. Cup products of unramified classes land in H^2 of the unramified Galois group
+    Z-hat with torsion coefficients, which is zero, so the line is isotropic, and a maximal isotropic
+    subspace of a 2-dimensional nondegenerate space has dimension 1, so it is the full annihilator.
+  novelty_status: adaptation
+  citations:
+  - ref: KR-RHO-53c89f
+    provenance: internal
+    claim: Pairing transfers exist only for small embedding degree; the local Tate pairing restricted
+      to the Kummer image is identically zero regardless of embedding degree.
+    verified_by: REPO BRIEF section 3 row text, Mythos run 2026-11-09
+  - ref: KR-RHO-13bf67
+    provenance: internal
+    claim: Generic lower bound; exponent delta here is 0.
+    verified_by: REPO BRIEF section 3 row text, Mythos run 2026-11-09
+  assumptions:
+  - p does not divide N and E~ has good reduction at P.
+  - N is prime so E(F_p) is cyclic of order N and E(F_p)/N is all of E(F_p).
+  proof_search_map:
+    not_applicable_reason: Closure statement with a numerical consistency check.
+    bottleneck: not_applicable
+    baseline_embedding:
+      parameter_slice: not_applicable
+      reproduction_check: not_applicable
+    observation_collision:
+      observable: not_applicable
+      distinct_preimage_search: not_applicable
+    constructive_transforms: []
+    quantifier_order: not_applicable
+    method_ceiling:
+      strongest_certifiable_claim: not_applicable
+      nearby_object_control: not_applicable
+    proof_obligations: []
+  predictions:
+  - metric: order of E~(Q_p)[N] on toy lifts
+    direction: different
+    minimum_effect: equals N exactly
+  - metric: order of E~(Q_p)/N on toy lifts
+    direction: different
+    minimum_effect: equals N exactly
+  - metric: local Tate pairing of two Kummer classes
+    direction: different
+    minimum_effect: zero on every tested pair
+  minimal_test:
+    design: For p = 13 and the curves y^2 = x^3 + b with prime order N in {7, 19}, and for three integer
+      lifts b~ = b, b + p, b + 2p, compute E~(Q_p)[N] by Hensel lifting the F_p-points and the quotient
+      E~(Q_p)/N through the filtration by the formal group. Where Magma is available, construct explicit
+      cocycles for Kummer classes and evaluate the local Tate pairing through the Weil pairing and the
+      Hilbert symbol at p; otherwise record the order counts only.
+    controls:
+    - A lift with N dividing p - 1 is excluded; such p fail the embedding-degree condition and are reported
+      separately.
+    - Repeat with a prime ell not dividing N; the Kummer image is then 0, the shadow-theorem case.
+    required_metrics:
+    - p
+    - N
+    - lift b~
+    - order of E~(Q_p)[N]
+    - order of E~(Q_p)/N
+    - number of pairing evaluations and number that are nonzero
+  falsification_conditions:
+  - E~(Q_p)[N] or E~(Q_p)/N has order different from N on a valid instance.
+  - A nonzero local Tate pairing value between two Kummer classes is found.
+  - A timeout is infrastructure, not a falsification.
+  confounders:
+  - Lifts with bad reduction at p are invalid instances, not counterexamples.
+  interpretation_limits:
+  - The record says nothing about the other local components of the Cassels-Tate pairing; only the component
+    at P is shown to be blind.
+  - It does not decide whether Sha[N] is nonzero for any lift.
+  heuristic_assumptions:
+  - id: H1
+    statement: The order counts computed by Hensel lifting at toy p reflect the general theorem.
+    rigorous_support: Tate local duality and the local Euler characteristic formula, recalled.
+    validation_plan: Exact counts at p = 13 for both N and for three lifts each.
+  target_complexity:
+    time_exponent: N^{1/2} unchanged; delta 0
+    memory_exponent: unchanged
+    best_known: Pollard rho in Theta(N^{1/2}) group operations, KR-RHO-13bf67
+    hidden_overhead: None; no algorithm is proposed.
+    tradeoff_note: Not applicable.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: low
+  dominated_by: KR-RHO-13bf67 for any exponent reading. The wave-2 shadow theorem covers classes of order
+    prime to N; this record covers the N-part.
+  sota_delta: Exponent delta 0. Closes the question of what a Sha[N] element buys through its component
+    at p, namely one unlabelled point of E(F_p).
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/generic-rho
+    rows_checked:
+    - KR-RHO-53c89f
+    - KR-RHO-13bf67
+    - KR-RHO-755e35
+    - KR-IC-cd159a
+    - KR-IC-9e610d
+    nearest:
+    - ref: KR-RHO-53c89f
+      provenance: internal
+      relation: adjacent
+      delta: The row is about transfer by pairings; this record shows the local pairing that a global
+        obstruction would use is identically zero.
+    searched:
+      corpus_grep:
+      - REPO BRIEF section 2 for Cassels, Tate pairing, Brauer, local duality
+      - Wave 1 p-adic leads and wave 2 descent leads in the appendix
+      web: []
+      blocked: []
+    lead: LEAD-TRF-global-lift-small-height
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: For p = 13 and the curves y^2 = x^3 + b with prime order N in {7, 19}, and
+        for three integer lifts b~ = b, b + p, b + 2p, compute E~(Q_p)[N] by Hensel lifting the F_p-points
+        and the quotient E~(Q_p)/N through the filtration by the formal group. Where Magma is available,
+        construct explicit cocycles for Kummer classes and evaluate the local Tate pairing through the
+        Weil pairing and the Hilbert symbo'

@@ -1,0 +1,259 @@
+# Second pre-approval FIX card for EXP-MONO-1a1be2 (review_required; NOT approved). It closes the
+# TASK-20261106-7c2b01 findings N-5 item 5, NF-1 (blocking) and NF-2 to NF-7, and the receipt-id
+# clash (DEC-20261106-475620). Each fix comes with a test that fails on the 9a0b5955146a code.
+# For a KAT, the evidence is instead a scratch mutant it kills (M6). launcher.py, tests/test_kat.py
+# and README.md change; every other code file is frozen. No contract cell is computed and no
+# predicted value is asserted. The DEV-1 cell is NOT part of this card (TASK-20261106-96fee7).
+# Zero runs.
+handoff:
+  id: TASK-20261106-2b7223
+  from: coordinator
+  to: executor
+  goal_id: GOAL-PATH-001
+  batch_id: BATCH-a8825c
+  authorized_by: DEC-20261106-475620
+  objective: >-
+    Fix the EXP-MONO-1a1be2 launcher at its 9a0b5955146a bytes:
+    (1) refuse any entry in code/ outside the committed tree, and make bytecode and path
+        resolution unable to run unhashed code (N-5 item 5, NF-1);
+    (2) compare every top-level cdf.json key, and carry m (NF-2);
+    (3) void on a missing per-convention recount (NF-3);
+    (4) close the F2 enforcement edges (NF-4);
+    (5) add a start-up KAT on the large-Q arm-C S-set path that kills M6 (NF-5);
+    (6) make launcher validity apply V2-1 and refuse a symlinked runs/ (NF-6);
+    (7) attribute memory to the cell's own processes (NF-7);
+    (8) make receipt ids collision-free.
+    The trial plan stays byte-identical.
+  uncertainty_reduced: >-
+    Readiness blockers B1 (the M6 path) and B8: whether the instrument can refuse or invalidate
+    every cell whose executed code is not the approved build, or whose records disagree, and
+    whether its start-up suite can fail on the large-Q arm-C S-set path. Nothing about the
+    mathematics.
+  inputs:
+    - ledger/handoffs/TASK-20261106-2b7223.yaml
+    - ledger/decisions/DEC-20261106-475620.yaml
+    - ledger/decisions/DEC-20261106-843cf7.yaml
+    - coordination/goals/GOAL-PATH-001/review/TASK-20261106-7c2b01/fix_review.md
+    - experiments/EXP-MONO-1a1be2/specification.yaml
+    - experiments/EXP-MONO-1a1be2/code/fqn.py
+    - experiments/EXP-MONO-1a1be2/code/curves.py
+    - experiments/EXP-MONO-1a1be2/code/semaev.py
+    - experiments/EXP-MONO-1a1be2/code/counters.py
+    - experiments/EXP-MONO-1a1be2/code/kernel.c
+    - experiments/EXP-MONO-1a1be2/code/launcher.py
+    - experiments/EXP-MONO-1a1be2/code/make_trial_plan.py
+    - experiments/EXP-MONO-1a1be2/code/throughput_calibration.py
+    - experiments/EXP-MONO-1a1be2/code/tests/test_kat.py
+    - experiments/EXP-MONO-1a1be2/code/tests/test_kat_extended.py
+    - experiments/EXP-MONO-1a1be2/code/README.md
+    - experiments/EXP-MONO-1a1be2/implementation/fix-report-4c4831.md
+    - agents/executor.md
+  inputs_note: >-
+    Your context consists of: the 7c2b01 fix_review.md sections "New findings", RR-3 (M6),
+    RR-4 (repros N5-Y, N5-P and NF-1, and the attack table) and RR-7 (this is the defect list
+    you are fixing; read it in full); the decision's re_review_composition, V2-5, V2-6 and
+    approval_records_v2_1; the DEC-20261106-843cf7 approval_lock_binding_v2 and
+    specification_additions_for_v2; and the specification's stopping_rules and
+    invalidation_rules. Do not read the 7c2b01 attestation or any other file under
+    coordination/goals/GOAL-PATH-001/review/.
+  constraints:
+    - >-
+      HX-1 Write only the declared artifact paths. These files stay byte-identical to
+      9a0b5955146a: fqn.py, curves.py, semaev.py, counters.py, kernel.c, make_trial_plan.py,
+      throughput_calibration.py, tests/test_kat_extended.py, the specification, and every
+      existing implementation/ file. If a fix appears to need any of them, or a new KAT exposes
+      a defect in one, stop. Record it as scope finding SF-n in fix-report-2b7223.md and return
+      without that fix; a fresh Coordinator act (spare DEC-20261106-24d2a2) decides. Do not
+      touch src/, ledger/ or other experiments. CODE_FILES and the code_sha256 definition are
+      unchanged (seven files, same order); the five-field lock is unchanged.
+    - >-
+      HX-2 N-5 item 5 and NF-1 (blocking): executed-code integrity.
+      (a) Allow-list. launcher.py defines CODE_TREE_ALLOWLIST, an explicit sorted tuple of
+          every file path under code/ relative to code/, equal to the committed tree at the fix
+          commit. The launcher refuses (exit 3, no runs/ entry, reason naming the entry) at
+          import, in gate() and in the selftest subcommand when code/ holds any other entry at
+          any depth. That covers any file or directory, including __pycache__/, *.pyc, *.pyo,
+          *.so, hidden files and symlinks. It also refuses when an allow-listed path is a
+          symlink or not a regular file. The scan uses os.lstat semantics, never following
+          links.
+      (b) Bytecode. Before any non-stdlib import and before HERE is placed on sys.path, the
+          launcher sets sys.dont_write_bytecode = True and sys.pycache_prefix to a fresh empty
+          temporary directory outside code/. A cached file under code/ is then never consulted
+          even if one appears after the scan.
+      (c) Import order and origin. Third-party modules (at least numpy and yaml) are imported
+          before HERE is inserted on sys.path. The gate records module_origins, the __file__ of
+          each imported third-party module, and refuses if any lies inside code/.
+      (d) Self-test path. The self-test subprocess runs with interpreter flags -B -P and
+          -X pycache_prefix=<fresh empty dir>, with cwd set to the self-test's temporary
+          directory (outside code/), and keeps --rootdir <code> (so node ids and DESIGNED_SKIPS
+          are unchanged). The receipt and startup_selftest block record the pytest module's
+          resolved __file__ (from the --collect-only invocation), and the gate refuses if it lies
+          inside code/. If the host Python lacks -P, refuse with a reason; never fall back.
+      (e) Trace. Every contract-mode manifest carries a code_tree block (V2-6) with:
+          allowlist_sha256; the pre-gate scan result; a post-cell scan result; the sha256 of
+          every allow-listed file re-hashed after the cell; and module_origins. Any extra entry
+          at the post-cell scan, or any re-hash difference, sets validity invalid with a reason.
+      Tests, each failing on the 9a0b5955 code:
+      - N5-Y: a sourceless code/yaml.pyc (compiled from a delegating fake) refuses;
+      - N5-P: a code/pytest.pyc refuses. With the allow-list check disabled by a test hook, the
+        self-test command still resolves pytest outside code/;
+      - NF-1: code/__pycache__/counters.cpython-<tag>.pyc with the source's mtime and size and a
+        marker refuses. With the allow-list check disabled, the module imported through the
+        launcher's path is the hashed source (marker absent);
+      - the pytest rewrite-cache variant: tests/__pycache__/test_kat.cpython-<tag>-pytest-<ver>.pyc
+        refuses;
+      - non-Python strays refuse: code/kernel.so, code/notes.txt, a hidden file, a directory
+        code/yaml/ with __init__.py, and a symlink replacing an allow-listed file;
+      - a post-cell plant (a file created in code/ by a stubbed cell) sets validity invalid;
+      - positive control: a clean extract passes, and CODE_TREE_ALLOWLIST equals the extract's
+        file list.
+      Every test uses scratch roots and never the real code/.
+    - >-
+      HX-3 NF-2: raw/summary agreement covers every top-level cdf.json key: N, s, q, n, seed,
+      curve_id, cell_id, the per-base target_seed and base_seed, and a new key m (tuple size),
+      which cdf.json now carries. Each is compared with raw-result.json or the plan cell. Any
+      difference sets validity void. Tests, failing on the old code: top-level N + 1 voids; s +
+      1 voids; a parametrized perturbation of each other key voids; m is present and compared.
+    - >-
+      HX-4 NF-3: the R1 check voids when any recount convention expected for the arm is
+      missing, empty or non-numeric. The expected set per arm is a constant in launcher.py.
+      Test, failing on the old code: recount["S"] deleted voids; a positive control with all
+      conventions present stays valid.
+    - >-
+      HX-5 NF-4: F2 enforcement edges.
+      (a) The arm-A refusal while the sentinel exists lives in gate(), so a library gate() and
+          run_cell on an arm-A cell refuse too.
+      (b) write_stop_f2 records family_runs_at_stop (the run ids of arm-A packages already in
+          runs/) and family_void: true. Earlier manifests are never rewritten; V2-5 makes the
+          analysis apply the sentinel.
+      (c) Presence is tested with os.path.lexists: a broken symlink, a directory or any entry
+          named STOP-F2.json refuses arm A.
+      (d) A run id may not equal STOP_F2_NAME or start with "STOP-" (case-insensitive).
+          write_stop_f2 never swallows FileExistsError. If the existing entry is not a
+          regular-file sentinel written by the launcher, the cell is invalid with a reason and
+          the launcher exits nonzero. If it is a valid sentinel, the new cell is void, and its
+          F2 failure is recorded in its own manifest with the sentinel left untouched.
+      One test per edge, each failing on the old code.
+    - >-
+      HX-6 NF-5 (owner direction): the M6-killing S-set KAT, in tests/test_kat.py so that the
+      start-up suite guards the executing host.
+      - Fields and curves: the KAT fields (41, 6) and (29, 7), KAT curves kat|large|q|n, m = 2
+        and m = 3.
+      - Bases: the line base AND a matched_random KAT base. The line base's S points have small
+        indices at m = 3, per 7c2b01 RR-3.
+      - Comparison: arm_c_cell's S_counts / exceptional_targets and m_S against a pure-Python
+        membership count over the S set, with no kernel call.
+      - Vacuity guards, which are properties of the construction: per field, at least one S key
+        of at least 2^32 has nonzero truth (S = {O} at index 2Q qualifies).
+      - m_S: report the observed m_S values. If m_S is zero on every KAT cell examined, say so,
+        and the guard applies to S_counts.
+      In a scratch extract outside the repository, apply the 7c2b01 M6 edit (counters.arm_c_cell:
+      S_idx.astype(np.uint64) becomes S_idx.astype(np.uint32).astype(np.uint64)). At least one
+      new item must fail in the full suite. Re-run M5 and M3 (7c2b01 RR-3 edits) and confirm they
+      are still killed. mutant-check-2b7223.json records each edit, the failing node ids and the
+      counts. These KAT items may pass on the old code, because the committed bytes are correct;
+      the M6 kill is their evidence. Record their added wall time. The committed counters.py
+      stays unchanged.
+    - >-
+      HX-7 NF-6: compute_validity sets invalid unless both of the following hold. (i) The
+      manifest gate block equals values recomputed at write time from the on-disk lock,
+      specification, plan, code and test file. (ii) The startup_selftest block shows a full pass
+      for this host: collected EXPECTED_KAT_ITEMS, zero failures and errors, and skipped ids
+      equal to DESIGNED_SKIPS for the status. runs/ and selftest-receipts/ must be real
+      directories whose realpath lies inside the experiment directory; otherwise refuse.
+      Tests, failing on the old code: a GateResult built with _GATE_TOKEN and fake hashes yields
+      invalid; a symlinked runs/ refuses with no write outside the experiment.
+    - >-
+      HX-8 NF-7: memory attribution. The manifest separates three keys.
+      - peak_rss_kb_self.
+      - peak_rss_kb_children_pre_cell: children reaped before the cell begins, such as the
+        self-test and the compiler.
+      - peak_rss_kb_cell_children: the cell's own worker processes, each self-reported at exit
+        via getrusage(RUSAGE_SELF). It is null with the reason "cell spawns no child process"
+        when there are none.
+      The existing keys stay, with their meaning documented in README.md. The 16 GB check reads
+      self plus the cell figure. Test, failing on the old code: in ran mode with a stub suite,
+      the pre-cell key is present, and the cell figure excludes the self-test process. The test
+      checks keys and attribution, not values.
+    - >-
+      HX-9 Receipt id collision. The selftest subcommand creates its receipt directory with
+      exclusive create and a unique suffix, so two receipts within one second both succeed.
+      Test, failing on the old code: two back-to-back receipt writes in a scratch root both
+      verify.
+    - >-
+      HX-10 Regression and records.
+      - The full test_kat.py suite passes under launcher.run_selftest_suite (the hardened
+        command). EXPECTED_KAT_ITEMS equals the new collected count. Report both.
+      - All 165da2 CR-1 scenarios and the 7c2b01 RR-2 S, A and R repros keep refusing. The
+        existing producer tests for them still pass.
+      - Regenerate the trial plan into a temporary path outside the repository and record its
+        sha256. It must equal 9ccbe61445fba836ec44bdea6e55255220a4d08e8d09c9198e5bd28696d8fb4a;
+        any difference stops the task.
+      - For every new test, fix-report-2b7223.md gives the finding it closes and its outcome on
+        the 9a0b5955 launcher.py: it fails as required, or, for HX-6, the M6 kill is the
+        evidence. That outcome comes from running the final test_kat.py against the old
+        launcher.py in a scratch extract. Node id -> outcome goes in mutant-check-2b7223.json.
+      - IM-2 and IM-3 bind: no contract cell is computed; no KAT asserts a predicted value or a
+        cross-convention identity; every scratch file stays outside the repository. Unit, KAT,
+        mutant and selftest-subcommand invocations against scratch roots are not runs. If a hook
+        refuses an invocation as a run launch, follow its instruction (scripts/checkpoint.sh
+        init, fill .resume/RESUME.md) before retrying.
+      - No commit, no push. No KAT output, timing, residual or prediction value appears in any
+        message. Never select, configure or contact Amazon Bedrock.
+  deliverables:
+    - "code/launcher.py: HX-2 to HX-9, CODE_TREE_ALLOWLIST, the updated EXPECTED_KAT_ITEMS; DESIGNED_SKIPS unchanged"
+    - "code/tests/test_kat.py: every new test of HX-2 to HX-9, plus all existing tests"
+    - "code/README.md: the code-tree allow-list and how to keep code/ clean (never run modules without the launcher's flags), bytecode and path rules, the code_tree block, cdf.json keys including m, the F2 edges and V2-5, the validity V2-1 self-check, the memory keys, and receipt ids"
+    - "implementation/fix-report-2b7223.md: per HX item, the change, its tests, and the old-code and new-code outcomes; the pass count; the plan sha256; the M6, M5 and M3 outcomes; scope findings; the sha256 of every file written"
+    - "implementation/kat-log-2b7223.json: raw outputs of the new KATs (KAT fields only; under 64 KiB)"
+    - "implementation/environment-2b7223.json: interpreter (with -P support), libraries, pytest, compiler and flags, host, cores"
+    - "implementation/mutant-check-2b7223.json: the M6, M5 and M3 edits, failing node ids and counts; old-code runs of every new test (node id -> outcome)"
+  artifact_paths:
+    - experiments/EXP-MONO-1a1be2/code/launcher.py
+    - experiments/EXP-MONO-1a1be2/code/tests/test_kat.py
+    - experiments/EXP-MONO-1a1be2/code/README.md
+    - experiments/EXP-MONO-1a1be2/implementation/fix-report-2b7223.md
+    - experiments/EXP-MONO-1a1be2/implementation/kat-log-2b7223.json
+    - experiments/EXP-MONO-1a1be2/implementation/environment-2b7223.json
+    - experiments/EXP-MONO-1a1be2/implementation/mutant-check-2b7223.json
+  write_scope:
+    - experiments/EXP-MONO-1a1be2/code/launcher.py
+    - experiments/EXP-MONO-1a1be2/code/tests/test_kat.py
+    - experiments/EXP-MONO-1a1be2/code/README.md
+    - experiments/EXP-MONO-1a1be2/implementation/fix-report-2b7223.md
+    - experiments/EXP-MONO-1a1be2/implementation/kat-log-2b7223.json
+    - experiments/EXP-MONO-1a1be2/implementation/environment-2b7223.json
+    - experiments/EXP-MONO-1a1be2/implementation/mutant-check-2b7223.json
+  archived_by: TASK-20261106-dfd0ed
+  inference:
+    policy: executor-implementation
+    reasoning_effort: null
+    reasoning_effort_note: null means the policy default.
+    fallback_allowed: true
+    fallback_note: Backend or model substitution only, recorded as fallback_used. Never Bedrock.
+    degraded_allowed: false
+    independent_session_required: false
+    independence_note: Must not be the session of the re-reviewers TASK-20261106-941825 or TASK-20261106-7c2b01, or of the reviewer TASK-20261105-165da2.
+    delivery: interactive
+  budget:
+    wall_clock_seconds: 28800
+    memory_gb: 16
+    maximum_runs: 0
+  dispatch_preconditions:
+    - {id: XP-1, text: "archived_by TASK-20261106-dfd0ed is bound."}
+    - {id: XP-2, text: "TASK-20261106-779e02 is completed and verified, its commit is pushed, lane BATCH-a8825c is open, and lane BATCH-69d9a2 is closed."}
+    - {id: XP-3, text: "Claim after git fetch: python3 tools/goal_lanes.py claim coordination/goals/GOAL-PATH-001/batches/BATCH-a8825c/dispatch_queue.json TASK-20261106-2b7223 --as <addr> --ttl-minutes 540 --publish. Release with --outcome completed and --artifact <path>=<sha256> once per written artifact. Confirm seven non-empty digests, plus any HX-1 scope-finding path, which stops the queue before 96fee7."}
+  completion_gate:
+    - All seven artifact paths exist. Nothing outside them is modified, and every HX-1 file is byte-identical to 9a0b5955146a.
+    - The full test_kat.py suite passes and EXPECTED_KAT_ITEMS equals the collected count. Every new test is shown failing on the 9a0b5955 launcher.py, or, for HX-6, killing M6. M5 and M3 are still killed.
+    - The N5-Y, N5-P, NF-1 and rewrite-cache repros refuse in scratch roots, and the positive control passes.
+    - The regenerated plan sha256 equals 9ccbe614...fb4a.
+    - No contract cell is computed, no KAT asserts a predicted value, and there are zero experiment runs.
+  return_format: >-
+    The artifact paths with sha256; the KAT pass count and EXPECTED_KAT_ITEMS; the plan sha256
+    comparison; the M6, M5 and M3 outcomes (killed or not); the bytecode repro outcomes; and any
+    scope finding. No KAT output, timing or residual values in the message.
+  review_plan: null
+  review_required: false
+  review_required_note: FALSE. An instrument; it changes no claim. TASK-20261106-941825 re-reviews it before approval.
+  runs_launched: 0

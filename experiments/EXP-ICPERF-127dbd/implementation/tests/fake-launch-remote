@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+# Offline stand-in for taskq/deploy/eks-karpenter/remote/launch-remote, used only by the C1 tests. It "runs the job":
+# it copies the case's launcher receipt files into $ISOLAB_CLIENT_OUTPUT and the case's S3 objects into $FAKE_S3_ROOT,
+# then exits with the case's launcher exit code. It calls no AWS service.
+# v3c: launch_eks.sh re-executes itself under `env -i`, so FAKE_CASE_DIR and FAKE_S3_ROOT come from the conf file
+# fake-launch-remote.conf in the directory this file was copied to (shell syntax assigning both).
+set -eu
+conf=${FAKE_LAUNCH_CONF:-$(dirname -- "$0")/fake-launch-remote.conf}
+[[ -f $conf ]] && . "$conf"
+: "${FAKE_CASE_DIR:?fake-launch-remote: no conf file with FAKE_CASE_DIR}" "${FAKE_S3_ROOT:?}"
+out=${ISOLAB_CLIENT_OUTPUT:?}
+mkdir -p "$out"
+cp "$1" "$out/request.json"
+cp "$FAKE_CASE_DIR/launcher/build.json" "$out/build.json"
+cp "$FAKE_CASE_DIR/launcher/result.json" "$out/result.json"
+cp -a "$FAKE_CASE_DIR/s3/." "$FAKE_S3_ROOT/"
+echo "Launcher: fake"
+exit "$(cat "$FAKE_CASE_DIR/launch_rc")"

@@ -1,0 +1,402 @@
+{
+  "schema": "experiment.protocol/v1",
+  "protocol_id": "SEMAEV-NOWRAP-W2-20261109",
+  "version": 1,
+  "created": "2026-11-09",
+  "repository": "crypto-autoresearcher",
+  "study_dir": "analysis/semaev-bound-labels-20261109/no-wrap-w2",
+  "authors": [
+    "Codex"
+  ],
+  "links": {
+    "problem": "problems/growing-boolean-semaev-lower-bound.md"
+  },
+  "question": "Does exact full W2 derive every known affine ideal generator for each fixed no-wrap coefficient system r=1..12?",
+  "claims": [
+    {
+      "id": "C1",
+      "text": "The emitted DAG and closed space certify cap-two derivability or a missing named affine consequence for each fixed r.",
+      "class": "exact_computation",
+      "decided_by": []
+    }
+  ],
+  "hypotheses": [],
+  "arms": [
+    {
+      "id": "exact-w2",
+      "role": "candidate",
+      "description": "Degree-two saturation with replayable provenance",
+      "instrument": {
+        "repo": "crypto-autoresearcher",
+        "commit": null,
+        "build": [],
+        "binary_sha256": "c1fc707e1e3ae674a8eaea0247ecd28e9d400303ac444f1e16540615b5c49b44",
+        "flags": {},
+        "env": {},
+        "threads": 1
+      },
+      "parameters": {
+        "r": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12
+        ]
+      }
+    },
+    {
+      "id": "independent-replay",
+      "role": "reference",
+      "description": "Independent set-polynomial reconstruction and full DAG/closure replay of each candidate",
+      "instrument": {
+        "repo": "crypto-autoresearcher",
+        "commit": null,
+        "build": [],
+        "binary_sha256": "c1fc707e1e3ae674a8eaea0247ecd28e9d400303ac444f1e16540615b5c49b44",
+        "flags": {},
+        "env": {},
+        "threads": 1
+      },
+      "parameters": {
+        "r": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12
+        ]
+      }
+    },
+    {
+      "id": "positive",
+      "role": "control_positive",
+      "description": "known r1 and r2 upper2",
+      "instrument": {
+        "repo": "crypto-autoresearcher",
+        "commit": null,
+        "build": [],
+        "binary_sha256": "c1fc707e1e3ae674a8eaea0247ecd28e9d400303ac444f1e16540615b5c49b44",
+        "flags": {},
+        "env": {},
+        "threads": 1
+      },
+      "parameters": {
+        "r": [
+          1,
+          2
+        ]
+      }
+    },
+    {
+      "id": "negative",
+      "role": "control_negative",
+      "description": "corrupted r1 DAG and incomplete space rejected",
+      "instrument": {
+        "repo": "crypto-autoresearcher",
+        "commit": null,
+        "build": [],
+        "binary_sha256": "c1fc707e1e3ae674a8eaea0247ecd28e9d400303ac444f1e16540615b5c49b44",
+        "flags": {},
+        "env": {},
+        "threads": 1
+      },
+      "parameters": {
+        "r": [
+          1
+        ]
+      }
+    }
+  ],
+  "controls": {
+    "aa": {
+      "present": false,
+      "not_applicable_reason": "No noisy statistic; exact byte-identical r1 repetition is required.",
+      "comparison": null
+    },
+    "positive": {
+      "present": true,
+      "arm": "positive",
+      "expected_detection": "r1,r2 upper2 by existing symbolic proofs",
+      "not_applicable_reason": null
+    },
+    "negative": {
+      "present": true,
+      "arm": "negative",
+      "null_population": {
+        "description": "corrupt DAG and incomplete containing space",
+        "generator": "run.py fixed mutations of r1",
+        "n": 2,
+        "why_n": "two distinct soundness failure paths; no statistical claim",
+        "matched_on": [
+          "same r1 inputs and schema"
+        ]
+      },
+      "not_applicable_reason": null
+    }
+  },
+  "variable_ledger": {
+    "independent": [
+      {
+        "name": "r",
+        "levels": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12
+        ]
+      }
+    ],
+    "factors": [
+      {
+        "name": "presentation",
+        "treatment": "fixed",
+        "value": "all nonzero polynomial coefficients of S3 with n>4r,z=a6=1",
+        "how": "source reconstructs coefficient expansion"
+      },
+      {
+        "name": "host",
+        "treatment": "measured",
+        "how": "start receipt; no timings interpreted"
+      },
+      {
+        "name": "source",
+        "treatment": "fixed",
+        "value": {
+          "closure.py": "c1fc707e1e3ae674a8eaea0247ecd28e9d400303ac444f1e16540615b5c49b44",
+          "replay.py": "f7b829b848c9377b51d2707abdd26e0c996de6038599f9f5d48304fd16088e35",
+          "run.py": "54a68cf5614578e431f20ca1a472e7adc206f15d7668f72eda16624cc6aefd20"
+        },
+        "how": "commit and freeze before computation"
+      },
+      {
+        "name": "implementation",
+        "treatment": "crossed",
+        "value": [
+          "bitset producer",
+          "set-polynomial replay"
+        ],
+        "how": "every produced certificate replayed independently"
+      }
+    ],
+    "comparisons": [
+      {
+        "id": "C-exact",
+        "arms": [
+          "exact-w2",
+          "independent-replay"
+        ],
+        "differs_in": [
+          "implementation"
+        ],
+        "design": "absolute",
+        "threshold": "every certificate passes independent replay and closure checks"
+      }
+    ],
+    "aa_not_applicable": "deterministic exact proof computation",
+    "crosses_map": false
+  },
+  "randomization": {
+    "arm_order": "fixed",
+    "arm_order_reason": "ascending r; no performance claims",
+    "seed_derivation": {
+      "method": "explicit_list",
+      "seeds": [
+        0
+      ],
+      "nonce": null,
+      "note": "deterministic coefficient systems; no random draws"
+    },
+    "instance_sampling": {
+      "rule": "all integer r1..12",
+      "independent_of_arm": true
+    },
+    "blinding": {
+      "analysis_labels_masked": false,
+      "how": "exact deterministic proof, no statistical analysis",
+      "unmasked_at": null
+    }
+  },
+  "sample_size": {
+    "instances": 12,
+    "replicates": 1,
+    "warmups": 0,
+    "power": {
+      "method": "exact",
+      "alpha": 0.05,
+      "tests_in_family": 1,
+      "correction": "none",
+      "rank_test_n": null,
+      "min_attainable_two_sided_p": null,
+      "passes": true,
+      "note": "exhaustive fixed finite list, no population inference"
+    },
+    "preflight_runtime": {
+      "fixed_seconds": null,
+      "per_sample_seconds": null,
+      "threads": 1,
+      "estimated_total_seconds": 60,
+      "measured_on": "not measured; hard CPU limit60s and wall90s"
+    }
+  },
+  "metrics": {
+    "primary": [
+      {
+        "id": "missing",
+        "name": "missing affine generators",
+        "unit": "count",
+        "kind": "counted",
+        "definition": "known two-point ideal generators not in verified closed degree-two space",
+        "source": "r*-result.json missing_affine_generators",
+        "aggregation": "per_row",
+        "resolution": "1",
+        "uncertainty": "none_exact"
+      }
+    ],
+    "secondary": []
+  },
+  "measurement": {
+    "isolation_required": "L0",
+    "warmups": 0,
+    "order": "sequential",
+    "clock": "counted",
+    "counters": [
+      "rank",
+      "affine_dimension"
+    ],
+    "record": [
+      "python",
+      "host",
+      "commit",
+      "source_sha256"
+    ],
+    "timed_primary_justification": null
+  },
+  "execution": {
+    "backend": "local",
+    "queue": "none",
+    "placement": {
+      "cpus": 1,
+      "spot": false,
+      "memory_mib": 512
+    },
+    "measurement_class": "search",
+    "timeout_seconds": 90,
+    "checkpoint": {
+      "policy": "none",
+      "interval_seconds": null,
+      "grace_seconds": null,
+      "restore_validation": "none",
+      "after_restore": {
+        "wall_time": "invalid",
+        "counted_units": "valid"
+      }
+    },
+    "retries": {
+      "infrastructure_only": true,
+      "max_attempts": 1
+    }
+  },
+  "stopping_rules": [
+    {
+      "rule": "12 cells or first assertion/resource limit; no retry",
+      "kind": "fixed_n",
+      "preregistered": true
+    }
+  ],
+  "invalidation_rules": [
+    "any failed control invalidates all scientific labels",
+    "failed replay invalidates that cell; stop",
+    "partial execution yields only completed verified cells"
+  ],
+  "decision_rule": {
+    "text": "A replayed closed containing space missing a known affine consequence yields LFD>=3. Replayed derivations of the full affine ideal yield LFD<=2. No general-r extrapolation.",
+    "comparison_ids": [
+      "C-exact"
+    ],
+    "threshold": "zero missing versus positive missing",
+    "statistic": "exact membership",
+    "interval": "none",
+    "multiple_comparison_correction": "none",
+    "effect_size_measure": "none",
+    "verdict_vocabulary": [
+      "upper2",
+      "lower3",
+      "invalid",
+      "incomplete"
+    ]
+  },
+  "analysis_plan": {
+    "script": {
+      "path": "analysis/semaev-bound-labels-20261109/no-wrap-w2/replay.py",
+      "sha256": "f7b829b848c9377b51d2707abdd26e0c996de6038599f9f5d48304fd16088e35"
+    },
+    "inputs": [
+      "r*-certificate.json"
+    ],
+    "outputs": [
+      "r*-result.json",
+      "summary.json"
+    ],
+    "blinded": false,
+    "frozen_before_data": true
+  },
+  "reporting": {
+    "export_schema": "experiment.export/v1",
+    "review_schema": "experiment.review/v1",
+    "graphs": [
+      "closure rank and affine dimension by r"
+    ],
+    "report_dir": "reports"
+  },
+  "inadmissible": [
+    "general-r bound inferred from finite list",
+    "timing or instruction count conclusion",
+    "production dataset admission",
+    "same-field claim without n>4r and original presentation"
+  ],
+  "literature": [
+    {
+      "ref": "analysis/semaev-bound-labels-20261109/no-wrap-coefficient-progress.md",
+      "provenance": "internal",
+      "claim": "coefficient identity and known r1,r2 cap2 proofs",
+      "verified_by": "independent written review 2026-11-09"
+    },
+    {
+      "ref": "analysis/semaev-bound-labels-20261109/polynomial-subspace-candidate.md",
+      "provenance": "internal",
+      "claim": "exact two-point bridge",
+      "verified_by": "independent written review 2026-11-09"
+    }
+  ],
+  "amendments": [],
+  "freeze": {
+    "status": "frozen",
+    "protocol_sha256": "43d516bdc7e9567224958ca6e802409846b0c54e9e5a7d97c9f1c21a005cb647",
+    "commit": "6fb18cafab39bf15fa5c83b3eb1cadf206f90653",
+    "frozen_at": "2026-11-09T19:18:06Z",
+    "filed_before_affected_data": true
+  }
+}

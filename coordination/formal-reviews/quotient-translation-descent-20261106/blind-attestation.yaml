@@ -1,0 +1,41 @@
+review_attestation:
+  task_id: TASK-20261106-bb6ab4
+  authorized_by: DEC-20261106-2f9a94
+  role: reviewer
+  joints_owned: [J4]
+  verdict: holds
+  formal_status: infrastructure_error  # Lean source written, not elaborated: no toolchain; elan install refused by session permission layer
+  session_id: session_01TCbLH9HCFyXdMUQej4nLk2
+  model_id: claude-opus-5-5  # as exposed in this session's system prompt; not probed with adapter doctor
+  commit_trailer: "Claude-Session: https://claude.ai/code/session_01TCbLH9HCFyXdMUQej4nLk2"
+  independence: >-
+    This session is none of session_016SURwTvgaQmnMnhpa1SLXQ,
+    session_01TCbLH84PotMkHyFGFE4ifE, session_01TCbLH7HXJioSw2Bzx7P9p9, and was
+    not given TASK-20261106-6d4fa6.
+  sources_read:
+    - git:a9717726f2fd6f59f213f43d05e16604a61fe998:coordination/formal-reviews/quotient-translation-descent-20261106/blind-handoff.yaml
+    - AGENTS.md (working tree at a9717726f2fd6f59f213f43d05e16604a61fe998)
+    - CLAUDE.md (auto-loaded into session context)
+    - SessionStart hook brief (lead-atlas summary; no content about this statement)
+    - formal/lean-toolchain and formal/lakefile.toml (to check for a Lean toolchain; no Lean files opened)
+    - top-level directory listing of formal/ (names only; formal/CryptoResearch/ and formal/targets/ not listed or opened)
+    - "general mathematics (recalled, not retrieved): group axioms, neg_add_rev; Mathlib lemma names recalled from memory, unverified"
+  read_sibling_reports: false
+  blind_from_respected: true
+  repository_searches_for_statement_terms: none
+  controls:
+    a: fails_as_expected   # S3, T=(0 1), P=(1 2): T^2=e but PT != TP
+    b: fails_as_expected   # Z/2, S=0, T=1
+    c: fails_as_expected   # Z/3, S=1, T=0
+    d: fails_as_expected   # Z/3, S=0, T=1
+    e: fails_as_expected   # Z/4, S=0, T=1
+  minimal_hypotheses:
+    - "group (inverses with a + -a = 0); fails in SubtractionCommMonoid ({0,1,2}, max, neg=id)"
+    - "commutativity sufficient, not necessary: exact condition is T*T=1 -> T central (holds in Q8, fails in S3, D4)"
+    - "no condition on S"
+    - "quantifier placement irrelevant in commutative groups; matters in non-commutative ones"
+  evidence:
+    blind-evidence/BlindDescent.lean: 7478c812fc73237488026b2e72023275dc7cb414748d00d5818def8153a12d19
+    blind-evidence/enumerate_controls.py: 1a5424558de3a0919abcaee178f0529ff65f980724bd9d54c23fa75df6f917a2
+    blind-evidence/enumerate_controls.out: aba16f341eca7ced63927ca3cca99cbb902a6483d4883bb53dca56ac6f21b1d9
+  runs: 0

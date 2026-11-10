@@ -1,0 +1,148 @@
+idea:
+  id: IDEA-20261109-6c4a84
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: 'Diamond-operator reading of the ECDLP on X_1(N): the trace-formula population of curves with
+    Frobenius eigenvalue k on an N-point is isogeny-disconnected from the instance and covers at most
+    4p^{-1/2} of all k'
+  class: barrier
+  claim: Let E/F_p have a subgroup G of prime order N with N > 4 sqrt(p). For k in (Z/N)^*, let M_p(k)
+    be the number of pairs (E', P') up to F_p-isomorphism with E'/F_p, P' in E'[N] of exact order N and
+    Frob_p(P') = k P'. Then M_p(k) > 0 only if N divides k^2 - t k + p for an integer t with |t| <= 2
+    sqrt(p), hence only for a fraction at most (4 sqrt(p) + 1)/(N - 1) of all k; when the unique such
+    t exists, M_p(k) = (N - 1) * H(t^2 - 4p) with H the Kronecker class number, except on the scalar locus
+    t = 2k, p = k^2 mod N where the factor is N^2 - 1. Because every F_p-isogeny commutes with Frobenius,
+    the eigenvalue of Frobenius on a cyclic N-subgroup is an isogeny invariant; G is the eigenvalue-1
+    line of E, so no F_p-rational algebraic map sends (E, G) into the population counted by M_p(k) for
+    k != 1. No exponent change is claimed.
+  mechanism: (E, P) is an F_p-point of X_1(N) and the discrete log (E, P) -> (E, Q) is the diamond operator
+    <k> on the (Z/N)^*/{+-1} torsor over j(E). The Lefschetz number of Frob composed with <k> counts (E',
+    P') with Frobenius acting as k on P'; the characteristic polynomial of Frobenius on E'[N] is X^2 -
+    t X + p mod N, so k must be a root. The class-number formula for M_p(k) is Deuring-Schoof counting
+    of curves with prescribed trace. The barrier is that the trace-formula object attached to k lives
+    on curves with a different Frobenius eigenvalue structure, unreachable from E by isogeny, base change,
+    or twist.
+  novelty_status: adaptation
+  citations:
+  - ref: IDEA-20260806-0c9de1
+    provenance: internal
+    claim: Represents (E, P) as a point of X_1(N); this record adds the trace-formula count and the isogeny-invariance
+      barrier.
+    verified_by: ledger index excerpt in REPO BRIEF 2026-11-09 section 2
+  - ref: KR-RHO-755e35
+    provenance: internal
+    claim: Isogenous curves are equally hard; invariants of the class are shared. Used here for the Frobenius-eigenvalue
+      invariance.
+    verified_by: frontier map excerpt in REPO BRIEF 2026-11-09 section 3
+  - ref: KR-RHO-13bf67
+    provenance: internal
+    claim: Generic lower bound Omega(sqrt(N)); exponent delta here is 0.
+    verified_by: frontier map excerpt in REPO BRIEF 2026-11-09 section 3
+  assumptions:
+  - Deuring-Schoof count of F_p-isomorphism classes with trace t equals the Kronecker class number H(t^2
+    - 4p) for p > 3 (recalled; the test checks it directly).
+  - N is prime and N > 4 sqrt(p) so that t is unique when it exists.
+  proof_search_map:
+    not_applicable_reason: A finite count and an invariance statement; no exponent-moving algorithm is
+      proposed.
+    bottleneck: not_applicable
+    baseline_embedding:
+      parameter_slice: not_applicable
+      reproduction_check: not_applicable
+    observation_collision:
+      observable: not_applicable
+      distinct_preimage_search: not_applicable
+    constructive_transforms: []
+    quantifier_order: not_applicable
+    method_ceiling:
+      strongest_certifiable_claim: not_applicable
+      nearby_object_control: not_applicable
+    proof_obligations: []
+  predictions:
+  - metric: fraction of k in (Z/N)^* with M_p(k) > 0
+    direction: lower
+    minimum_effect: at most (4 sqrt(p) + 1)/(N - 1) at every tested (p, N)
+  - metric: M_p(k) / ((N - 1) H(t^2 - 4p)) off the scalar locus
+    direction: different
+    minimum_effect: equals 1 exactly for every k with M_p(k) > 0
+  - metric: Frobenius eigenvalue on G after each F_p-isogeny of degree <= 13
+    direction: different
+    minimum_effect: equals 1 in 100 percent of isogenies
+  minimal_test:
+    design: 'For p in crypto/docs/ECDLP_CALIBRATION_PRIMES.md with p <= 2^12, pick a prime N > 4 sqrt(p)
+      dividing some #E''(F_p). Enumerate all F_p-isomorphism classes (j, twists) in Sage under crypto/sage,
+      compute traces, and for every k compute M_p(k) from the roots of X^2 - t X + p mod N. Compare with
+      (N - 1) H(t^2 - 4p) using Sage''s Kronecker class number. For the target curve with eigenvalue-1
+      line G, apply all F_p-isogenies of degree <= 13 via modular polynomials and recompute the Frobenius
+      eigenvalue on the image line.'
+    controls:
+    - 'Random relabelling control: replace Frobenius by a random element of GL_2(Z/N) per curve and recompute
+      the coverage fraction; it must jump to order 1.'
+    - Scalar locus t = 2k, p = k^2 mod N handled and counted separately.
+    required_metrics:
+    - p
+    - N
+    - coverage fraction
+    - M_p(k) table
+    - H(t^2 - 4p) table
+    - number of isogenies checked and eigenvalue after transport
+  falsification_conditions:
+  - Coverage fraction exceeds (4 sqrt(p) + 1)/(N - 1) at any tested pair.
+  - M_p(k) differs from (N - 1) H(t^2 - 4p) off the scalar locus.
+  - An F_p-isogeny changes the Frobenius eigenvalue on the image of G.
+  - A statistic computed from E alone (not from the pair) that varies with k would kill the barrier reading.
+  confounders:
+  - Twist pairs share j; both must be enumerated or counts halve.
+  - Curves with j in {0, 1728} carry extra automorphisms; weight accordingly.
+  interpretation_limits:
+  - A confirmed count at p <= 2^12 fixes a barrier, not an algorithm.
+  - The statement is about F_p-rational maps; it says nothing new beyond generic hardness.
+  heuristic_assumptions:
+  - id: H1
+    statement: The Deuring-Schoof class-number formula holds as recalled.
+    rigorous_support: Published theorem (Schoof 1987), recalled from memory.
+    validation_plan: Direct enumeration at p <= 2^12 against Sage class numbers.
+  target_complexity:
+    time_exponent: p^{1/2} unchanged; coverage of the trace-formula population is 4 p^{-1/2}
+    memory_exponent: O(p) for the toy enumeration only
+    best_known: Pollard rho, Theta(sqrt(N)) group operations (KR-RHO-13bf67)
+    hidden_overhead: None; no algorithm is proposed.
+    tradeoff_note: Barrier record; no time-memory curve is defined.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  dominated_by: KR-RHO-755e35 for isogeny invariance; IDEA-20260806-0c9de1 for the X_1(N) representation.
+    Neither states the coverage fraction.
+  sota_delta: Exponent delta 0. New content is the explicit 4 p^{-1/2} coverage of the trace-formula population
+    and the eigenvalue-invariance barrier.
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/generic-rho
+    rows_checked:
+    - KR-RHO-755e35
+    - KR-RHO-13bf67
+    - KR-RHO-53c89f
+    - KR-RHO-0528e7
+    - KR-IC-cd159a
+    nearest:
+    - ref: KR-RHO-755e35
+      provenance: internal
+      relation: adjacent
+      delta: Row states isogeny-class invariance of weakness classes; this record applies it to the Frobenius
+        eigenvalue on a cyclic N-subgroup and quantifies the trace-formula population.
+    searched:
+      corpus_grep:
+      - REPO BRIEF section 2 for X_1(N), diamond, trace formula, Lefschetz
+      - REPO BRIEF section 3 generic-rho and index-calculus rows
+      web: []
+      blocked: []
+    lead: LEAD-RHO-automorphism-class-walks
+    lead_delta:
+      kind: answers_obstruction
+      statement: 'New test: For p in crypto/docs/ECDLP_CALIBRATION_PRIMES.md with p <= 2^12, pick a prime
+        N > 4 sqrt(p) dividing some #E''(F_p). Enumerate all F_p-isomorphism classes (j, twists) in Sage
+        under crypto/sage, compute traces, and for every k compute M_p(k) from the roots of X^2 - t X
+        + p mod N. Compare with (N - 1) H(t^2 - 4p) using Sage''s Kronecker class number. For the target
+        curve with eigenvalue-1 line G, appl'

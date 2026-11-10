@@ -265,6 +265,9 @@ Two things are deliberately exempt from tier 1:
   finishes the integrity page says *not yet measured* rather than showing
   zero — reporting a clean sweep that has not happened is the failure
   AGENTS.md rule 5 names.
+  The integrity table counts invalid originals even when a registered,
+  hash-bound parsed copy exists. It links that copy separately after checking
+  both hashes and the record ID; the link does not certify scientific meaning.
 
 ## What it knows about the program's rules
 

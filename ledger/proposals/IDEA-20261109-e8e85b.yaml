@@ -1,0 +1,109 @@
+idea:
+  id: IDEA-20261109-e8e85b
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECC-9d5d44
+  title: Inversion-free bridge from the final ladder pair to extended Edwards coordinates in 13M + 1S
+    + 2c, with the exact exception set
+  class: composition
+  claim: Let $P = (x_P, y_P)$ on $v^2 = u^3 + Au^2 + u$, $A = 486662$, and let the ladder end with $(X_Q:Z_Q)
+    = kP$ and $(X_\oplus:Z_\oplus) = (k+1)P$. Compute $v_1 = x_P Z_Q$, $v_2 = X_Q + v_1$, $v_3 = (X_Q
+    - v_1)^2 X_\oplus$, $v_4 = 2A Z_Q$, $v_5 = x_P X_Q + Z_Q$, $Y' = ((v_2 + v_4) v_5 - v_4 Z_Q) Z_\oplus
+    - v_3$, $w = 2 y_P Z_Q Z_\oplus$, $X' = w X_Q$, and, with $c^2 = -486664$, $X_E = c X' (X_Q + Z_Q)$,
+    $Y_E = Y' (X_Q - Z_Q)$, $Z_E = Y' (X_Q + Z_Q)$, $T_E = c X' (X_Q - Z_Q)$. Claim 1. $(X_E:Y_E:Z_E:T_E)$
+    is $[k]P$ on $-x^2 + y^2 = 1 + d x^2 y^2$, $d = -121665/121666$, under $x = c u / v$, $y = (u-1)/(u+1)$,
+    and $X_E Y_E = Z_E T_E$. Claim 2. Cost is 13M + 1S + 2c + 9a with no inversion; $2A$ is a small constant
+    and $c$ is full-size. Claim 3. $Z_E = 0$ exactly when $y_P = 0$, $kP = O$, $(k+1)P = O$ or $kP = (0,0)$,
+    and in no other case. Claim 4. For clamped $k$ and $P$ of order $\ell$ the only failing scalar is
+    $k^\ast = 5\ell - 1$, which is a valid clamped scalar. Claim 5. A variable-base Edwards multiplication
+    through this path costs I + 1295M + 1021S + 258c for 255 bits with a uniform schedule, against about
+    2168M + 1020S on average for the branching double-and-add in EdPoint::scalar_mul.
+  mechanism: 'From the chord law, $(x_\oplus + A + x_P + x_Q)(x_Q - x_P)^2 = (y_Q - y_P)^2$, hence $2
+    y_P y_Q = (x_P x_Q + 1)(x_P + x_Q + 2A) - 2A - (x_P - x_Q)^2 x_\oplus$. Clearing $Z_Q^2 Z_\oplus$
+    gives $Y''$ and the projective point $(X'' : Y'' : w Z_Q)$. The Edwards map in projective form is
+    $X_E = cU(U+W)$, $Y_E = V(U-W)$, $Z_E = V(U+W)$, $T_E = cU(U-W)$; the common factor $w$ of $U$ and
+    $W$ is divided out, so $w Z_Q$ is never formed (one M saved). The map is birational because $c^2 =
+    -(A+2)$ and $d = -(A-2)/(A+2)$. $X_Q + Z_Q \neq 0$ on rational points since $u = -1$ is not on the
+    curve ($A - 2$ is a non-square). Exceptions. $kP = O$ and $kP = -P$ both give $Y'' = 0$ and $w = 0$;
+    $y_P = 0$ gives $w = 0$ and $Y'' = 0$; $kP = (0,0)$ gives $Y'' = 0$. For clamped $k$, $kP = O$ needs
+    $8\ell \mid k$ and $8\ell > 2^{255}$; $kP = -P$ needs $k = m\ell - 1$ with $8 \mid k$, and $\ell \equiv
+    5 \pmod 8$ forces $m \equiv 5 \pmod 8$, so $m = 5$ is the only value below $2^{255}$. The failure
+    is detected by one zero test on $Z_E$ and repaired with masks on $Z_Q = 0$ and $Z_\oplus = 0$. Symmetry
+    used. The map sends $T$ to $(0,-1)$ and $(X_Q - Z_Q : X_Q + Z_Q)$ is the Edwards $y$.'
+  novelty_status: unverified
+  citations:
+  - ref: Okeya and Sakurai, CHES 2001, y-coordinate recovery
+    provenance: recalled
+    claim: Source of the affine recovery identity. Pointer only.
+    verified_by: null
+  - ref: RFC 7748 section 4.1
+    provenance: recalled
+    claim: The birational map and the base v-coordinate. Pointer only.
+    verified_by: null
+  - ref: aburan28/crypto src/ecc/ed25519.rs EdPoint
+    provenance: internal
+    claim: double() is 4M + 4S, add() is 9 full multiplications and calls ed25519_d(), which inverts 121666
+      on every call; scalar_mul branches on scalar bits.
+    verified_by: idea-generator session 2026-11-09 read the excerpt in BRIEF section 1
+  assumptions:
+  - $y_P$ is available. From an Edwards point it costs one inversion of $x(1-y)$; from a bare u it costs
+    a square root and fails on twist inputs.
+  - The sign of $c$ is the one sending the RFC base point to the Ed25519 base point with even x.
+  predictions:
+  - metric: mismatches against EdPoint::scalar_mul after encode()
+    direction: lower
+    minimum_effect: exactly 0 outside the stated exception set
+  - metric: clamped scalars with Z_E = 0 for the base point
+    direction: different
+    minimum_effect: exactly one, k = 5l - 1
+  minimal_test:
+    design: Sage script bridge_identity.sage checks the formulas on random points with random projective
+      rescalings and asserts X_E Y_E = Z_E T_E and the curve equation. It tries both roots c and asserts
+      exactly one maps u = 9 to (base_x, 4/5). Rust test ladder_bridge_matches_edwards compares encodings
+      with EdPoint::scalar_mul for 10000 seeded scalars.
+    controls:
+    - k = 5l - 1 must give Z_E = 0 and the masked repair must give -P.
+    - k = 5l - 9, a neighbouring clamped scalar, must not fail.
+    - P = (0,0) and k with kP = O must give Z_E = 0.
+    required_metrics:
+    - mismatches
+    - M, S, c and a counts of the fused bridge
+    - list of inputs with Z_E = 0
+    - which root c was selected
+  falsification_conditions:
+  - A mismatch outside the exception set.
+  - Z_E = 0 for an input outside the exception set.
+  - A second clamped scalar failing for an order-l point.
+  confounders:
+  - Encoding compares affine values, so a wrong common factor in all four outputs would go unseen; the
+    identity X_E Y_E = Z_E T_E and a subsequent add() catch it.
+  interpretation_limits:
+  - No constant-time claim for BigUint.
+  - Claim 5 counts field operations and takes I as one inversion; it is not a wall-time claim.
+  heuristic_assumptions:
+  - id: H1
+    statement: The secret scalar has average bit weight one half.
+    rigorous_support: Uniform scalars only; fixed scalars differ.
+    validation_plan: Report the count as a function of the weight.
+  target_complexity:
+    time_exponent: not applicable, constant-factor formula count
+    memory_exponent: not applicable
+    best_known: Recovery at 10M + 1S + 1c followed by an inversion and an affine map, or windowed Edwards
+      arithmetic outside this angle
+    hidden_overhead: one entry inversion, masks for the exception set
+    tradeoff_note: uniform schedule in exchange for the entry inversion
+  estimated_cost:
+    implementation: medium
+    compute: low
+  recommended_priority: high
+  dominated_by: Not dominated by a record in the BRIEF. Windowed Edwards methods may beat Claim 5 in raw
+    count and are not compared here.
+  sota_delta: 13M + 1S + 2c against 14M + 1S + 2c for unfused recovery plus map; zero inversions against
+    one; exception set stated exactly.
+  prior_art:
+    frontier_map: not_applicable
+    not_applicable_reason: Curve25519 explicit-formula campaign; coordinate conversion, not an ECDLP mechanism.
+    none_found_after:
+    - BRIEF section 2 ledger index, searched for recovery, birational
+    - BRIEF section 0 curve data and section 1 excerpts

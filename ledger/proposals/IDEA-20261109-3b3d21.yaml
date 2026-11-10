@@ -1,0 +1,110 @@
+idea:
+  id: IDEA-20261109-3b3d21
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECC-9d5d44
+  title: Completed P1 x P1 coordinates with Segre completion and lazy T for Edwards25519 doubling and
+    readdition
+  class: representation
+  claim: 'On $-x^2+y^2=1+dx^2y^2$ over $\mathbb F_p$, $p=2^{255}-19$, represent an intermediate result
+    as $\bar P=((E:G),(H:F))\in\mathbb P^1\times\mathbb P^1$ with $x=E/G$, $y=H/F$. Completions: $\sigma_4(\bar
+    P)=(X:Y:Z:T)=(EF:GH:FG:EH)$ at 4M and $\sigma_3(\bar P)=(X:Y:Z)=(EF:GH:FG)$ at 3M. Front halves returning
+    $(E,F,G,H)$: doubling of $(X:Y:Z)$ is $A=X^2$, $B=Y^2$, $C=2Z^2$, $H=A+B$, $E=(X+Y)^2-H$, $G=B-A$,
+    $F=C-G$ at 4S + 6a; readdition against $(Y_2^+,Y_2^-,Z_2'',T_2'')=(Y_2+X_2,Y_2-X_2,2Z_2,2dT_2)$ is
+    $A=(Y_1-X_1)Y_2^-$, $B=(Y_1+X_1)Y_2^+$, $C=T_1T_2''$, $D=Z_1Z_2''$, $E=B-A$, $F=D-C$, $G=D+C$, $H=B+A$
+    at 4M + 6a. Rule: apply $\sigma_3$ when the next operation is a doubling and $\sigma_4$ when it is
+    an addition. Then a doubling costs 3M + 4S or 4M + 4S and a readdition 7M or 8M. A window of $w$ doublings
+    and one readdition costs $w(3M+4S)+8M$, against $w(4M+4S)+8M+1c$ in all-extended HWCD form and against
+    $w(4S+5\,\mathrm{fe\_mul})+12\,\mathrm{fe\_mul}+1I$ for the repository as quoted. Outputs equal the
+    repository''s as projective points; the doubling differs from it by the scalar $-1$.'
+  mechanism: '$\sigma_4$ is the Segre embedding of $\mathbb P^1\times\mathbb P^1$ into $\mathbb P^3$;
+    its image is the quadric $XY=ZT$, which is exactly the extended-coordinate invariant. Doubling reads
+    no $T$: $x_3=E/G=2XY/(Y^2-X^2)$ and $y_3=H/F=(X^2+Y^2)/(2Z^2-Y^2+X^2)$. So the product $EH$ is wasted
+    whenever a doubling follows. Symmetry used: independent scaling of the two $\mathbb P^1$ factors,
+    which absorbs the sign $(H:F)=(-H:-F)$ and removes the repository''s negation $h=0-(a+b)$. Validity:
+    for $\mathbb F_p$-points, $G=Z^2(1+dx^2y^2)$ and $F=Z^2(1-dx^2y^2)$ in doubling and $G,F=2Z_1Z_2(1\pm
+    dx_1x_2y_1y_2)$ in addition are nonzero because $-1$ is a square and $d$ a non-square, so every completed
+    point is a genuine point of $\mathbb P^1\times\mathbb P^1$ and $Z=FG\ne0$. Torsion: doubling $(0:1:1)$
+    or $(0:-1:1)$ gives $E=0$, $G=1$, $H=1$, $F=1$, the identity; doubling $(\pm i:0:1)$ gives $E=0$,
+    $G=1$, $H=-1$, $F=1$, the point $(0,-1)$. Optimality remark: $EF,GH,FG,EH$ are four linearly independent
+    bilinear forms on $(E,G)\times(F,H)$, so a program built from products of a linear form in $(E,G)$
+    with one in $(F,H)$ needs 4 products for $\sigma_4$ and 3 for $\sigma_3$.'
+  novelty_status: unverified
+  citations:
+  - ref: BRIEF section 1, src/ecc/ed25519.rs excerpt
+    provenance: internal
+    claim: EdPoint::double computes all four output products on every call and scalar_mul always feeds
+      a doubling next.
+    verified_by: idea-generator session 2026-11-09, read from the quoted code
+  - ref: Hisil, Wong, Carter, Dawson 2008, mixed projective and extended coordinates
+    provenance: recalled
+    claim: Doubling without T at 3M + 4S and with T at 4M + 4S.
+    verified_by: none; recalled pointer, not support
+  assumptions:
+  - Inputs are F_p-points on the curve with Z nonzero.
+  - The choice between sigma_3 and sigma_4 follows the operation schedule; in the present double-and-add
+    that schedule is already scalar-dependent.
+  predictions:
+  - metric: fe_mul calls per doubling that is followed by a doubling
+    direction: lower
+    minimum_effect: from 5 to 3
+  - metric: field calls per window of 4 doublings and 1 readdition
+    direction: lower
+    minimum_effect: 20 fe_mul + 16 fe_sq + 0 fe_inv, from 32 fe_mul + 16 fe_sq + 1 fe_inv
+  - metric: projective equality with legacy scalar_mul outputs
+    direction: different
+    minimum_effect: 0 mismatches
+  minimal_test:
+    design: Implement EdCompleted with dbl_front, readd_front, to_projective and to_extended. Rewrite
+      scalar_mul to pick the completion from the next operation. For 500 fixed-seed scalars and the base
+      point, compare encode() of the new and legacy results, and compare per-call counter deltas with
+      the predicted integers.
+    controls:
+    - RFC 8032 section 7.1 vectors still pass.
+    - 'Power control: always use sigma_3 and feed the stale T into the next addition; the equality assertion
+      must fail.'
+    - Scalars 0, 1, 2, 8, l - 1, l and the eight torsion points as bases.
+    required_metrics:
+    - fe_mul, fe_sq, fe_inv and add/sub calls per doubling and per window
+    - encode mismatches
+    - number of sigma_3 and sigma_4 completions
+  falsification_conditions:
+  - Any encode mismatch against the legacy path.
+  - A doubling followed by a doubling uses more than 3 fe_mul.
+  - A completed point with F = 0 or G = 0 arises from on-curve inputs.
+  - A crash or timeout is infrastructure, not a result.
+  confounders:
+  - If fe_sq wraps fe_mul, saved calls are a smaller share of the total.
+  - Extra struct conversions may add allocations under BigUint.
+  interpretation_limits:
+  - Call counts, not a measured bound; wall time is not claimed.
+  - The rank remark covers bilinear products only, not programs using squarings of mixed forms or inversions.
+  heuristic_assumptions:
+  - id: H1
+    statement: No cheaper route from completed to extended coordinates exists in practice than the four
+      products.
+    rigorous_support: Linear independence of the four bilinear forms gives the bound in the bilinear model
+      only.
+    validation_plan: None needed for the counts claimed; the bound is stated with its model.
+  target_complexity:
+    time_exponent: not applicable; constant factor per group operation
+    memory_exponent: unchanged, four field elements per intermediate
+    best_known: 3M + 4S doubling and 8M readdition (HWCD 2008, recalled)
+    hidden_overhead: one extra point type and a schedule-dependent completion choice
+    tradeoff_note: Saves w M + 1c per window of w doublings relative to all-extended arithmetic.
+  estimated_cost:
+    implementation: medium
+    compute: low
+  recommended_priority: high
+  dominated_by: HWCD 2008 mixed coordinates and the ref10 p1p1/p2/p3 layout (recalled) reach the same
+    counts. No BRIEF section 2 record files them.
+  sota_delta: 0M against HWCD mixed coordinates. Against the repository, minus 2 fe_mul per doubling followed
+    by a doubling and minus 12 fe_mul and 1 fe_inv per 4-doubling window.
+  prior_art:
+    frontier_map: not_applicable
+    not_applicable_reason: Curve25519 explicit-formula campaign; a coordinate representation for arithmetic,
+      not an ECDLP mechanism.
+    none_found_after:
+    - BRIEF section 2 index, all 30 lines, read for completed coordinates, P1 x P1, Segre, lazy T
+    - BRIEF section 1 code excerpts for an existing completed-point type

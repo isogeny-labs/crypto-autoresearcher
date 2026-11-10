@@ -1,0 +1,57 @@
+{
+  "schema": "prime-sat.scalar-prefix-interface/v1",
+  "status": "source_only_unvalidated",
+  "task": "TASK-20261107-898896",
+  "module": "extractor.py",
+  "entry_points": {
+    "restrict_reference(p,n,assignment,generators,depth)": "Returns residuals list and counters; does not extract a witness.",
+    "extract_reference(p,n,assignment,generators)": "Direct original-generator restriction with binary prefix search.",
+    "extract_sweep(p,n,assignment,generators)": "Original-term incidence sweep with completed-batch qualification."
+  },
+  "inputs": {
+    "p": "Exact built-in int >= 2; externally assumed prime, not proved here.",
+    "n": "Exact built-in int >= 0.",
+    "assignment": "Exact built-in int, 0 <= assignment < 2**n; bit i is x_i.",
+    "generators": "Built-in list or tuple of built-in dicts. Keys are exact int masks in [0,2**n); values exact int in [1,p). Empty dictionary denotes zero. Booleans rejected. No concurrent caller mutation permitted.",
+    "depth": "restrict_reference only: exact built-in int in [0,n]."
+  },
+  "output": {
+    "status": ["found", "no_scalar_witness"],
+    "method": ["reference_binary", "incidence_sweep"],
+    "found": "depth, prefix, generator_index, constant are ints. Prefix is assignment & ((1 << depth)-1); constant in [1,p). Index is lowest qualifying generator at least qualifying prefix depth.",
+    "no_scalar_witness": "All four witness fields are null; establishes all full polynomial evaluations zero, not domain validity.",
+    "counters": "Integer structural-event counts, reproducible for identical ordered input. Insertion-order permutations can alter intermediate cancellation/deletion counts while preserving witnesses and final residuals. No elapsed-time or bit-cost claim."
+  },
+  "counter_semantics": {
+    "validation_generator_headers": "Generators copied and type-checked; independent of algorithm headers.",
+    "validation_term_visits": "Input terms validated and copied; includes snapshot dictionary write per visit.",
+    "generator_headers": "Algorithm generator visits; sweep initialization or direct restriction per query.",
+    "original_term_visits": "Original terms visited by algorithm after validation.",
+    "incidences_built": "Original term-variable memberships appended to buckets; includes low-bit bit_length extraction per entry.",
+    "incidence_visits": "Bucket term IDs inspected, including dead terms.",
+    "live_incidence_visits": "Bucket IDs requiring coefficient updates.",
+    "dictionary_initial_writes": "Sweep initial aggregate entries; validated snapshots counted separately.",
+    "dictionary_adds": "Modular addition updates, each with one aggregate get and possible write/delete; not all dictionary operations.",
+    "dictionary_subtractions": "Modular subtraction updates, including missing-key subtraction from zero.",
+    "dictionary_deletes": "Existing aggregate keys removed after zero result.",
+    "mask_operations": "Explicit shift, AND, XOR and complement operators on masks/assignment; excludes arithmetic negation/subtraction, bit_length, comparisons, hashing, allocations and integer bit costs.",
+    "predicate_checks": "Whole-prefix existence queries, only at complete states.",
+    "generator_predicate_checks": "Individual generator constant-qualification checks.",
+    "variable_batches": "Sweep variable buckets processed, including empty ones.",
+    "touched_set_adds": "Attempted touched-generator insertion per live incidence.",
+    "touched_generator_updates": "Distinct touched generator processed per completed batch.",
+    "qualifying_set_updates": "Add or discard attempts; includes initial successful insertions.",
+    "tie_break_visits": "Reference ascending generator visits per query, overlapping generator predicate work; sweep qualifying-set entries visited once at successful stop.",
+    "full_validity_checks": "Sweep final empty-residual assertions. Reference validity follows from false full-depth predicate and is counted in predicate work.",
+    "inverse_calls": "Always zero: no certificate constructed.",
+    "multiplier_entries": "Always zero: no multiplier vector allocated."
+  },
+  "failure_semantics": "Malformed inputs raise ValueError. Internal invariant failures raise AssertionError. Other exceptions/interruption propagate; no catch converts them to no_scalar_witness. No partial result/callback/checkpoint API.",
+  "complexity": {
+    "reference": "O((s+T)*(1+log(n+1))) structural bookkeeping upper bound plus validation, expected dictionary probes and non-unit mask/arithmetic costs; snapshot O(s+T) entries plus up to two transient residual dictionaries during extraction because the previous local remains referenced while the next is constructed. restrict_reference additionally retains every returned residual, O(s+T) output entries.",
+    "sweep": "O(n+s+T+I) structural bookkeeping and entries, expected hash probes. One O(s) final tie scan upper bound; no per-depth all-generator scan. Not a bit complexity guarantee."
+  },
+  "security_boundary": "Witness-only producer output is untrusted. Future integration must independently reconstruct ALL original residuals before certificate construction/checking; do not trust internal sweep dictionaries.",
+  "scope": "Shortest fixed-order prefix only within scalar-inverse single-original-generator constant family. No arbitrary-support/global proof minimality, prime certification, projection truncation, degree-of-regularity or measured speedup claim.",
+  "execution": "No candidate imports/execution/tests/solver or field enumeration performed under source task."
+}

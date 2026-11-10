@@ -1,0 +1,83 @@
+..........FF                                                             [100%]
+=================================== FAILURES ===================================
+__________________ test_prospective_grid_and_original_budget ___________________
+
+    def test_prospective_grid_and_original_budget():
+        p=prepare21.make_protocol('0'*40);t=custody21.tools()
+>       assert not t.schema_errors(p,'experiment.protocol/v1')and not t.lint_protocol(p,custody21.HERE)
+E       assert (not ["schema: variable_ledger/comparisons/0/design: 'paired' is not one of ['one_factor', 'factorial', 'absolute', 'aa', 'confounded']"])
+E        +  where ["schema: variable_ledger/comparisons/0/design: 'paired' is not one of ['one_factor', 'factorial', 'absolute', 'aa', 'confounded']"] = <function schema_errors at 0x7fc91c5c54e0>({'amendments': [], 'analysis_plan': {'blinded': False, 'frozen_before_data': True, 'inputs': ['<run>/execution.json', ...'authors': ['Root implementer and administrative exact-source Coordinator; configured model identity unverified'], ...}, 'experiment.protocol/v1')
+E        +    where <function schema_errors at 0x7fc91c5c54e0> = <module '_a12_protocol_tools' from '/workspace/crypto-autoresearcher/tools/experiment_protocol.py'>.schema_errors
+
+research/prime_field_a21_execution_20261107/test_direct21.py:87: AssertionError
+_____________ test_explicit_repeated_tiny_archive_and_all_unknown ______________
+
+tiny = ({'id': 'p211-i0', 'fixture': {'p': 211, 'a': 1, 'b': 1, 'r': 223, ...}}, {'schema': 'prime-field-formal-pair-pool/v1'...6abf1abc6084fc2c8cc6bd26af54bbf1ff07ec77d7a94ea26d47601fad8f0a11', 'size': 2, 'domain': 'a20-formal-software/v1', ...})
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-61/test_explicit_repeated_tiny_ar0')
+
+    def test_explicit_repeated_tiny_archive_and_all_unknown(tiny,tmp_path):
+        # Four IDs repeat this SAME tiny fixture. Admission/checkpoints are mocked
+        # metadata here; no native invocation, independent replicate or S3 claim.
+        case,prep=fixture(tiny);raw=tmp_path/'raw';raw.mkdir();rules=dict(cases=[])
+        def write(path,value):path.write_text(json.dumps(value)+'\n')
+        pc=tmp_path/'public-case.json';pp=tmp_path/'public-prep.json';write(pc,case);write(pp,prep)
+        producer=dict(case=dict(path=str(pc),sha256=custody21.digest(pc)),prepared=dict(path=str(pp),sha256=custody21.digest(pp)))
+        child=dict(child_pid=12,child_process_group=12,supervisor_pid=11);write(tmp_path/'child.json',child)
+        write(raw/'admission.json',dict(returncode=0,command=['bash','scripts/checkpoint.sh','gate'],last_push='software-mock'))
+        write(tmp_path/'checkpoint-admitted-start.json',dict(returncode=0,command=['bash','scripts/checkpoint.sh','push'],admission_last_push='software-mock',native_curves_generated=0,**child))
+        for i in range(4):
+            cid='explicit-software-'+str(i);descriptor=dict(cell_id=cid,producer=producer);rules['cases'].append(descriptor);events=[]
+            for method in custody21.ARMS:
+                meter=solver.Meter(prep['cell']['fixture'])
+                value=direct21.solve(case,prep,meter)if method=='direct_formal'else cancel19.solve(case,prep,meter)if method=='aux_cancel_joint'else solver.solve(case,method,meter)
+>               proof=check21.verify(case,prep,value)if method=='direct_formal'else check_algebra19.cancelled_target(case,prep,value)if method=='aux_cancel_joint'else __import__('deps21').known_checks.joint_case(case,value,prep['cell']['fixture'])
+                                                                                                                                                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+research/prime_field_a21_execution_20261107/test_direct21.py:108: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+case = {'width': 5, 'target_count': 8, 'modulus': 223, 'source': [([1, 0, 0, 0, 0], 1), ([222, 222, 0, 1, 0], 0), ([1, 0, 222, 0, 1], 0), ([1, 0, 0, 0, 0], 1), ([0, 1, 0, 0, 0], 3)], ...}
+actual = {'arm': 'sparse_joint', 'system': {'rows': 13, 'columns': 13, 'rank': 12, 'nullity': 1, ...}, 'recoveries': [{'target_...ertificate_verification', 'status': 'complete', 'wall_valid': False, 'wall_seconds': 3.251899761380628e-05, ...}], ...}
+fixture = {'p': 211, 'a': 1, 'b': 1, 'r': 223, ...}
+
+    def joint_case(case, actual, fixture=None):
+        w, nt, r = case['width'], case['target_count'], case['modulus']
+        rows = [v + [0] * nt for v, b in case['source']] + [v['vector'] + v['outside'] for v in case['target']]
+        values = [b for v, b in case['source']] + [v['rhs'] for v in case['target']]
+        M = [v for v, b in case['source']]
+        U = [v['outside'] for v in case['target']]
+        rr, mr, ur = check_source.rank(rows, r), check_source.rank(M, r), check_source.rank(U, r)
+        if actual['arm'] != 'sparse_joint' or actual['system']['columns'] != w + nt:
+            raise ValueError('joint arm or width')
+        check_source.system(actual['system'], rows, values, r)
+        if len(actual['recoveries']) != nt:
+            raise ValueError('joint target coverage')
+        for t, rec in enumerate(actual['recoveries']):
+            unit = [0] * (w + nt)
+            unit[w + t] = 1
+            if rec['target_index'] != t:
+                raise ValueError('joint target order')
+            check_solver.member(rec, unit, rows, values, actual['system'], r)
+            if rec['scalar'] != rec['value']:
+                raise ValueError('joint scalar offset')
+            if rec['identifiable']:
+                weights = rec['original_row_weights']
+                if len(weights) != len(rows) or check_solver.combine(weights, rows, values, w + nt, r) != (unit, rec['scalar']):
+                    raise ValueError('joint original row certificate')
+                if fixture and check_source.old.multiply(fixture['p'], 0, fixture['a'], rec['scalar'], tuple(fixture['P'])) != tuple(case['targets'][t]['point']):
+                    raise ValueError('joint public target certificate')
+            elif rec['original_row_weights'] is not None:
+                raise ValueError('joint fabricated unresolved certificate')
+        phase_counts(actual)
+        names = ['joint_matrix_construction', 'elimination', 'identification', 'certificate_lifting', 'original_row_certificate_verification']
+        if fixture:
+            names.append('public_target_verification')
+        if [v['phase'] for v in actual['phases']] != names:
+>           raise ValueError('joint phase sequence')
+E           ValueError: joint phase sequence
+
+research/prime_field_a13_execution_20261106/known_checks.py:228: ValueError
+=========================== short test summary info ============================
+FAILED research/prime_field_a21_execution_20261107/test_direct21.py::test_prospective_grid_and_original_budget
+FAILED research/prime_field_a21_execution_20261107/test_direct21.py::test_explicit_repeated_tiny_archive_and_all_unknown
+2 failed, 10 passed in 0.35s

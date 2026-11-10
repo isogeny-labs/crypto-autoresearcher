@@ -1,0 +1,299 @@
+{
+ "m5_killed": true,
+ "m5_mutant": {
+  "counts": {
+   "failed": 8,
+   "passed": 7,
+   "selected": 15
+  },
+  "edit": [
+   {
+    "new": "if (p->inf) return (uint32_t)(2 * Q_);",
+    "old": "if (p->inf) return 2 * Q_;"
+   },
+   {
+    "new": "return (uint32_t)(2 * e_code(&p->x) + (yc > nyc ? 1 : 0));",
+    "old": "return 2 * e_code(&p->x) + (yc > nyc ? 1 : 0);"
+   }
+  ],
+  "edit_file": "kernel.c p_idx (scratch extract; committed kernel.c unchanged)",
+  "failing_node_ids": [
+   "test_large_q_sampled_counter_against_membership_method[41-6-2]",
+   "test_large_q_sampled_counter_against_membership_method[41-6-3]",
+   "test_large_q_sampled_counter_against_membership_method[29-7-2]",
+   "test_large_q_sampled_counter_against_membership_method[29-7-3]",
+   "test_large_q_kernel_point_index_matches_python_index_beyond_2_32[41-6]",
+   "test_large_q_kernel_point_index_matches_python_index_beyond_2_32[29-7]",
+   "test_large_q_sampled_counter_on_constructed_targets_matches_membership_method[41-6]",
+   "test_large_q_sampled_counter_on_constructed_targets_matches_membership_method[29-7]"
+  ],
+  "run_note": "run with the test_kat.py of the same commit as FX-7; the FX-7 items are unchanged by later edits to other tests",
+  "selection": "pytest -k 'beyond_2_32 or constructed or against_membership_method' tests/test_kat.py (the new FX-7 items and the modified W10 items)"
+ },
+ "note": "M5 = 165da2 CR-3 mutant (32-bit truncation of the target index). KAT-field runs only; nothing is a run.",
+ "old_code_runs": {
+  "counts": {
+   "failed": 58,
+   "items": 63,
+   "passed": 5
+  },
+  "description": "the new test_kat.py run against the 72f51766a6 launcher.py and counters.py (all other code files identical) in a scratch extract; 63 added test items",
+  "outcomes": {
+   "test_expected_kat_items_equals_the_collected_count_and_the_designed_skip_is_a_collected_node": [
+    "failed",
+    "AttributeError: module 'launcher' has no attribute 'selftest_environment'"
+   ],
+   "test_fx10_kat_mode_arm_c_package_omits_the_derived_keys": [
+    "failed",
+    "assert not True"
+   ],
+   "test_fx11_1_gate_requires_execution_authorized_and_frozen[kw0-execution_authorized]": [
+    "failed",
+    "assert (not True)"
+   ],
+   "test_fx11_1_gate_requires_execution_authorized_and_frozen[kw1-frozen]": [
+    "failed",
+    "assert (not True)"
+   ],
+   "test_fx11_1_lock_approved_by_must_equal_the_specifications": [
+    "failed",
+    "assert (not True)"
+   ],
+   "test_fx11_2_run_id_is_sanitised_and_confined_to_runs[-x]": [
+    "failed",
+    "AttributeError: module 'launcher' has no attribute 'resolve_run_dir'"
+   ],
+   "test_fx11_2_run_id_is_sanitised_and_confined_to_runs[../x]": [
+    "failed",
+    "AttributeError: module 'launcher' has no attribute 'resolve_run_dir'"
+   ],
+   "test_fx11_2_run_id_is_sanitised_and_confined_to_runs[..]": [
+    "failed",
+    "AttributeError: module 'launcher' has no attribute 'resolve_run_dir'"
+   ],
+   "test_fx11_2_run_id_is_sanitised_and_confined_to_runs[.hidden]": [
+    "failed",
+    "AttributeError: module 'launcher' has no attribute 'resolve_run_dir'"
+   ],
+   "test_fx11_2_run_id_is_sanitised_and_confined_to_runs[/abs/path]": [
+    "failed",
+    "AttributeError: module 'launcher' has no attribute 'resolve_run_dir'"
+   ],
+   "test_fx11_2_run_id_is_sanitised_and_confined_to_runs[]": [
+    "failed",
+    "AttributeError: module 'launcher' has no attribute 'resolve_run_dir'"
+   ],
+   "test_fx11_2_run_id_is_sanitised_and_confined_to_runs[a b]": [
+    "failed",
+    "AttributeError: module 'launcher' has no attribute 'resolve_run_dir'"
+   ],
+   "test_fx11_2_run_id_is_sanitised_and_confined_to_runs[a/b]": [
+    "failed",
+    "AttributeError: module 'launcher' has no attribute 'resolve_run_dir'"
+   ],
+   "test_fx11_2_run_id_is_sanitised_and_confined_to_runs[run_id6]": [
+    "failed",
+    "AttributeError: module 'launcher' has no attribute 'resolve_run_dir'"
+   ],
+   "test_fx11_2_run_id_is_sanitised_and_confined_to_runs[x\\n]": [
+    "failed",
+    "AttributeError: module 'launcher' has no attribute 'resolve_run_dir'"
+   ],
+   "test_fx11_3_cdf_json_carries_target_and_base_seeds": [
+    "failed",
+    "KeyError: 'target_seed'"
+   ],
+   "test_fx11_4_peak_rss_is_recorded_for_self_and_children": [
+    "failed",
+    "AssertionError: assert {'peak_rss_kb..._total_upper'} <= {'arm', 'cell...nd_file', ...}"
+   ],
+   "test_fx11_5_stray_python_file_in_code_dir_refuses_the_launcher": [
+    "failed",
+    "AttributeError: module 'launcher' has no attribute 'stray_python_files'"
+   ],
+   "test_fx2_lock_binds_the_test_file": [
+    "failed",
+    "assert (not True)"
+   ],
+   "test_fx3_hostile_repository_tree_still_collects_every_item": [
+    "failed",
+    "AttributeError: module 'launcher' has no attribute 'run_selftest_suite'"
+   ],
+   "test_fx3_pytest_addopts_in_the_parent_environment_does_not_deselect": [
+    "failed",
+    "AttributeError: module 'launcher' has no attribute 'run_selftest_suite'"
+   ],
+   "test_fx4_designed_skip_as_a_function_of_status_and_node_id_form": [
+    "failed",
+    "AttributeError: module 'launcher' has no attribute 'designed_skips'"
+   ],
+   "test_fx4_pass_in_full_refuses_extra_skip_fewer_items_xfail_failure_or_missing_designed_skip[designed_skip_missing]": [
+    "failed",
+    "AttributeError: module 'launcher' has no attribute 'run_selftest_suite'"
+   ],
+   "test_fx4_pass_in_full_refuses_extra_skip_fewer_items_xfail_failure_or_missing_designed_skip[extra_skip]": [
+    "failed",
+    "AttributeError: module 'launcher' has no attribute 'run_selftest_suite'"
+   ],
+   "test_fx4_pass_in_full_refuses_extra_skip_fewer_items_xfail_failure_or_missing_designed_skip[failure]": [
+    "failed",
+    "AttributeError: module 'launcher' has no attribute 'run_selftest_suite'"
+   ],
+   "test_fx4_pass_in_full_refuses_extra_skip_fewer_items_xfail_failure_or_missing_designed_skip[one_fewer]": [
+    "failed",
+    "AttributeError: module 'launcher' has no attribute 'run_selftest_suite'"
+   ],
+   "test_fx4_pass_in_full_refuses_extra_skip_fewer_items_xfail_failure_or_missing_designed_skip[wrong_skip]": [
+    "failed",
+    "AttributeError: module 'launcher' has no attribute 'run_selftest_suite'"
+   ],
+   "test_fx4_pass_in_full_refuses_extra_skip_fewer_items_xfail_failure_or_missing_designed_skip[xfail]": [
+    "failed",
+    "AttributeError: module 'launcher' has no attribute 'run_selftest_suite'"
+   ],
+   "test_fx4_pass_in_full_refuses_extra_skip_fewer_items_xfail_failure_or_missing_designed_skip[xpass]": [
+    "failed",
+    "AttributeError: module 'launcher' has no attribute 'run_selftest_suite'"
+   ],
+   "test_fx5_hand_written_receipt_is_refused_by_cell": [
+    "failed",
+    "assert 'receipt' in \"REFUSED: contract cell not startable:\\n  - specification status is 'review_required', not 'approved'\\n  - specificati...s 'review_required'"
+   ],
+   "test_fx5_launcher_written_receipt_verifies_and_is_accepted_by_the_gate": [
+    "failed",
+    "AttributeError: module 'launcher' has no attribute 'write_selftest_receipt'"
+   ],
+   "test_fx5_receipt_outside_the_directory_or_with_edited_junit_or_fields_is_refused": [
+    "failed",
+    "AttributeError: module 'launcher' has no attribute 'write_selftest_receipt'"
+   ],
+   "test_fx5_receipt_with_one_env_key_field_altered_is_refused[compile_flags-value5]": [
+    "failed",
+    "AttributeError: module 'launcher' has no attribute 'write_selftest_receipt'"
+   ],
+   "test_fx5_receipt_with_one_env_key_field_altered_is_refused[compiler_path-/usr/bin/cc-other]": [
+    "failed",
+    "AttributeError: module 'launcher' has no attribute 'write_selftest_receipt'"
+   ],
+   "test_fx5_receipt_with_one_env_key_field_altered_is_refused[compiler_version_sha256-0000000000000000000000000000000000000000000000000000000000000000]": [
+    "failed",
+    "AttributeError: module 'launcher' has no attribute 'write_selftest_receipt'"
+   ],
+   "test_fx5_receipt_with_one_env_key_field_altered_is_refused[cpu_model-other cpu]": [
+    "failed",
+    "AttributeError: module 'launcher' has no attribute 'write_selftest_receipt'"
+   ],
+   "test_fx5_receipt_with_one_env_key_field_altered_is_refused[kernel_release-0.0]": [
+    "failed",
+    "AttributeError: module 'launcher' has no attribute 'write_selftest_receipt'"
+   ],
+   "test_fx5_receipt_with_one_env_key_field_altered_is_refused[machine-other]": [
+    "failed",
+    "AttributeError: module 'launcher' has no attribute 'write_selftest_receipt'"
+   ],
+   "test_fx5_receipt_with_one_env_key_field_altered_is_refused[node-other-host]": [
+    "failed",
+    "AttributeError: module 'launcher' has no attribute 'write_selftest_receipt'"
+   ],
+   "test_fx5_receipt_with_one_env_key_field_altered_is_refused[numpy-0.0]": [
+    "failed",
+    "AttributeError: module 'launcher' has no attribute 'write_selftest_receipt'"
+   ],
+   "test_fx5_receipt_with_one_env_key_field_altered_is_refused[pytest-0.0]": [
+    "failed",
+    "AttributeError: module 'launcher' has no attribute 'write_selftest_receipt'"
+   ],
+   "test_fx5_receipt_with_one_env_key_field_altered_is_refused[python_version-3.0.0]": [
+    "failed",
+    "AttributeError: module 'launcher' has no attribute 'write_selftest_receipt'"
+   ],
+   "test_fx5_selftest_subcommand_refuses_before_approval_and_writes_nothing": [
+    "failed",
+    "AttributeError: module 'launcher' has no attribute 'RECEIPTS_DIR'"
+   ],
+   "test_fx6_contract_package_carries_gate_and_selftest_blocks_and_copies[ran]": [
+    "failed",
+    "AttributeError: module 'launcher' has no attribute 'gate'"
+   ],
+   "test_fx6_contract_package_carries_gate_and_selftest_blocks_and_copies[receipt]": [
+    "failed",
+    "AttributeError: module 'launcher' has no attribute 'write_selftest_receipt'"
+   ],
+   "test_fx6_run_cell_without_a_gate_result_raises": [
+    "failed",
+    "Failed: DID NOT RAISE PermissionError"
+   ],
+   "test_fx8_f2_failure_writes_the_sentinel_and_the_next_arm_a_cell_is_refused": [
+    "failed",
+    "AssertionError: assert 3 == 0"
+   ],
+   "test_fx8_failed_execution_is_void_and_keeps_its_execution_status": [
+    "failed",
+    "AttributeError: module 'launcher' has no attribute 'gate'"
+   ],
+   "test_fx8_group_law_mismatch_makes_the_cell_void[gl_mismatch_generic]": [
+    "failed",
+    "AttributeError: module 'launcher' has no attribute 'gate'"
+   ],
+   "test_fx8_group_law_mismatch_makes_the_cell_void[gl_mismatch_nongeneric]": [
+    "failed",
+    "AttributeError: module 'launcher' has no attribute 'gate'"
+   ],
+   "test_fx8_identity_completeness_invalid_and_curve_rule_void": [
+    "failed",
+    "AttributeError: module 'launcher' has no attribute 'gate'"
+   ],
+   "test_fx8_kat_mode_never_writes_a_sentinel": [
+    "passed",
+    null
+   ],
+   "test_fx8_raw_summary_agreement_reads_the_files_on_disk": [
+    "failed",
+    "AttributeError: module 'launcher' has no attribute 'gate'"
+   ],
+   "test_fx8_raw_summary_disagreement_makes_the_cell_void": [
+    "failed",
+    "AttributeError: module 'launcher' has no attribute '_write_file'"
+   ],
+   "test_fx8_recount_differing_makes_the_cell_void": [
+    "failed",
+    "AttributeError: module 'launcher' has no attribute 'gate'"
+   ],
+   "test_fx8_sentinel_is_not_written_for_a_passing_identity": [
+    "failed",
+    "AttributeError: module 'launcher' has no attribute 'gate'"
+   ],
+   "test_fx8_valid_baseline_and_status_field_is_kept_separate": [
+    "failed",
+    "AttributeError: module 'launcher' has no attribute 'gate'"
+   ],
+   "test_fx9_lambda_follows_the_counted_cancellation_free_total": [
+    "failed",
+    "assert Fraction(34, 499) == Fraction(75, 998)"
+   ],
+   "test_fx9_ncf_mismatch_sets_the_flag_the_reason_and_withholds_p6": [
+    "failed",
+    "TypeError: arm_c_entry() takes 4 positional arguments but 6 were given"
+   ],
+   "test_large_q_kernel_point_index_matches_python_index_beyond_2_32[29-7]": [
+    "passed",
+    null
+   ],
+   "test_large_q_kernel_point_index_matches_python_index_beyond_2_32[41-6]": [
+    "passed",
+    null
+   ],
+   "test_large_q_sampled_counter_on_constructed_targets_matches_membership_method[29-7]": [
+    "passed",
+    null
+   ],
+   "test_large_q_sampled_counter_on_constructed_targets_matches_membership_method[41-6]": [
+    "passed",
+    null
+   ]
+  },
+  "passed_on_old_code_note": "5 items pass on the 72f51766a6 code: the 4 FX-7 KAT items (the committed kernel is correct on the large-Q path; their evidence is the M5 kill) and test_fx8_kat_mode_never_writes_a_sentinel (a negative control that holds on both).",
+  "test_file_sha256_used": "c34b8fe0c94faedad8e35a8135a639aa09bfa6b13f1aac2f26d4cc899df2539a"
+ },
+ "task": "TASK-20261106-4c4831"
+}

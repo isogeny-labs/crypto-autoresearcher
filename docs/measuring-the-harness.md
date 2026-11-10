@@ -282,3 +282,10 @@ If a new grader is needed, add it to `orchestration/eval/graders.py` with the
 find yourself wanting a grader that asks a model whether the answer was good,
 the task is not yet well posed — reshape it until the answer is a field, a
 file, or a number.
+
+## Bounded research campaigns
+
+The [capability campaign evaluator](capability-campaigns.md) additionally exercises
+planning, execution, independent-session review and revision on supplied-input
+research tasks. Its reports distinguish software controls, demonstrated cases and
+held-out reliability screens. It does not measure the complete production dispatch loop.

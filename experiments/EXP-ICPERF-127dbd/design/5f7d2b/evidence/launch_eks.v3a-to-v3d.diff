@@ -1,0 +1,223 @@
+--- /tmp/claude-0/-home-user/fe537fb0-7f2e-504d-8df2-39e551cfffea/scratchpad/dir-5f7d2b/experiments/EXP-ICPERF-127dbd/implementation/tests/fixtures/launch_eks.v3a.sh	2026-11-07 06:25:03.539969475 +0000
++++ /tmp/claude-0/-home-user/fe537fb0-7f2e-504d-8df2-39e551cfffea/scratchpad/dir-5f7d2b/experiments/EXP-ICPERF-127dbd/implementation/launch_eks.sh	2026-11-07 06:31:22.666474877 +0000
+@@ -30,6 +30,114 @@
+ # It never retries: a rerun is a new, separately authorised runbook session.
+ set -euo pipefail
+ set +x
++# ---- K-7 environment prologue (v3d; DEC-20261107-a83c51 K-7; DEC-20261107-c3e91a R-1 to R-3). It is not study logic. ----
++# Phase 1 drops every inherited shell function, refuses an AWS_ENDPOINT_URL* variable and a preset constant of another value, and
++# re-executes this script under `env -i` with an explicit allowlist: HOME, TMPDIR, AWS_REGION, AWS_DEFAULT_REGION, ISOLAB_BUCKET,
++# CRYPTO_CHECKOUT (and ISOLAB_CODEBUILD_PROJECT in launch_eks.sh), the credential variables named in K7_CRED_VARS (never printed), the
++# transport variables named in K7_TRANSPORT_VARS when they are set (R-1 T-1), the constants of K7_CONSTS (R-3 CR-2 and PY-1), and a PATH
++# of exactly <directory of the first aws on the caller's PATH>:/usr/bin:/bin. env -i clears BASH_ENV, ENV, CDPATH, PYTHONPATH, the
++# AWS_CONFIG_FILE family and every BASH_FUNC_* export. Phase 2 (C1_ENV_PHASE=2) refuses to start unless the environment is exactly
++# that allowlist, the constants hold their values, AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY are set and non-empty (CR-1), the proxy,
++# no-proxy and CA-bundle values match their pins (T-2 to T-4), no function is defined, aws reports the pinned version, and the aws-cli
++# configuration files hold none of the entries named in K7_CFG_NAMES (entry names are printed, values never). BASH_ENV, ENV, imported
++# functions and SHELLOPTS act in the first bash before line 1 of this script; the argv of the runbook and of the trial plan closes them
++# with `/bin/bash -p` (R-2 A-1), and the refusals below stay as defence in depth (A-3). Not prevented by any script: the choice of the
++# directory that holds aws, and a swap of the CA-bundle file between the sha256 below and the CLI's own read (declared TOCTOU residual).
++K7_PIN_AWS_CLI=aws-cli/1.46.2
++K7_CRED_VARS=(AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_SESSION_TOKEN)
++K7_CFG_ALLOWED=()   # aws-cli configuration entry names the executor identity is allowed to use; none is allowed
++K7_CFG_NAMES=(credential_process endpoint_url cli_legacy_plugin_path ca_bundle role_arn source_profile credential_source web_identity_token_file sso_session sso_start_url)
++K7_PASS_VARS=(HOME TMPDIR AWS_REGION AWS_DEFAULT_REGION ISOLAB_BUCKET ISOLAB_CODEBUILD_PROJECT CRYPTO_CHECKOUT)
++K7_TRANSPORT_VARS=(HTTPS_PROXY https_proxy NO_PROXY no_proxy AWS_CA_BUNDLE)
++K7_CA_BUNDLE_ALLOWED=(/root/.ccr/ca-bundle.crt)
++K7_CONSTS=(AWS_EC2_METADATA_DISABLED=true PYTHONNOUSERSITE=1)
++K7_PROXY_RE='^http://(127\.0\.0\.1|localhost):[0-9]{1,5}/?$'
++K7_NOPROXY_RE='^[A-Za-z0-9.,:*/_-]*$'
++if [[ ${C1_ENV_PHASE:-} != 2 ]]; then
++  k7_fns=""
++  while IFS= read -r k7_l; do
++    [[ -n $k7_l ]] || continue
++    k7_fns+=" ${k7_l##* }"; builtin unset -f -- "${k7_l##* }" 2>/dev/null || true
++  done < <(builtin declare -F)
++  k7_hits=""
++  [[ -v BASH_ENV ]] && k7_hits+=" BASH_ENV"
++  [[ -v ENV ]] && k7_hits+=" ENV"
++  for k7_n in $(builtin compgen -e); do
++    [[ $k7_n == AWS_ENDPOINT_URL* ]] && { echo "k7: refused: $k7_n is set; no AWS_ENDPOINT_URL* variable is allowed" >&2; exit 2; }
++  done
++  for k7_c in "${K7_CONSTS[@]}"; do
++    k7_n=${k7_c%%=*}
++    [[ ! -v $k7_n || ${!k7_n} == "${k7_c#*=}" ]] || { echo "k7: refused: $k7_n is set to a value other than its constant ${k7_c#*=}" >&2; exit 2; } # [K7-const-preset]
++  done
++  k7_aws=$(builtin type -P aws 2>/dev/null) || { echo "k7: refused: no aws executable on PATH" >&2; exit 2; }
++  k7_dir=${k7_aws%/*}
++  [[ $k7_aws == /*/aws && $k7_dir != *[[:space:]:]* ]] || { echo "k7: refused: the aws on PATH is not an absolute path to a file named aws" >&2; exit 2; }
++  k7_kv=()
++  for k7_n in "${K7_PASS_VARS[@]}" "${K7_CRED_VARS[@]}" "${K7_TRANSPORT_VARS[@]}"; do
++    [[ -v $k7_n ]] && k7_kv+=("$k7_n=${!k7_n}")
++  done
++  [[ -x /usr/bin/env && -n ${BASH:-} ]] || { echo "k7: refused: /usr/bin/env or \$BASH is unavailable" >&2; exit 2; }
++  exec /usr/bin/env -i "${k7_kv[@]}" "${K7_CONSTS[@]}" "PATH=$k7_dir:/usr/bin:/bin" C1_ENV_PHASE=2 "C1_ENV_DROPPED=$(printf '%s%s' "$k7_hits" "$k7_fns" | tr -c 'A-Za-z0-9_ ' '?')" "$BASH" "$0" "$@"
++fi
++k7_ok=" PATH C1_ENV_PHASE C1_ENV_DROPPED PWD OLDPWD SHLVL _ ${K7_PASS_VARS[*]} ${K7_CRED_VARS[*]} ${K7_TRANSPORT_VARS[*]} "
++for k7_c in "${K7_CONSTS[@]}"; do k7_ok+="${k7_c%%=*} "; done
++k7_extra=""
++for k7_n in $(builtin compgen -e); do [[ $k7_ok == *" $k7_n "* ]] || k7_extra+=" $k7_n"; done
++[[ -z $k7_extra ]] || { echo "k7: refused: variables outside the allowlist are set:$k7_extra" >&2; exit 2; }
++[[ -z $(builtin declare -F) ]] || { echo "k7: refused: shell functions are defined" >&2; exit 2; }
++[[ -v BASH_ENV || -v ENV || -v CDPATH ]] && { echo "k7: refused: BASH_ENV, ENV or CDPATH is set" >&2; exit 2; }
++for k7_c in "${K7_CONSTS[@]}"; do
++  k7_n=${k7_c%%=*}
++  [[ -v $k7_n && ${!k7_n} == "${k7_c#*=}" ]] || { echo "k7: refused: $k7_n is not set to its constant ${k7_c#*=}" >&2; exit 2; } # [K7-const-value]
++done
++[[ -n ${AWS_ACCESS_KEY_ID:-} ]] || { echo "k7: refused: AWS_ACCESS_KEY_ID is not set or is empty (credentials come only from the environment)" >&2; exit 2; } # [K7-cred-id]
++[[ -n ${AWS_SECRET_ACCESS_KEY:-} ]] || { echo "k7: refused: AWS_SECRET_ACCESS_KEY is not set or is empty (credentials come only from the environment)" >&2; exit 2; } # [K7-cred-secret]
++[[ ! -v HTTPS_PROXY || ! -v https_proxy || $HTTPS_PROXY == "$https_proxy" ]] || { echo "k7: refused: HTTPS_PROXY and https_proxy differ" >&2; exit 2; } # [K7-proxy-pair]
++for k7_n in HTTPS_PROXY https_proxy; do
++  [[ ! -v $k7_n || ${!k7_n} =~ $K7_PROXY_RE ]] || { echo "k7: refused: $k7_n does not match the loopback proxy pin $K7_PROXY_RE (value not printed)" >&2; exit 2; } # [K7-proxy-shape]
++done
++[[ ! -v NO_PROXY || ! -v no_proxy || $NO_PROXY == "$no_proxy" ]] || { echo "k7: refused: NO_PROXY and no_proxy differ" >&2; exit 2; } # [K7-noproxy-pair]
++for k7_n in NO_PROXY no_proxy; do
++  [[ ! -v $k7_n || ${!k7_n} =~ $K7_NOPROXY_RE ]] || { echo "k7: refused: $k7_n does not match $K7_NOPROXY_RE (value not printed)" >&2; exit 2; } # [K7-noproxy-shape]
++done
++k7_ca=none; k7_casha=none
++if [[ -v AWS_CA_BUNDLE ]]; then
++  [[ -v HTTPS_PROXY || -v https_proxy ]] || { echo "k7: refused: AWS_CA_BUNDLE is allowed only when HTTPS_PROXY or https_proxy is set" >&2; exit 2; } # [K7-ca-needs-proxy]
++  k7_hit=""
++  for k7_a in "${K7_CA_BUNDLE_ALLOWED[@]}"; do [[ $AWS_CA_BUNDLE == "$k7_a" ]] && k7_hit=1; done
++  [[ -n $k7_hit ]] || { echo "k7: refused: AWS_CA_BUNDLE is not an entry of K7_CA_BUNDLE_ALLOWED (value not printed)" >&2; exit 2; } # [K7-ca-entry]
++  [[ $(realpath -e -- "$AWS_CA_BUNDLE" 2>/dev/null) == "$AWS_CA_BUNDLE" ]] || { echo "k7: refused: AWS_CA_BUNDLE is missing or its realpath differs (no symlink may be on the path)" >&2; exit 2; } # [K7-ca-realpath]
++  [[ -f $AWS_CA_BUNDLE && -s $AWS_CA_BUNDLE ]] || { echo "k7: refused: AWS_CA_BUNDLE is not a non-empty regular file" >&2; exit 2; } # [K7-ca-file]
++  k7_casha=$(sha256sum -- "$AWS_CA_BUNDLE" 2>/dev/null | cut -d ' ' -f1 || true)
++  [[ $k7_casha =~ ^[0-9a-f]{64}$ ]] || { echo "k7: refused: the sha256 of AWS_CA_BUNDLE could not be computed" >&2; exit 2; } # [K7-ca-sha]
++  k7_ca=$AWS_CA_BUNDLE
++fi
++k7_first=${PATH%%:*}
++[[ $PATH == "$k7_first:/usr/bin:/bin" && $k7_first == /* ]] || { echo "k7: refused: PATH is not <absolute dir>:/usr/bin:/bin" >&2; exit 2; }
++[[ $(builtin type -P aws 2>/dev/null) == "$k7_first/aws" ]] || { echo "k7: refused: aws does not resolve to $k7_first/aws" >&2; exit 2; }
++k7_v=$("$k7_first/aws" --version 2>&1 | head -n 1 || true)
++[[ ${k7_v%% *} == "$K7_PIN_AWS_CLI" ]] || { echo "k7: refused: aws reports '${k7_v%% *}', not the pinned $K7_PIN_AWS_CLI" >&2; exit 2; }
++[[ ${HOME:-} == /* && -d ${HOME:-/nonexistent} ]] || { echo "k7: refused: HOME is not an absolute directory" >&2; exit 2; }
++k7_cfg=""
++for k7_f in "$HOME/.aws/config" "$HOME/.aws/credentials"; do
++  [[ -f $k7_f ]] || continue
++  for k7_k in "${K7_CFG_NAMES[@]}"; do
++    grep -q -i -E "^[[:space:]]*$k7_k[[:space:]]*=" "$k7_f" && k7_cfg+=" $k7_k@${k7_f##*/}"
++  done
++  grep -q -i -E '^[[:space:]]*\[plugins\]' "$k7_f" && k7_cfg+=" plugins@${k7_f##*/}"
++done
++if [[ -f $HOME/.aws/cli/alias ]] && grep -q -E '^[[:space:]]*[^#;[:space:]\[][^=]*=' "$HOME/.aws/cli/alias"; then k7_cfg+=" alias@alias"; fi
++for k7_e in $k7_cfg; do
++  [[ " ${K7_CFG_ALLOWED[*]:-} " == *" $k7_e "* ]] || { echo "k7: refused: aws-cli configuration entry:$k7_cfg (names only; values are never printed)" >&2; exit 2; }
++done
++k7_t=""
++for k7_n in "${K7_TRANSPORT_VARS[@]}"; do [[ -v $k7_n ]] && k7_t+=" $k7_n"; done
++k7_px=none; [[ -v HTTPS_PROXY ]] && k7_px=$HTTPS_PROXY; [[ -v https_proxy ]] && k7_px=$https_proxy
++k7_np=none; [[ -v NO_PROXY ]] && k7_np=$NO_PROXY; [[ -v no_proxy ]] && k7_np=$no_proxy
++K7_STATUS="ok aws=$k7_first/aws version=${k7_v%% *} dropped=[${C1_ENV_DROPPED# }] config_entries=[${k7_cfg# }] transport=[${k7_t# }] proxy=$k7_px no_proxy=$k7_np ca_bundle=$k7_ca ca_bundle_sha256=$k7_casha"
++echo "k7_env_hygiene=$K7_STATUS"
++unset k7_ok k7_extra k7_n k7_first k7_v k7_f k7_k k7_e k7_c k7_a k7_hit k7_t k7_px k7_np k7_ca k7_casha
++# ---- end of the K-7 prologue ----
+ 
+ dry=0; protocol=""; eid=""; hid=""; tid=""; appr=""; trial=""; runid=""; out=""; rec=""; req=""
+ while [[ $# -gt 0 ]]; do
+@@ -232,18 +340,77 @@
+ finished=$(date -u +%FT%TZ)
+ echo "launch-remote exit $launch_rc (no retry)"
+ 
+-# 3. Whatever the launcher returned, fetch the job's own results if its receipt names them (read-only).
++# K-5 (v3c): the job is submitted from here on. A failing command or a parse failure writes raw-result.json with submitted true and
++# outcome_class other, then exits 5. Exit 2, 3 and 4 are never used after the submission line (DEC-20261107-a83c51 K-5).
++post_crash() { # post_crash LINE : the ERR trap (set -E hands it to functions and subshells; only the main shell acts)
++  [[ $BASHPID == "$$" ]] || return 0
++  trap - ERR
++  set +e
++  echo "post-submission failure at line $1: raw-result.json is written with outcome_class other and the exit status is 5" >&2
++  inventory() { echo '{}'; }
++  write_records "$(jq -n --arg started "${started:-}" --arg finished "$(date -u +%FT%TZ)" --arg line "$1" --arg rc "${launch_rc:-}" --arg uri "${results_uri:-}" \
++    '{submitted:true, outcome_class:"other", launch_remote_exit:($rc | tonumber? // null), results_uri:$uri, started_at:$started,
++      finished_at:$finished, parse_failures:("post-submission failure at line " + $line)}')"
++  exit 5
++}
++set -E   # the ERR trap is inherited by functions (write_records), so a failure inside one reaches post_crash
++trap 'post_crash $LINENO' ERR
++
++# 3. Whatever the launcher returned, fetch the job's own results (read-only). v3c (C1-AMENDMENT-2; DEC-20261107-a83c51 K-1 to K-6): the
++# results are located by locate_results.sh, by one rule for every outcome. The receipt's status.json pod uid, bound to the Job uid and
++# to the launcher id, names the one results prefix. A non-empty result.json .results_uri is accepted only if it equals that prefix, and
++# locate_results.sh checks the prefix listing against the launcher's objects.json (Key, Size, ETag). After the download the files must
++# equal objects.json and the pod's job-exit.json must equal that pod, this job and the container exit code, or the outcome is never
++# job_completed.
+ res="$client_out/result.json"
+ results_uri=""; state=""; build_status=""
+-[[ -s $res ]] && results_uri=$(jq -r '.results_uri // empty' "$res") && state=$(jq -r '.state // empty' "$res")
+-[[ -s $client_out/build.json ]] && build_status=$(jq -r '.builds[0].buildStatus // empty' "$client_out/build.json")
++results_locator=none; job_uid=""; pod_uid=""; located_ok=yes; loc_rc="not_attempted"; objects_check=not_checked; parse_bad=""
++if [[ -s $res ]]; then
++  state=$(jq -r '.state // empty' "$res" 2>/dev/null) || { state=""; parse_bad+=" result.json"; }
++fi
++if [[ -s $client_out/build.json ]]; then
++  build_status=$(jq -r '.builds[0].buildStatus // empty' "$client_out/build.json" 2>/dev/null) || { build_status=""; parse_bad+=" build.json"; }
++fi
++if [[ -s $res && $parse_bad != *result.json* ]]; then
++  loc_rc=0
++  "$here/locate_results.sh" locate --launcher-result "$res" --job "$job" --bucket "$ISOLAB_BUCKET" \
++    --workdir "$out/locator" --out "$out/locator/locator.json" || loc_rc=$?
++  echo "locate_results exit $loc_rc"
++  if [[ $loc_rc == 0 ]]; then
++    results_uri=$(jq -r .results_uri "$out/locator/locator.json" 2>/dev/null) || { results_uri=""; parse_bad+=" locator.json"; }
++    results_locator=$(jq -r .results_locator "$out/locator/locator.json" 2>/dev/null) || { results_locator=none; parse_bad+=" locator.json"; }
++    job_uid=$(jq -r '.job_uid // ""' "$out/locator/locator.json" 2>/dev/null) || { job_uid=""; parse_bad+=" locator.json"; }
++    pod_uid=$(jq -r '.pod_uid // ""' "$out/locator/locator.json" 2>/dev/null) || { pod_uid=""; parse_bad+=" locator.json"; }
++  fi
++fi
+ dl_rc="not_attempted"
+ if [[ -n $results_uri ]]; then
+-  set +e; aws s3 cp "$results_uri" "$out/artifacts/" --recursive --only-show-errors; dl_rc=$?; set -e
++  dl_rc=0
++  aws s3 cp "$results_uri" "$out/artifacts/" --recursive --only-show-errors || dl_rc=$?
+ fi
+ have_exit=no; have_sums=no; job_exit_code=""
+-[[ -s $out/artifacts/job-exit.json ]] && have_exit=yes && job_exit_code=$(jq -r '.exit_code // empty' "$out/artifacts/job-exit.json")
++if [[ -s $out/artifacts/job-exit.json ]]; then
++  have_exit=yes
++  # K-4: the exit code is read only when .exit_code has jq type number and is spelled 0, 42 or 43 (no string, boolean or float)
++  if jq -e '(.exit_code | type) == "number" and (.exit_code | tojson | test("^(0|42|43)$"))' "$out/artifacts/job-exit.json" >/dev/null 2>&1 \
++     && grep -q -E '"exit_code"[[:space:]]*:[[:space:]]*(0|42|43)[[:space:]]*[,}]' "$out/artifacts/job-exit.json" 2>/dev/null; then # [K4-wrapper]
++    job_exit_code=$(jq -r '.exit_code | tojson' "$out/artifacts/job-exit.json" 2>/dev/null) || job_exit_code=""
++  fi
++fi
+ [[ -s $out/artifacts/SHA256SUMS ]] && have_sums=yes
++if [[ -n $results_uri ]]; then
++  objects_rc=0
++  "$here/locate_results.sh" objects --locator "$out/locator/locator.json" --artifacts "$out/artifacts" || objects_rc=$?
++  echo "locate_results objects exit $objects_rc"
++  if [[ $objects_rc == 0 ]]; then objects_check=true; else objects_check=false; located_ok=no; fi # [K2-wrapper-objects]
++  [[ $dl_rc == 0 ]] || located_ok=no # [K2-wrapper-dl]
++  if [[ $have_exit == yes ]]; then
++    verify_rc=0
++    "$here/locate_results.sh" verify --locator "$out/locator/locator.json" --artifacts "$out/artifacts" || verify_rc=$?
++    echo "locate_results verify exit $verify_rc"
++    [[ $verify_rc == 0 ]] || located_ok=no
++  fi
++fi
+ 
+ # Outcome class. Deadline first, whatever was downloaded (PROTOCOL section 9: a session that ends at its deadline is
+ # infrastructure whether or not it wrote a job-exit.json). launch-remote exits 26 for ANY terminal CodeBuild status other
+@@ -262,12 +429,21 @@
+ elif [[ $launch_rc == 26 && $build_status == "$V6_COUNTED_CODEBUILD_STATUS" && ( $job_exit_code == 42 || $job_exit_code == 43 ) ]]; then
+   class=job_completed
+ fi
++# v3c: result.json named a results_uri or pod_uid other than the located prefix (K-1): the class is other, never job_completed.
++if [[ $loc_rc == 24 && $class != deadline_hit ]]; then class=other; fi # [K1-class]
++# v3c: a launcher file that did not parse (K-5), or files that do not equal objects.json or a job-exit.json that does not match the
++# receipt (K-2, K-4), are never job_completed.
++if [[ -n $parse_bad && $class != deadline_hit ]]; then class=other; fi
++[[ $located_ok == yes || $class != job_completed ]] || class=other
+ 
+ write_records "$(jq -n --arg class "$class" --arg started "$started" --arg finished "$finished" \
+   --argjson launch_rc "$launch_rc" --arg uri "$results_uri" --arg state "$state" --arg bstatus "$build_status" --arg dl "$dl_rc" \
+   --arg have_exit "$have_exit" --arg have_sums "$have_sums" --arg jec "$job_exit_code" \
++  --arg locator "$results_locator" --arg juid "$job_uid" --arg puid "$pod_uid" --arg oc "$objects_check" --arg lrc "$loc_rc" --arg pbad "$parse_bad" \
+   '{submitted:true, outcome_class:$class, launch_remote_exit:$launch_rc, launcher_state:$state, codebuild_status:$bstatus,
+-    results_uri:$uri, download_exit:$dl, job_exit_json_present:$have_exit, sha256sums_present:$have_sums,
++    results_uri:$uri, results_locator:$locator, job_uid:$juid, pod_uid:$puid, download_exit:$dl,
++    objects_match:($oc == "true"), objects_check:$oc, locate_exit:$lrc, parse_failures:$pbad,
++    job_exit_json_present:$have_exit, sha256sums_present:$have_sums,
+     job_exit_code:$jec, started_at:$started, finished_at:$finished}')"
+ echo "outcome_class=$class job_exit_code=${job_exit_code:-none} record_dir=$rec"
+ [[ $class == job_completed ]] && exit 0

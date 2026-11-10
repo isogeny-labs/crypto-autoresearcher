@@ -553,11 +553,11 @@ def arm_c_cell(kernel: Kernel, E: Curve, D, m: int, s: int, target_rng, N: int):
     allkeys = np.concatenate([keys, S_idx.astype(np.uint64)])
     counts, st = kernel.run_sampled(E, m, D, allkeys, keys.size)
     N_cf = ncf_coefficient(B, t2, m)
-    lam = Fraction(N_cf - st["m_S"], N - int(S_idx.size))
+    lam = Fraction(st["cancellation_free"] - st["m_S"], N - int(S_idx.size))   # V2-3: the counted total, not the closed form
     return {"sampled_counts": counts[:keys.size], "S_counts": counts[keys.size:], "keys": keys,
             "S_size": int(S_idx.size), "draws": draws, "B": B, "t2": t2, "N": N, "m": m, "s": s,
             "multisets": st["multisets"], "cancellation_free": st["cancellation_free"], "m_S": st["m_S"],
-            "N_cf_formula": N_cf, "lambda": lam}
+            "N_cf_formula": N_cf, "ncf_counted_equals_formula": st["cancellation_free"] == N_cf, "lambda": lam}
 
 
 def poisson_pmf_list(lam: float, kmax: int):

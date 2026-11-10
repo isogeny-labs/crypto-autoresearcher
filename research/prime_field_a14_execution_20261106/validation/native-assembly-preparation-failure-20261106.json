@@ -1,0 +1,37 @@
+{
+  "stage": "preparation_software_controls",
+  "command": "/workspace/factor-base-venv/bin/python -m pytest -q research/prime_field_a14_execution_20261106/test_mixed.py research/prime_field_a14_execution_20261106/test_native.py",
+  "observed_output": "3 failed, 30 passed in 6.13s",
+  "failures": [
+    {
+      "test": "test_native_rows_partial_joint_and_full_joint_agree_with_public_targets",
+      "policy": "walk",
+      "base": "known48",
+      "field": 211,
+      "group_order": 199,
+      "error": "ValueError: matrix size gate",
+      "reason": "At target budget3 this tiny dense group exceeds the unchanged total matrix cap4096."
+    },
+    {
+      "test": "test_native_rows_partial_joint_and_full_joint_agree_with_public_targets",
+      "policy": "hash_offset",
+      "base": "known48",
+      "field": 211,
+      "group_order": 199,
+      "error": "ValueError: matrix size gate",
+      "reason": "At target budget3 this tiny dense group exceeds the unchanged total matrix cap4096."
+    },
+    {
+      "test": "test_native_rows_partial_joint_and_full_joint_agree_with_public_targets",
+      "policy": "general",
+      "base": "known48",
+      "field": 211,
+      "group_order": 199,
+      "error": "ValueError: matrix size gate",
+      "reason": "At target budget3 this tiny dense group exceeds the unchanged total matrix cap4096."
+    }
+  ],
+  "resolution": "Retain production gate4096; move tiny known48 positive algebra check to budget2 and add explicit budget3 failure-prefix test. Incremental gate now retains exactly4097 materialized rows with their paid prefix counters; no native sampling or frozen protocol changed.",
+  "scientific_executions": 0,
+  "raw_traceback_scope": "Concise observed failure receipt; full original pytest stdout was returned by tool but not saved as a local file."
+}

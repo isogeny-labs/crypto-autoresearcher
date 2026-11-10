@@ -1,0 +1,192 @@
+# Review attestation for TASK-20261107-7db1de (focused hardening re-review, B8-H). Written by the reviewer session.
+review_attestation:
+  task_id: TASK-20261107-7db1de
+  goal_id: GOAL-PATH-001
+  batch_id: BATCH-c077fd
+  authorized_by: DEC-20261106-24d2a2 (review_placement, b8_split)
+  archived_by: TASK-20261107-971edf
+  role: validator
+  review_plan: null
+  joints_owned: []
+  joints_note: Instrument re-review with no review_plan; the card's RR-1 to RR-9 are the scope.
+  commit_reviewed: 5f6c0924502a804271cc100937bf706021985ed6
+  checkout_used:
+    path: /home/user/crypto-autoresearcher
+    head: a640b9f1dd5cb91364eb2efa44613bbcfc6b1451
+    relation: descends from the commit (git merge-base --is-ancestor)
+    mode: full, non-sparse, read-only
+    identity: >-
+      code/ (tree d8e76adb), specification.yaml (blob 3b585041) and implementation/ (tree 88d7cb6e) are identical at
+      both commits; root conftest.py (afaa38ee) and pyproject.toml (8b60f44a) are identical. The experiment tree object
+      differs (9332429b vs 174873d4) only because HEAD adds reports/review-DEC-20261106-24d2a2/ (7 files), which this
+      review did not read.
+  sources_read:
+    # in order of first reading; extent stated
+    - {path: ledger/handoffs/TASK-20261107-7db1de.yaml, extent: full}
+    - {path: docs/agent-runtime-core.md, extent: full}
+    - {path: agents/validator.md, extent: full}
+    - {path: ledger/decisions/DEC-20261106-24d2a2.yaml, extent: "top-level key list (grep); lines 101-395 (outcome_composition_96fee7, dev1_rerun_decision, owner_questions, review_placement incl. b8_split, batch_choice, batch_a8825c_revisions, updated_blockers, approval_act_conditions_added); lines 66-77 (environment_observations, ENV-1 cited by RR-8)"}
+    - {path: ledger/decisions/DEC-20261106-475620.yaml, extent: "key list (grep); lines 82-205 (re_review_composition); lines 276-307 (V2-5, V2-6, approval_records_v2_1)"}
+    - {path: ledger/decisions/DEC-20261106-843cf7.yaml, extent: "key list (grep); lines 226-281 (approval_lock_binding_v2, specification_additions_for_v2)"}
+    - {path: coordination/goals/GOAL-PATH-001/review/TASK-20261105-165da2/code_review.md, extent: full (blindness lifted)}
+    - {path: coordination/goals/GOAL-PATH-001/review/TASK-20261106-7c2b01/fix_review.md, extent: full (blindness lifted)}
+    - {path: ledger/handoffs/TASK-20261106-2b7223.yaml, extent: full}
+    - {path: ledger/handoffs/TASK-20261106-96fee7.yaml, extent: full}
+    - {path: ledger/handoffs/TASK-20261107-bc7a76.yaml, extent: full}
+    - {path: experiments/EXP-MONO-1a1be2/code/launcher.py, extent: "full (1,794 lines), at the commit via a scratch extract"}
+    - {path: experiments/EXP-MONO-1a1be2/code/counters.py, extent: "grep-located ranges: imports, lines 50-100 (compiler_record, build_kernel, target_index), 392-401 (s_set_indices), 429-439, 547-560 (arm_c_cell)"}
+    - {path: experiments/EXP-MONO-1a1be2/code/kernel.c, extent: "includes; line 74 (e_mul loop); lines 113-121 (e_code); 178-188 (p_idx)"}
+    - {path: experiments/EXP-MONO-1a1be2/code/curves.py fqn.py semaev.py make_trial_plan.py, extent: import lines only (grep)}
+    - {path: coordination/goals/GOAL-PATH-001/batches/BATCH-a8825c/archives/TASK-20261106-dfd0ed/snapshot-receipt.json, extent: full}
+    - {path: experiments/EXP-MONO-1a1be2/code/tests/test_kat.py, extent: "git diff 9a0b5955146a..5f6c092450 (every hunk); lines 2330-2919 in full (HX section); lines 1154-1166 (large_instance, large_base)"}
+    - {path: experiments/EXP-MONO-1a1be2/implementation/dev1-report-96fee7.md, extent: full}
+    - {path: experiments/EXP-MONO-1a1be2/implementation/dev1-kat-log-96fee7.json, extent: full}
+    - {path: experiments/EXP-MONO-1a1be2/implementation/dev1-junit-96fee7.xml, extent: full}
+    - {path: experiments/EXP-MONO-1a1be2/implementation/environment-96fee7.json, extent: full}
+    - {path: experiments/EXP-MONO-1a1be2/implementation/trial-plan.preview-ac5ad6.json, extent: "at the commit: one cell per arm (plan schema) and its sha256"}
+    - {path: experiments/EXP-MONO-1a1be2/specification.yaml, extent: "lines 21-24 (status fields); 386-396 (stopping_rules, invalidation_rules)"}
+    - {path: experiments/EXP-MONO-1a1be2/code/tests/test_kat_extended.py, extent: "grep of env, tests, asserts and log writes; lines 105-183"}
+    - {path: experiments/EXP-MONO-1a1be2/implementation/fix-report-2b7223.md, extent: full}
+    - {path: experiments/EXP-MONO-1a1be2/implementation/mutant-check-2b7223.json, extent: "keys; mutants.{M6,M5,M3} failing node id lists"}
+    - {path: experiments/EXP-MONO-1a1be2/implementation/kat-log-2b7223.json, extent: sha256 only}
+    - {path: experiments/EXP-MONO-1a1be2/implementation/environment-2b7223.json, extent: sha256 only}
+    - {path: experiments/EXP-MONO-1a1be2/code/README.md, extent: sha256 only}
+  not_read:
+    - any review_attestation.yaml
+    - any other file under coordination/goals/GOAL-PATH-001/review/ (only the two lifted reports)
+    - any producer session or transcript
+    - the files of other sessions in the shared scratchpad (a directory listing showed their names; none was opened)
+    - experiments/EXP-MONO-1a1be2/reports/review-DEC-20261106-24d2a2/ (present only at HEAD)
+    - "files written into the shared checkout by another session during the review (names seen in git status only): ledger/goals/GOAL-PATH-001.yaml (modified), ledger/decisions/DEC-20261107-f46a40.yaml, ledger/handoffs/TASK-20261107-{5b2b59,88b2fc,af7359,d279a7}.yaml (untracked), and the BATCH-342e48 dispatch queue and lane committed as 7c8cb59d2b and 54a0f238a0"
+  concurrent_checkout_activity: >-
+    During the review another session (commits by coordinator-portfolio-4y7t3o) moved HEAD from a640b9f1dd to
+    54a0f238a0 (BATCH-342e48 queue and lane only) and left uncommitted ledger changes from 03:02Z. None touched
+    experiments/EXP-MONO-1a1be2/code, specification.yaml, implementation/, conftest.py or pyproject.toml (same objects at
+    the new HEAD); none was read. DEC-20261107-f46a40 is the releasing-act id named by bc7a76 BP-2; it was not read, so
+    RR-9 is independent of it.
+  read_sibling_reports: none (no other report of this round exists or was read)
+  blindness:
+    lifted_for:
+      - coordination/goals/GOAL-PATH-001/review/TASK-20261105-165da2/code_review.md
+      - coordination/goals/GOAL-PATH-001/review/TASK-20261106-7c2b01/fix_review.md
+    rationale: >-
+      Fix verification needs both defect lists and their repros (DEC-20261106-475620 batch.review;
+      DEC-20261106-24d2a2 review_placement.rules_from_DEC-20261106-475620_that_still_bind). Both were read in full.
+      Neither attestation was read.
+  findings_summary:
+    must_fix_closed: [N-5 item 5, NF-1, NF-2, NF-3, NF-4, NF-5, NF-6, NF-7, receipt clash]
+    must_fix_not_closed: []
+    dev1_row: not run (open); does not count for B8-H
+    regression_rows_holding: [F-1, N-1, N-2, N-3, N-4]
+    new_findings:
+      blocking: []
+      non_blocking:
+        - {id: NF-H1, text: "launcher process honours parent-environment interpreter variables (PYTHONPATH, PYTHONPYCACHEPREFIX); a stdlib module it imports can be replaced from outside code/ with validity valid and no trace", repro: "fix_review.md RR-2 O6c, O7c"}
+        - {id: NF-H2, text: "time-of-check gaps inside the cell: code/ first on sys.path with lazily imported stdlib modules (multiprocessing, hmac, secrets); kernel.c compiled from code/ after the last hash; a live writer leaves no trace", repro: "fix_review.md RR-2 TOCTOU-a, TOCTOU-b"}
+        - {id: NF-H3, text: "compute_validity does not check the package's selftest junit copy; a token-forged GateResult with real hashes and a fabricated full-pass block is valid", repro: "fix_review.md RR-4 forged_gate_real_hashes_no_selftest"}
+        - {id: NF-H4, text: "F2 refusal in run_cell keyed to dirname(outdir); a library run with outdir outside runs/ runs an arm-A cell while the sentinel exists", repro: "fix_review.md RR-4 f2_a_library"}
+      grading_note: >-
+        NF-H1 and NF-H2 are graded non-blocking for the reasons in fix_review.md "Grading line": NF-H2 needs a live
+        same-uid writer during the cell; NF-H1 lies outside the approved-build boundary of specification invalidation
+        rule 3 and V2-6 (a)-(c). Both have cheap launcher-only fixes; any fix adopted before DEV-1 changes code_sha256
+        and voids the bc7a76 binding (DEC-20261106-24d2a2 dev1_rerun_decision.binds_code_sha256). The Coordinator composes.
+    observations: [O-1 allow-list digest serialisation vs SC-4, O-2 consistent writer defect, O-3 m_S zero on all 8 HX-6 cells, O-4 self-test temp dir left on refusal, O-5 pytest_file from collect-only invocation, O-6 tests/ first on the self-test sys.path, O-7 pytest 9.2.0 rewrite cache is hash-checked, O-8 hard link accepted]
+  m6_killed_by_reviewer_run: true
+  m6_detail: "6 of 438 items fail, all new HX-6 S-set items; M5 still killed (8); M3 still killed (62); node ids equal the producer's claim"
+  rr1_allowlist_sha256:
+    without_trailing_newline: 8a242ebc1c51564041564ecc7edc46eef353bba62611ea33da9f1b8604ba6445 (matches the dfd0ed receipt sa5_allowlist)
+    with_trailing_newline: 1832f8552b8d0cb0df9824fa0fd61c1a0308675383d8c795ebecaac9d38c11d1 (matches fix-report-2b7223.md and launcher.allowlist_sha256(), the value every manifest records)
+  rr1_plan_sha256: 9ccbe61445fba836ec44bdea6e55255220a4d08e8d09c9198e5bd28696d8fb4a (byte-identical)
+  rr5h:
+    result: agree
+    outcome_confirmed: stopped_infrastructure
+    discrepancies: ["D-1 remaining-budget figure understated by about 880 s; conclusion unchanged", "D-2 2 s start-time difference report vs kat log", "D-3 stdout.log progress-dot claim not archived (not presented as data)"]
+  rr9:
+    routes: 13
+    blocks_release_of_bc7a76: [R9-5, R9-7, R9-8, R9-9, R9-10]
+    does_not_block: [R9-1, R9-2, R9-3, R9-4, R9-6, R9-11, R9-12, R9-13]
+    counts: {blocks_release: 5, does_not_block: 8}
+    advisory: true
+  verdict_b8h: passed
+  verdict_basis: Every hardening must-fix is closed (9 of 9) and no new blocking finding exists; M6 killed and M5, M3 still killed by the reviewer's own runs; plan byte-identical. The DEV-1 row reads not run (open).
+  validation_report:
+    id: VAL-20261107-7db1de
+    task_id: TASK-20261107-7db1de
+    run_ids: []
+    artifact_checks:
+      - "dfd0ed path_sha256 (11 paths) recomputed on disk: equal"
+      - "sa6_code_binding (7 CODE_FILES, both test files, code_sha256 5d5a607d...1464, EXPECTED_KAT_ITEMS 438, DESIGNED_SKIPS): equal"
+      - "8 HX-1 frozen files and specification equal their 9a0b5955 bytes"
+      - "CODE_TREE_ALLOWLIST equals the committed code/ tree (11 entries)"
+    metric_recomputations:
+      - "trial plan regenerated: 9ccbe614...fb4a, 135,868 bytes"
+      - "96fee7 DX-3 modelled projection recomputed from the kat-log keys: agree"
+      - "HX-6 S-set guards recounted independently (own index and brute force): agree on 8 of 8 cells; m_S zero on all"
+    control_checks:
+      - "baseline full suite 438/438 under launcher.run_selftest_suite"
+      - "full-checkout self-test (read-only, /home/user/crypto-autoresearcher): collected 438 = EXPECTED_KAT_ITEMS, 438 passed, rc 0; checkout state unchanged"
+      - "P1 and P2 positive controls valid; every refusal scenario has its no-plant control"
+      - "M6 killed, M5 killed, M3 killed"
+    heuristic_validation_checks: []
+    cost_model_checks: []
+    proof_architecture_checks: []
+    verdict: passed
+    limitations:
+      - "Instrument hardening only; nothing about the mathematics or any prediction"
+      - "DEV-1 not run; B8-D untouched"
+      - "KAT-field checks only; contract-scale behaviour inferred from identical code paths"
+      - "Non-blocking findings NF-H1 to NF-H4 open, with fixes recommended"
+    artifact_paths:
+      - coordination/goals/GOAL-PATH-001/review/TASK-20261107-7db1de/fix_review.md
+      - coordination/goals/GOAL-PATH-001/review/TASK-20261107-7db1de/review_attestation.yaml
+  inference:
+    requested_policy: review-adversarial
+    reasoning_effort: policy default (card null; never below the review floor)
+    resolved_model: claude-opus-5-5
+    backend: anthropic (Claude Code), not Bedrock
+    fallback_used: false
+    degraded: false
+    independent_session: true
+    independent_session_basis: >-
+      A fresh session dispatched by the top-level session for this task only; its context began with this task. It is
+      not the session of TASK-20261106-2b7223, TASK-20261106-96fee7, TASK-20261106-4c4831, TASK-20261105-ac5ad6,
+      TASK-20261029-a97206, the PR #2707 author, the reviewers TASK-20261105-165da2 and TASK-20261106-7c2b01, the
+      composing session TASK-20261107-0932f4, or any TASK-20261107-bc7a76 executor. Independence is between sessions,
+      not between models.
+  procedure_deviations:
+    - id: PD-1
+      text: >-
+        VP-3 substitute: the full main checkout /home/user/crypto-autoresearcher at HEAD a640b9f1dd (descends from
+        5f6c092450) was used read-only instead of a separate full worktree (not enough disk), as the dispatching session
+        directed. The dispatch said the experiment tree is byte-identical; it is not, but only because HEAD adds the
+        reports/review-DEC-20261106-24d2a2/ directory. code/, specification.yaml, implementation/, root conftest.py and
+        pyproject.toml are identical objects. State compared before and after the full-checkout self-test.
+    - id: PD-2
+      text: No claim or release by the reviewer; the top-level session holds claim a640b9f1dd and performs every git operation and the release.
+    - id: PD-3
+      text: >-
+        The 165da2 S table and the 7c2b01 A and R tables, and the predecessors' attacks, were re-implemented on the
+        reviewer's own harness (stub 438-item suite, synthetic KAT-field plan at (13, 2) and (11, 2)); the predecessors'
+        scripts were not available (deleted by them).
+    - id: PD-4
+      text: >-
+        Writer-side defects in RR-4 were injected by wrapping launcher arm functions or Kernel.run_sampled in a scratch
+        process, as a stand-in for a code defect (as 7c2b01 did).
+    - id: PD-5
+      text: >-
+        The baseline and the three mutant suites ran in parallel on the 4 cores, with lighter work alongside; wall times
+        are under load. No DEV-1 attempt was live (DEC-20261106-24d2a2 R-P4).
+    - id: PD-6
+      text: >-
+        RR-9 exercised the LD-8 classification on a reviewer-written toy supervisor (from the LD-4 text) with stub
+        commands, because the bc7a76 supervisor script does not exist yet. Never on the cell.
+    - id: PD-7
+      text: >-
+        DEC-20261106-24d2a2 was read over lines 101-395, which include owner_questions, batch_choice,
+        batch_a8825c_revisions and updated_blockers beyond the four sections the card lists, and lines 66-77
+        (environment_observations) for RR-8's ENV-1. None of these is a review report or attestation.
+  runs_launched: 0
+  experiment_cells_computed: 0
+  writes: [fix_review.md, review_attestation.yaml]
+  scratch: /tmp/claude-0/-home-user/d72a143b-1bef-500a-b9ca-d25907246d76/scratchpad/r7db1de (outside the repository; not an artifact)
+  host_boot_id_start_and_end: e0e8df54-e1ca-428d-81b0-3d15b63dd550

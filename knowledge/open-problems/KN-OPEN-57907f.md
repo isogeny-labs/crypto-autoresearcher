@@ -11,7 +11,7 @@ internal_refs: []
 proof_status: not_applicable
 proof_refs: []
 added: 2026-10-27
-superseded_by: null
+superseded_by: KN-LIT-eef882
 ---
 
 ## Question

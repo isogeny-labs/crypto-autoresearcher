@@ -1,0 +1,182 @@
+# DEC-20261106-1d23b6: Coordinator next-improvement selection after the v6 layout=lines closure: rank three IC optimization candidates for the prime-field pair-table pipeline at fp28 and select C1 (deferred repeat guard paired with a pre-registered smaller factor base) for design. Approves no experiment and no EKS spend; supersedes XP-20261029-srenew-deferred-guard for dispatch.
+coordinator_decision:
+  id: DEC-20261106-1d23b6
+  id_provenance: Allocated by the top-level session with tools/allocate_id.py --next coordinator_decision --date 20261106
+    and confirmed free with --check. The Coordinator had no shell and minted no identifier.
+  recorded_at: '2026-11-06'
+  decided_at: '2026-11-06'
+  decided_by: coordinator
+  recorded_by: coordinator
+  relates_to: DEC-20261106-859e56
+  source: 'Coordinator ranking note (session scratchpad next-candidate/RANKING.md, not committed to any repository; this
+    record is the durable statement), plus the main session''s free checks against git objects reported to the Coordinator
+    on 2026-11-06 (finding 1 below).'
+  subject: 'Next improvement for LEAD-ICP-prime-ic-constant-engineering after the layout=lines item closed at fp28 on c8a.2xlarge
+    (DEC-20261106-859e56): C1 selected for design; C2 and C3 ranked behind it; prioritisation only
+
+    '
+  context: 'DEC-20261106-859e56 closed the layout=lines item at its scope and directed the Coordinator to choose the next
+    improvement in a separate decision. Owner criterion: any verified, measured improvement over the current IC baseline
+    counts; the gap to matched rho is the distance remaining, not a gate; relabelling and accounting changes are not improvements.
+    Constraints for this selection: crypto PR 2826 (stride-renew baseline promotion, VAL-20261029-4aed57) has merge conflicts
+    awaiting an owner decision and nothing here may depend on it merging; the route is EKS Spot via isolab-eks on c8a.2xlarge
+    at about USD 1 per job-hour; fp20 wall timing is unusable under the 1 ms L2 minimum.
+
+    Counted-cost picture at fp28 for the main incumbent (prime-abscissa:size=407, mitm:negation_folded=1, targets=walk,
+    max_trials 26479085, incremental-gauss), from the v6 counted file research/ic_line_layout_tournament_20261031/reports/v6/analysis-a/counted-compare-rho-neg__incumbent-w0.json
+    (a/b blocks only; Coordinator arithmetic, not a measured per-phase split): mean S 20.771 at w = 0; oracle set-up N(N+1)
+    = 166,056 GAE, about 10.5 S (about 51 %) at sqrt(r) = 15,786; trials about 138.6k per run (lookups_uncharged 17,738,567
+    over 128 runs), about 8.8 S (about 42 %) assuming one addition per walk step; about 1.5 S (about 7 %) unidentified.
+    Unpriced native work about 17.8 S per run at w = 1, of which target_guard_probes_uncharged (17,743,870) is about 49
+    %; guard probes minus lookups is about 41 per run, close to the birthday count T^2/2r (38.6). Distance remaining today,
+    incumbent / rho-neg: 23.00 / 22.87 / 22.28 at w = 0 / 0.1 / 1.
+
+    Finding 1 (main session, free checks against git objects, 2026-11-06): Targets::StrideRenewDeferredGuard parses from
+    stride-renew-deferred-guard in src/cryptanalysis/ic_framework/stages.rs; ic_boundary.rs at ea8e9ef71c3c82027dd9e01535302725519c3fca
+    line 8265 sets defer_guard = (targets == TargetSource::StrideRenewDeferredGuard); the first stages.rs commit touching
+    it is 14bc6f48a4 (2026-10-29). Both stride-renew and the deferred guard are therefore on crypto main and in the pinned
+    v6 source ea8e9ef7. PROTOCOL-V6 line 51 ("stride-renew ... exists only on the unmerged #2826 branch") is out of date.
+    No walk deferred-guard variant exists.
+
+    '
+  decision: prioritize
+  target_ids:
+  - LEAD-ICP-prime-ic-constant-engineering
+  - GOAL-ICPERF-e6b6a4
+  - XP-20261029-srenew-deferred-guard
+  ranking:
+  - rank: 1
+    id: C1
+    item: Deferred repeat guard (guard moved after the oracle, so only decomposing targets are probed and inserted) paired
+      with a pre-registered, band-minimax smaller factor base at fp28, against the walk N 407 incumbent.
+    class: counted at w = 0, 0.1 and 1 through the pairing; possible wall side-effect, not claimed
+    estimated_cost_usd: about 1-2 in total (one counted-only session about 0.25-0.5, one replication and one validator replay
+      about the same each); proposed hard cap 5
+    closes_when: On fresh curves the pre-registered candidate's candidate/incumbent CI upper bound is >= 1 at any of w = 0,
+      0.1 or 1 (close at fp28 at the stated scope; a single unreplicated session allows weaken plus replication, never reject_scoped).
+      A parity failure of the deferred variant at equal N is an implementation defect, not a negative result.
+  - rank: 2
+    id: C2
+    item: stride-renew target source at fp28 against walk.
+    class: counted at w = 0 (band to be checked)
+    estimated_cost_usd: about 0.1 marginal as descriptive arms in the C1 counted session; about 0.5-1 stand-alone
+    availability: Not blocked by PR 2826 (finding 1, the source is on main and in ea8e9ef7). Promoting stride-renew as the
+      28-bit baseline remains a separate question that overlaps the owner's pending PR 2826 decision.
+    closes_when: srenew/walk at fp28 has a CI not wholly below 1 at w = 0, or its order flips across the section 5a band.
+  - rank: 3
+    id: C3
+    item: Trim the unidentified fixed overhead (about 7 % of S), for example restart or renewal scalar multiplications via
+      the fixed-window aP+bQ generator, if it is not already the default.
+    class: counted
+    estimated_cost_usd: 0 to decompose the v6 counted records by phase; about 0.5-1 for a counted A/B if warranted
+    closes_when: The phase decomposition shows a reducible share under about 3 % of S, or the generator is already the default
+      on main.
+  selected_for_design: C1
+  c1_route_ruling:
+    route_A: 'Run C1 on the pinned image ea8e9ef7 with targets=stride-renew-deferred-guard (finding 1, no new image needed).
+      Confound, stated now: route A changes two factors at once against the walk incumbent, the guard placement (eager to
+      deferred) and the target source (walk to stride-renew), in addition to N. A route A result against walk is therefore
+      a recipe-level claim, and its attribution requires descriptive factorial arms in the same session at minimum: walk
+      eager N 407 (incumbent), walk eager N_small, stride-renew eager N 407, stride-renew deferred N 407, and the candidate
+      stride-renew deferred N_small, plus A/A and matched rho-neg. The guard effect is then read within stride-renew (eager
+      vs deferred at equal N), the target-source effect as stride-renew eager vs walk eager at N 407, and the N effect at
+      fixed source and guard. The only fp28 reading of stride-renew against walk is the F4 pre-freeze smoke (one non-study
+      curve, one target, L0): S 21.066 vs 16.289, the wrong direction. It is not evidence, but it is a real risk that the
+      target-source factor costs at w = 0 and masks a guard gain.'
+    route_B: An opt-in walk deferred-guard target source (single-factor change against the incumbent). It needs new code,
+      a parity test and a new image; the AWS bridge cannot build images (DEC-20261106-662e33 / decision section 3.9), so
+      it needs an owner-approved image route. If walk renews on a repeat, a deferred walk guard also needs a cycle detector
+      whose compares are priced as a native op class.
+    ruling: Route A is the default for the design step because it needs no image. Route B is the follow-up if route A's
+      factorial shows that the target-source factor masks a guard-placement gain, or if the owner approves an image route
+      earlier.
+  old_protocol_ruling:
+    item: XP-20261029-srenew-deferred-guard (frozen 2026-10-29 on crypto PR 2831; candidate dg-small at N 130 / 267 / 741;
+      baseline srenew at 28 bits, walk at 24 and 32)
+    ruling: superseded for dispatch; not re-baselined
+    why: Its 28-bit baseline is srenew, but main's 28-bit incumbent is walk (DEC-20261106-662e33, decision section 12.3).
+      Re-baselining a frozen protocol would edit its success criterion through an amendment written after the v6 counted
+      data and the holdout-P28 row were seen. A new protocol with fresh curves and seeds, its N fixed by a pre-data band-minimax
+      model and its baseline the walk incumbent, is cleaner and is no more expensive.
+    if_it_already_ran: Its records and verdict stand as recorded and are not edited. They are listed as data_seen in the
+      new C1 protocol, are design input only, and are never pooled with the C1 sessions or with v6. Whether it ran has not
+      been checked; the design handoff checks it first.
+  rationale:
+  - 'C1 is the only ranked candidate that can plausibly lower counted S at all three weights. At w = 0 the measured holdout-P28
+    row (docs/ic/LEADERBOARD.md, eager guard, N 288 vs 407) reads 0.929 [0.894, 0.964]; at w = 1 the same switch reads
+    1.193 [1.134, 1.257] because the extra trials carry native work, about half of it guard probes. Removing the guard probes
+    from that row projects about 0.93 / 0.92 / 0.85 at w = 0 / 0.1 / 1 (pre-data projection, not a claim); the distance
+    to rho would then be about 21.4 / 21.0 / 18.9.'
+  - Deferring the guard removes executed hash probes (about 49 % of native work per run, of which about 41 per run catch
+    anything). It is real work removed, not relabelling. table_insert_attempts is unpriced on every IC arm; pricing it would
+    favour the smaller-N arm, so leaving it unpriced is conservative and it is not to be changed inside this study.
+  - The claim can be decided from counted cost, which is deterministic and certified by replay, so it needs neither the
+    L2 wall gate nor the A/A wall gate that made v6 invalid_measurement. Wall time, if read at all, is descriptive.
+  - C1 also attacks the hash-table floor that v6 diagnosed. The eager guard's seen map grows to about 138.6k entries per
+    solve, a second random-access map beside the about 2 MiB pair table, and both are touched on every trial; deferral
+    removes one, and N 288 halves the pair table to about 1 MiB (L2 per c8a core). This is a pointer, not a claim.
+  - C2 rests on a 20-bit result (srenew/walk 0.842 at w = 0) with no support for transfer to fp28 and one contrary smoke
+    reading. It is best answered descriptively inside C1's route A factorial.
+  - C3 has a small ceiling (about 7 % of S at best) and no fp28 evidence; a free decomposition decides whether it is worth
+    a run.
+  - 'Not ranked: software prefetch (wall-only; needs the A/A machinery; v6''s prefetched line guard lost; C1 changes its
+    target), layout=lines (closed, DEC-20261106-859e56), N retune alone at 28 bits (measured relabelling), packed filter
+    at 28 bits (undecidable, no successor, DEC-20261029-5eb8e6 (B)), walk self-collision harvesting (that is rho), known-log
+    base points (BSGS), retained set-up across targets (accounting; closed_dominated), accounting edits, x-only sum/difference
+    sharing (GAE-neutral), rectangular pair tables (no gain by construction).'
+  - Roadmap caveat. C1 is constant-factor engineering on a pipeline that the 2026-10-26 cost model reads as BSGS needing
+    c|F| hits, with a structural ratio to rho growing as r^(1/6). It is selected because it is cheap and counted-decidable,
+    and it must not displace exponent-targeting items from the next batch.
+  owner_gate: Any EKS spend for C1, C2 or C3 (qualification, counted, replication, validator replay or wall sessions) needs
+    the owner's explicit go-ahead before launch, in addition to a frozen protocol and a Coordinator approval decision. Selecting
+    C1 for design, and any design work, protocol drafting, free git or record checks or local non-study development runs,
+    do not constitute that go-ahead.
+  scope: Prime-field pair-table pipeline at fp28 (prime-abscissa base, mitm:negation_folded=1, walk incumbent at N 407,
+    max_trials 26479085, incremental-gauss) on the pinned executable ea8e9ef7 for route A. A verified gain would improve
+    the prime-table reference baseline (generic-decomposition track under crypto research/prime_ic_program_20261029/DECISIONS.md
+    R1 if Option C lands), never an algebraic IC row. No transfer to other sizes, target sources, hosts or later commits
+    is assumed.
+  evidence_refs:
+  - isogeny-labs/crypto:research/ic_line_layout_tournament_20261031/reports/v6/analysis-a/counted-compare-rho-neg__incumbent-w0.json
+  - isogeny-labs/crypto:research/ic_line_layout_tournament_20261031/reports/v6/V6-RESULTS.md
+  - isogeny-labs/crypto:research/ic_line_layout_tournament_20261031/reports/v6/validation/VALIDATION-REPORT.md
+  - isogeny-labs/crypto:research/ic_line_layout_tournament_20261031/DECISION-V6-REDESIGN-20261106.md
+  - isogeny-labs/crypto:research/ic_line_layout_tournament_20261031/prefreeze-checks-v6.md
+  - isogeny-labs/crypto:research/ic_line_layout_tournament_20261031/PROTOCOL-V6.md
+  - isogeny-labs/crypto:docs/ic/LEADERBOARD.md
+  - isogeny-labs/crypto:docs/session-logs/2026-10-26.md
+  - isogeny-labs/crypto:docs/session-logs/2026-10-29.md
+  - isogeny-labs/crypto:docs/session-logs/2026-10-30.md
+  - isogeny-labs/crypto:src/cryptanalysis/ic_framework/stages.rs@ea8e9ef71c3c82027dd9e01535302725519c3fca
+  - isogeny-labs/crypto:src/cryptanalysis/ic_boundary.rs@ea8e9ef71c3c82027dd9e01535302725519c3fca
+  - LEAD-ICP-prime-ic-constant-engineering
+  - EV-ICPERF-92c130
+  - DEC-20261106-859e56
+  - DEC-20261106-662e33
+  - DEC-20261029-5eb8e6
+  limitations:
+  - The fp28 phase split is Coordinator arithmetic from aggregate counters (one GAE per trial assumed; set-up taken as N(N+1)),
+    not a measured per-phase decomposition; the v6 counted records in S3 (sha256 1a7f3faa...) can confirm it.
+  - The projections for C1 are pre-data model outputs built on another study's curves (holdout-P28); they decide nothing.
+  - That the packed-filter dgb arm uses the deferred guard is inferred from naming, not read from its spec; it is cited
+    nowhere as evidence.
+  - Finding 1 was relayed by the main session from git objects; the Coordinator did not read the source files.
+  - Not read in the sparse checkouts, the XP-20261029-srenew-deferred-guard and dg-blocked backlogs, the packed-filter
+    and stride-renew study directories, and the raw run records.
+  - Whether XP-20261029-srenew-deferred-guard ever ran is unchecked.
+  knowledge_promotion:
+    promoted: []
+    not_warranted: Prioritisation decision only; no evidence review, no support or reject_scoped, so no KN-FIND.
+  next_actions:
+  - 'Main session: ledger archive, alone, of this record; post-commit verifier; push; open or refresh the crypto-autoresearcher
+    PR against main, ready for review, with auto-merge enabled. If GOAL-ICPERF-e6b6a4 carries this lead, checkpoint it
+    with exactly one next action: the C1 design handoff below.'
+  - 'Main session: issue one handoff (TASK id via allocate_id) for C1 design input, with no EKS spend: (a) check whether
+    XP-20261029-srenew-deferred-guard ran and where its records are; (b) check whether targets=walk renews on a repeat;
+    (c) decompose the v6 counted records by phase (this also answers C3); (d) local counted-only development solves on
+    non-study fp28 curves to confirm deferred-vs-eager counted parity at equal N on ea8e9ef7. Deliverables are named paths;
+    design input only, never evidence.'
+  - 'Coordinator: after the handoff returns, draft the C1 route A protocol (fresh curves and seeds, one candidate arm, N
+    fixed by a pre-data band-minimax model, the factorial arms above, success rule CI upper < 1 at each of w = 0, 0.1 and
+    1, counted-only decision, an equivalence-band A/A gate for any descriptive wall reading), then seek the owner''s go-ahead
+    for EKS spend before any approval decision or launch.'

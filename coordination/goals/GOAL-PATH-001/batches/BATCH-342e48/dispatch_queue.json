@@ -1,0 +1,370 @@
+{
+ "schema": "crypto.autoresearch.dispatch_queue.v1",
+ "goal_id": "GOAL-PATH-001",
+ "batch_id": "BATCH-342e48",
+ "objective": "OWNER ANSWER TO OQ-1 RECORDED, AND THE B8-D DEV-1 VERIFICATION WRITTEN, for EXP-MONO-1a1be2 (DEC-20261107-f46a40). TASK-20261107-5b2b59 records the owner's answer (A): re-run DEV-1 here under the detached supervisor, up to two attempts, with fallback (B) if both are lost to restarts. It states the TASK-20261107-bc7a76 caps and writes this queue. TASK-20261107-88b2fc ledger-archives the act ALONE, after TASK-20261107-7db1de releases. TASK-20261107-af7359 (fresh validator) verifies the DEV-1 record on the TASK-20261107-eebc5b commit (B8-D), and is BLOCKED until eebc5b records DEV-1 outcome passed. TASK-20261107-d279a7 snapshots it. bc7a76 stays blocked in BATCH-c077fd until DEC-20261107-40200d dispositions the 7db1de RR-9 routes. Zero runs in every card. No experiment is approved and no status moves.",
+ "opening_decision_id": "DEC-20261107-f46a40",
+ "opened_by_decision": "DEC-20261107-f46a40",
+ "authorized_by": "DEC-20261106-24d2a2 batch.focus.inconclusive_decision (the owner's answer to OQ-1) and OQ-1 on_each_answer.A; DEC-20261107-f46a40 NA-1",
+ "question_ids": ["RQ-MONO-001"],
+ "reserved_ids": {
+  "decision": "DEC-20261107-f46a40",
+  "batch": "BATCH-342e48",
+  "composing_task": "TASK-20261107-5b2b59",
+  "ledger_archive_task": "TASK-20261107-88b2fc",
+  "dev1_verification_task": "TASK-20261107-af7359",
+  "dev1_verification_snapshot_task": "TASK-20261107-d279a7",
+  "designated": "DEC-20261107-40200d. It is the act at the 971edf boundary: on a B8-H pass with no code or launcher change, it dispositions the RR-9 routes and releases bc7a76; otherwise it is the fresh composing act.",
+  "unused": "DEC-20261107-856d9b, the spare for a fresh act after any bc7a76, eebc5b or af7359 outcome that does not pass, including the (B) fallback after retries are exhausted.",
+  "provenance": "All minted and checked by the top-level session and supplied to the composing session, which holds no shell and minted and re-checked nothing. The --check results belong in the 88b2fc receipt (LA-5)."
+ },
+ "max_concurrent": 1,
+ "max_concurrent_basis": "The tasks form a strict chain. The cards keep work serial across this lane and BATCH-c077fd: no commit task runs beside another, nothing here runs beside 7db1de's use of the main checkout, and nothing runs beside a live DEV-1 attempt (DEC-20261107-f46a40 batch_choice.lanes). GOAL-PATH-001 campaign_budget.max_concurrent is 3.",
+ "notes": [
+  {
+   "at": "2026-11-07T00:00:00Z",
+   "kind": "batch_record",
+   "text": "This queue is the task record; no batch.yaml is written. Timestamps are date-granular because the authoring role holds no clock. TASK-20261107-5b2b59 wrote the head update on ledger/goals/GOAL-PATH-001.yaml by insertion only: the keys current_batch_id_2026_11_07_342e48, dispatch_queue_path_2026_11_07_342e48, current_batch_note_2026_11_07_342e48, next_action_2026_11_07_342e48 and owner_answer_2026_11_07_342e48; one open_batches item; and one impediment, IMP-PATH-20261107-2. The pointer scalars are NOT moved. No batch is checkpointed, because BATCH-c077fd stays open."
+  },
+  {
+   "at": "2026-11-07T00:00:00Z",
+   "kind": "opening_custody",
+   "text": "Written by a Coordinator subagent with no shell. New files: this queue; ledger/decisions/DEC-20261107-f46a40.yaml; four handoffs. Edited by insertion: ledger/goals/GOAL-PATH-001.yaml. The top-level session renders the decision report into experiments/EXP-MONO-1a1be2/reports/review-DEC-20261107-f46a40/ after 7db1de releases, and pushes its PDF to the artifact store. This queue is committed alone first (88b2fc LA-1) and is never staged by an archive. The committed specification, every code/ file and every committed card are unchanged."
+  },
+  {
+   "at": "2026-11-07T00:00:00Z",
+   "kind": "owner_answer",
+   "text": "OQ-1 of DEC-20261106-24d2a2 was answered by the owner in the session at about 2026-11-07T02:20Z with option (A), as the top-level session relays it. The owner set no lower cap. DEC-20261107-f46a40 records the answer, and it is official when 88b2fc verifies. Option (B) still needs its own owner parameters before use. This note is not a release of bc7a76."
+  },
+  {
+   "at": "2026-11-07T00:00:00Z",
+   "kind": "cross_lane_links",
+   "text": "research_dispatch.py resolves depends_on only within one queue. The links to BATCH-c077fd are therefore dispatch preconditions: 88b2fc waits on the 7db1de release (LP-3); af7359 waits on the eebc5b receipt (DVP-2) and on DEC-20261107-40200d (DVP-3). af7359 is held blocked. The top-level session moves it to queued by a tasks_state_revisions entry, mechanically, only when the committed eebc5b receipt records DEV-1 outcome passed, SA-3 equal and SA-5 with no disagreement (DEC-20261107-f46a40 dev1_verification.state_and_release)."
+  },
+  {
+   "at": "2026-11-07T00:00:00Z",
+   "kind": "archive_order",
+   "text": "Order: (1) This queue is committed alone, pushed and rendered clean, and lane BATCH-342e48 is opened; then scripts/checkpoint.sh push. (2) 7db1de finishes, and 971edf runs alone. (3) The decision report is rendered, and 88b2fc runs ALONE, is verified and pushed, and gets a ready PR with auto-merge. (4) DEC-20261107-40200d is written. (5) On its pass path, the bc7a76 revision, bc7a76, then eebc5b. (6) On DEV-1 passed, the af7359 revision, af7359, then d279a7 alone. (7) The approval act. If any condition fails, stop before staging and return to a fresh act. This record is not edited except for archive blocks and tasks_state_revisions."
+  },
+  {
+   "at": "2026-11-07T00:00:00Z",
+   "kind": "inference_declared_up_front",
+   "text": "Every card sets fallback_allowed true, for backend or model substitution only, and degraded_allowed false. Coordinator cards run under the session model by runtime inheritance. af7359 uses review-adversarial with independent_session_required true and the independence list on its card. Amazon Bedrock is never selected, configured or contacted."
+  },
+  {
+   "at": "2026-11-07T00:00:00Z",
+   "kind": "outcome_discipline",
+   "text": "Until 88b2fc verifies, no text describes the owner's answer as recorded officially or bc7a76 as released. No text describes EXP-MONO-1a1be2 as approved. No text describes a KAT, the DEV-1 cell, a projection or a throughput figure as evidence about compounding, relation rates or any exponent. Commit messages and PR text state no lemma value, formula, prediction value, KAT value, timing or prior (PD-1)."
+  }
+ ],
+ "tasks_state_revisions": [
+ {
+  "at": "2026-11-07T04:03:47Z",
+  "by": "top-level session (coordinator-portfolio-4y7t3o)",
+  "task_id": "TASK-20261107-88b2fc",
+  "from_state": "queued",
+  "to_state": "completed",
+  "reason": "Ledger archive committed alone at 849b323f1525 (parent 2997d49f1379) with exactly the fourteen expected paths after OC-1 to OC-7; report.pdf in the artifact store. Zero runs.",
+  "paths_or_records_added": []
+ }
+ ],
+ "tasks": [
+  {
+   "id": "TASK-20261107-5b2b59",
+   "title": "Coordinator: record the owner's answer (A) to OQ-1, state the bc7a76 caps and release conditions, write the B8-D DEV-1 verification and its snapshot, open BATCH-342e48 (DEC-20261107-f46a40)",
+   "role": "coordinator",
+   "state": "completed",
+   "priority": 79,
+   "review_required": false,
+   "review_required_note": "FALSE. A recording and design act; it changes no claim.",
+   "depends_on": [],
+   "read_scope": ["ledger", "coordination/goals/GOAL-PATH-001", "experiments/EXP-MONO-1a1be2", "templates/research-records.md", "AGENTS.md", "agents/coordinator.md", "tools"],
+   "write_scope": [
+    "ledger/goals/GOAL-PATH-001.yaml",
+    "ledger/handoffs/TASK-20261107-5b2b59.yaml",
+    "ledger/handoffs/TASK-20261107-88b2fc.yaml",
+    "ledger/handoffs/TASK-20261107-af7359.yaml",
+    "ledger/handoffs/TASK-20261107-d279a7.yaml",
+    "experiments/EXP-MONO-1a1be2/reports/review-DEC-20261107-f46a40"
+   ],
+   "write_scope_note": "The act also wrote two files outside these artifact paths. ledger/decisions/DEC-20261107-f46a40.yaml is owned by TASK-20261107-88b2fc. This queue is committed alone and is never staged by an archive. The top-level session renders the report directory from the decision's visual_report; report.pdf goes to the artifact store, and only its manifest and the managed .gitignore are tracked.",
+   "artifact_paths": [
+    "ledger/goals/GOAL-PATH-001.yaml",
+    "ledger/handoffs/TASK-20261107-5b2b59.yaml",
+    "ledger/handoffs/TASK-20261107-88b2fc.yaml",
+    "ledger/handoffs/TASK-20261107-af7359.yaml",
+    "ledger/handoffs/TASK-20261107-d279a7.yaml",
+    "experiments/EXP-MONO-1a1be2/reports/review-DEC-20261107-f46a40/report.typ",
+    "experiments/EXP-MONO-1a1be2/reports/review-DEC-20261107-f46a40/dev1-allowance.svg",
+    "experiments/EXP-MONO-1a1be2/reports/review-DEC-20261107-f46a40/release-gates.svg",
+    "experiments/EXP-MONO-1a1be2/reports/review-DEC-20261107-f46a40/figures.py",
+    "experiments/EXP-MONO-1a1be2/reports/review-DEC-20261107-f46a40/figure-data.json",
+    "experiments/EXP-MONO-1a1be2/reports/review-DEC-20261107-f46a40/.artifacts.json",
+    "experiments/EXP-MONO-1a1be2/reports/review-DEC-20261107-f46a40/.gitignore"
+   ],
+   "archived_by": "TASK-20261107-88b2fc",
+   "handoff_record": "ledger/handoffs/TASK-20261107-5b2b59.yaml",
+   "handoff": {
+    "id": "TASK-20261107-5b2b59",
+    "from": "coordinator",
+    "to": "coordinator",
+    "objective": "Record the owner's answer (A) to OQ-1 and its scope. State the bc7a76 attempt cap and cumulative cap, and what its release still needs. Write the B8-D DEV-1 verification task, its snapshot and this act's ledger archive. Open BATCH-342e48, and write the additive goal-head update and DEC-20261107-f46a40.",
+    "uncertainty_reduced": "Whether, and under which caps, the DEV-1 re-attempt may run on this host, and what still stands between it and dispatch.",
+    "inputs": [
+     "ledger/decisions/DEC-20261106-24d2a2.yaml",
+     "ledger/handoffs/TASK-20261107-bc7a76.yaml",
+     "ledger/handoffs/TASK-20261107-7db1de.yaml",
+     "ledger/handoffs/TASK-20261106-941825.yaml",
+     "coordination/goals/GOAL-PATH-001/batches/BATCH-c077fd/dispatch_queue.json",
+     "coordination/goals/GOAL-PATH-001/batches/BATCH-c077fd/archives/TASK-20261107-58546f/ledger-receipt.json",
+     "ledger/goals/GOAL-PATH-001.yaml"
+    ],
+    "constraints": ["As ledger/handoffs/TASK-20261107-5b2b59.yaml, which is authoritative. No approval and no status change. No edit of the specification, of code/ or of any committed card. The goal-head edit is insertions only, and the BATCH-c077fd queue is not edited. Zero runs. No owner text is added beyond what was relayed."],
+    "deliverables": ["ledger/decisions/DEC-20261107-f46a40.yaml (owned by 88b2fc)", "this queue (committed alone)", "the twelve artifact paths above"],
+    "artifact_paths": [
+     "ledger/goals/GOAL-PATH-001.yaml",
+     "ledger/handoffs/TASK-20261107-5b2b59.yaml",
+     "ledger/handoffs/TASK-20261107-88b2fc.yaml",
+     "ledger/handoffs/TASK-20261107-af7359.yaml",
+     "ledger/handoffs/TASK-20261107-d279a7.yaml",
+     "experiments/EXP-MONO-1a1be2/reports/review-DEC-20261107-f46a40/report.typ",
+     "experiments/EXP-MONO-1a1be2/reports/review-DEC-20261107-f46a40/dev1-allowance.svg",
+     "experiments/EXP-MONO-1a1be2/reports/review-DEC-20261107-f46a40/release-gates.svg",
+     "experiments/EXP-MONO-1a1be2/reports/review-DEC-20261107-f46a40/figures.py",
+     "experiments/EXP-MONO-1a1be2/reports/review-DEC-20261107-f46a40/figure-data.json",
+     "experiments/EXP-MONO-1a1be2/reports/review-DEC-20261107-f46a40/.artifacts.json",
+     "experiments/EXP-MONO-1a1be2/reports/review-DEC-20261107-f46a40/.gitignore"
+    ],
+    "archived_by": "TASK-20261107-88b2fc",
+    "inference": {"policy": "coordinator-orchestration-code", "reasoning_effort": "high", "fallback_allowed": true, "fallback_note": "Runtime inheritance under the Claude Code harness. Backend or model substitution only. Never Bedrock.", "degraded_allowed": false, "independent_session_required": false},
+    "budget": {"wall_clock_seconds": 3600, "memory_gb": 1, "maximum_runs": 0},
+    "completion_gate": ["Decision, queue, four handoffs and goal-head update exist in the working tree.", "The decision records the answer with its scope and limits; states the caps and why bc7a76 is not queued now; lists the gates; writes the B8-D task and its state rule; gives the batch choice, knowledge_promotion, the visual report and exactly one next action.", "Zero runs."],
+    "return_format": "Files written; decision summary; the single next action; any owner question.",
+    "review_plan_ref": null,
+    "runs_launched": 0
+   },
+   "outcome": null
+  },
+  {
+   "id": "TASK-20261107-88b2fc",
+   "title": "Ledger archive of DEC-20261107-f46a40 and the 5b2b59 artifacts, ALONE, after 7db1de releases, checking OC-1 to OC-7",
+   "role": "coordinator",
+   "state": "completed",
+   "priority": 78,
+   "review_required": false,
+   "review_required_note": "FALSE. An archive stages and verifies. It judges nothing.",
+   "depends_on": ["TASK-20261107-5b2b59"],
+   "read_scope": ["ledger", "experiments/EXP-MONO-1a1be2", "coordination/goals/GOAL-PATH-001", "templates/research-records.md", "AGENTS.md", "tools"],
+   "write_scope": [
+    "coordination/goals/GOAL-PATH-001/batches/BATCH-342e48/archives/TASK-20261107-88b2fc",
+    "ledger/decisions/DEC-20261107-f46a40.yaml"
+   ],
+   "artifact_paths": [
+    "coordination/goals/GOAL-PATH-001/batches/BATCH-342e48/archives/TASK-20261107-88b2fc/ledger-receipt.json",
+    "ledger/decisions/DEC-20261107-f46a40.yaml"
+   ],
+   "archived_by": "TASK-20261107-88b2fc",
+   "archive": {
+    "kind": "ledger",
+    "binding_mode": "content_at_commit",
+    "binding_mode_note": "GOAL-PATH-001.yaml has a life after this archive. commit_sha, parent_sha and path_sha256 are filled at archive time, in a later commit.",
+    "source_task_ids": ["TASK-20261107-5b2b59"],
+    "record_ids": ["DEC-20261107-f46a40", "GOAL-PATH-001", "BATCH-342e48", "BATCH-c077fd", "EXP-MONO-1a1be2", "TASK-20261107-5b2b59", "TASK-20261107-88b2fc", "TASK-20261107-af7359", "TASK-20261107-d279a7", "TASK-20261107-bc7a76"],
+    "expected_paths": [
+     "coordination/goals/GOAL-PATH-001/batches/BATCH-342e48/archives/TASK-20261107-88b2fc/ledger-receipt.json",
+     "experiments/EXP-MONO-1a1be2/reports/review-DEC-20261107-f46a40/.artifacts.json",
+     "experiments/EXP-MONO-1a1be2/reports/review-DEC-20261107-f46a40/.gitignore",
+     "experiments/EXP-MONO-1a1be2/reports/review-DEC-20261107-f46a40/dev1-allowance.svg",
+     "experiments/EXP-MONO-1a1be2/reports/review-DEC-20261107-f46a40/figure-data.json",
+     "experiments/EXP-MONO-1a1be2/reports/review-DEC-20261107-f46a40/figures.py",
+     "experiments/EXP-MONO-1a1be2/reports/review-DEC-20261107-f46a40/release-gates.svg",
+     "experiments/EXP-MONO-1a1be2/reports/review-DEC-20261107-f46a40/report.typ",
+     "ledger/decisions/DEC-20261107-f46a40.yaml",
+     "ledger/goals/GOAL-PATH-001.yaml",
+     "ledger/handoffs/TASK-20261107-5b2b59.yaml",
+     "ledger/handoffs/TASK-20261107-88b2fc.yaml",
+     "ledger/handoffs/TASK-20261107-af7359.yaml",
+     "ledger/handoffs/TASK-20261107-d279a7.yaml"
+    ],
+    "expected_paths_note": "This card's artifact_paths together with those of its source task. If the dispatcher's computed set differs, stop and report.",
+    "commit_sha": "849b323f15256622af2587f8c4f8724e57f58dfc",
+    "parent_sha": "2997d49f13792ecc53603f6798400c17eecd2eed",
+    "path_sha256": {
+     "coordination/goals/GOAL-PATH-001/batches/BATCH-342e48/archives/TASK-20261107-88b2fc/ledger-receipt.json": "11ae2b3e22d6a413dcdcfd9fddac35d435080956d66dbfb91f02dd2b5e686c3c",
+     "experiments/EXP-MONO-1a1be2/reports/review-DEC-20261107-f46a40/.artifacts.json": "a12bf490b02aa10a929fa1ff695954b994bbabeb3f9eab2b27a9ff05b5ee9b1b",
+     "experiments/EXP-MONO-1a1be2/reports/review-DEC-20261107-f46a40/.gitignore": "766bfb191e0c017c5844a426af294646f988628283ab0417407220bc0fa72aaa",
+     "experiments/EXP-MONO-1a1be2/reports/review-DEC-20261107-f46a40/dev1-allowance.svg": "9d7e7666527d5e7b5c3eafb2d8cf4bc2a3b85cad84f975b38b39f3e05c056ca8",
+     "experiments/EXP-MONO-1a1be2/reports/review-DEC-20261107-f46a40/figure-data.json": "36ed8e745426e9e58a07404579e206ec39cd2fda57f8eb022c683dad59346432",
+     "experiments/EXP-MONO-1a1be2/reports/review-DEC-20261107-f46a40/figures.py": "943c0a21813bf626fed1d290b71f1dec8ce40b4e1496cecd2492bee2522fc209",
+     "experiments/EXP-MONO-1a1be2/reports/review-DEC-20261107-f46a40/release-gates.svg": "80607bbde9a4d36611497b50df32277bb683b783c4514b1917e9cbc3d2fe54a1",
+     "experiments/EXP-MONO-1a1be2/reports/review-DEC-20261107-f46a40/report.typ": "bb911eca5cda12d97142be0a8e19101c3dba65084ca593e48589afca15b7b358",
+     "ledger/decisions/DEC-20261107-f46a40.yaml": "26d8f4532598ae4d6e389570a354dc93ae6a805a402a4df5a8f510e0e04c26ea",
+     "ledger/goals/GOAL-PATH-001.yaml": "54128a6288113d19c2418cdffa97396c5b13d6900eb03b7c09756ce363e528e9",
+     "ledger/handoffs/TASK-20261107-5b2b59.yaml": "8e8b2123adfde33f31f3520d010ee433ea27938dcd1175d625e6aa8e37fe965a",
+     "ledger/handoffs/TASK-20261107-88b2fc.yaml": "35d595f8a63c69c71a9c40858b7c79b633aa39395059236a9846d08c6d593191",
+     "ledger/handoffs/TASK-20261107-af7359.yaml": "6cb28755fa83a8ed304273e24fed2b0b6ed37c2f5cb2f0e90fb7e97a010cecda",
+     "ledger/handoffs/TASK-20261107-d279a7.yaml": "94af074436e54f960eb0ce5986cc5ce7b736a1821c6f1ef8447053bcfbb82412"
+    }
+   },
+   "handoff_record": "ledger/handoffs/TASK-20261107-88b2fc.yaml",
+   "handoff": {
+    "id": "TASK-20261107-88b2fc",
+    "from": "coordinator",
+    "to": "coordinator",
+    "objective": "After OC-1 to OC-7, commit and bind exactly the fourteen expected paths in ONE isolated ledger archive commit. Verify, push, and open or refresh the ready-for-review PR with auto-merge. Runs ALONE, after 7db1de releases.",
+    "uncertainty_reduced": "None about the mathematics. It makes the owner-answer record, the bc7a76 caps, the B8-D task and the batch opening durable together.",
+    "inputs": ["ledger/decisions/DEC-20261107-f46a40.yaml", "ledger/goals/GOAL-PATH-001.yaml", "coordination/goals/GOAL-PATH-001/batches/BATCH-342e48/dispatch_queue.json", "coordination/goals/GOAL-PATH-001/batches/BATCH-c077fd/dispatch_queue.json", "experiments/EXP-MONO-1a1be2/reports/review-DEC-20261107-f46a40/"],
+    "constraints": ["LA-1 to LA-13 of ledger/handoffs/TASK-20261107-88b2fc.yaml, which is authoritative. In brief: (1) the queue is committed alone, the lane opened and a checkpoint pushed; (2) wait for 7db1de, then merge origin/main, never rebase, and record what a640b9f1dd names; (3) a mechanical goal-head diff of insertions only; (4) card and queue agreement, af7359 and bc7a76 blocked; (5) --check on every id, with 40200d and 856d9b free; (6) ECC and focus outputs; (7) specification, code and bc7a76-card byte checks; (8) the decision report and its PDF; (9) the fourteen paths staged one by one, then validator and hygiene; (10) a commit message with no value or timing, and a ready PR with auto-merge; (11) the archive block filled later; (12) release digests; (13) alone, zero runs."],
+    "deliverables": ["The ledger receipt as specified in the ledger card.", "One isolated commit, a pushed branch, a ready-for-review PR with auto-merge, and lane BATCH-342e48 open."],
+    "artifact_paths": ["coordination/goals/GOAL-PATH-001/batches/BATCH-342e48/archives/TASK-20261107-88b2fc/ledger-receipt.json", "ledger/decisions/DEC-20261107-f46a40.yaml"],
+    "archived_by": "TASK-20261107-88b2fc",
+    "inference": {"policy": "coordinator-orchestration-code", "reasoning_effort": null, "reasoning_effort_note": "null means the policy default (high).", "fallback_allowed": true, "fallback_note": "Runtime inheritance under the Claude Code harness. Backend or model substitution only. Never Bedrock.", "degraded_allowed": false, "independent_session_required": false},
+    "budget": {"wall_clock_seconds": 3600, "memory_gb": 1, "maximum_runs": 0},
+    "dispatch_preconditions": [
+     {"id": "LP-1", "text": "archived_by is bound (SELF)."},
+     {"id": "LP-2", "text": "LA-1 is done: queue committed, pushed and rendered clean; lane BATCH-342e48 open."},
+     {"id": "LP-3", "text": "TASK-20261107-7db1de has a completed release; 971edf is not live."},
+     {"id": "LP-4", "text": "Claim after git fetch: python3 tools/goal_lanes.py claim coordination/goals/GOAL-PATH-001/batches/BATCH-342e48/dispatch_queue.json TASK-20261107-88b2fc --as <addr> --ttl-minutes 60 --publish."},
+     {"id": "LP-5", "text": "RUNS ALONE; no DEV-1 attempt live."}
+    ],
+    "completion_gate": ["origin/main merged after 7db1de released, with base and merge outcome recorded.", "OC-1 to OC-7 hold and are recorded.", "One commit binds exactly the expected paths and verifies under tools/research_dispatch.py.", "Branch pushed; ready PR with auto-merge; lane BATCH-342e48 open.", "Two non-empty release digests. Zero runs."],
+    "return_format": "Ledger receipt, PR reference, lane record path, a640b9f1dd record, LA-5 outputs, release digests.",
+    "review_plan": null,
+    "runs_launched": 0
+   },
+   "outcome": null
+  },
+  {
+   "id": "TASK-20261107-af7359",
+   "title": "Validator (review-adversarial, fresh independent session): B8-D DEV-1 verification of the bc7a76 record on the eebc5b commit; 941825 RR-5 verbatim plus bc7a76 record checks; kernel-free membership on at least 10 targets; zero cells. BLOCKED until eebc5b records DEV-1 outcome passed",
+   "role": "validator",
+   "subagent_binding": "validator",
+   "state": "blocked",
+   "blocked_note": "Blocked until the committed and verified eebc5b receipt records DEV-1 outcome passed, SA-3 equal and SA-5 with no disagreement. The top-level session then moves it to queued by a tasks_state_revisions entry, mechanically, under DEC-20261107-f46a40 dev1_verification.state_and_release. It also needs DEC-20261107-40200d to have released bc7a76 without superseding it (DVP-3).",
+   "priority": 77,
+   "review_required": false,
+   "review_required_note": "FALSE. This IS the independent verification of the DEV-1 instrument record; it changes no claim and has no review_plan.",
+   "depends_on": ["TASK-20261107-88b2fc"],
+   "read_scope": [
+    "ledger/handoffs/TASK-20261107-af7359.yaml",
+    "ledger/handoffs/TASK-20261107-bc7a76.yaml",
+    "ledger/handoffs/TASK-20261106-96fee7.yaml",
+    "ledger/handoffs/TASK-20261106-941825.yaml",
+    "ledger/decisions/DEC-20261107-f46a40.yaml",
+    "ledger/decisions/DEC-20261107-40200d.yaml",
+    "ledger/decisions/DEC-20261106-24d2a2.yaml",
+    "ledger/decisions/DEC-20261106-475620.yaml",
+    "experiments/EXP-MONO-1a1be2",
+    "coordination/goals/GOAL-PATH-001/batches/BATCH-c077fd",
+    "coordination/goals/GOAL-PATH-001/batches/BATCH-a8825c/archives/TASK-20261106-dfd0ed",
+    "agents/validator.md",
+    "AGENTS.md"
+   ],
+   "read_scope_note": "Reads no file under coordination/goals/GOAL-PATH-001/review/ other than its own output, no attestation, no 7db1de report and no producer session.",
+   "write_scope": ["coordination/goals/GOAL-PATH-001/review/TASK-20261107-af7359"],
+   "artifact_paths": [
+    "coordination/goals/GOAL-PATH-001/review/TASK-20261107-af7359/dev1_verification.md",
+    "coordination/goals/GOAL-PATH-001/review/TASK-20261107-af7359/review_attestation.yaml"
+   ],
+   "archived_by": "TASK-20261107-d279a7",
+   "handoff_record": "ledger/handoffs/TASK-20261107-af7359.yaml",
+   "handoff": {
+    "id": "TASK-20261107-af7359",
+    "from": "coordinator",
+    "to": "validator",
+    "objective": "On the verified eebc5b commit, confirm that the bc7a76 DEV-1 record shows the FX-16 cell run in full and unmodified on the 5d5a607d bytes with outcome passed; compute kernel-free membership counts on the full line base for at least 10 logged targets and compare them; check the record against the bc7a76 card and the f46a40 caps; give a terminal B8-D verdict.",
+    "uncertainty_reduced": "Whether blocker B8-D clears. Nothing about the mathematics.",
+    "inputs": [
+     "ledger/handoffs/TASK-20261107-af7359.yaml",
+     "ledger/handoffs/TASK-20261107-bc7a76.yaml",
+     "ledger/handoffs/TASK-20261106-941825.yaml",
+     "ledger/decisions/DEC-20261107-f46a40.yaml",
+     "ledger/decisions/DEC-20261107-40200d.yaml",
+     "experiments/EXP-MONO-1a1be2/code/",
+     "experiments/EXP-MONO-1a1be2/implementation/",
+     "coordination/goals/GOAL-PATH-001/batches/BATCH-c077fd/archives/TASK-20261107-eebc5b/snapshot-receipt.json",
+     "coordination/goals/GOAL-PATH-001/batches/BATCH-c077fd/archives/TASK-20261107-58546f/ledger-receipt.json",
+     "agents/validator.md"
+    ],
+    "constraints": ["DV-0 to DV-5 of ledger/handoffs/TASK-20261107-af7359.yaml, which is authoritative. In brief: (0) 941825 RR-5 verbatim under a file-name substitution table; (1) the seven artifacts equal the eebc5b binding; (2) the record against the bc7a76 card and the caps: attempts, LD-8 classes, retry only after C5, fresh copies, the supervisor, the launch and RESUME; (3) kernel-free membership on at least 10 targets of the full line base, from a stated seed; (4) the SC-3 arithmetic; (5) zero cells, no full kernel pass, long commands detached, no commit, never Bedrock."],
+    "deliverables": ["dev1_verification.md and review_attestation.yaml as specified in the ledger card."],
+    "artifact_paths": [
+     "coordination/goals/GOAL-PATH-001/review/TASK-20261107-af7359/dev1_verification.md",
+     "coordination/goals/GOAL-PATH-001/review/TASK-20261107-af7359/review_attestation.yaml"
+    ],
+    "archived_by": "TASK-20261107-d279a7",
+    "inference": {"policy": "review-adversarial", "reasoning_effort": null, "reasoning_effort_note": "null means the policy default; never below the review floor.", "fallback_allowed": true, "fallback_note": "Backend or model substitution only, recorded as fallback_used. Never a cheaper policy, never degraded, never Bedrock.", "degraded_allowed": false, "independent_session_required": true},
+    "budget": {"wall_clock_seconds": 21600, "memory_gb": 16, "maximum_runs": 0},
+    "dispatch_preconditions": [
+     {"id": "DVP-1", "text": "archived_by TASK-20261107-d279a7 is bound."},
+     {"id": "DVP-2", "text": "Moved to queued mechanically only when the committed eebc5b receipt records DEV-1 outcome passed, SA-3 equal and SA-5 with no disagreement. Never by a message."},
+     {"id": "DVP-3", "text": "DEC-20261107-40200d committed and verified, having released bc7a76 without superseding it."},
+     {"id": "DVP-4", "text": "Read-only checkout at or after the eebc5b commit; scratch extracts for computation."},
+     {"id": "DVP-5", "text": "Claim after git fetch with --ttl-minutes 420 --publish. Release with two non-empty digests."},
+     {"id": "DVP-6", "text": "Fresh validator session per independence_note; the resolved model id contains no 'bedrock'; no DEV-1 attempt and no commit task live."}
+    ],
+    "completion_gate": ["dev1_verification.md covers DV-0 to DV-5 with commands, outcomes and a terminal B8-D verdict.", "Every RR-5 bullet answered with evidence.", "DV-3 computed by the reviewer without the kernel on at least 10 targets from a stated seed.", "review_attestation.yaml parses and names the eebc5b commit.", "Zero cells; nothing outside write_scope."],
+    "return_format": "Two paths with sha256, the B8-D verdict, RR-5 rows held/not held, DV-2, DV-3 agree/disagree and target count (no values), DV-4, findings by severity, commit reviewed.",
+    "review_plan": null,
+    "runs_launched": 0
+   },
+   "outcome": null
+  },
+  {
+   "id": "TASK-20261107-d279a7",
+   "title": "Snapshot archive of the B8-D DEV-1 verification (TASK-20261107-af7359), alone among commit tasks",
+   "role": "coordinator",
+   "state": "queued",
+   "priority": 76,
+   "review_required": false,
+   "review_required_note": "FALSE. An archive stages and verifies. It judges nothing.",
+   "depends_on": ["TASK-20261107-af7359"],
+   "read_scope": ["coordination/goals/GOAL-PATH-001/review/TASK-20261107-af7359", "ledger/handoffs/TASK-20261107-af7359.yaml", "coordination/goals/GOAL-PATH-001/batches/BATCH-342e48", "coordination/goals/GOAL-PATH-001/batches/BATCH-c077fd", "tools"],
+   "write_scope": ["coordination/goals/GOAL-PATH-001/batches/BATCH-342e48/archives/TASK-20261107-d279a7"],
+   "artifact_paths": ["coordination/goals/GOAL-PATH-001/batches/BATCH-342e48/archives/TASK-20261107-d279a7/snapshot-receipt.json"],
+   "archived_by": "TASK-20261107-d279a7",
+   "archive": {
+    "kind": "snapshot",
+    "binding_mode": "content_at_commit",
+    "binding_mode_note": "The approval act names this commit for B8-D (DEC-20261106-24d2a2 SC-5). commit_sha, parent_sha and path_sha256 are filled at archive time, in a later commit.",
+    "source_task_ids": ["TASK-20261107-af7359"],
+    "record_ids": ["EXP-MONO-1a1be2", "BATCH-342e48", "TASK-20261107-af7359", "TASK-20261107-d279a7", "TASK-20261107-bc7a76"],
+    "expected_paths": [
+     "coordination/goals/GOAL-PATH-001/batches/BATCH-342e48/archives/TASK-20261107-d279a7/snapshot-receipt.json",
+     "coordination/goals/GOAL-PATH-001/review/TASK-20261107-af7359/dev1_verification.md",
+     "coordination/goals/GOAL-PATH-001/review/TASK-20261107-af7359/review_attestation.yaml"
+    ],
+    "expected_paths_note": "This card's artifact_paths together with those of its source task. If the dispatcher's computed set differs, stop and report.",
+    "commit_sha": null,
+    "parent_sha": null,
+    "path_sha256": {}
+   },
+   "handoff_record": "ledger/handoffs/TASK-20261107-d279a7.yaml",
+   "handoff": {
+    "id": "TASK-20261107-d279a7",
+    "from": "coordinator",
+    "to": "coordinator",
+    "objective": "After SA-1 to SA-5, commit and bind exactly the three expected paths in ONE isolated snapshot commit. Verify, push, and refresh the PR. Runs alone among commit tasks.",
+    "uncertainty_reduced": "None about the mathematics. It makes the B8-D verification durable before the approval act, or a fresh act, reads it.",
+    "inputs": ["ledger/handoffs/TASK-20261107-af7359.yaml", "coordination/goals/GOAL-PATH-001/review/TASK-20261107-af7359/", "coordination/goals/GOAL-PATH-001/batches/BATCH-c077fd/archives/TASK-20261107-eebc5b/snapshot-receipt.json"],
+    "constraints": ["SA-1 to SA-5 of ledger/handoffs/TASK-20261107-d279a7.yaml, which is authoritative."],
+    "deliverables": ["The snapshot receipt as specified in the ledger card.", "One isolated commit, pushed branch, refreshed PR."],
+    "artifact_paths": ["coordination/goals/GOAL-PATH-001/batches/BATCH-342e48/archives/TASK-20261107-d279a7/snapshot-receipt.json"],
+    "archived_by": "TASK-20261107-d279a7",
+    "inference": {"policy": "coordinator-orchestration-code", "reasoning_effort": null, "reasoning_effort_note": "null means the policy default (high).", "fallback_allowed": true, "fallback_note": "Runtime inheritance under the Claude Code harness. Backend or model substitution only. Never Bedrock.", "degraded_allowed": false, "independent_session_required": false},
+    "budget": {"wall_clock_seconds": 1800, "memory_gb": 1, "maximum_runs": 0},
+    "dispatch_preconditions": [
+     {"id": "RP-1", "text": "archived_by is bound (SELF)."},
+     {"id": "RP-2", "text": "af7359 released with two non-empty digests."},
+     {"id": "RP-3", "text": "Claim after git fetch: python3 tools/goal_lanes.py claim coordination/goals/GOAL-PATH-001/batches/BATCH-342e48/dispatch_queue.json TASK-20261107-d279a7 --as <addr> --ttl-minutes 45 --publish."},
+     {"id": "RP-4", "text": "No other commit task is live, and no DEV-1 attempt is live."}
+    ],
+    "completion_gate": ["origin/main merged, recorded.", "SA-2 and SA-3 in the receipt.", "Exactly three paths bound; receipt verifies.", "Pushed; PR names af7359.", "Non-empty release digest. Zero runs."],
+    "return_format": "Receipt, B8-D verdict word and finding counts, independence-check output, PR reference, release digest.",
+    "review_plan": null,
+    "runs_launched": 0
+   },
+   "outcome": null
+  }
+ ]
+}

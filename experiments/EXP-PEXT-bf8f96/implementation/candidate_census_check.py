@@ -41,6 +41,23 @@ def check_batch(run_dir, cohort, binder, binary_sha256, *, scope="approved-cohor
         raise ValueError("full geometry and Type2 checker mode missing")
     index = verify_complete_index(run_dir, cohort, binder.plan,
                                   binder.plan_sha256, binary_sha256)
+    exit_path = run_dir / "worker-exit.json"
+    stderr_path = run_dir / "worker.stderr.log"
+    if scope == "approved-cohort" or exit_path.exists() or stderr_path.exists():
+        if (exit_path.is_symlink() or stderr_path.is_symlink()
+                or not exit_path.is_file() or not stderr_path.is_file()):
+            raise ValueError("candidate worker exit custody absent")
+        worker_exit = json.loads(exit_path.read_bytes())
+        if (worker_exit.get("schema") != "pext.candidate-worker-exit/v1"
+                or worker_exit.get("status") != "clean_exit"
+                or worker_exit.get("returncode") != 0
+                or worker_exit.get("binary_sha256") != binary_sha256
+                or worker_exit.get("join_plan_sha256") != binder.plan_sha256
+                or worker_exit.get("stderr_sha256") != digest(stderr_path.read_bytes())
+                or stderr_path.read_bytes()):
+            raise ValueError("candidate worker final exit not clean")
+    else:
+        worker_exit = None
     units = expected_units(binder.plan)
     checker = IndependentCandidateChecker(binder.plan["field"])
     output = run_dir / "candidate-reviews.jsonl"
@@ -73,6 +90,13 @@ def check_batch(run_dir, cohort, binder, binary_sha256, *, scope="approved-cohor
                             or type(wall) is not int
                             or not 0 < wall <= expected_limits["unit_wall_seconds"]):
                         raise ValueError("candidate unit limits differ from frozen stage")
+                if worker_exit is not None:
+                    worker_input = json.loads(files["input.json"]).get("worker")
+                    if (not isinstance(worker_input, dict)
+                            or worker_input.get("startup_sha256") !=
+                            worker_exit["startup_sha256"]
+                            or worker_input.get("join_plan_sha256") != binder.plan_sha256):
+                        raise ValueError("candidate unit differs from worker exit")
                 ordinal = int(name[1:])
                 row = units[ordinal]
                 if row["name"] != name or row["chunk"] != chunk_name:
@@ -119,6 +143,7 @@ def check_batch(run_dir, cohort, binder, binary_sha256, *, scope="approved-cohor
                            "compressed_sha256": review["compressed_sha256"],
                            "raw_sha256": review["raw_sha256"],
                            "independent": independent,
+                           "generic_descent": review["generic_descent"],
                            "geometry_ordinals": review["geometry_ordinals"],
                            "generic_ordinals": review["generic_ordinals"],
                            "type2_counts": type2_counts}

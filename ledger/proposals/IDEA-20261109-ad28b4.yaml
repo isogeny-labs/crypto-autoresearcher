@@ -1,0 +1,112 @@
+idea:
+  id: IDEA-20261109-ad28b4
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECC-3fae8b
+  title: Cross-model differential test Montgomery vs Edwards with Okeya-Sakurai y-recovery (10M + 1S +
+    1c) and exhaustive ladder completeness on curve and twist
+  class: measurement
+  claim: 'Let s = sqrt(-486664) with the sign fixed so that x_ed(B) equals the RFC 8032 base x (even).
+    The maps u = (1 + y)/(1 - y), v = s u / x and y = (u - 1)/(u + 1), x = s u / v are inverse bijections
+    between E_ed(F_p) minus {(0,1),(0,-1)} and the Montgomery points with u not in {0} and v nonzero,
+    with (0,1) <-> infinity and (0,-1) <-> (0,0); u = -1 carries no rational point because A - 2 = 486660
+    is a non-square, and (0,0) is the only v = 0 point because A^2 - 4 = 486660 x 486664 is a non-square.
+    Assertion A (full size): for every RFC 7748 section 5.2 vector already in the test module and 1000
+    random clamped scalars k, x25519(k, 9) equals the encoding of (1 + y)/(1 - y) where (x, y) = [clamp(k)]
+    B via ed25519.rs, and the recovered point from the ladder maps to the same x. Recovery, given affine
+    Q = (u_Q, v_Q) with v_Q nonzero and ladder outputs (X_2 : Z_2) = [k]Q, (X_3 : Z_3) = [k+1]Q: v_1 =
+    u_Q Z_2, v_2 = X_2 + v_1, v_3 = (X_2 - v_1)^2 X_3, v_1'' = 2A Z_2, v_2 <- (v_2 + v_1'')(u_Q X_2 +
+    Z_2) - v_1'' Z_2, Y = v_2 Z_3 - v_3, w = 2 v_Q Z_2 Z_3, X = w X_2, Z = w Z_2, [k]Q = (X/Z, Y/Z); cost
+    10M + 1S + 1c + 7a; it fails exactly when [k]Q = O, [k+1]Q = O or Q in E[2]. Assertion B (small analogue):
+    for every u in F_p'' and every k below max(8l'', 4l''''), the transliterated ladder equals x([k]P)
+    computed by affine Montgomery arithmetic on E or its twist, with x(O) := 0; and recovery agrees on
+    every pair outside its stated failure set. Pass threshold: 0 mismatches in A and B, and the recovery
+    failure set equals the stated set exactly.'
+  mechanism: 'The Edwards base point corresponds to u = 9 and Ed25519 clamps the scalar exactly as X25519
+    does, so the two implementations compute the same group element by different laws; agreement is a
+    sign and completeness check on both. Recovery works because the differential addition relation between
+    [k]Q, [k+1]Q and Q determines v of [k]Q linearly once u_Q, v_Q are known, using the curve symmetry
+    (u, v) -> (u, -v) resolved by v_Q. Ladder B-independence makes the twist check free: the same ladder
+    serves both E and E^t, and the small-field selector requires the twist to have order 4l'''' so the
+    analogue reproduces the Curve25519 cofactor pair (8, 4). fe_inv(0) = 0 under Fermat inversion gives
+    x(O) = 0, which is the RFC 7748 all-zero output already handled by x25519_checked. v_Q for u = 9 is
+    recomputed by the test from the curve equation with fe_pow_p58 and the root selected by the Edwards
+    sign, so no transcribed constant is trusted.'
+  novelty_status: unverified
+  citations:
+  - ref: Okeya and Sakurai 2001, y-coordinate recovery for the Montgomery ladder; Costello and Smith 2017
+      section on recovery
+    provenance: recalled
+    claim: Source of the 10M + 1S recovery sequence for Montgomery form.
+    verified_by: null
+  - ref: RFC 7748 sections 4.1 and 5.2
+    provenance: recalled
+    claim: Base u = 9, clamping, iterated test vectors.
+    verified_by: null
+  - ref: src/ecc/x25519.rs and src/ecc/ed25519.rs
+    provenance: internal
+    claim: Both modules exist with RFC vectors but have no test relating them.
+    verified_by: formula-engineer session 2026-11-09 read BRIEF section 1 excerpts
+  assumptions:
+  - The Edwards base y = 4/5 maps to u = 9 under u = (1 + y)/(1 - y); the test asserts this rather than
+    assuming it.
+  - The small analogue is selected by the harness lead's procedure.
+  predictions:
+  - metric: mismatches in assertion A
+    direction: equal
+    minimum_effect: exactly 0 over vectors plus 1000 random scalars
+  - metric: mismatches in assertion B
+    direction: equal
+    minimum_effect: exactly 0 over p' x max(8l', 4l'') cases
+  - metric: recovery failures on the analogue
+    direction: equal
+    minimum_effect: exactly the pairs with [k]Q = O, [k+1]Q = O or Q in E[2]
+  minimal_test:
+    design: New cfg(test) functions ladder_full in x25519.rs and a public scalar_mul accessor in ed25519.rs;
+      a Rust test for assertion A; a Python transliteration of the Rust ladder for assertion B, cross-checked
+      against the Rust ladder on 100 random (k, u) at p' before the exhaustive run.
+    controls:
+    - Flip the sign of s and assert the test fails on x while u still agrees, proving the sign is observed.
+    - Feed a twist u (quadratic non-residue of u^3 + A u^2 + u) at full size and assert the ladder still
+      agrees with the twist arithmetic on the analogue.
+    required_metrics:
+    - mismatch counts for A and B
+    - recovery failure count and classification
+    - op vector of recovery {M:10, S:1, c:1, a:7} from the counting harness
+  falsification_conditions:
+  - Any mismatch in A or B.
+  - Recovery failure set differs from the stated set.
+  - The analogue's Python ladder disagrees with the Rust ladder on the 100 cross-check cases, which invalidates
+    the run.
+  confounders:
+  - Non-canonical u inputs (u >= p) are only testable at full size; the analogue says nothing about bit-255
+    masking.
+  interpretation_limits:
+  - Agreement between two implementations certifies consistency of laws and maps, not timing and not security.
+  heuristic_assumptions:
+  - id: H1
+    statement: Exhaustive agreement at p' plus vector agreement at p certifies the law transfer, since
+      the formulas are p-independent polynomials.
+    rigorous_support: The laws are identities in the coordinate ring; the analogue only varies the residue
+      field.
+    validation_plan: Sage ideal memberships from the verifier lead.
+  target_complexity:
+    time_exponent: not applicable
+    memory_exponent: O(1)
+    best_known: 10M + 1S + 1c recovery, Okeya-Sakurai
+    hidden_overhead: one extra inversion when returning affine output
+    tradeoff_note: none
+  estimated_cost:
+    implementation: medium
+    compute: low
+  recommended_priority: medium
+  dominated_by: RFC 7748 and Okeya-Sakurai dominate the formulas; no repository test relates the two modules.
+  sota_delta: 'Repository delta: first cross-model consistency test, first twist and torsion coverage
+    of the ladder, full-point output from x-only code. Literature delta: zero.'
+  prior_art:
+    frontier_map: not_applicable
+    not_applicable_reason: Curve25519 formula-verification campaign; no ECDLP mechanism is claimed.
+    none_found_after:
+    - BRIEF section 2 scanned for birational, Montgomery to Edwards, recovery, twist
+    - BRIEF section 0 sign conventions read and made explicit here

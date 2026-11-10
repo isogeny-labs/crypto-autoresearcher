@@ -1,0 +1,103 @@
+idea:
+  id: IDEA-20261109-dff352
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECC-9d5d44
+  title: Edwards25519 doubling, 4M + 4S + 6a against 5M + 3S + 5a, with the decision rule M - S > a
+  class: measurement
+  claim: 'For doubling $(X:Y:Z)$ on $-x^2+y^2=1+dx^2y^2$ over $\mathbb F_p$, $p=2^{255}-19$, with output
+    $(X_3:Y_3:Z_3:T_3)=(EF:GH:FG:EH)$, two front halves produce identical field elements $E,F,G,H$. S-form
+    (the repository''s choice): $A=X^2$, $B=Y^2$, $C=2Z^2$, $H=A+B$, $E=(X+Y)^2-H$, $G=B-A$, $F=C-G$,
+    costing 4S + 6a. M-form: $A=X^2$, $B=Y^2$, $C=2Z^2$, $H=A+B$, $E=2(X\cdot Y)$, $G=B-A$, $F=C-G$, costing
+    1M + 3S + 5a. Totals are 4M + 4S + 6a against 5M + 3S + 5a with $T_3$, and 3M + 4S + 6a against 4M
+    + 3S + 5a without it. The S-form is cheaper exactly when $M-S>a$ in whatever cost unit is fixed. Prediction
+    for this repository: if fe_sq(x) is fe_mul(x, x), then $M=S$ and the M-form saves one reduced addition
+    per doubling and nothing else. With a dedicated schoolbook squaring on $n$ limbs ($n(n+1)/2$ word
+    products against $n^2$; 15 against 25 for $n=5$) the S-form wins by $n(n-1)/2$ word products per doubling.
+    The companion trade $2Z_1Z_2=(Z_1+Z_2)^2-Z_1^2-Z_2^2$ in addition is rejected: no formula in the pipeline
+    outputs $Z_1^2$, so it costs 2S + 3a against 1M + 1a.'
+  mechanism: 'Both forms compute $E=2XY$; the S-form uses $(X+Y)^2-X^2-Y^2=2XY$ and reuses $H=X^2+Y^2$,
+    which is already needed for $y_3=H/F$. The trade replaces one general product by one squaring plus
+    one extra subtraction. Its value is therefore set by two implementation ratios, $S/M$ and $a/M$, not
+    by the curve. The formulas are valid for all $\mathbb F_p$-points: $G=Z^2(1+dx^2y^2)$ and $F=Z^2(1-dx^2y^2)$
+    are nonzero because $-1$ is a square and $d$ is not. Torsion behaviour is identical in both forms
+    because $E,F,G,H$ are identical: $2(0,\pm1)=(0,1)$ and $2(\pm i,0)=(0,-1)$. Both are straight-line
+    and read no $T$. The repository''s present doubling additionally spends one fe_mul by the constant
+    2 and a negation, 4 fe_sq + 5 fe_mul + 7 add/sub in total; either form removes those.'
+  novelty_status: unverified
+  citations:
+  - ref: BRIEF section 1, src/ecc/ed25519.rs and src/ecc/x25519.rs excerpts
+    provenance: internal
+    claim: EdPoint::double uses (X+Y)^2 - A - B; the X25519 ladder writes squarings as fe_mul(&a, &a).
+    verified_by: idea-generator session 2026-11-09, read from the quoted code
+  - ref: Hisil, Wong, Carter, Dawson 2008, dedicated doubling
+    provenance: recalled
+    claim: Extended a = -1 doubling at 4M + 4S.
+    verified_by: none; recalled pointer, not support
+  assumptions:
+  - The body of fe_sq is not quoted in the BRIEF and must be read before interpreting counts.
+  - Field elements are canonical residues, so both forms can be compared coordinate-wise.
+  predictions:
+  - metric: coordinate-wise equality of the two forms
+    direction: different
+    minimum_effect: 0 mismatches
+  - metric: calls per doubling with T, S-form
+    direction: different
+    minimum_effect: exactly 4 fe_sq, 4 fe_mul, 6 add/sub
+  - metric: calls per doubling with T, M-form
+    direction: different
+    minimum_effect: exactly 3 fe_sq, 5 fe_mul, 5 add/sub
+  - metric: fe_mul calls made inside one fe_sq
+    direction: different
+    minimum_effect: reported as 0 or 1; it decides which branch of the rule applies
+  minimal_test:
+    design: Implement double_s and double_m beside the legacy double with cfg(test) call counters on the
+      field helpers. For 1000 fixed-seed points iB and the eight torsion points assert double_s and double_m
+      agree coordinate-wise and agree projectively with the legacy doubling. Record counter deltas per
+      call and whether fe_sq calls fe_mul.
+    controls:
+    - RFC 8032 section 7.1 vectors pass with either form selected.
+    - 'Power control: drop the factor 2 in the M-form E; equality must fail.'
+    - Legacy doubling counts reported as the baseline row.
+    required_metrics:
+    - fe_sq, fe_mul and add/sub calls per doubling for legacy, S-form, M-form
+    - fe_mul calls inside fe_sq
+    - coordinate mismatches
+  falsification_conditions:
+  - Any mismatch between the two forms or against the legacy doubling.
+  - Per-call counts differ from the predicted integers.
+  - A crash or timeout is infrastructure, not a result.
+  confounders:
+  - BigUint may special-case equal operands internally, making S differ from M invisibly to call counts.
+  - Each fe_add or fe_sub includes a reduction, so a is not negligible here.
+  interpretation_limits:
+  - The rule is symbolic; weights for M, S and a need a separate sealed measured-bound record.
+  - The word-product figures are combinatorial counts for schoolbook limbs, not measurements.
+  heuristic_assumptions:
+  - id: H1
+    statement: In this repository S equals M in cost.
+    rigorous_support: Only circumstantial; the ladder uses fe_mul for squarings and the fe_sq body is
+      not quoted.
+    validation_plan: Read fe_sq and count fe_mul calls inside it.
+  target_complexity:
+    time_exponent: not applicable; one field operation per doubling at stake
+    memory_exponent: unchanged
+    best_known: 4M + 4S extended doubling (HWCD 2008, recalled)
+    hidden_overhead: one extra subtraction in the S-form
+    tradeoff_note: S-form wins iff M - S > a; M-form wins iff M - S < a.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: low
+  dominated_by: Both forms are standard. The record adds the decision rule and the repository-specific
+    prediction; no BRIEF section 2 record files either.
+  sota_delta: 0 against HWCD 2008. In this repository at most one add/sub per doubling if S = M, and minus
+    1 fe_mul and minus 1 or 2 add/sub per doubling against the legacy code in either form.
+  prior_art:
+    frontier_map: not_applicable
+    not_applicable_reason: Curve25519 explicit-formula campaign; a field-operation trade inside one doubling,
+      not an ECDLP mechanism.
+    none_found_after:
+    - BRIEF section 2 index, all 30 lines, read for doubling, squaring trade, S/M ratio
+    - BRIEF section 1 code excerpts for an existing alternative doubling

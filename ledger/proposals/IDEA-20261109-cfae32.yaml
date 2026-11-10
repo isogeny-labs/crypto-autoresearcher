@@ -1,0 +1,94 @@
+idea:
+  id: IDEA-20261109-cfae32
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECC-9d5d44
+  title: Small-order test on Edwards25519 as the quartic U^4 = V^4, in two squarings
+  class: algorithm
+  claim: Formula-engineering claim, not an ECDLP claim. For a rational point $(X:Y:Z:T)$ on $-x^2+y^2=1+dx^2y^2$,
+    $p=2^{255}-19$, cofactor 8, put $U=Y+X$, $V=Y-X$. Then $[8]P=O$ iff $XY(X^2+Y^2)=0$ iff $U^4=V^4$.
+    The test is $U^2=V^2$ (order dividing 4) or $U^2=-V^2$ (order 8). Cost 2S + 3a and two comparisons,
+    0M, 0I, no use of $Z$, $T$ or $d$. It replaces a cofactor multiplication followed by an identity test,
+    which under the assumed baseline costs 12M + 12S + 3 fe_mul by 2 + 1I + 2M.
+  mechanism: The doubling in the repository gives $T(2P)=EH$ and $Z(2P)=FG$ with $E=2XY$, $H=-(X^2+Y^2)$,
+    $G=Y^2-X^2$, $F=G-2Z^2$. Doubling is complete because $d$ is a non-square, so $FG\ne0$. $E(\mathbb
+    F_p)[4]$ is $\{(0,\pm1),(\pm\sqrt{-1},0)\}$, which is the locus $T=0$. Hence $[8]P=O$ iff $[2]P\in
+    E[4]$ iff $EH=0$ iff $XY(X^2+Y^2)=0$. Finally $U^2-V^2=4XY$ and $U^2+V^2=2(X^2+Y^2)$, so $8XY(X^2+Y^2)=U^4-V^4$.
+    $U$ and $V$ are the eigen-coordinates of translation by the order-4 point, which maps $U\mapsto iU$,
+    $V\mapsto-iV$ and so preserves $U^4=V^4$.
+  novelty_status: adaptation
+  citations:
+  - ref: BRIEF section 1, src/ecc/ed25519.rs excerpt (double, is_identity, module note)
+    provenance: internal
+    claim: Verification rejects small-order points; is_identity converts to affine with one inversion.
+      The rejecting code is not in the excerpt.
+    verified_by: idea-generator session 2026-11-09 read the BRIEF excerpt
+  assumptions:
+  - Baseline is three doublings plus is_identity; the excerpt does not show it.
+  - $E(\mathbb F_p)[8]$ is cyclic of order 8; $d$ is a non-square.
+  proof_search_map:
+    not_applicable_reason: Explicit predicate with a finite check.
+    bottleneck: not_applicable
+    baseline_embedding:
+      parameter_slice: not_applicable
+      reproduction_check: not_applicable
+    observation_collision:
+      observable: not_applicable
+      distinct_preimage_search: not_applicable
+    constructive_transforms: []
+    quantifier_order: not_applicable
+    method_ceiling:
+      strongest_certifiable_claim: not_applicable
+      nearby_object_control: not_applicable
+    proof_obligations: []
+  predictions:
+  - metric: agreement of the predicate with [8]P = O (A10)
+    direction: different
+    minimum_effect: agreement on all 8 torsion points and all sampled points
+  - metric: field operations per test
+    direction: lower
+    minimum_effect: 2S against at least 12M + 12S + 1I
+  minimal_test:
+    design: Assertion A10 of scripts/ed25519_law_ansatz.py builds an order-8 point as [l]Q, checks its
+      eight multiples, random points, and points of the form [8]Q + torsion. Then a Rust unit test against
+      the existing check.
+    controls:
+    - Existing cofactor-multiplication check on the same encodings.
+    - Points of order l, 2l, 4l, 8l must be reported as not small.
+    required_metrics:
+    - number of points tested and disagreements
+    - fe_sq, fe_mul and fe_inv calls per test in both arms
+  falsification_conditions:
+  - Any rational point where the predicate disagrees with [8]P = O.
+  - The current verify path already costs 2S or less.
+  confounders:
+  - Decoding accepts non-canonical encodings; test after decode.
+  interpretation_limits:
+  - Does not test membership in the prime-order subgroup.
+  - Says nothing about the quadratic twist or X25519 inputs.
+  heuristic_assumptions:
+  - id: H1
+    statement: None; the claim is an identity plus completeness of doubling.
+    rigorous_support: Hand derivation in this session.
+    validation_plan: Assertion A10.
+  target_complexity:
+    time_exponent: not applicable, constant-factor formula cost
+    memory_exponent: not applicable
+    best_known: Cofactor multiplication then identity test
+    hidden_overhead: None claimed.
+    tradeoff_note: None.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  dominated_by: Encoding blacklists reach the same decision with table lookups on canonical bytes; this
+    is the algebraic form for projective points.
+  sota_delta: Assumed baseline 14M + 12S + 3 small multiplies + 1I becomes 2S.
+  prior_art:
+    frontier_map: not_applicable
+    not_applicable_reason: Curve25519 explicit-formula campaign; no ECDLP mechanism is claimed.
+    none_found_after:
+    - BRIEF section 2 ledger index, terms small order, cofactor, 8-torsion
+    - BRIEF section 2 summaries of IDEA-20260905-05648a and IDEA-20260829-d052e6 (truncated)
+    - BRIEF section 1 excerpt of ed25519.rs

@@ -7,6 +7,7 @@ does not import the producer's support-span or genus implementation.
 from check_quotient_certificate import (Field, polynomial_mul,
                                         polynomial_remainder, square_relations,
                                         trim)
+from check_structure_certificate import transform
 
 
 IDENTITY = ((1,), False)
@@ -56,18 +57,35 @@ def rank(cardinality):
     return cardinality.bit_length() - 1
 
 
-def assess(field_record, forms):
-    """Return independent geometric components and character-sum genus."""
+def assess(field_record, forms, *, twisted_frobenius_matrix=None):
+    """Return independent components and character-sum genus.
+
+    C6 applies one common K-projective coordinate change to every source
+    conjugate. Its transformed list has a twisted semilinear action. The
+    supplied exact matrix must carry every successive form; absent it, the
+    original direct coefficient-Frobenius guard remains mandatory.
+    """
     field = Field(field_record)
     if not isinstance(forms, list) or len(forms) != field.n or field.n not in (3, 5, 7):
         raise ValueError("degree-n conjugate quartics required")
+    if twisted_frobenius_matrix is not None:
+        matrix = twisted_frobenius_matrix
+        if (type(matrix) is not list or len(matrix) != 4
+                or any(type(value) is not int or not 0 <= value < field.size
+                       for value in matrix)
+                or field.mul(matrix[0], matrix[3]) == field.mul(matrix[1], matrix[2])):
+            raise ValueError("twisted Frobenius matrix invalid")
     # Independent certificate checker validates coefficient shape and squarefreeness.
     checker_relations = square_relations(field, forms)
     supports = []
     bits = []
     for index, form in enumerate(forms):
-        if forms[(index + 1) % field.n] != [field.power(value, field.p) for value in form]:
-            raise ValueError("nonconjugate quartic family")
+        image = [field.power(value, field.p) for value in form]
+        expected = (forms[(index + 1) % field.n]
+                    if twisted_frobenius_matrix is None else
+                    transform(field, forms[(index + 1) % field.n], matrix))
+        if image != expected:
+            raise ValueError("nonconjugate or invalid twisted quartic family")
         finite = trim(form)
         supports.append((monic(field, finite), len(finite) == 4))
         bits.append(field.power(finite[-1], (field.size - 1) // 2) != 1)

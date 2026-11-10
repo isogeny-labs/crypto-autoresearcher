@@ -1,0 +1,108 @@
+idea:
+  id: IDEA-20261109-55cbd8
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECC-3fae8b
+  title: 'The Montgomery ladder is the Edwards addition law on the y-line: y-only Edwards differential
+    addition at 5M + 4S + 1c per step, identity output y = 1 without the X25519 zero convention, and the
+    Kummer obstruction to transporting a differential addition into a full addition'
+  class: representation
+  claim: 'Under the linear change (X_M : Z_M) = (Z + Y : Z - Y), the RFC 7748 ladder step becomes an Edwards
+    (Y:Z) ladder step with the same count 5M + 4S + 1c, whose differential addition is y_5 = (2 y_2 y_3
+    - y_1 (y_2^2 + y_3^2)) / ((y_2^2 + y_3^2) - 2 y_1 y_2 y_3), derived from the Edwards addition law
+    by eliminating x_2 x_3 between y(P+Q) and y(P-Q). Its exceptional set is exactly the Montgomery one
+    (difference y_1 = -1 produces (0:0) states; difference y_1 = 1 is degenerate), but whenever the Montgomery
+    ladder outputs a clean (X:0), X != 0, the y-line outputs (X:X) = the true identity y = 1, with no
+    0^{p-2} convention. No coordinate change on the Kummer line can turn a differential addition into
+    the full Edwards addition.'
+  mechanism: 'Substitute X_M = Z + Y, Z_M = Z - Y, so X_M + Z_M = 2Z and X_M - Z_M = 2Y; the RFC step
+    gives, with u_1 = (1+y_1)/(1-y_1), S = Y_2 Z_3 + Z_2 Y_3, D = Y_2 Z_3 - Z_2 Y_3, Y_5 = S^2 - u_1 D^2,
+    Z_5 = S^2 + u_1 D^2 (3M + 2S) and doubling K = Y^2 Z^2, L = (Z^2 - Y^2)(Y^2 + a24 (Z^2 - Y^2)), Y_4
+    = K - L, Z_4 = K + L (2M + 2S + 1c), a24 = 121665; the inverse change is (Y:Z) = (X_M - Z_M : X_M
+    + Z_M), 4 additions per step in total. Group-law derivation: on a = -1, with m = x_2 x_3, n = y_2
+    y_3, y(P +- Q) = (n +- m)/(1 -+ d m n); sum = 2n(1 + d m^2)/(1 - d^2 m^2 n^2), product = (n^2 - m^2)/(1
+    - d^2 m^2 n^2), and m^2 = (y_2^2 - 1)(y_3^2 - 1)/((1 + d y_2^2)(1 + d y_3^2)); so y(P+Q) is the second
+    root of a quadratic with coefficients in F_p(y_2, y_3) whose first root is y_1, and the closed form
+    above is that root. Checks: Q = O gives y_5 = y_2; Q = -P gives y_5 = 1 when y_2 != 0 and y_1 != 1;
+    P = Q gives 0/0, which is why the ladder doubles instead. Identity output: Montgomery (X:0) <-> (X:X),
+    y = 1; Montgomery (0:0) <-> (0:0), still undefined, and this arises only from the difference u_1 =
+    0, i.e. y_1 = -1. Kummer obstruction: kappa: E -> E/<-1> = P^1; both (P,Q) and (P,-Q) have the same
+    kappa-images while kappa(P+Q) != kappa(P-Q) generically, so no map P^1 x P^1 -> P^1 computes kappa(P+Q);
+    an isomorphism of P^1 preserves fibres, so no coordinate change helps; the missing datum is kappa(P-Q)
+    or one x. Symmetry: the involution x -> -x whose quotient is the y-line; the identity (0,1) and (0,-1)
+    are both fixed and remain distinguishable on the y-line, unlike on the u-line where (0,0) and infinity
+    share the conventional output 0.'
+  novelty_status: unverified
+  citations:
+  - ref: Castryck-Galbraith-Farashahi, ePrint 2008/218, mixed Edwards-Montgomery representation
+    provenance: recalled
+    claim: y-only Edwards differential addition exists.
+    verified_by: null
+  - ref: Bernstein 2006, Curve25519, Theorem 2.1; Bernstein-Lange 2017, Montgomery curves and the Montgomery
+      ladder
+    provenance: recalled
+    claim: Ladder correctness for all inputs with the projective-zero convention.
+    verified_by: null
+  - ref: src/ecc/x25519.rs
+    provenance: internal
+    claim: The repository ladder step and its final x2/z2 division.
+    verified_by: brief excerpt read in this session
+  assumptions:
+  - The u-line and y-line are related by u = (1+y)/(1-y), an isomorphism of P^1 over F_p.
+  - a24 = (A+2)/4 = 121665 as in the repository.
+  predictions:
+  - metric: disagreement between y-line ladder and RFC ladder (through y = (u-1)/(u+1)) on 1000 random
+      inputs and 255-bit random scalars
+    direction: equal
+    minimum_effect: zero
+  - metric: y-line outputs on the four order-4 and order-8 inputs with clamped scalars
+    direction: equal
+    minimum_effect: exactly y = 1 with Z_5 != 0
+  minimal_test:
+    design: 'tests/y_ladder.rs: implement ladder_y with the formulas above; compare against ladder on
+      random inputs; run the eight small-order inputs with clamped scalars and record whether (Y:Z) is
+      (X:X) or (0:0); confirm (0:0) only for y_1 = -1.'
+    controls:
+    - 'Null object: swap the roles of K and L in doubling; random comparisons must fail.'
+    - The repository ladder as the reference.
+    required_metrics:
+    - mismatch count
+    - count of (0:0) outputs by input
+    - M, S, c per step
+  falsification_conditions:
+  - Any mismatch on a random input.
+  - A (0:0) output for an input with y_1 != -1.
+  - A per-step count above 5M + 4S + 1c.
+  confounders:
+  - Choosing u_1 affine already costs the input inversion that y_1 affine also costs; the comparison is
+    at equal normalisation.
+  interpretation_limits:
+  - Same operation count as X25519; the gain is the identity output and a derivation, not speed.
+  - The Kummer obstruction is a statement about the quotient map, not about any specific formula family's
+    constants.
+  heuristic_assumptions:
+  - id: H1
+    statement: Clean (X:0) outputs occur for all order-4 and order-8 inputs under clamped scalars.
+    rigorous_support: Hand trace for u = 1 given in the lead; order-8 by the script.
+    validation_plan: Exhaustive over the eight points.
+  target_complexity:
+    time_exponent: not applicable
+    memory_exponent: O(1)
+    best_known: RFC 7748 ladder 5M + 4S + 1c per step
+    hidden_overhead: none
+    tradeoff_note: equal count, strictly larger set of inputs with a canonical identity output
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  dominated_by: X25519 on count; not dominated on identity handling.
+  sota_delta: 'Count delta zero; completeness delta: identity returned as y = 1 on every input except
+    the 2-torsion point, where both models are undefined.'
+  prior_art:
+    frontier_map: not_applicable
+    not_applicable_reason: curve25519 explicit-formula campaign, not an ECDLP mechanism
+    none_found_after:
+    - BRIEF section 2 ledger index searched for y-only, Kummer, differential addition, ladder
+    - IDEA-20260811-d7856a and IDEA-20260815-b751cf excerpts read; they discuss models and summation polynomials,
+      not the y-line law

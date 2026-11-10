@@ -1,0 +1,109 @@
+idea:
+  id: IDEA-20261109-506904
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECC-9d5d44
+  title: Complete degree-2 lift from projective Curve25519 points to extended Edwards25519 coordinates
+    with base locus on the non-rational 2-torsion
+  class: representation
+  claim: 'Formula engineering, not an ECDLP claim. Let $M: V^2W = U^3 + AU^2W + UW^2$ with $A = 486662$,
+    $\gamma^2 = -486664$, $d = -121665/121666$, and $Q = U^2 + AUW + W^2$. Define $\Lambda(U:V:W) = (X:Y:Z:T)
+    = (\gamma V(U+W) : V^2 - Q : V^2 + Q : \gamma V(U-W))$. C1. $-X^2 + Y^2 = Z^2 + dT^2$ holds identically
+    in $U,V,W$, and $XY - ZT = 2\gamma V(V^2W - UQ)$ vanishes on $M$. C2. Where both sides are defined,
+    $X/Z = \gamma u/v$ and $Y/Z = (u-1)/(u+1)$, the RFC 7748 map. C3. $\Lambda(0:1:0) = (0:1:1:0)$ and
+    $\Lambda(0:0:1) = (0:-1:1:0)$. C4. The four forms vanish together only where $V = 0$ and $Q = 0$.
+    $Q$ has discriminant $A^2 - 4 = -d(A+2)^2$, a non-square, so $\Lambda$ is defined at every point of
+    $M(\mathbb{F}_p)$. C5. Cost $3M + 2S + 2c + 5a$ for projective input and $3M + 1S + 1c + 6a$ for affine
+    input, with no inversion and no branch.'
+  mechanism: 'Clearing denominators in the affine map gives $(\gamma U(U+W) : V(U-W) : V(U+W) : \gamma
+    U(U-W))$, which is zero at $O$ and at $(0,0)$. Multiplying by the function $v/u$, whose divisor is
+    $(T'') + (T'''') - (O) - ((0,0))$ with $T'', T''''$ the conjugate points $V = Q = 0$, moves the base
+    locus onto that pair; $v^2 = uq$ turns the cubics into the quadrics $V^2 \pm Q$. Bookkeeping: quadrics
+    cut degree 6 on $M$, the extended model has hyperplane degree 4, so a quadratic chart has a base divisor
+    of degree 2 with sum $(0,0)$, and $\{T'', T''''\}$ is such a divisor without a rational point. Schedule:
+    $t_1 = U+W$, $t_2 = U-W$, $S_1 = V^2$, $P = UW$, $Q = t_1^2 + 486660P$, $V'' = \gamma V$, $X = V''t_1$,
+    $T = V''t_2$, $Y = S_1 - Q$, $Z = S_1 + Q$. Affine input uses $Q = u(u+A) + 1$. Symmetry: $v \mapsto
+    -v$ acts as $(X,T) \mapsto (-X,-T)$; translation by $(0,0)$, $(U:V:W) \mapsto (UW : -VW : U^2)$, acts
+    as $(X,Y) \mapsto (-X,-Y)$.'
+  novelty_status: unverified
+  citations:
+  - ref: BRIEF section 0, curve data
+    provenance: internal
+    claim: States a = -1, d = -121665/121666 non-square, -1 square, and the map with sqrt(-486664).
+    verified_by: idea-generator session 2026-11-09 read the BRIEF text
+  - ref: BRIEF section 1, src/ecc/ed25519.rs excerpt
+    provenance: internal
+    claim: EdPoint uses extended (X,Y,Z,T) with the unified a = -1 addition; no Montgomery conversion
+      exists.
+    verified_by: idea-generator session 2026-11-09 read the excerpt
+  - ref: RFC 7748 section 4.1
+    provenance: recalled
+    claim: Affine birational map between curve25519 and edwards25519.
+    verified_by: null
+  assumptions:
+  - The sign of $\gamma$ is fixed by $x_Bv_B = 9\gamma$ with $x_B$ the even root; the opposite sign negates
+    $X$ and $T$.
+  - Hypotheses a = -1, d non-square, B = 1, cofactor 8, as in the BRIEF.
+  predictions:
+  - metric: points of Curve25519 or the p = 13 toy where the four forms all vanish
+    direction: lower
+    minimum_effect: exactly 0
+  - metric: mismatches between the lift and the affine map over the sample
+    direction: lower
+    minimum_effect: exactly 0
+  - metric: all-zero outputs on the planted control p = 17, A = 6
+    direction: higher
+    minimum_effect: exactly 2, at (2,0) and (9,0)
+  minimal_test:
+    design: 'Proposed scripts/sage/c25519_lift_complete.sage. (i) Symbolic check of C1 in $\mathbb{Z}[A,\gamma,d][U,V,W]$
+      modulo $\gamma^2 + A + 2$ and $d(A+2) + A - 2$. (ii) Exhaustive at p = 13, A = 7, gamma = 2, d =
+      11: every point including O and (0,0) lifts onto the Edwards model, agrees with the affine map,
+      and the lift of P+Q equals the unified add of the lifts for all pairs. (iii) Curve25519: 10000 random
+      points, the 8 torsion points and u = 9. (iv) Rust unit test in src/ecc/ed25519.rs: the lift of (9,
+      v_B) is projectively the base point.'
+    controls:
+    - Planted failure at p = 17, A = 6, gamma = 3, where A^2 - 4 = 15 is a square; the lift must return
+      (0:0:0:0) at (2,0) and (9,0) only.
+    - The denominator-cleared chart must return all zeros at O and (0,0) on Curve25519.
+    required_metrics:
+    - all-zero output count per curve
+    - mismatch count against the affine map
+    - homomorphism mismatch count on the toy
+    - instrumented fe_mul and fe_sq calls per lift
+  falsification_conditions:
+  - A rational point of Curve25519 where all four coordinates vanish.
+  - Any mismatch with the affine map or with the group law.
+  - A measured call count above 3M + 2S + 2c for projective input.
+  - A crash or timeout is infrastructure, not a falsification.
+  confounders:
+  - $\gamma$ is a full-size constant, so its multiply costs a general M in this BigUint code.
+  interpretation_limits:
+  - No claim for twist points, where v is not in the base field, and no speed claim for X25519 itself.
+  heuristic_assumptions:
+  - id: H1
+    statement: None. All claims are polynomial identities plus one squareness fact.
+    rigorous_support: Hand derivation in the filing session; one hand evaluation at p = 13.
+    validation_plan: The symbolic and exhaustive checks above.
+  target_complexity:
+    time_exponent: not applicable, fixed 3M + 2S + 2c per lift
+    memory_exponent: not applicable, O(1) field elements
+    best_known: Affine RFC 7748 map at 1I + 5M + 1c, undefined at O and (0,0).
+    hidden_overhead: one multiply by a full-size constant
+    tradeoff_note: Output is projective; no normalisation is performed.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: high
+  dominated_by: Nothing in BRIEF sections 1 or 2. The affine map is preferable only when an inversion
+    is already paid and the input is known not to be O or (0,0).
+  sota_delta: 'Against the affine map: removes 1I and 2M and gains the two missing points. Against the
+    denominator-cleared chart (4M + 1c, two exceptional points): 3M + 2S + 2c with zero exceptional points.'
+  prior_art:
+    frontier_map: not_applicable
+    not_applicable_reason: Campaign "Curve25519 explicit formulas and coordinate systems" is formula engineering;
+      no ECDLP frontier row is touched.
+    none_found_after:
+    - BRIEF section 2, all 30 ledger entries (truncated abstracts), for Montgomery-to-Edwards lifts or
+      completeness of charts
+    - BRIEF section 1 excerpts of x25519.rs and ed25519.rs

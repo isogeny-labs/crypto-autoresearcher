@@ -114,7 +114,7 @@ except ImportError:  # imported as tools.<name>, the repository root importable
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 VERDICTS = {"holds", "breaks", "inconclusive"}
-_TASK_ID = re.compile(r"TASK-[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*\Z")
+_TASK_ID = re.compile(r"(?:TASK-[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*|T-[1-9][0-9]*)\Z")
 _NATIVE_TASK_ID = re.compile(r"TASK-\d{8}-(?:[0-9a-f]{6}|\d{3})\Z")
 _OWN_SEVEN = {"independent_enumerator.py", "predicted-counts.json", "report.md",
               "diagram.svg", "report.pdf", "visual-inspection.json", "read-attestation.yaml"}
@@ -148,7 +148,11 @@ def _replacement_allowlist(raw, task):
 
 
 def _valid_task(value, *, native=False):
-    """Legacy task labels remain readable; new phase directives use real IDs."""
+    """Review labels may be legacy TASK IDs or Conductor T refs.
+
+    Native phase directives still require dated TASK IDs; accepting a
+    Conductor ref for a review owner does not relax that separate contract.
+    """
     pattern = _NATIVE_TASK_ID if native else _TASK_ID
     return isinstance(value, str) and bool(pattern.fullmatch(value))
 

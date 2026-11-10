@@ -1,0 +1,103 @@
+# WRITE-ONCE goal checkpoint shard (tools/shard_goal.py layout). One checkpoint
+# per file. Never edit or reorder this file. A correction is a new record.
+# GOAL-PEXT-4a1d6b, BATCH-21339c admission checkpoint written with
+# DEC-20261106-4f6860. It records the verified executor route and the recheck of
+# the frozen bindings and refs-aware ownership. It approves and runs nothing.
+batch_checkpoint:
+  batch_id: BATCH-21339c
+  checkpoint_id: BATCH-21339c-DEC-20261106-4f6860
+  goal_id: GOAL-PEXT-4a1d6b
+  kind: executor_admission_verified
+  recorded_at: '2026-11-06'
+  recorded_by: coordinator
+  decision_id: DEC-20261106-4f6860
+  decision_ids:
+  - DEC-20261106-4f6860
+  status: active
+  goal_status_after: active
+  question_ids:
+  - RQ-PEXT-7c3e91
+  records_opened:
+  - DEC-20261106-4f6860
+  completion_criteria_discharged: none
+  observed_main: 311a5de2c0
+  open_lanes:
+  - BATCH-21339c
+  - BATCH-a4886a
+  lane_capacity:
+    max_concurrent: 2
+    open: 2
+    third_lane_opened: false
+  admission_recheck:
+    executor_admission_verified: true
+    requested_policy: executor-implementation
+    fallback_allowed: false
+    degraded_allowed: false
+    resolved_backend: openai
+    resolved_model_id: gpt-5.6-terra
+    model_tier: core
+    required_model_tier: director
+    reasoning_effort: medium
+    adapter_version: '1.2.0'
+    config_digest: sha256:4ba20de58738333b2a9252214edd9f16
+    verified_model: true
+    fallback_used: false
+    degraded_requirements: []
+    note: >-
+      openai-gpt6 and openai-gpt61 still resolve model:null for this policy; the plain
+      openai binding is the working route. Explicit backend selection is not a fallback
+      substitution, and the adapter reports none.
+    frozen_bindings_checked:
+      run_py_sha256: 10ed4714870dba07ea99934f6241b014fa4a4df83520a1265cc33bfd72d76939
+      trial_plan_sha256: 81b885ae3f1bcc479ffa948db8dd888b128eeb6d11bda0a861e5c5f1e233489f
+      dispatch_queue_sha256: 2bdce9e2cb517b7093336c73f7e983e4dfd42013b198340b78b4372f4186579a
+      input_fixtures: 4 checked, 4 match, 0 missing
+      mismatches: 0
+    refs_aware_ownership:
+      command: 'research_dispatch.py --ready-only --claims refs'
+      result: 'TASK-20261024-672126 ready, claim=null'
+    selector_execution_state: ready
+    off_main_runs: []
+  ci_debt:
+    status: outstanding_unreassessed
+    scope: >-
+      Inherited whole-ledger validation errors stay disclosed under their own owning scope.
+      They are not PEXT evidence and no all-green CI is claimed here.
+  hypotheses:
+    H-PEXT-d536a1: approved (pre-run, DEC-20261024-992998); no result exists
+    H-PEXT-ad0073: approved (pre-run, DEC-20261031-dcfdee); no result exists
+  impediments_changed: none
+  impediments_note: >-
+    IMP-PEXT-CI-PUBLICATION-20261026 is left in place and is not rewritten. Its blocking
+    clause names the Executor handoff and that clause is met by this checkpoint; its
+    separate CI-debt disclosure duty continues and is not a dispatch blocker.
+  executor_tasks_ready:
+  - id: TASK-20261024-672126
+    lane: BATCH-21339c
+    experiment_id: EXP-PEXT-212d5c
+    rank: 1
+  - id: TASK-20261031-73799d
+    lane: BATCH-a4886a
+    experiment_id: EXP-PEXT-0b2c75
+    rank: 2
+  next_action: >-
+    Executor, in separate /run sessions: claim lane BATCH-21339c and run
+    TASK-20261024-672126 (/run EXP-PEXT-212d5c) on the verified route (backend openai,
+    gpt-5.6-terra, effort medium, no fallback, no degradation) on a Lean-capable host;
+    after or apart from it, claim BATCH-a4886a and run TASK-20261031-73799d
+    (/run EXP-PEXT-0b2c75), then its archive TASK-20261031-4fa3ea and /review-evidence.
+    No scientific execution from /coordinate.
+  scientific_trials_launched: 0
+  scientific_status_change: none
+  scope_preserved: >-
+    Only the mutable goal head, this new checkpoint shard and DEC-20261106-4f6860 are
+    written. No queue, lane, task, trial plan, implementation, approval or hypothesis
+    record changed.
+  inference:
+    requested_policy: coordinator-orchestration-code
+    reasoning_effort: high
+    resolved_backend: null
+    resolved_model_id: null
+    note: >-
+      The OpenCode runtime did not resolve an adapter model for this session; no resolved
+      model is asserted.

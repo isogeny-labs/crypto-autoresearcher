@@ -1,0 +1,125 @@
+# DEC-20261106-1a1bec: Coordinator ratification of the BATCH-4c1c67 follow-up
+# dispositions (F1, F2, F3, F5, O1, O3). It changes no research status, no joint
+# verdict and no evidence record; it supplies the Coordinator record the batch's
+# own decision.md and papers/first-fall-lean/README.md already rely on.
+coordinator_decision:
+  id: DEC-20261106-1a1bec
+  id_provenance: >-
+    Allocated with tools/allocate_id.py --next coordinator_decision --date 20261106 and
+    confirmed free with --check (well-formed, 0 occurrences across 48,205 paths).
+  recorded_at: '2026-11-06'
+  decided_at: '2026-11-06'
+  decided_by: coordinator
+  recorded_by: coordinator
+  archive_task: TASK-20261106-ced0bb
+  session_provenance: >-
+    Coordinator session in an OpenCode runtime, branch coord/portfolio-20261106, after
+    merging origin/main 0976c748ce. Requested role policy coordinator-orchestration-code;
+    the runtime resolved no adapter model id, so none is asserted. Read the bus message
+    MSG-20261102-03a39f, coordination/formal-reviews/BATCH-4c1c67/decision.md, the J3
+    review report, the corrected review plan, FakeExact.lean, paper.tex and the batch
+    README, and checked the two cited hosted runs.
+  subject: >-
+    Ratify the dispositions of the six follow-ups the three independent reviews left for
+    the Coordinator; leave the O3 residual open.
+  decision: synthesize
+  target_ids:
+  - BATCH-4c1c67
+  - TASK-20261101-cd72e8
+  - KN-FIND-936151
+  - CORR-20261101-4186ae
+  - CORR-20261102-dfef8b
+
+  context: >-
+    J1, J2's rewrap and J3 all report holds for every joint they own, and
+    tools/check_review_independence.py passed on main. The producer session then closed
+    the follow-ups in coordination/formal-reviews/BATCH-4c1c67/decision.md on the owner's
+    instruction. J3's bus message of 2026-11-02 still lists F2, F3 and F5 as decisions
+    owed, and the paper's provenance table and README describe the exact-degree theorem
+    as "adopted by Coordinator decision" with no DEC-* record behind that claim. This
+    decision supplies that record after checking the artifacts, and changes nothing else.
+
+  verified:
+    F2_exact_fake_first_fall:
+      claim: J3's control C4_fake_side and the exact-degree theorem are adopted.
+      artifacts:
+      - formal/CryptoResearch/Nagao/FakeExact.lean (exact_first_fall_degrees)
+      - commit e1109e222a518cccaa6d94a34a7c86b797b1bb51 (formal: adopt J3's control for F2)
+      found: present on main
+    F1_citation:
+      claim: paper cites per-witness theorems for the degree equalities and witness B.
+      artifacts:
+      - papers/first-fall-lean/paper.tex lines 240-242 and 265 (lemma4_inside_false_A/_B, lemma4_outside_false_A/_B, exact_first_fall_degrees)
+      found: present
+    F3_definition_reading:
+      claim: Nagao Definition 6 bounds reduced products, fake cofactors unrestricted; the list model's narrowing is harmless for both witnesses.
+      artifacts:
+      - coordination/formal-reviews/BATCH-4c1c67/decision.md, item F3
+      note: >-
+        This is a reading of the source adopted by the batch; the open question of an
+        independent human check of Proposition 6 and the Lemma 6 reading stays open and is
+        not asserted settled here.
+    F5_build_environment:
+      claim: J3's pruned 8.9 GB build is supplementary; the hosted workspace gate runs a plain lake build.
+      artifact: GitHub Actions run 41372240324, conclusion success (104 targets), head e1109e222a
+      found: confirmed success
+    O1_proves_too_much_control:
+      claim: the >= control was corrected additively.
+      artifacts:
+      - ledger/corrections/CORR-20261101-4186ae.yaml
+      - ledger/corrections/CORR-20261102-dfef8b.yaml
+      found: present
+    O3_live_fetch:
+      claim: eprint 2015/984 landing page reached; vendored PDF is the only posted version; byte-for-byte fetch still owed.
+      status: residual_open
+      not_asserted: a byte-for-byte comparison of the vendored PDF against a live fetch
+
+  reservations:
+  - >-
+    The dispositions were written by the producer session, not by the Coordinator. This
+    ratification checks that the named artifacts exist and that no verdict or status is
+    being upgraded: the claim stays at the scope decision.md records, which excludes the
+    transcription prerequisites and the literal >= reading beyond CORR-20261101-4186ae.
+  - >-
+    O3's live fetch and the independent human check of Proposition 6 / the Lemma 6
+    reading remain open. This decision does not close them.
+
+  status_effect: none
+  verdict_effect: none
+  knowledge_promotion:
+    promoted: []
+    not_warranted: >-
+      No new finding is created; the underlying KN-FIND-936151 and the batch records stay
+      as written. This is a procedural ratification of follow-up dispositions.
+
+  next_actions:
+  - id: NA-1
+    rank: 1
+    owner: top-level session
+    text: >-
+      Archive this decision, push, open PR, enable auto-merge; then reply on the bus to
+      MSG-20261102-03a39f naming this decision and ack it.
+  - id: NA-2
+    rank: 2
+    owner: coordinator, when a source-restricted host is available
+    text: >-
+      Close O3 with a byte-for-byte comparison of the vendored 2015/984 PDF against a
+      live eprint fetch; record it additively.
+
+  limitations:
+  - 'No Lean or paper byte was rebuilt by this session; the checks are presence and run-conclusion checks on named artifacts.'
+  - 'The Proposition 6 / Lemma 6 human reading is not performed here.'
+
+  evidence_refs:
+  - coordination/bus/messages/MSG-20261102-03a39f.yaml
+  - coordination/formal-reviews/BATCH-4c1c67/decision.md
+  - coordination/formal-reviews/BATCH-4c1c67/reviews/TASK-20261101-cd72e8/review.md
+  - coordination/formal-reviews/BATCH-4c1c67/review-plan-addendum-blind-from.yaml
+  - formal/CryptoResearch/Nagao/FakeExact.lean
+  - papers/first-fall-lean/paper.tex
+  - papers/first-fall-lean/README.md
+  - ledger/corrections/CORR-20261101-4186ae.yaml
+  - ledger/corrections/CORR-20261102-dfef8b.yaml
+  - https://github.com/isogeny-labs/crypto-autoresearcher/actions/runs/41372240324
+
+  conclusions: []

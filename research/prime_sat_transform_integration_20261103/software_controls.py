@@ -60,12 +60,15 @@ class Controls:
         if time.monotonic() >= self.deadline:
             raise TimeoutError('fixed software attempt deadline')
 
-    def rejects(self, function, label, *, expected=(ValueError, AssertionError), layer=None):
+    def rejects(self, function, label, *, expected=(ValueError, AssertionError), layer=None,
+                expected_message=None):
         self.remaining()
         try:
             function()
         except expected as error:
-            self.check(True, label, rejection={'type': type(error).__name__, 'message': str(error)}, layer=layer)
+            accepted = (expected_message is None or
+                        (type(error) in expected and str(error) == expected_message))
+            self.check(accepted, label, rejection={'type': type(error).__name__, 'message': str(error)}, layer=layer)
             return error
         self.check(False, label, layer=layer)
 
@@ -271,11 +274,15 @@ def mutation_controls(ctx, contract):
     proof = {'depth':0,'prefix':0,'clause':[],'certificate':[{'0':1}]}
     literal = {'status':'complete','models':[],'learned':[proof]}
     ctx.check(adapter.verify_transcript(5,1,1,[{'0':1}],[],literal,aux_bound=None)['valid'], 'literal certificate control')
-    for label, mutate in (('multiplier', lambda a:a['learned'][0].update(certificate=[{'0':2}])),
-                          ('projection blocker', lambda a:a['learned'][0].update(clause=[1]))):
+    for label, mutate, message, layer in (
+        ('multiplier', lambda a:a['learned'][0].update(certificate=[{'0':2}]),
+         'certificate identity is not one', 'final_adapter_multiplier'),
+        ('projection blocker', lambda a:a['learned'][0].update(clause=[1]),
+         'prefix clause does not match its cylinder', 'final_adapter_projection')):
         bad = deepcopy(literal); mutate(bad)
-        ctx.check(not adapter.verify_transcript(5,1,1,[{'0':1}],[],bad,aux_bound=None)['valid'],
-                  'final adapter rejects '+label)
+        ctx.rejects(lambda bad=bad: adapter.verify_transcript(5,1,1,[{'0':1}],[],bad,aux_bound=None),
+                    'final adapter rejects '+label, expected=(ValueError,),
+                    expected_message=message, layer=layer)
     return d, doc, assignment, enc['bits']
 
 

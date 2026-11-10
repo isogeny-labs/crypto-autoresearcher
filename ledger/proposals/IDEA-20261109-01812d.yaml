@@ -1,0 +1,66 @@
+idea:
+  id: IDEA-20261109-01812d
+  question_id: RQ-ISO-3325c3
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  class: algorithm
+  novelty_status: adaptation
+  title: 'What an endomorphism-ring computation reveals, in constants: HNF of O1*O2 plus Minkowski reduction
+    gives a sqrt(p)-norm connecting ideal; one dimension-2 gluing gives the smooth-degree isogeny without
+    KLPT'
+  assumption_attacked: Tightness of the EndRing => isogeny-path direction (parameter/cost audit); no assumption
+    is weakened.
+  mechanism: Given Z-bases of End(E1) = O1 and End(E2) = O2 in B_{p,inf}, the connecting ideal is the
+    Z-module O1*O2 (scaled to be integral), computed by 4x4 Hermite normal form in O(log^3 p) bit operations.
+    Minkowski-reduce the rank-4 lattice under the reduced-norm form to obtain J ~ I with nrd(J) ~ c*sqrt(p).
+    Then, instead of KLPT, find J1, J2 ~ I with coprime norms N1 + N2 = 2^f (density per H-SSIQ-dfee7e)
+    and glue via the dimension-2 Kani step of H-ALISO-017. Clears H-SSIQ-dfee7e (retry density), H-ALISO-017
+    (gluing), H-ALISO-016 (choice of representative in the class), H-SSIQ-d724f2 (standard order as O1).
+  object_computed: HNF basis of O1*O2; Minkowski-reduced basis; pair (N1, N2) and the (2^f, 2^f) kernel
+    on E_{J1} x E_{J2}.
+  cost_model:
+    linear_algebra: O(log^3 p) bit ops for HNF and rank-4 Minkowski reduction
+    gluing: f ~ log_2 p steps of (2,2)-isogenies, ~1e3 F_{p^2} mults each
+    retries: expected O(1); kill threshold 10
+  obstruction: Admissible (N1, N2) pairs fail with probability ~ 1 - c*6/pi^2 per attempt (two-square
+    obstruction); need 2^f > p, which is free only for p = 2^f*c - 1.
+  kill_test: Implement at p ~ 2^64 and record mean retries to find (N1, N2); if the mean exceeds 10 the
+    stated constant is wrong and the record is downgraded to a measurement of the retry distribution.
+  lean:
+    theorem: null
+    coverage: none
+    needed_statement: For maximal orders O1, O2 of B_{p,inf} with Z-bases, O1*O2 is a left-O1 right-O2
+      ideal and its Minkowski-reduced shortest vector has reduced norm at most c*sqrt(p)*nrd(O1*O2)^{1/2}
+      for an absolute constant c.
+  experiment:
+    id: null
+    nearest_surface: aburan28/crypto-autoresearcher autolab package p1243_auxiliary_geometric_principalization
+  prior_art:
+    frontier_map: not_applicable
+    nearest_record:
+      id: H-ALISO-017
+      relation: composition_of
+    searched:
+      corpus_grep:
+      - H-SSIQ-dfee7e
+      - H-ALISO-017
+      - H-ALISO-016
+      - H-SSIQ-d724f2
+    none_found_after:
+    - 'BRIEF query: "Hermite" / "HNF" / "Minkowski" -> none'
+    - 'BRIEF query: "connecting ideal" -> none; nearest H-ALISO-016 principalization'
+    - 'BRIEF query: EV-* on ideal norm bounds -> none quoted'
+    not_applicable_reason: This campaign is isogeny/formula engineering, not an ECDLP-mechanism claim;
+      the ECDLP frontier map does not cover the relevant literature.
+  disproven_avoided: none in the brief
+  evidence_type: parameter_audit
+  tag: adaptation
+  claim: 'What an endomorphism-ring computation reveals, in constants: HNF of O1*O2 plus Minkowski reduction
+    gives a sqrt(p)-norm connecting ideal; one dimension-2 gluing gives the smooth-degree isogeny without
+    KLPT. Given Z-bases of End(E1) = O1 and End(E2) = O2 in B_{p,inf}, the connecting ideal is the Z-module
+    O1*O2 (scaled to be integral), computed by 4x4 Hermite normal form in O(log^3 p) bit operations. Minkowski-reduce
+    the rank-4 lattice under the reduced-norm form to obtain J ~ I with nrd(J) ~ c*sqrt(p). Then, instead
+    of KLPT, find J1, J2 ~ I with coprime norms N1 + N2 = 2^f (density per H-SSIQ-dfee7e) and glue via
+    the dimension-2 Kani step of H-ALISO-017. Clears H-SSIQ-dfee7e (retry density), H-ALISO-017 (gluing),
+    H-ALISO-016 (choice of representative in the class), H-SSIQ-d724f2 (standard order as O1).'

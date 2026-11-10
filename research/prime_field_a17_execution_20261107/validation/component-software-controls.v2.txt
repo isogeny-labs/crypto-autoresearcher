@@ -1,0 +1,120 @@
+......FF.F.                                                              [100%]
+=================================== FAILURES ===================================
+__________ test_all24_points_and_registry_paid_before_any_extra_query __________
+
+toy = ({'id': 'p211-i0', 'fixture': {'p': 211, 'a': 1, 'b': 82, 'r': 233, ...}}, {'p': 211, 'a': 1, 'b': 82, 'r': 233, ...},...{'target_index': 1, 'counter': 1, 'x': 201, 'y': None, ...}, {'target_index': 1, 'counter': 2, 'x': 50, 'y': 3, ...}]})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fcbdb3b1dc0>
+
+    def test_all24_points_and_registry_paid_before_any_extra_query(toy,monkeypatch):
+        prep,col,recipe,r=fresh(toy,'suppress');events=[]
+        before=len(col.query_index.engines.records)
+        def no_query(*a,**k):raise AssertionError('preconstruction attempted an endpoint query')
+        monkeypatch.setattr(col.query_index,'query',no_query)
+>       result=preconstruct17.build(prep['cell'],col,r,recipe,events.append,'suppress')
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+research/prime_field_a17_execution_20261107/test_preconstruct17.py:49: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+cell = {'id': 'p211-i0', 'fixture': {'p': 211, 'a': 1, 'b': 82, 'r': 233, ...}}
+collected = {'program_id': 'known48_24', 'target_horizon': 24, 'complete': True, 'projection': None, 'selection': {'orders': {}, '..._sha256': 'eda20918a118a8cad43da4e0fdfd5abc8dc3b0e6ca7a20702ff04df6644ccc69', 'equal': True}], 'arm_owner': 'suppress'}
+rules = {'software_control': True, 'domain': 'a17-preconstruction-software/v1', 'fields': [{'p': 211, 'base_size': 5}], 'a': 1, ...}
+recipe = [[{'alpha': 0, 'beta': 1}, {'alpha': 98, 'beta': 16}, {'alpha': 66, 'beta': 87}, {'alpha': 123, 'beta': 130}, {'alpha'..., {'alpha': 182, 'beta': 230}, {'alpha': 124, 'beta': 85}, {'alpha': 60, 'beta': 118}, {'alpha': 19, 'beta': 91}, ...]]
+event = <built-in method append of list object at 0x7fcbdb28d240>
+arm = 'suppress', capability = None
+
+    def build(cell,collected,rules,recipe,event,arm,capability=None):
+        owner=contract(cell,collected,rules,recipe,arm,capability)
+        retained=dict(selections=[],scalar_points=0,constructed_endpoints=0)
+        event(dict(kind='full_preconstruction_start',owner=asdict(owner)))
+        def emit(value):
+            kind=value.get('kind')
+            if kind=='horizon_constructor_selection':retained['selections'].append(value)
+            elif kind=='affine_scalar_point':retained['scalar_points']+=1
+            elif kind=='affine_endpoint':retained['constructed_endpoints']+=1
+            if kind in ('target_request','target_cache_record'):raise ValueError('preconstruction attempted a native query')
+            event(value)
+        try:
+            value=_execute(cell,collected,rules,recipe,emit,owner,capability)
+>           if len(value['endpoints'])!=rules['targets']*24:raise ValueError('full construction endpoint census')
+                                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           ValueError: full construction endpoint census
+
+research/prime_field_a17_execution_20261107/preconstruct17.py:88: ValueError
+________ test_preconstruction_equals_existing_full24_workload_and_costs ________
+
+toy = ({'id': 'p211-i0', 'fixture': {'p': 211, 'a': 1, 'b': 82, 'r': 233, ...}}, {'p': 211, 'a': 1, 'b': 82, 'r': 233, ...},...{'target_index': 1, 'counter': 1, 'x': 201, 'y': None, ...}, {'target_index': 1, 'counter': 2, 'x': 50, 'y': 3, ...}]})
+
+    def test_preconstruction_equals_existing_full24_workload_and_costs(toy):
+>       prep,col,recipe,r=fresh(toy,'full');result=preconstruct17.build(prep['cell'],col,r,recipe,lambda v:None,'full')
+                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+research/prime_field_a17_execution_20261107/test_preconstruct17.py:59: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+cell = {'id': 'p211-i0', 'fixture': {'p': 211, 'a': 1, 'b': 82, 'r': 233, ...}}
+collected = {'program_id': 'known48_24', 'target_horizon': 24, 'complete': True, 'projection': None, 'selection': {'orders': {}, '...ints_sha256': 'eda20918a118a8cad43da4e0fdfd5abc8dc3b0e6ca7a20702ff04df6644ccc69', 'equal': True}], 'arm_owner': 'full'}
+rules = {'software_control': True, 'domain': 'a17-preconstruction-software/v1', 'fields': [{'p': 211, 'base_size': 5}], 'a': 1, ...}
+recipe = [[{'alpha': 0, 'beta': 1}, {'alpha': 98, 'beta': 16}, {'alpha': 66, 'beta': 87}, {'alpha': 123, 'beta': 130}, {'alpha'..., {'alpha': 182, 'beta': 230}, {'alpha': 124, 'beta': 85}, {'alpha': 60, 'beta': 118}, {'alpha': 19, 'beta': 91}, ...]]
+event = <function test_preconstruction_equals_existing_full24_workload_and_costs.<locals>.<lambda> at 0x7fcbdb3f2980>
+arm = 'full', capability = None
+
+    def build(cell,collected,rules,recipe,event,arm,capability=None):
+        owner=contract(cell,collected,rules,recipe,arm,capability)
+        retained=dict(selections=[],scalar_points=0,constructed_endpoints=0)
+        event(dict(kind='full_preconstruction_start',owner=asdict(owner)))
+        def emit(value):
+            kind=value.get('kind')
+            if kind=='horizon_constructor_selection':retained['selections'].append(value)
+            elif kind=='affine_scalar_point':retained['scalar_points']+=1
+            elif kind=='affine_endpoint':retained['constructed_endpoints']+=1
+            if kind in ('target_request','target_cache_record'):raise ValueError('preconstruction attempted a native query')
+            event(value)
+        try:
+            value=_execute(cell,collected,rules,recipe,emit,owner,capability)
+>           if len(value['endpoints'])!=rules['targets']*24:raise ValueError('full construction endpoint census')
+                                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           ValueError: full construction endpoint census
+
+research/prime_field_a17_execution_20261107/preconstruct17.py:88: ValueError
+________ test_missing_full_workload_and_scalar_count_tampering_rejected ________
+
+toy = ({'id': 'p211-i0', 'fixture': {'p': 211, 'a': 1, 'b': 82, 'r': 233, ...}}, {'p': 211, 'a': 1, 'b': 82, 'r': 233, ...},...{'target_index': 1, 'counter': 1, 'x': 201, 'y': None, ...}, {'target_index': 1, 'counter': 2, 'x': 50, 'y': 3, ...}]})
+
+    def test_missing_full_workload_and_scalar_count_tampering_rejected(toy):
+>       prep,col,recipe,r=fresh(toy,'full');result=preconstruct17.build(prep['cell'],col,r,recipe,lambda v:None,'full')
+                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+research/prime_field_a17_execution_20261107/test_preconstruct17.py:79: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+cell = {'id': 'p211-i0', 'fixture': {'p': 211, 'a': 1, 'b': 82, 'r': 233, ...}}
+collected = {'program_id': 'known48_24', 'target_horizon': 24, 'complete': True, 'projection': None, 'selection': {'orders': {}, '...ints_sha256': 'eda20918a118a8cad43da4e0fdfd5abc8dc3b0e6ca7a20702ff04df6644ccc69', 'equal': True}], 'arm_owner': 'full'}
+rules = {'software_control': True, 'domain': 'a17-preconstruction-software/v1', 'fields': [{'p': 211, 'base_size': 5}], 'a': 1, ...}
+recipe = [[{'alpha': 0, 'beta': 1}, {'alpha': 98, 'beta': 16}, {'alpha': 66, 'beta': 87}, {'alpha': 123, 'beta': 130}, {'alpha'..., {'alpha': 182, 'beta': 230}, {'alpha': 124, 'beta': 85}, {'alpha': 60, 'beta': 118}, {'alpha': 19, 'beta': 91}, ...]]
+event = <function test_missing_full_workload_and_scalar_count_tampering_rejected.<locals>.<lambda> at 0x7fcbdb3f2ca0>
+arm = 'full', capability = None
+
+    def build(cell,collected,rules,recipe,event,arm,capability=None):
+        owner=contract(cell,collected,rules,recipe,arm,capability)
+        retained=dict(selections=[],scalar_points=0,constructed_endpoints=0)
+        event(dict(kind='full_preconstruction_start',owner=asdict(owner)))
+        def emit(value):
+            kind=value.get('kind')
+            if kind=='horizon_constructor_selection':retained['selections'].append(value)
+            elif kind=='affine_scalar_point':retained['scalar_points']+=1
+            elif kind=='affine_endpoint':retained['constructed_endpoints']+=1
+            if kind in ('target_request','target_cache_record'):raise ValueError('preconstruction attempted a native query')
+            event(value)
+        try:
+            value=_execute(cell,collected,rules,recipe,emit,owner,capability)
+>           if len(value['endpoints'])!=rules['targets']*24:raise ValueError('full construction endpoint census')
+                                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           ValueError: full construction endpoint census
+
+research/prime_field_a17_execution_20261107/preconstruct17.py:88: ValueError
+=========================== short test summary info ============================
+FAILED research/prime_field_a17_execution_20261107/test_preconstruct17.py::test_all24_points_and_registry_paid_before_any_extra_query
+FAILED research/prime_field_a17_execution_20261107/test_preconstruct17.py::test_preconstruction_equals_existing_full24_workload_and_costs
+FAILED research/prime_field_a17_execution_20261107/test_preconstruct17.py::test_missing_full_workload_and_scalar_count_tampering_rejected
+3 failed, 8 passed in 0.18s

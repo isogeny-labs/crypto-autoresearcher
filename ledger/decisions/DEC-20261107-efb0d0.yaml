@@ -1,0 +1,88 @@
+# DEC-20261107-efb0d0: Coordinator ruling on runbook session RBS-SEMBIN-24ec56 (EXP-SEMBIN-24ec56),
+# flagged by the audit-runs sweep (AUD-20261106T051423Z-aaa977, receipt SR-20261106-210194).
+# Ruling: quarantine. Two unrelated executions share this session id and journal path. No unit is valid
+# on main's tip, and the runbook has latent fidelity defects F1 to F3. Approves no run. Changes no status.
+coordinator_decision:
+  id: DEC-20261107-efb0d0
+  id_provenance: >-
+    Allocated by the top-level session with `python3 tools/allocate_id.py --next coordinator_decision
+    --date 20261107`, which also confirmed it with `--check`. The Coordinator subagent has no shell and
+    ran neither command.
+  recorded_at: '2026-11-07'
+  decided_at: '2026-11-07'
+  decided_by: coordinator
+  recorded_by: coordinator
+  session_provenance: >-
+    Coordinator subagent (policy coordinator-orchestration-code, effort high, claude-opus-5-5) in /coordinate
+    mode on branch claude/coordinate-audit-rulings-20261107, from origin/main 41bfaed260. It has no shell. It
+    wrote this file only. It read on-main records directly. It read the sweep audit and reader review from
+    the scratchpad extraction, which the top-level session states is byte-for-byte `git show
+    origin/claude/audit-runs-lgx7-20261106:<path>`. The Coordinator did not hash-verify that extraction. It
+    ran no trial, audit or replay.
+  goal_id: GOAL-SEMBIN-5078bc
+  batch_id: BATCH-c8105a
+  hypothesis_id: H-SEMBIN-106967
+  experiment_id: EXP-SEMBIN-24ec56
+  runbook_session: RBS-SEMBIN-24ec56
+  decision: revise
+  ruling: quarantine
+  context: >-
+    The audit-runs sweep flagged RBS-SEMBIN-24ec56. The deterministic verdict is flagged, with 0 replayed
+    units and miss probability 1.0 at every rate. The reader review (validator, Opus tier) is also flagged,
+    with escalate true. The session id and journal path carry two unrelated chains. The chain on main has no
+    valid unit. The other chain exists only on an unmerged branch. Its independent custody review is
+    blocked. The frozen plan can no longer pass the supervisor (MSG-20261106-e9aeae).
+  decision_scope: >-
+    A ruling on runbook session RBS-SEMBIN-24ec56 as a source of results, covering both of its journal
+    chains and every unit, receipt and run directory either chain records. It approves no run, no
+    successor, no reopen, no merge and no custody-review dispatch. It edits no existing record and makes no
+    status transition. The goal stays active. Quarantine ends this session, not GOAL-SEMBIN-5078bc.
+  facts_reported:
+    - "Verified with git by the top-level session (not by the Coordinator): both sweep audits read verdict flagged, replayed_units 0, and miss probability 1.0 at every rate, with no valid unit on the current tips. Both reader reviews read verdict flagged and escalate true."
+    - "Verified with git by the top-level session: main's journal is blob e8e6357d (40 entries, owner codex-run-20261026-01a179ee). It holds one attempt that ends in infrastructure_error, then session stopped, with all 36 units not_run. A second, unrelated 52-entry chain (blob f9bc11b7, owner executor-sonnet-rm3mrv, first commit 47c605da4a) exists only on origin/claude/index-calculus-ecdlp-ecc2k-rm3mrv."
+    - "Read on main by the Coordinator: journal lines 38 to 40 (seq 37 to 39) of experiments/EXP-SEMBIN-24ec56/runbook-sessions/RBS-SEMBIN-24ec56/journal.jsonl read units valid 0 of 36. step_finished reads status failed, exit_code 2, failure_class infrastructure_error. session_finished reads status stopped, control_validity failed and execution_validity incomplete, and every metric has n 0. The detail string 'supervisor exit 2 (impediment: the supervisor refused to launch)' is producer prose and is unverified."
+    - "Read on main by the Coordinator: source-manifest.json of BATCH-c8105a pins the Claude journal at oid fdea491e (size 9641, commit 0d63f42248). DEC-20261030-a44f55 describes that chain as 11 rows. The sweep reader (AUD-20261106T051423Z-aaa977 audit-review.yaml, journal_chains.chain_A_executor_sonnet) reports that fdea491e is a byte-prefix of f9bc11b7. It reports that the chain was extended to 52 entries by commit 9fc0d78b5e at 2026-10-31T21:29:02Z, including attempt 5 under claim epoch 3, acquired 2026-10-31T21:27:02Z on the rm3mrv branch only. That claim came after DEC-20261030-a44f55 (decided 2026-10-30T20:57:19Z) had blocked the original executor task. These are the reader's statements. The Coordinator has not verified them."
+    - "Reader report (unverified): attempt 5 of the foreign chain recorded 11 output_validated, 6 invalid_output, 4 needs_reconciliation and 15 infrastructure_error units, and finished failed (implementation_error, supervisor exit 3). The 11 and 6 match the producer receipt counts in DEC-20261030-a44f55. No independent review of any of them exists."
+    - "Read on main by the Coordinator: dispatch_queue.json of BATCH-c8105a holds TASK-20261030-d34252 with state blocked. Its blocked_reason is the Typst render zlib-rs MemError under the 2 GiB limit, with the instruction 'Do not reoffer this task/epoch'. TASK-20261030-459b12 is queued and depends on it. No task in that queue is ready."
+    - "Reader findings (AUD-20261106T051423Z-aaa977 audit-review.yaml, specification_fidelity.findings). F1: C6 is compared within one trial (summary.c6.identical over two repetitions), not against trial poly-m3-n9 / RUN-SEMBIN-0689a2 as the specification and comparison C-aa-c6 require. F2: step validity accepts raw-result /status completed_invalid, so a unit whose C1 gate fails, whose C6 differs, or which has a false refutation or eliminator disagreement would be recorded as valid. F3: the summary does not surface the D_W distribution, per-cell CP95, per-cell M_4, null r_4 (P2), the m=2 control rate (C2), the block-local arm, or ops_proxy/P4. The reader states that F1 to F3 bind any session that reuses runbook sha256 2996f44f."
+    - "Bus message MSG-20261106-e9aeae (priority high, unacknowledged; read on main): the frozen plan of EXP-SEMBIN-24ec56 has no hypothesis_id, so the supervisor refuses its run envelope. A fix needs a versioned plan amendment with hash rebinding, fresh run ids and Coordinator approval. The bus is a feed, not evidence."
+  rulings:
+    - "R1 (ruling quarantine). RBS-SEMBIN-24ec56 is quarantined as a whole. This covers chain B on main (blob e8e6357d, tip eb3ee32b) and chain A on origin/claude/index-calculus-ecdlp-ecc2k-rm3mrv (blobs 6a77a91a, fdea491e and f9bc11b7 at commit 9fc0d78b5e, tip 7a8329e2 as the reader reports). It also covers every unit, step log, receipt and run directory either chain records, including the 17 producer receipts that DEC-20261030-a44f55 counted. Quarantined material is kept byte-for-byte. It is not evidence about H-SEMBIN-106967 or any other record. No evidence review, validation gate, synthesis, roadmap ranking or knowledge entry may cite it as a measurement. No chain is a continuation prefix of the other. The session id is never reopened, resumed or re-claimed. Neither chain is ever merged onto the other at the shared path."
+    - "R2 (not replay, not clear). Replay is impossible because the chain on main has no valid unit, and the audit had zero replay power. A clear ruling is excluded by the identity finding (two executions under one session id) alone."
+    - "R3 (escalation to an independent validator not ordered now). On main's tip there is nothing to validate. For chain A, the only validation route is TASK-20261030-d34252, which is blocked with 'do not reoffer'. Its frozen source pins (fdea491e, 11 rows) are now a strict prefix of a 52-entry tip, as the reader reports. Under F2, output_validated does not imply validity under the specification. A future validator review of chain A's receipts therefore needs a re-scoped successor custody plan, pinned to the current tip, and that is a separate Coordinator act. This ruling does not foreclose it."
+    - "R4. The extension of chain A at attempt 5 on 2026-10-31 is recorded as an open custody defect, not adjudicated here. It came after the original task was blocked (DEC-20261030-a44f55), on a branch main does not contain. Any later custody review must answer whether that claim was authorized and whether attempt 5 wrote or only reconciled receipts."
+    - "R5. Attempt 1 of chain B (the dispatcher's ancestry refusal, whose cause the reader could not reproduce) is infrastructure signal. Its control_validity 'failed' means controls not run, not controls measured to fail. None of it is evidence for or against H-SEMBIN-106967."
+    - "R6. Runbook sha256 2996f44f854ecb70712ddca4ef64e31888467cdaa37dbea739824c717d38fd5c and trial plan sha256 ced00bdae527379d627263a4c9befcc3eb97f015c06b222da26899619acfb7c5 may not drive any further session. A successor needs a versioned protocol_amendment that adds hypothesis_id with hash rebinding (MSG-20261106-e9aeae) and fixes F1 to F3 without changing any success criterion. It also needs fresh run ids, a new session id, red-team review and a Coordinator approval decision. Only then may it run, and only via /run. DEC-20261018-9262ac remains the record of the original approval. It authorizes no further execution under RBS-SEMBIN-24ec56."
+    - "R7. TASK-20261030-d34252 and TASK-20261030-459b12 keep their present queue states. This decision neither reoffers nor cancels them."
+  status_transitions: []
+  target_ids: [RBS-SEMBIN-24ec56, EXP-SEMBIN-24ec56, H-SEMBIN-106967, GOAL-SEMBIN-5078bc, BATCH-c8105a, TASK-20261030-d34252, TASK-20261030-459b12, TASK-20261018-944ddb]
+  related_records:
+    prior_decisions: [DEC-20261018-9262ac, DEC-20261030-a44f55]
+    audits: [AUD-20261106T051423Z-aaa977]
+    session_receipt: SR-20261106-210194
+    bus_messages: [MSG-20261106-e9aeae]
+    sibling_ruling: DEC-20261107-c5ceaf
+  rationale:
+    - "Quarantine is the only ruling that keeps both chains intact without treating either as authoritative. The two chains have different genesis entries, owners and claim epochs under one session id, and one was extended after its task was blocked. Under docs/pcc.md, an unexplained continuation is treated as possible sabotage until a custody review explains it."
+    - "Replay needs a valid unit, and none exists on main. Clear needs a session whose identity and chain hold, and this one fails that test."
+    - "Escalating now would send a validator to a session with nothing to check on main, or to a chain whose frozen review pins are stale. The defects that block progress (F1, F2, the missing hypothesis_id) are protocol defects. Only a versioned amendment can fix them."
+  evidence_refs:
+    - "origin/claude/audit-runs-lgx7-20261106@82130dbe78:experiments/EXP-SEMBIN-24ec56/audits/AUD-20261106T051423Z-aaa977/audit.json (not on main)"
+    - "origin/claude/audit-runs-lgx7-20261106@173d3cc69c:experiments/EXP-SEMBIN-24ec56/audits/AUD-20261106T051423Z-aaa977/audit-review.yaml (not on main; journal_chains, unit_invalidity, specification_fidelity.findings F1-F3)"
+    - experiments/EXP-SEMBIN-24ec56/runbook-sessions/RBS-SEMBIN-24ec56/journal.jsonl (seq 37-39)
+    - coordination/goals/GOAL-SEMBIN-5078bc/batches/BATCH-c8105a/source-manifest.json (claude_journal, codex_journal)
+    - coordination/goals/GOAL-SEMBIN-5078bc/batches/BATCH-c8105a/dispatch_queue.json (TASK-20261030-d34252 blocked_reason)
+    - coordination/goals/GOAL-SEMBIN-5078bc/batches/BATCH-c8105a/custody-review-plan.yaml
+    - ledger/decisions/DEC-20261030-a44f55.yaml
+    - ledger/decisions/DEC-20261018-9262ac.yaml (runbook_sha256, protocol_binding)
+    - coordination/bus/messages/MSG-20261106-e9aeae.yaml
+  limitations:
+    - "No shell. The git facts (blob ids, entry counts, branch reachability) are as the top-level session and the sweep reader reported them. The Coordinator did not open chain A, its receipts or its run directories."
+    - "The audit material is not on main. It was read from a scratchpad extraction whose byte identity the top-level session asserts and the Coordinator did not check."
+    - "The reader review is a screen, not a validation_report. Its findings F1 to F3 are taken as stated and were not re-derived here."
+    - "This ruling says nothing about H-SEMBIN-106967, about toy-scale closure degrees, or about any curve."
+  next_actions:
+    - {id: NA-1, rank: 1, owner: "experiment-director (design-experiment, dispatched by the Coordinator)", text: "After this decision is committed and on main, design a versioned protocol_amendment for EXP-SEMBIN-24ec56. Add hypothesis_id H-SEMBIN-106967 to the trial plan with sha256 rebinding (MSG-20261106-e9aeae). Add a runbook step comparing ctrl-c6-replicate-m3-n9 against poly-m3-n9 (F1). Make completed_invalid not step-valid, and surface c1.pass, c6.identical and /status (F2). Surface the F3 metrics. Use fresh run ids and a new session id, and change no success criterion. Zero runs. Return uncommitted previews for red-team review and a Coordinator approval decision before any /run."}
+  knowledge_promotion:
+    promoted: []
+    not_warranted: "Session-custody ruling on a runbook session with zero valid units. An audit is not evidence, and no durable research claim results."

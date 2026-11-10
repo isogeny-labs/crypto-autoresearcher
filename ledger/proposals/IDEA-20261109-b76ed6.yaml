@@ -1,0 +1,70 @@
+idea:
+  id: IDEA-20261109-b76ed6
+  question_id: RQ-ISO-844f9f
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  class: measurement
+  record_kind: parameter_audit
+  title: Measured per-step cost of a (2,2)-isogeny in level-2 theta vs Richelot over F_{p^2} at SQIsign2D-West-shaped
+    p, as a calibration for every dimension-2 Kani cost claim in the lane
+  novelty_status: adaptation
+  claim: The lane has filed seventeen Kani-tagged packages (H-ALISO-001 through H-ALISO-017) that measure
+    Hecke, degree-first and auxiliary-search statistics, but none records the arithmetic cost of the (2,2)
+    step that any dimension-2 attack or verification actually executes. We claim that a measured table
+    (theta null update, point push, Richelot splitting and inversion count) at p = 2^e f - 1 with e in
+    {60, 120, 250} will show theta at least 3x cheaper than Richelot per step and will fix the constant
+    in every later cost statement. No Lean coverage exists for the theta gluing step; the statement needing
+    formalization is the 8-torsion-lift independence of the polarised codomain.
+  mechanism: 'Dimension 2, level-2 theta coordinates (4 projective coordinates), isogeny degree (2,2)
+    per step, chain length e. Per step: compute codomain theta null from an 8-torsion lift of the kernel
+    (heuristic figure recalled from the literature, roughly 8 squarings plus a handful of multiplications
+    and one batched inversion), then push each tracked point (roughly 4S + 4M). Richelot baseline in Rosenhain/sextic
+    model with the quadratic-splitting determinant inversion. Record field ops with the ecbench counters.
+    Clears H-ALISO-001 (same degree-first chain order), H-ALISO-009 (a cost probe, but of Hecke support),
+    H-ALISO-017 (same a^2+b^2 auxiliary).'
+  quantitative:
+    dimension: 2
+    coordinate_model: 'level-2 theta (baseline: Richelot sextic)'
+    isogeny_degree: (2,2) per step, 2^e total
+    field: F_{p^2}, p = 2^e f - 1, e in {60,120,250}
+    expected_cost: theta roughly 10-20 mults/step (heuristic); Richelot heuristically an order of magnitude
+      more
+  cleared:
+    checked:
+    - H-ALISO-001
+    - H-ALISO-009
+    - H-ALISO-017
+    disproven: none in the brief
+    lean: no Lean coverage; would need the statement that for K maximal isotropic in A[2], all 8-torsion
+      lifts of K yield isomorphic polarised codomains A/K with level-2 theta structures differing by the
+      finite theta group
+    exp: none; nearest surface is Autolab package p1486_hecke_support_cost_probe (H-ALISO-009)
+  kill_test: Implement both step types at e = 60 and e = 250. If theta is not at least 3x cheaper in counted
+    field multiplications, or if the two models produce non-isomorphic codomains on any of 10^4 random
+    kernels, mark the record refuted and remove the "theta makes dimension-2 cheap" framing from the lane.
+  prior_art:
+    frontier_map: not_applicable
+    frontier_map_reason: this is an internal cost calibration of a known algorithm, not a frontier claim;
+      the only frontier question is the measured constant
+    searched:
+      corpus_grep:
+      - H-ALISO-001
+      - H-ALISO-002
+      - H-ALISO-009
+      - H-ALISO-013
+      - H-ALISO-017
+      none_found_after:
+      - theta null
+      - (2,2)
+      - Richelot
+      - per-step cost
+      - 8-torsion
+    nearest_record:
+      id: H-ALISO-009
+      relation: adjacent
+      note: cost probe exists but measures Hecke support cost, not isogeny-step arithmetic
+    not_applicable_reason: This campaign is isogeny/formula engineering, not an ECDLP-mechanism claim;
+      the ECDLP frontier map does not cover the relevant literature.
+    none_found_after:
+    - repository search of crypto, cryptanalysis, crypto-autoresearcher and ecbench

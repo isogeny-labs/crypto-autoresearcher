@@ -1,0 +1,102 @@
+{
+ "schema": "decision-report-figure-data.v1",
+ "decision_id": "DEC-20261106-24d2a2",
+ "composing_task_id": "TASK-20261107-0932f4",
+ "experiment_id": "EXP-MONO-1a1be2",
+ "no_new_computation": "Every value is copied by key from the named source, or is a sum or difference of copied values whose derivation is written beside it. figures.py derives nothing but layout and label text. No KAT count, lemma value, formula or prior is copied here; only timings of the infrastructure stop and decision parameters.",
+ "sources": {
+  "decision": {"path": "ledger/decisions/DEC-20261106-24d2a2.yaml", "sha256": "7b74bc1d310905ac1ff2a9a0a0a30dcc647fb67d91073eb2a8a7c1658ca1db88"},
+  "predecessor": {"path": "ledger/decisions/DEC-20261106-475620.yaml", "sha256": "d161625377de5731e12972e549476d4576d1314c6fe19fcb5c81ba5dd325ea56"},
+  "dev1_report": {"path": "experiments/EXP-MONO-1a1be2/implementation/dev1-report-96fee7.md", "sha256": "f36ebcc045c91c2013d5bf71d5666daa5712bff780769bb9641c6febf5ced196"},
+  "dev1_kat_log": {"path": "experiments/EXP-MONO-1a1be2/implementation/dev1-kat-log-96fee7.json", "sha256": "6349fe1a85269dfcda3c7ec3a6b4d96c2e1912d101fd14fe8180b78981754e45"},
+  "environment": {"path": "experiments/EXP-MONO-1a1be2/implementation/environment-96fee7.json", "sha256": "71abb9e53f95d1fc2dbb3f6ff8d0b5aa0470d256afe531575c3f3be90b8dbbb3"},
+  "snapshot_receipt_dfd0ed": {"path": "coordination/goals/GOAL-PATH-001/batches/BATCH-a8825c/archives/TASK-20261106-dfd0ed/snapshot-receipt.json", "sha256": "6de123ec4da548002aa15f9d747edec9062ccbe269ced59bd654770dc1d6f0d7"},
+  "queue_a8825c": {"path": "coordination/goals/GOAL-PATH-001/batches/BATCH-a8825c/dispatch_queue.json", "sha256": "69b61e91b20e0f24bd96986d9a9e64387cf50eb31176b56aadaff5afbe9f3d07"},
+  "queue_c077fd": {"path": "coordination/goals/GOAL-PATH-001/batches/BATCH-c077fd/dispatch_queue.json", "sha256": "da8826ae4e419c76465d673f43dd003e38f993dc58b7d2ad0b1b61ad508eaac1"},
+  "card_bc7a76": {"path": "ledger/handoffs/TASK-20261107-bc7a76.yaml", "sha256": "1251478e5c317b88299b32e0a06af965ed7b5231374cac78eb9124f79caf3a21"}
+ },
+ "figure_1_dev1_attempt_timeline": {
+  "axis": "seconds from the start of the attempt-1 cell (dev1_kat_log key start_utc = 2026-11-06T23:24:12Z)",
+  "projection_bar": {
+   "label": "DX-3 projection (attempt 1)",
+   "wall_s": {"value": 725.1219975948334, "source": "dev1_kat_log", "key": "dx3_projection.wall"},
+   "start_offset_s": {"value": -769, "kind": "derived", "derivation": "dx3_projection.started (epoch 1794006683.30 = 2026-11-06T23:11:23Z) minus start_utc (23:24:12Z), rounded to 1 s", "source": "dev1_kat_log", "key": "dx3_projection.started; start_utc"},
+   "end_offset_s": {"value": -44, "kind": "derived", "derivation": "dx3_projection.finished (epoch 1794007408.43 = 2026-11-06T23:23:28Z) minus start_utc (23:24:12Z), rounded to 1 s", "source": "dev1_kat_log", "key": "dx3_projection.finished; start_utc"}
+  },
+  "cell_bar": {
+   "label": "attempt-1 cell (96fee7), start to kill",
+   "wall_s": {"value": 7200, "approx": true, "source": "dev1_kat_log", "key": "cell_result.wall_s"},
+   "last_heartbeat_elapsed_s": {"value": 7140, "source": "dev1_kat_log", "key": "cell_result.wall_s_basis"},
+   "end_label": "harness cap (ENV-1)",
+   "status": {"value": "killed_infrastructure_launcher_background_time_limit", "source": "dev1_kat_log", "key": "cell_result.status"}
+  },
+  "markers": [
+   {"id": "harness_cap", "label": "harness cap (ENV-1)", "value_s": 7200, "source": "decision", "key": "environment_observations.items[ENV-1] (7,200,000 ms)"},
+   {"id": "modelled_projection", "label": "modelled projection total (attempt 1)", "value_s": 37776.85279367371, "source": "dev1_kat_log", "key": "dx3_projection.modeled_projection_seconds.total"},
+   {"id": "go_threshold", "label": "go threshold", "value_s": 39600, "source": "predecessor", "key": "dev1_decision_v2.budget"},
+   {"id": "watchdog", "label": "cell watchdog", "value_s": 41400, "source": "predecessor", "key": "dev1_decision_v2.budget"},
+   {"id": "per_attempt_limit", "label": "per-attempt limit (1,200 + 41,400)", "value_s": 42600, "source": "predecessor", "key": "dev1_decision_v2.budget"},
+   {"id": "task_budget", "label": "task budget", "value_s": 43200, "source": "predecessor", "key": "dev1_decision_v2.budget"}
+  ],
+  "projection_limit_s": {"value": 1200, "source": "predecessor", "key": "dev1_decision_v2.budget"},
+  "cumulative_lane": {
+   "kind": "budget bound, not a measurement",
+   "segments": [
+    {"label": "attempt 1 task wall (96fee7, about 23:05Z to 01:32Z)", "value_s": 8820, "approx": true, "kind": "derived", "derivation": "kill-detection time 01:32Z minus task start about 23:05Z (2 h 27 min); the decision states about 2.5 h", "source": "dev1_report", "key": "Outcome paragraph (task budget sentence)"},
+    {"label": "re-attempt 1 (bc7a76 attempt 2), at most", "value_s": 42600, "kind": "parameter", "source": "decision", "key": "dev1_rerun_decision.allowance_reading (b)"},
+    {"label": "re-attempt 2 (bc7a76 attempt 3), at most", "value_s": 42600, "kind": "parameter", "source": "decision", "key": "dev1_rerun_decision.allowance_reading (b); card_bc7a76 budget.maximum_attempts = 2"}
+   ],
+   "cumulative_ends_s": {"value": [8820, 51420, 94020], "kind": "derived", "derivation": "running sums of the three segments (about 2.5 h, about 14.3 h, about 26.1 h)"},
+   "grant_band_s": {"low": 36000, "high": 43200, "kind": "parameter", "derivation": "about 10 h to 12 h times 3,600 s", "source": "decision", "key": "owner_direction_in_force.text_as_relayed_to_this_act; as_encoded_by_DEC-20261106-475620"}
+  }
+ },
+ "figure_2_queue_and_gates": {
+  "edge_label": "instrument, not evidence",
+  "batch_a8825c": {
+   "source": "decision context; batch_a8825c_checkpoint.summary; batch_a8825c_revisions; queue_a8825c tasks[].state",
+   "tasks": [
+    {"id": "TASK-20261106-d5063d", "state": "completed", "note": "DEC-20261106-475620"},
+    {"id": "TASK-20261106-779e02", "state": "completed", "note": "ledger archive at 6c54f43511"},
+    {"id": "TASK-20261106-2b7223", "state": "completed", "note": "HX-1 to HX-10"},
+    {"id": "TASK-20261106-96fee7", "state": "completed", "note": "DEV-1 attempt 1: stopped_infrastructure"},
+    {"id": "TASK-20261106-dfd0ed", "state": "completed", "note": "snapshot at 5f6c092450"},
+    {"id": "TASK-20261106-941825", "state": "cancelled, superseded", "note": "by TASK-20261107-7db1de"},
+    {"id": "TASK-20261106-afbe9b", "state": "cancelled, superseded", "note": "by TASK-20261107-971edf"}
+   ]
+  },
+  "batch_c077fd": {
+   "source": "decision batch.tasks and batch.order; queue_c077fd tasks[].state",
+   "chain": [
+    {"id": "TASK-20261107-0932f4", "kind": "task", "role": "coordinator", "state": "completed", "note": "this act"},
+    {"id": "TASK-20261107-58546f", "kind": "task", "role": "coordinator", "state": "queued", "note": "ledger archive, alone"},
+    {"id": "TASK-20261107-7db1de", "kind": "task", "role": "validator", "state": "queued", "note": "hardening re-review (RR-1 to RR-4, RR-5H, RR-6 to RR-9)"},
+    {"id": "TASK-20261107-971edf", "kind": "task", "role": "coordinator", "state": "queued", "note": "snapshot of 7db1de", "gate_after": "B8-H"},
+    {"id": "OQ-1 answer + releasing act", "kind": "condition", "state": "pending", "note": "DEC-20261107-f46a40 or later (BP-2)"},
+    {"id": "TASK-20261107-bc7a76", "kind": "task", "role": "executor", "state": "blocked", "note": "DEV-1 re-attempt, detached supervisor"},
+    {"id": "TASK-20261107-eebc5b", "kind": "task", "role": "coordinator", "state": "queued", "note": "snapshot of bc7a76"},
+    {"id": "DEV-1 verification", "kind": "condition", "state": "not yet written", "note": "written by the releasing act (941825 RR-5 verbatim)", "gate_after": "B8-D"},
+    {"id": "approval act", "kind": "condition", "state": "declared successor", "note": "SC-1 to SC-5"}
+   ],
+   "gates": [
+    {"id": "B8-H", "after": "TASK-20261107-971edf", "source": "decision", "key": "review_placement.b8_split.B8-H"},
+    {"id": "B8-D", "after": "DEV-1 verification", "source": "decision", "key": "review_placement.b8_split.B8-D"},
+    {"id": "B8 = B8-H and B8-D", "after": "approval act", "source": "decision", "key": "review_placement.b8_split.B8"}
+   ]
+  },
+  "ld8_classification": {
+   "source": "card_bc7a76 constraints LD-8 and LD-9; decision dev1_rerun_decision.restart_handling",
+   "rows": [
+    {"class": "C1", "condition": "exit.json, rc 0, three passed items", "outcome": "passed (or mismatch per DX-6)", "retry": "no"},
+    {"class": "C2", "condition": "exit.json, rc nonzero, assertion failed", "outcome": "mismatch", "retry": "no"},
+    {"class": "C3", "condition": "exit.json, timeout fired", "outcome": "stopped_infrastructure (watchdog)", "retry": "no"},
+    {"class": "C4", "condition": "exit.json, signal name", "outcome": "stopped_infrastructure (signalled)", "retry": "no"},
+    {"class": "C5", "condition": "no exit.json, restart evidence, supervisor gone", "outcome": "stopped_infrastructure (container_restart)", "retry": "yes (LD-9)"},
+    {"class": "C6", "condition": "no exit.json, no restart evidence, supervisor gone", "outcome": "stopped_infrastructure (unexplained_kill)", "retry": "no"},
+    {"class": "C7", "condition": "supervisor alive, heartbeat older than 1,800 s", "outcome": "anomaly recorded; keep waiting", "retry": "n/a"},
+    {"class": "C8", "condition": "exit.json, rc nonzero, no assertion failure", "outcome": "stopped_infrastructure (crash or oom)", "retry": "no"}
+   ],
+   "retry_cap": {"value": 2, "source": "card_bc7a76", "key": "budget.maximum_attempts"},
+   "exhausted_outcome": {"value": "stopped_infrastructure_retries_exhausted", "source": "card_bc7a76", "key": "constraints LD-9"}
+  }
+ }
+}

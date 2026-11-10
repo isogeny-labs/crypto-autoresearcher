@@ -1,0 +1,114 @@
+idea:
+  id: IDEA-20261109-1db4ee
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECC-9d5d44
+  title: Bilinear (1,1) addition-law ansatz on extended Edwards25519 solves to two pencils; 8M is the
+    floor and the Z/4 characters chi^(+-1) carry no law
+  class: representation
+  claim: 'Formula-engineering claim, not an ECDLP claim. Curve $-x^2+y^2=1+dx^2y^2$, $d=-121665/121666$
+    non-square, $p=2^{255}-19$, coordinates $(X:Y:Z:T)$, $XY=ZT$. Ansatz: $x_3=N_x/D_x$, $y_3=N_y/D_y$
+    with all four forms bilinear in $(X_1,Y_1,Z_1,T_1)\otimes(X_2,Y_2,Z_2,T_2)$ (64 unknowns), outputs
+    $X_3=N_xD_y$, $Y_3=N_yD_x$, $Z_3=D_xD_y$, $T_3=N_xN_y$. (C1) The solution space is exactly $(N_x,D_x)=\lambda(X_1Y_2+Y_1X_2,\
+    Z_1Z_2+dT_1T_2)+\mu(T_1Z_2+Z_1T_2,\ Y_1Y_2-X_1X_2)$ and $(N_y,D_y)=\lambda''(Y_1Y_2+X_1X_2,\ Z_1Z_2-dT_1T_2)+\mu''(T_1Z_2-Z_1T_2,\
+    X_1Y_2-Y_1X_2)$. (C2) The law fails exactly when $\lambda+\mu\,y(P_1-P_2)=0$ or $\lambda''+\mu''\,x(P_1-P_2)=0$.
+    (C3) Every member needs at least 4 bilinear products for its four forms, hence at least 8M; the corners
+    cost ss 8M+1c, dd 8M, sd and ds 9M+1c over $\mathbb F_p$. (C4) With $U=Y+X$, $V=Y-X$ and $\tau=(\sqrt{-1},0)$,
+    the 16 monomials split 4+4+4+4 by character of $(P_1,P_2)\mapsto(P_1+\tau,P_2-\tau)$; ss uses exactly
+    $\{U_1U_2,V_1V_2,Z_1Z_2,T_1T_2\}$, dd exactly $\{U_1V_2,V_1U_2,Z_1T_2,T_1Z_2\}$, and the other eight
+    monomials carry no law. No law below 8M exists in this ansatz.'
+  mechanism: '$\tau$ acts linearly, $(X,Y,Z,T)\mapsto(iY,iX,Z,-T)$, diagonal on $(U,V,Z,T)$ with characters
+    $(i,-i,1,-1)$. Dimension: denominators are sections of $p_1^*L\otimes p_2^*L\otimes\mu^*\mathcal O(-(x)_\infty)$,
+    which has degree 0 on fibres of $P_1-P_2$; a nonzero section has divisor $\delta^*$(degree-2 divisor),
+    so $h^0=2$. Membership uses the identities $(x_1y_1+x_2y_2)(1+dt)-(x_1y_2+y_1x_2)(y_1y_2-x_1x_2)=-x_1y_1c_2-x_2y_2c_1$
+    and $(x_1y_1-x_2y_2)(1-dt)-(y_1y_2+x_1x_2)(x_1y_2-y_1x_2)=-x_1y_1c_2+x_2y_2c_1$, $t=x_1x_2y_1y_2$,
+    $c_j=-x_j^2+y_j^2-1-dx_j^2y_j^2$. Bound: the eight basis forms have disjoint monomial supports, so
+    the four chosen forms span dimension 4 and need 4 rank-one products. Mixed corners: the pair $\{Z_1Z_2\pm
+    dT_1T_2,\ T_1Z_2\mp Z_1T_2\}$ has rank 3 because $\lambda^2=-1/d$ has no root in $\mathbb F_p$.'
+  novelty_status: unverified
+  citations:
+  - ref: BRIEF section 1, src/ecc/ed25519.rs excerpt (EdPoint::add, EdPoint::double)
+    provenance: internal
+    claim: The repository implements the ss corner with 12 fe_mul and 1 fe_inv per add as coded.
+    verified_by: idea-generator session 2026-11-09 read the BRIEF excerpt
+  - ref: Hisil, Wong, Carter, Dawson 2008, Twisted Edwards curves revisited
+    provenance: recalled
+    claim: Source of the unified and dedicated laws; pointer only.
+    verified_by: null
+  - ref: Kohel 2011, Addition law structure of elliptic curves
+    provenance: recalled
+    claim: Dimension counts for addition-law spaces; pointer only.
+    verified_by: null
+  assumptions:
+  - $a=-1$ is a square and $d$ a non-square mod $p$; the script asserts both.
+  - 'Cost model: layer 1 is products of a linear form in $P_1$ by a linear form in $P_2$; layer 2 is the
+    four output products.'
+  proof_search_map:
+    bottleneck: Dimension of the solution space at the actual constant d.
+    baseline_embedding:
+      parameter_slice: Corners ss and dd are the two HWCD laws.
+      reproduction_check: Assertion A1 and the hwcd4 comparison in A5.
+    observation_collision:
+      observable: Nullity of the 40 x 32 evaluation matrix.
+      distinct_preimage_search: Evaluation can only over-estimate the space.
+    constructive_transforms:
+    - Change of basis to tau-eigen coordinates (U, V, Z, T).
+    quantifier_order: For all pencil parameters, no evaluation with fewer than 4 layer-1 products.
+    method_ceiling:
+      strongest_certifiable_claim: A floor inside the two-layer ansatz only.
+      nearby_object_control: A curve with square d, where the mixed block rank drops to 2.
+    proof_obligations:
+    - Fibre-degree computation for the denominator bundle.
+  predictions:
+  - metric: dimension of the solution space per coordinate (A2, A3)
+    direction: different
+    minimum_effect: exactly 2
+  - metric: Legendre symbol of -1/d (A6)
+    direction: different
+    minimum_effect: exactly -1
+  minimal_test:
+    design: Run scripts/ed25519_law_ansatz.py. A2 solves the ansatz over Q(d) with linsolve; A3 evaluates
+      at 40 random point pairs on Edwards25519.
+    controls:
+    - Square-d control curve; the mixed-corner block rank must drop to 2.
+    - Random bilinear pair (N, D) must fail the membership rows.
+    required_metrics:
+    - free-parameter count from A2
+    - nullity from A3 for x and y
+    - Legendre symbol of -1/d
+  falsification_conditions:
+  - A2 or A3 reports a dimension other than 2.
+  - A law in the family is exhibited with fewer than 4 layer-1 products.
+  - A timeout of the symbolic solve is infrastructure, not falsification.
+  confounders:
+  - A generic-d solve can specialise badly; A3 guards the actual constant.
+  interpretation_limits:
+  - The floor does not cover non-pure bidegree-(2,2) outputs, intra-point products, squarings or cached
+    operands.
+  heuristic_assumptions:
+  - id: H1
+    statement: The fibre-degree argument gives dimension exactly 2.
+    rigorous_support: Hand argument in this session; not machine-checked.
+    validation_plan: Assertions A2 and A3.
+  target_complexity:
+    time_exponent: not applicable, constant-factor formula cost
+    memory_exponent: not applicable
+    best_known: HWCD 2008 at 8M + 1c unified, 8M dedicated
+    hidden_overhead: None claimed.
+    tradeoff_note: Closure of an ansatz, not a speedup.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: high
+  dominated_by: HWCD 2008 already attains the floor; this record adds the exhaustion and the character
+    decomposition, not a cheaper law.
+  sota_delta: 0M against HWCD. Delta is a lower bound of 8M inside the stated ansatz and a completeness
+    criterion for all its members.
+  prior_art:
+    frontier_map: not_applicable
+    not_applicable_reason: Curve25519 explicit-formula campaign; no ECDLP mechanism is claimed.
+    none_found_after:
+    - BRIEF section 2 ledger index, terms addition law, extended coordinates, dual addition
+    - BRIEF section 2 summaries of IDEA-20260905-05648a and IDEA-20260905-4dff7b (truncated)
+    - BRIEF section 1 excerpts of x25519.rs and ed25519.rs

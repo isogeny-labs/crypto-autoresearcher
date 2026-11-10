@@ -79,6 +79,22 @@ class IndependentFixedModelCheckTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "source form mismatch"):
             verify(record, self.joined["field"], self.joined["rows"][0]["conjugates"])
 
+    def test_tampered_source_map_readback_rejected(self):
+        row = self.joined["rows"][0]
+        for key, component, expected_error in (
+                ("determinant", None, "source determinant mismatch"),
+                ("x_map", "numerator_constant", "stored x map mismatch"),
+                ("y_map", "numerator_y", "stored y map mismatch")):
+            with self.subTest(key=key):
+                record = copy.deepcopy(self.records[0])
+                source_map = record["source"]["source"]["source_map"]
+                if component is None:
+                    source_map[key] = 2
+                else:
+                    source_map[key][component][0] = (source_map[key][component][0] + 1) % 27
+                with self.assertRaisesRegex(ValueError, expected_error):
+                    verify(record, self.joined["field"], row["conjugates"])
+
     def test_tampered_ambient_table_rejected(self):
         record = copy.deepcopy(self.records[0])
         algebra = record["fixed_model"]["basis"]["algebra"]

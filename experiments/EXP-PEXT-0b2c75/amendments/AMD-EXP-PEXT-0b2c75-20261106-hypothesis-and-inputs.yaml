@@ -1,0 +1,91 @@
+amendment:
+  id: AMD-EXP-PEXT-0b2c75-20261106-hypothesis-and-inputs
+  experiment_id: EXP-PEXT-0b2c75
+  goal_id: GOAL-PEXT-4a1d6b
+  recorded_at: '2026-11-06'
+  kind: prospective_plan_hypothesis_and_trial_input_binding
+  decision_id: DEC-20261106-e3de25
+  original_approval: DEC-20261031-dcfdee
+  status: prepared_pending_archive_and_publication
+  reason: >-
+    EXP-PEXT-0b2c75 has never been launched, but its frozen plan carries none of the
+    fields the supervisor now requires a driver fact to have a source for
+    (SHF-20261106-a114e7 G4/G5/G6/G7). Its driver writes run.hypothesis_id, and
+    run.inputs.seed, run.inputs.curve_id and a non-empty run.inputs.parameters, so the
+    first launch would be refused exactly as EXP-PEXT-212d5c's was. This amendment
+    declares those values before any run, so no run directory or run id is consumed and
+    no refusal record has to be made.
+  changes:
+  - path: experiments/EXP-PEXT-0b2c75/trial-plan.json
+    field: top-level hypothesis_id (new key)
+    from: absent
+    to: H-PEXT-ad0073
+    effect: >-
+      Binds the execution plan to the hypothesis the approved specification already
+      names and DEC-20261031-dcfdee approved. No hypothesis, prediction, trial, seed,
+      metric or threshold changes.
+  - path: experiments/EXP-PEXT-0b2c75/trial-plan.json
+    field: each of the six trials gains seed, curve_id and parameters
+    from: absent in every trial
+    to: >-
+      seed: 20261101; curve_id: null; parameters: {trial_id: <trial id>, stage: <trial
+      stage>, inputs_from: <the trial's mapping or {}>, plan:
+      experiments/EXP-PEXT-0b2c75/trial-plan.json, rustc_flags: [--edition, '2021', -O],
+      threads: 4, negative_count: 1000}
+    effect: >-
+      Gives the driver's own recorded inputs a plan source. Every value is already
+      fixed by the frozen plan defaults (negative_seed 20261101, threads 4,
+      negative_configs 1000) or by run.py's own frozen constants (RUSTC_FLAGS). The
+      driver's parameter dict has exactly these seven keys, verified by reading
+      run.py's manifest writer and its constants.
+  hash_rebinding:
+    trial_plan_sha256:
+      from: deb61b0cc1a41a327e3c2fa7dc190c49619df6986be995af4c7ffd8192bab1da
+      to: 085bf4f3d98cecd5484e0318f64dc22675b846d4ab0b7c8f0fa0ca8b1441b37c
+    dispatch_queue_sha256:
+      path: coordination/goals/GOAL-PEXT-4a1d6b/batches/BATCH-a4886a/dispatch_queue.json
+      from: d47f7e12519021817512aa4c77dc5ac7c753b426755cc3ae4393d19e8864dd47
+      to: a663e63ebb2feba46ed183e2a7469512226051eabae630611a1c93c97a74b67c
+    executor_handoff_sha256:
+      path: ledger/handoffs/TASK-20261031-73799d.yaml
+      from: 8f14dadf6bb3833e3b97f8fb0a5767b70c5f2fb1880e3dce32f907e70779f2bb
+      to: 08a5e3a6293fefeabc1ae16b3703f8eb5c398183fecc8999ca865e5369f66cc6
+    rebound_in:
+    - coordination/goals/GOAL-PEXT-4a1d6b/batches/BATCH-a4886a/dispatch_queue.json (trial_plan_sha256)
+    - ledger/handoffs/TASK-20261031-73799d.yaml (trial_plan_sha256)
+  run_ids: unchanged (no trial has ever written a run directory; all six ids stay as frozen)
+  verification_scope:
+    method: >-
+      Static: the driver's manifest-writer block (run.py lines 313-326) and its
+      constants (HYPOTHESIS_ID, NEG_SEED, THREADS, RUSTC_FLAGS, NEG_COUNT) were read and
+      compared with the values declared here; the plan loads, and the dispatcher reports
+      TASK-20261031-73799d ready with claim=null.
+    limitation: >-
+      No manifest exists to replay against, because no trial has ever run. The first
+      supervised launch is the first full proof; the same three fact classes were
+      exercised successfully by EXP-PEXT-212d5c on 2026-11-06.
+  approval_semantics: >-
+    Retains DEC-20261031-dcfdee as the scientific protocol approval. This additive
+    decision prospectively supersedes only the execution-binding values named above. It
+    does not rewrite that immutable decision, creates no new contract and does not assert
+    a fresh experiment approval. Approved-unrun is unchanged: the contract was already
+    approved and unrun.
+  preserved:
+  - specification and hypothesis bytes
+  - all implementation source bytes
+  - six trial ids, run ids, argv, check_argv, dependency order and watchdogs
+  - seeds, sample sizes, controls, metrics, thresholds, stopping and invalidation rules
+  - lane BATCH-a4886a, executor task TASK-20261031-73799d and archive ownership TASK-20261031-4fa3ea
+  scientific_protocol_unchanged: true
+  run_state: No trial launched by this amendment. No run directory exists.
+  outstanding_not_resolved:
+  - The whole-ledger validation CI debt is NOT resolved.
+  - DEC-20261031-dcfdee requires this lane to run alone on the host after or apart from the EXP-PEXT-212d5c census; that ordering is unchanged by this packet.
+  activation_gate: >-
+    Publish and verify through a Coordinator ledger archive task; until then this is a
+    prepared packet. Then, only when BATCH-21339c's census is finished or apart from it,
+    a separate Executor claims lane BATCH-a4886a and invokes /run EXP-PEXT-0b2c75 under
+    TASK-20261031-73799d.
+  asserts_nothing_about: >-
+    the candidate norm-character law, its truth, any 4-torsion count, transfer, novelty,
+    costs or deployed curves.

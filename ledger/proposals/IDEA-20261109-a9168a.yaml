@@ -1,0 +1,65 @@
+idea:
+  id: IDEA-20261109-a9168a
+  question_id: RQ-ISO-844f9f
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  class: control
+  record_kind: implementation_attack
+  title: Malformed 8-torsion data in theta-based dimension-2 signature verification; does any lift inconsistency
+    survive to a product codomain
+  novelty_status: speculative
+  claim: Level-2 theta (2,2)-steps fix signs via 8-torsion points above the kernel. A verifier that consumes
+    signature-supplied torsion without checking order and pairing compatibility may run a chain on an
+    inconsistent lift and still reach a surface with one vanishing even theta constant, i.e. a product,
+    with permuted or twisted components. We claim that fuzzing a reference verifier with order-4 or pairing-incompatible
+    8-torsion will either (a) be rejected before the chain in every case, closing the lead, or (b) expose
+    an acceptance path, which would be an implementation finding, not an assumption break. Clears H-ALISO-016
+    (codomain identification after a Kani chain) and H-WESO-516558 (endpoint identification of 2-power
+    walks). No Lean coverage for lift independence.
+  mechanism: 'Dimension 2, level-2 theta, (2,2) per step, chain length e, field F_{p^2}. Fuzz classes:
+    (i) supplied points of order 4 instead of 8; (ii) points of order 8 not above the stated kernel; (iii)
+    points with wrong Weil pairing relative to the kernel basis; (iv) sign-flipped theta coordinates at
+    one step. For each, record whether the chain terminates, whether the terminal theta null has exactly
+    one zero coordinate, and whether the recovered elliptic components match the expected ones up to isomorphism
+    and twist. Enumeration cost is at most 2^4 sign choices per step times e steps.'
+  quantitative:
+    dimension: 2
+    coordinate_model: level-2 theta
+    isogeny_degree: (2,2) per step, 2^e total
+    search_cost: at most 16 e candidates per fuzz class
+  cleared:
+    checked:
+    - H-ALISO-016
+    - H-WESO-516558
+    disproven: none in the brief
+    lean: no Lean coverage; would need "two 8-torsion lifts of the same maximal isotropic K in A[2] induce
+      level-2 theta structures on A/K differing by a sign-and-permutation action of the finite theta group"
+    exp: none; nearest surface is Autolab package p1243_auxiliary_geometric_principalization (H-ALISO-016)
+  kill_test: Run all four fuzz classes against a reference theta verifier at toy p (about 2^40) with 10^4
+    inputs per class. If every malformed input is rejected by order or pairing checks before the first
+    (2,2) step, close the record. Any accepted input is recorded as an implementation finding with the
+    exact check that was missing.
+  prior_art:
+    frontier_map: not_applicable
+    frontier_map_reason: implementation-surface fuzz, not a frontier claim; outcome depends on code, not
+      on mathematics
+    searched:
+      corpus_grep:
+      - H-ALISO-016
+      - H-WESO-516558
+      - H-ALISO-010
+      - H-ALISO-011
+      none_found_after:
+      - 8-torsion lift
+      - theta structure sign
+      - malformed signature
+      - product splitting check
+    nearest_record:
+      id: H-ALISO-016
+      relation: adjacent
+      note: identifies codomains after a chain but does not fuzz the input torsion
+    not_applicable_reason: This campaign is isogeny/formula engineering, not an ECDLP-mechanism claim;
+      the ECDLP frontier map does not cover the relevant literature.
+    none_found_after:
+    - repository search of crypto, cryptanalysis, crypto-autoresearcher and ecbench

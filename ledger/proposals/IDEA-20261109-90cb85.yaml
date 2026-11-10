@@ -1,0 +1,141 @@
+idea:
+  id: IDEA-20261109-90cb85
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: Modular fibre certificate - X_0(N)(F_p) over j(E) is two w_N-swapped points with quotient E,
+    the X_1(N) fibre is a Frobenius-trivial torsor, and the moduli presentation of ECDLP adds exactly
+    Aut(E)
+  class: representation
+  claim: 'Let E/F_p have odd prime order N with p not 1 mod N. (i) The fibre of X_0(N) -> X(1) over j(E)
+    consists of exactly two F_p-points, (E, L_1) and (E, L_p), exchanged by the Atkin-Lehner involution
+    w_N, and both quotient curves are isomorphic to E; hence X = j(E) is a root of Phi_N(j(E), X) mod
+    p of multiplicity exactly 2. (ii) The fibre of X_1(N) -> X_0(N) over (E, L_1) is the set of (N - 1)/2
+    points (E, +-kP), all F_p-rational; the diamond operators (Z/N)^*/{+-1} act simply transitively and
+    Frobenius acts trivially, so the ECDLP is the diamond-operator torsor problem with no Galois symmetry
+    to quotient by. (iii) The only extra symmetry is Aut(E) acting through the diamonds, orbits of size
+    |Aut(E)|/2 (3 for j = 0), the constant of KR-RHO-0528e7. (iv) Marked-point barrier: any object built
+    from (E, L_1) or symmetric in E(F_p) is invariant under all diamonds and therefore constant in k.
+    Exponent delta 0.'
+  mechanism: Stable cyclic subgroups of E[N] are the eigenlines L_1 = ker(pi-1) and L_p = ker(pihat-1);
+    pi - 1 and pihat - 1 are degree-N endomorphisms, so E/L_1 and E/L_p are E. w_N(E, L_1) is (E/L_1,
+    E[N]/L_1) = (E, (pi-1)L_p) = (E, L_p) since pi - 1 acts invertibly on L_p. Elements of norm N in End(E)
+    are units times pi - 1 or pibar - 1, so no other cyclic N-isogeny E -> E exists and the multiplicity
+    is 2. Diamonds <a> send (E, P) to (E, aP) and commute with Frobenius, which fixes every rational point.
+  novelty_status: known
+  citations:
+  - ref: KR-RHO-0528e7
+    provenance: internal
+    claim: Automorphism groups give a sqrt m constant; here it appears as the only non-diamond symmetry
+      of the X_1(N) fibre.
+    verified_by: REPO BRIEF section 3 row text, Mythos run 2026-11-09.
+  - ref: KR-RHO-755e35
+    provenance: internal
+    claim: Isogenous curves are equally hard; relevant to Hecke correspondences on the fibre, which this
+      record does not use.
+    verified_by: REPO BRIEF section 3 row text, Mythos run 2026-11-09.
+  - ref: IDEA-20260806-0c9de1
+    provenance: internal
+    claim: Earlier speculative X_1(N) representation of (E, P); this record states what that representation
+      can and cannot add.
+    verified_by: REPO BRIEF section 2 ledger index excerpt, 2026-11-09.
+  assumptions:
+  - N is an odd prime equal to
+  - For the Phi_N check j(E) is not in {0, 1728}; j = 0 curves are tested by direct subgroup enumeration
+    only.
+  predictions:
+  - metric: excess over 2 of F_p-rational cyclic N-subgroups, summed over curves
+    direction: lower
+    minimum_effect: exactly zero
+  - metric: number of curves with j not in {0,1728} where the multiplicity of X = j(E) in Phi_N(j(E),
+      X) mod p differs from 2
+    direction: lower
+    minimum_effect: zero
+  - metric: number of Frobenius-moved points in the X_1(N) fibre over (E, L_1)
+    direction: lower
+    minimum_effect: zero on every curve
+  minimal_test:
+    design: For p <= 40 and prime-order ordinary curves with N in {5, 7, 11, 13}, evaluate PARI polmodular(N)
+      at j(E) mod p, factor over F_p, record the multiplicity of j(E) and all other F_p-roots with multiplicities.
+      Enumerate E[N] over F_{p^{k_N}}, list Frobenius-stable cyclic subgroups, compute Velu quotients
+      and their j-invariants, and verify the swap under w_N by computing (pi - 1)L_p. On j = 0 curves
+      count <lambda>-orbits on x-values.
+    controls:
+    - A curve with N dividing p - 1 where the eigenvalues coincide and more stable lines are expected.
+    - A supersingular toy curve, where the rational structure differs, reported separately.
+    required_metrics:
+    - p, j, N, k_N
+    - stable subgroup count and Velu quotient j-invariants
+    - Phi_N root multiplicities over F_p
+    - lambda-orbit sizes on j = 0 curves
+  falsification_conditions:
+  - A tested curve has a third F_p-rational cyclic N-subgroup, or a quotient by L_1 or L_p not isomorphic
+    to E.
+  - The multiplicity of j(E) in Phi_N(j(E), X) mod p differs from 2 for some j not in {0, 1728}.
+  - Any point of the X_1(N) fibre is moved by Frobenius.
+  confounders:
+  - Other F_p-roots of Phi_N(j(E), X) can arise from Frobenius orbits of non-stable subgroups whose quotients
+    share a j-invariant; they are reported, not predicted away.
+  - PARI and Sage normalisations of Phi_N agree up to a unit; multiplicity is normalisation-free.
+  interpretation_limits:
+  - This closes the modular-curve coordinate route with exponent delta 0; it says nothing about Hecke-transported
+    relation collection beyond pointing at the repo's hecke experiments.
+  - Toy levels only; Phi_N for N near 2^256 is not an object of computation.
+  heuristic_assumptions:
+  - id: H1
+    statement: The multiplicity-2 statement holds for every ordinary prime-order curve, not only for maximal-order
+      CM curves.
+    rigorous_support: Ideals of norm N in any order coprime to the conductor are two; (pi - 1) and (pibar
+      - 1) are principal in Z[pi]; a short argument, not refereed in the repository.
+    validation_plan: Direct factorisation of Phi_N(j(E), X) mod p on all toy curves with generic j and
+      comparison with the Velu quotient list.
+  target_complexity:
+    time_exponent: p^{1/2} unchanged
+    memory_exponent: O(1) beyond toy modular polynomials
+    best_known: Pollard rho, Theta(p^{1/2}) group operations, KR-RHO-13bf67, with the sqrt 6 Aut constant
+      on j = 0 curves, KR-RHO-0528e7.
+    hidden_overhead: None claimed; no algorithm is proposed.
+    tradeoff_note: The diamond torsor has no Frobenius symmetry; the only usable quotient is Aut(E), already
+      charged in rho.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: low
+  dominated_by: KR-RHO-0528e7 dominates the only positive content (the Aut constant); KR-RHO-13bf67 dominates
+    the exponent. The record's value is closing the X_0 and X_1 coordinate route with a toy certificate.
+  sota_delta: Exponent delta 0. New content is the exact two-point fibre and multiplicity statement and
+    the Frobenius-trivial torsor reading of ECDLP on X_1(N).
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/generic-rho
+    rows_checked:
+    - KR-RHO-0528e7
+    - KR-RHO-755e35
+    - KR-RHO-53c89f
+    - KR-RHO-13bf67
+    - KR-IC-cd159a
+    nearest:
+    - ref: KR-RHO-0528e7
+      provenance: internal
+      relation: special_case
+      delta: The Aut(E) diamond orbits are exactly the automorphism-orbit walk of the row; this record
+        shows it is the only symmetry the modular presentation offers.
+    - ref: KR-RHO-755e35
+      provenance: internal
+      relation: adjacent
+      delta: The row governs isogeny walks; here both N-isogenies from (E, L_1) and (E, L_p) return to
+        E itself.
+    searched:
+      corpus_grep:
+      - REPO BRIEF section 2 for X_0, X_1, modular, diamond, Atkin-Lehner, Hecke
+      - REPO BRIEF section 1b hecke experiment directory names
+      web: []
+      blocked: []
+    lead: LEAD-STR-level-structure-torsor
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: For p <= 40 and prime-order ordinary curves with N in {5, 7, 11, 13}, evaluate
+        PARI polmodular(N) at j(E) mod p, factor over F_p, record the multiplicity of j(E) and all other
+        F_p-roots with multiplicities. Enumerate E[N] over F_{p^{k_N}}, list Frobenius-stable cyclic subgroups,
+        compute Velu quotients and their j-invariants, and verify the swap under w_N by computing (pi
+        - 1)L_p. On j = 0 curves c'

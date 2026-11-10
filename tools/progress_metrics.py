@@ -212,6 +212,9 @@ ICPERF_RUNS = {
 }
 
 
+ICPERF_PLANTED_PRICE_TRIAL = "ctl-neg-perturbed-price"
+
+
 def icperf_trials(ref, since):
     """Export only ICPERF rows whose committed raw output and receipt agree."""
     all_rows = []
@@ -270,28 +273,31 @@ def icperf_trials(ref, since):
         source = f"{raw_path} + {receipt_path}@{ref}"
         emit(f"icperf.{exp_id}.validated_trials", 1, date=day, problem="icperf", unit="trial records",
              kind="event", label=f"{exp_id} validated completed trial {trial_id}", source=source)
+        # Stage-0 values are computed by a seeded program from assumed or
+        # planted inputs. None is a measured latency or a table-probe count,
+        # so no unit may read as one (DEC-20261105-8a9984 NA-2; sheriff case
+        # SHF-20261106-a114e7, ICR-1).
         if exp_id == "EXP-ICPERF-283a70":
-            fields = (("n_targets", "target samples"), ("sample_sum", "probe-count sum"),
-                      ("median", "probes per target"))
+            fields = (("n_targets", "synthetic xorshift samples (count)"),
+                      ("sample_sum", "synthetic xorshift draw-count sum (not table probes)"),
+                      ("median", "draws (synthetic, not table probes)"))
+            qualifier = "synthetic xorshift sample, not table probes"
         else:
-            fields = (("states", "model states"), ("c_probe_ns", "nanoseconds per probe"),
-                      ("c_state_ns", "nanoseconds per state"), ("c_step_ns", "nanoseconds per step"),
-                      ("price_ratio_num", "numerator of computed price ratio (dimensionless; not the lab `ratio` unit)"),
-                      ("price_ratio_den", "denominator of computed price ratio (dimensionless; not the lab `ratio` unit)"))
+            # NEG-1 (ctl-neg-perturbed-price) plants a perturbed price; every
+            # other trial uses the assumed cost-model constants.
+            kind = "planted input" if trial_id == ICPERF_PLANTED_PRICE_TRIAL else "assumed input"
+            fields = (("states", "model states"),
+                      ("c_probe_ns", f"{kind}: nanoseconds per probe (cost-model constant, not measured)"),
+                      ("c_state_ns", f"{kind}: nanoseconds per state (cost-model constant, not measured)"),
+                      ("c_step_ns", f"{kind}: nanoseconds per step (cost-model constant, not measured)"),
+                      ("price_ratio_num", "dimensionless ratio numerator (computed from assumed inputs)"),
+                      ("price_ratio_den", "dimensionless ratio denominator (computed from assumed inputs)"))
+            qualifier = f"{kind}s, not a measurement"
         for field, unit in fields:
             value = raw.get(field)
             if type(value) in (int, float) and math.isfinite(value):
-                label = f"{exp_id} {trial_id}: {field}"
-                if exp_id == "EXP-ICPERF-284bc4":
-                    if field == "c_probe_ns" and trial_id == "ctl-neg-perturbed-price":
-                        label += " - planted control input (371 instead of 370), not a price"
-                    elif field in ("c_probe_ns", "c_state_ns", "c_step_ns"):
-                        label += " - assumed input (IDEA-20261015-7a3c9e n=83 estimate), not measured"
-                    elif field in ("price_ratio_num", "price_ratio_den"):
-                        label += (" - computed from assumed inputs by a closed-form model, not measured; "
-                                  "numerator/denominator of one reduced ratio, never export as a single ratio")
                 emit(f"icperf.{exp_id}.{trial_id}.{field}", value, date=day, problem="icperf", unit=unit,
-                     better="neutral", label=label, source=source)
+                     better="neutral", label=f"{exp_id} {trial_id}: {field} ({qualifier})", source=source)
 
 
 def prym_census(ref):
@@ -834,6 +840,1104 @@ def prime_field_json_functional_panel(ref,since):
             emit(prefix+'.'+c['cell_id']+'.'+c['schedule']+'.budget'+str(c['prefix'])+'.'+c['scope']+'.'+c['arm']+'.'+k,c[k],unit=unit,label='Cold supplied-row solver including cancellation/lifting/checks; shared projection separate; no unit weights',**common)
 
 
+
+def prime_field_ap_holdout_panel(ref,since):
+    """Fresh A10 measured rows only; no multiplication of shared physical work."""
+    date='2026-11-06'
+    if date<since:return
+    path='research/prime_field_a10_execution_20261106/runs/a10-ap-holdout-276654/analysis.json';raw=show(ref,path)
+    if raw is None:return
+    schedules=tuple(kind+str(seed) for seed in range(3) for kind in ('ap','hash'));budgets=(0,8,16,24,32,48,64,96,128)
+    try:
+        data=json.loads(raw);cells=data['cells'];costs=data['construction'];physical=data['collection_counters']
+        expected={(f'p{p}-i{i}',a,b,s,m) for p in (8191,65537) for i in (0,1) for a in schedules for b in budgets for s in ('relations','anchors') for m in ('sparse_joint','sparse_cancel')}
+        if data['panel_complete']is not True or data['generation_valid']is not True or data['physical_attempts']!=1 or data['solver_calls_verified']!=864 or data['partial_work_unknown']is not False:return
+        if len(cells)!=864 or {(c['cell_id'],c['schedule'],c['prefix'],c['scope'],c['arm']) for c in cells}!=expected:return
+        for c in cells:
+            if c['verified']is not True or c['status']!='verified':return
+            for k in ('identified_targets','source_rank','delta','base_rank_after_cancellation','base_columns','matrix_rank','matrix_columns','distinct_equations','fr_add','fr_sub','fr_mul','fr_inv'):
+                if type(c[k])is not int or c[k]<0:return
+            if c['source_rank']+c['delta']!=c['base_rank_after_cancellation'] or c['base_rank_after_cancellation']>c['base_columns'] or c['matrix_rank']>c['matrix_columns'] or c['identified_targets']>8 or len(c['identified_indices'])!=c['identified_targets']:return
+        pairs={}
+        for c in cells:pairs.setdefault(c['instance_id'],[]).append(c)
+        if len(pairs)!=432 or any(len(v)!=2 or v[0]['identified_indices']!=v[1]['identified_indices'] or v[0]['delta']!=v[1]['delta'] or v[0]['source_rank']!=v[1]['source_rank'] for v in pairs.values()):return
+        if any(physical.get(k)!=v for k,v in dict(source_queries=147456,target_queries=1536,pair_table_insertions=4928).items()):return
+        expected_cost={(f'p{p}-i{i}',a,b) for p in (8191,65537) for i in (0,1) for a in schedules for b in budgets}
+        if len(costs)!=216 or {(c['cell_id'],c['schedule'],c['prefix']) for c in costs}!=expected_cost:return
+        for c in costs:
+            if c['source_count']!=c['prefix'] or any(type(v)is not int or v<0 for v in c['constructor_counters'].values()):return
+    except (KeyError,TypeError,ValueError):return
+    common=dict(date=date,problem='prime-field-factor-bases',better='neutral',source=f'{path}@{ref}');prefix='prym.prime_field.a10'
+    emit(prefix+'.solver_calls',864,unit='solver calls',label='432dependent fresh scope systems, two cold kernel-free solvers',**common)
+    for k in ('source_queries','target_queries','pair_table_insertions'):
+        emit(prefix+'.physical.'+k,physical[k],unit='calls',label='Actual physical collection once per curve/schedule increment, no prefix/view multiplication',**common)
+    for c in cells:
+        for k,unit in (('identified_targets','target slots'),('source_rank','rank'),('delta','rank'),('distinct_equations','equations'),('fr_add','Fr additions'),('fr_sub','Fr subtractions'),('fr_mul','Fr multiplications'),('fr_inv','Fr inversions')):
+            emit(prefix+'.'+c['cell_id']+'.'+c['schedule']+'.budget'+str(c['prefix'])+'.'+c['scope']+'.'+c['arm']+'.'+k,c[k],unit=unit,label='Exact dependent scope observation; solver-only vector, cold shared construction separate',**common)
+    for c in costs:
+        for k in ('Fp.field_add','Fp.field_sub','Fp.field_mul','Fp.field_inv','constructor_group_add_calls'):
+            emit(prefix+'.'+c['cell_id']+'.'+c['schedule']+'.budget'+str(c['prefix'])+'.construction.'+k,c['constructor_counters'].get(k,0),unit='calls',label='Cumulative prefix view of paid constructor work; do not sum overlapping views or mix primitive units',**common)
+
+
+def prime_field_affine_holdout_panel(ref,since):
+    """A11 compact committed census, with physical aliases and solver vectors."""
+    date='2026-11-06'
+    if date<since:return
+    path='research/prime_field_a11_execution_20261106/runs/a11-affine-holdout-30245e/metrics.json';raw=show(ref,path)
+    if raw is None:return
+    try:
+        data=json.loads(raw)
+        if data['schema']!='prime-field-a11-metrics/v1' or data['panel_complete']is not True or data['physical_attempts']!=1 or data['planned_systems']!=1152 or data['planned_solver_calls']!=2304 or data['verified_systems']!=1152 or data['partial_work_unknown']is not False:return
+        columns=data['columns'];rows=[dict(zip(columns,v,strict=True)) for v in data['rows']]
+        if len(set(columns))!=len(columns) or len(rows)!=1152:return
+        expected={(f'p{p}-i{i}',k+str(seed),sp,policy,tp,scope) for p in (8191,65537) for i in (0,1) for seed in range(3) for k in ('ap','hash') for sp in (64,128) for policy in ('walk','hash_offset','general') for tp in (1,2,4,8) for scope in ('relations','anchors')}
+        if {(v['cell_id'],v['source_schedule'],v['source_prefix'],v['target_policy'],v['target_prefix'],v['scope']) for v in rows}!=expected or {v['case_id'] for v in rows}!=set(range(1152)):return
+        fields=('base_columns','source_rank','outside_rank','delta','after_cancellation_rank','identified_targets','identified_mask','source_rows','target_rows','decomposition_rows','knowledge_rows','joint_rank','joint_columns','cancel_rank','cancel_columns')+tuple(a+'_fr_'+k for a in ('joint','cancel') for k in ('add','sub','mul','inv'))
+        for v in rows:
+            if v['verified']is not True or any(type(v[k])is not int or v[k]<0 for k in fields):return
+            if v['identified_targets']>8 or v['identified_mask']>255 or v['identified_mask'].bit_count()!=v['identified_targets'] or v['outside_rank']>8:return
+            if v['source_rank']+v['delta']!=v['after_cancellation_rank'] or v['after_cancellation_rank']>v['base_columns'] or v['joint_rank']!=v['after_cancellation_rank']+v['outside_rank'] or v['cancel_rank']!=v['after_cancellation_rank']:return
+            if v['joint_columns']!=v['base_columns']+8 or v['cancel_columns']!=v['base_columns'] or v['decomposition_rows']+v['knowledge_rows']!=v['target_rows'] or v['scope']=='relations' and v['knowledge_rows']!=0:return
+        physical=data['physical_counters']
+        if any(type(v)is not int or v<0 for group in physical.values() for v in group.values()):return
+        if physical['source'].get('source_queries')!=147456 or physical['source'].get('pair_table_insertions')!=4928:return
+        queries=data['query_summary'];ids={f'p{p}-i{i}' for p in (8191,65537) for i in (0,1)}
+        if len(queries)!=4 or {v['cell_id'] for v in queries}!=ids:return
+        for v in queries:
+            n=16 if v['cell_id'].startswith('p8191-') else 32
+            if any(type(v[k])is not int for k in ('physical_cached_points','queries','logical_requests')) or not 8<=v['physical_cached_points']<=176 or v['queries']!=2*n*v['physical_cached_points'] or v['logical_requests']!=2304:return
+        target_queries=sum(v['queries'] for v in queries)
+        if target_queries!=physical['source'].get('target_queries',0)+physical['target_queries'].get('target_queries',0) or physical['target_queries'].get('logical_target_requests')!=9216:return
+        checkpoints=data['closed_curve_checkpoints']
+        if len(checkpoints)!=4 or {v['cell_id'] for v in checkpoints}!=ids or any(v['valid']is not True or v['receipt']['returncode']!=0 or v['receipt']['closed_curve']!=v['cell_id'] for v in checkpoints):return
+        for short,arm in [('joint','sparse_joint'),('cancel','sparse_cancel')]:
+            for key in ('add','sub','mul','inv'):
+                if sum(v[short+'_fr_'+key] for v in rows)!=data['observed_arm_counters'][arm].get('Fr.field_'+key,0):return
+    except (KeyError,TypeError,ValueError,AttributeError):return
+    common=dict(date=date,problem='prime-field-factor-bases',better='neutral',source=f'{path}@{ref}');prefix='prym.prime_field.a11'
+    emit(prefix+'.solver_calls',2304,unit='solver calls',label='1152dependent affine scope systems, two cold kernel-free solvers; producer checks',**common)
+    for key in ('source_queries','pair_table_insertions'):
+        emit(prefix+'.physical.'+key,physical['source'][key],unit='calls',label='Physical work counted once, no prefix/policy multiplication',**common)
+    emit(prefix+'.physical.target_queries',target_queries,unit='calls',label='Signed queries at distinct cached points, natural endpoints included once',**common)
+    emit(prefix+'.logical.target_requests',9216,unit='requests',label='Repeated logical endpoint requests, separate from physical queries',**common)
+    for v in rows:
+        name=prefix+'.'+v['cell_id']+'.'+v['source_schedule']+'.source'+str(v['source_prefix'])+'.'+v['target_policy']+'.target'+str(v['target_prefix'])+'.'+v['scope']
+        for key,unit in [('identified_targets','target slots'),('source_rank','rank'),('outside_rank','rank'),('delta','rank'),('after_cancellation_rank','rank'),('target_rows','equations'),('knowledge_rows','equations')]:
+            emit(name+'.'+key,v[key],unit=unit,label='Exact dependent affine scope observation; producer standing only',**common)
+        for arm in ('joint','cancel'):
+            for key,unit in [('add','Fr additions'),('sub','Fr subtractions'),('mul','Fr multiplications'),('inv','Fr inversions')]:
+                emit(name+'.'+arm+'.fr_'+key,v[arm+'_fr_'+key],unit=unit,label='Cold solver component including lift/checks, separate from collection/construction',**common)
+
+
+def prime_field_batched_holdout_panel(ref,since):
+    """A12 compact committed census, with physical aliases and solver vectors."""
+    date='2026-11-06'
+    if date<since:return
+    path='research/prime_field_a12_execution_20261106/runs/a12-batched-holdout-6ba98a/metrics.json';raw=show(ref,path)
+    if raw is None:return
+    try:
+        data=json.loads(raw)
+        if data['schema']!='prime-field-a12-metrics/v1' or data['panel_complete']is not True or data['physical_attempts']!=1 or data['planned_systems']!=1152 or data['planned_solver_calls']!=2304 or data['verified_systems']!=1152 or data['partial_work_unknown']is not False:return
+        columns=data['columns'];rows=[dict(zip(columns,v,strict=True)) for v in data['rows']]
+        if len(set(columns))!=len(columns) or len(rows)!=1152:return
+        expected={(f'p{p}-i{i}',k+str(seed),sp,policy,tp,scope) for p in (262139,524287) for i in (0,1) for seed in range(3) for k in ('ap','hash') for sp in (64,128) for policy in ('walk','hash_offset','general') for tp in (1,2,4,8) for scope in ('relations','anchors')}
+        if {(v['cell_id'],v['source_schedule'],v['source_prefix'],v['target_policy'],v['target_prefix'],v['scope']) for v in rows}!=expected or {v['case_id'] for v in rows}!=set(range(1152)):return
+        fields=('base_columns','source_rank','outside_rank','delta','after_cancellation_rank','identified_targets','identified_mask','source_rows','target_rows','decomposition_rows','knowledge_rows','joint_rank','joint_columns','cancel_rank','cancel_columns')+tuple(a+'_fr_'+k for a in ('joint','cancel') for k in ('add','sub','mul','inv'))
+        for v in rows:
+            if v['verified']is not True or any(type(v[k])is not int or v[k]<0 for k in fields):return
+            if v['identified_targets']>8 or v['identified_mask']>255 or v['identified_mask'].bit_count()!=v['identified_targets'] or v['outside_rank']>8:return
+            if v['source_rank']+v['delta']!=v['after_cancellation_rank'] or v['after_cancellation_rank']>v['base_columns'] or v['joint_rank']!=v['after_cancellation_rank']+v['outside_rank'] or v['cancel_rank']!=v['after_cancellation_rank']:return
+            if v['joint_columns']!=v['base_columns']+8 or v['cancel_columns']!=v['base_columns'] or v['decomposition_rows']+v['knowledge_rows']!=v['target_rows'] or v['scope']=='relations' and v['knowledge_rows']!=0:return
+        if any(len({v['base_columns'] for v in rows if v['cell_id']==cid})!=1 for cid in {v['cell_id'] for v in rows}):return
+        if any(v['base_columns']>32 or v['source_rank']>v['source_rows'] or v['outside_rank']>v['target_rows'] for v in rows):return
+        physical=data['physical_counters']
+        if any(type(v)is not int or v<0 for group in physical.values() for v in group.values()):return
+        if physical['source'].get('source_queries')!=196608 or physical['source'].get('pair_table_insertions')!=7936:return
+        queries=data['query_summary'];ids={f'p{p}-i{i}' for p in (262139,524287) for i in (0,1)}
+        if len(queries)!=4 or {v['cell_id'] for v in queries}!=ids:return
+        for v in queries:
+            n=32
+            if any(type(v[k])is not int for k in ('physical_cached_points','queries','logical_requests')) or not 8<=v['physical_cached_points']<=176 or v['queries']!=2*n*v['physical_cached_points'] or v['logical_requests']!=2304:return
+        target_queries=sum(v['queries'] for v in queries)
+        if target_queries!=physical['source'].get('target_queries',0)+physical['target_queries'].get('target_queries',0) or physical['target_queries'].get('logical_target_requests')!=9216:return
+        engines=data['query_engine_totals']
+        for engine in ('scalar','batch'):
+            if any(type(v)is not int or v<0 for v in engines[engine].values()):return
+            keys={key[len('query_'+engine+'.'):] for group in physical.values() for key in group if key.startswith('query_'+engine+'.')}
+            if keys!=set(engines[engine]):return
+            if any(sum(group.get('query_'+engine+'.'+key,0) for group in physical.values())!=value for key,value in engines[engine].items()):return
+        if engines['scalar'].get('Fp.group_add')!=196608+target_queries:return
+        checkpoints=data['closed_curve_checkpoints']
+        if len(checkpoints)!=4 or {v['cell_id'] for v in checkpoints}!=ids or any(v['valid']is not True or v['receipt']['returncode']!=0 or v['receipt']['closed_curve']!=v['cell_id'] for v in checkpoints):return
+        for short,arm in [('joint','sparse_joint'),('cancel','sparse_cancel')]:
+            for key in ('add','sub','mul','inv'):
+                if sum(v[short+'_fr_'+key] for v in rows)!=data['observed_arm_counters'][arm].get('Fr.field_'+key,0):return
+    except (KeyError,TypeError,ValueError,AttributeError):return
+    common=dict(date=date,problem='prime-field-factor-bases',better='neutral',source=f'{path}@{ref}');prefix='prym.prime_field.a12'
+    emit(prefix+'.solver_calls',2304,unit='solver calls',label='1152dependent affine scope systems, two cold kernel-free solvers; producer checks',**common)
+    for key in ('source_queries','pair_table_insertions'):
+        emit(prefix+'.physical.'+key,physical['source'][key],unit='calls',label='Physical work counted once, no prefix/policy multiplication',**common)
+    emit(prefix+'.physical.target_queries',target_queries,unit='calls',label='Signed queries at distinct cached points, natural endpoints included once',**common)
+    emit(prefix+'.logical.target_requests',9216,unit='requests',label='Repeated logical endpoint requests, separate from physical queries',**common)
+    for engine in ('scalar','batch'):
+        for key,unit in [('add','Fp additions'),('sub','Fp subtractions'),('mul','Fp multiplications'),('inv','Fp inversions')]:
+            emit(prefix+'.query.'+engine+'.fp_'+key,engines[engine].get('Fp.field_'+key,0),unit=unit,label='Executed engine element operations, separate from combined physical work and cold references',**common)
+        emit(prefix+'.query.'+engine+'.explicit_array_allocated_bytes',engines[engine].get('query_array_allocated_bytes',0),unit='bytes',label='Explicit query array allocation traffic, not peak live RSS; NumPy internal allocation excluded',**common)
+    for v in rows:
+        name=prefix+'.'+v['cell_id']+'.'+v['source_schedule']+'.source'+str(v['source_prefix'])+'.'+v['target_policy']+'.target'+str(v['target_prefix'])+'.'+v['scope']
+        for key,unit in [('identified_targets','target slots'),('source_rank','rank'),('outside_rank','rank'),('delta','rank'),('after_cancellation_rank','rank'),('target_rows','equations'),('knowledge_rows','equations')]:
+            emit(name+'.'+key,v[key],unit=unit,label='Exact dependent affine scope observation; producer standing only',**common)
+        for arm in ('joint','cancel'):
+            for key,unit in [('add','Fr additions'),('sub','Fr subtractions'),('mul','Fr multiplications'),('inv','Fr inversions')]:
+                emit(name+'.'+arm+'.fr_'+key,v[arm+'_fr_'+key],unit=unit,label='Cold solver component including lift/checks, separate from collection/construction',**common)
+
+
+def prime_field_paid_known_base_panel(ref, since):
+    """Committed-only A13 different-base census; supplied logs are not rank gain."""
+    date = '2026-11-06'
+    if date < since:
+        return
+    path = 'research/prime_field_a13_execution_20261106/runs/a13-paid-known-base-62d664/metrics.json'
+    raw = show(ref, path)
+    if raw is None:
+        return
+    try:
+        data = json.loads(raw)
+        if (data['schema'] != 'prime-field-a13-metrics/v1' or data['panel_complete'] is not True or
+            data['physical_attempts'] != 1 or data['planned_systems'] != 624 or data['planned_solver_calls'] != 1248 or
+            data['verified_systems'] != 624 or data['verified_solver_calls'] != 1248 or
+            data['unknown_systems'] != 0 or data['partial_work_unknown'] is not False):
+            return
+        columns = data['columns']
+        rows = [dict(zip(columns, value, strict=True)) for value in data['rows']]
+        if len(set(columns)) != len(columns) or len(rows) != 624 or {v['case_id'] for v in rows} != set(range(624)):
+            return
+        ids = {f'p{p}-i{i}' for p in (262139, 524287) for i in (0, 1)}
+        expected = {(cid, 'norm', k+str(seed), 128, policy, budget, scope)
+            for cid in ids for seed in range(3) for k in ('ap', 'hash')
+            for policy in ('walk', 'hash_offset', 'general') for budget in (1, 2, 4, 8)
+            for scope in ('relations', 'anchors')}
+        expected |= {(cid, 'known', 'known', 0, policy, budget, 'supplied')
+            for cid in ids for policy in ('walk', 'hash_offset', 'general') for budget in (1, 2, 4, 8)}
+        keys = ('cell_id', 'base_arm', 'source_schedule', 'source_prefix', 'target_policy', 'target_prefix', 'scope')
+        if {tuple(v[k] for k in keys) for v in rows} != expected:
+            return
+        fields = ('base_columns', 'source_rank', 'outside_rank', 'delta', 'after_cancellation_rank',
+                  'identified_targets', 'identified_mask', 'source_rows', 'target_rows', 'decomposition_rows', 'knowledge_rows')
+        for row in rows:
+            if row['verified'] is not True or any(type(row[k]) is not int or row[k] < 0 for k in fields):
+                return
+            if (row['base_columns'] > 32 or row['source_rank'] > row['source_rows'] or row['outside_rank'] > min(8, row['target_rows']) or
+                row['identified_targets'] > 8 or row['identified_mask'] > 255 or
+                row['identified_mask'].bit_count() != row['identified_targets'] or
+                row['source_rank']+row['delta'] != row['after_cancellation_rank'] or row['after_cancellation_rank'] > row['base_columns'] or
+                row['decomposition_rows']+row['knowledge_rows'] != row['target_rows'] or
+                row['scope'] == 'relations' and row['knowledge_rows'] != 0):
+                return
+            if row['base_arm'] == 'known' and (row['base_columns'], row['source_rank'], row['source_rows'], row['delta']) != (32, 32, 32, 0):
+                return
+        if any(len({v['base_columns'] for v in rows if v['cell_id'] == cid and v['base_arm'] == 'norm'}) != 1 for cid in ids):
+            return
+        physical, engines = data['physical_counters'], data['query_engine_totals']
+        if any(type(v) is not int or v < 0 for group in physical.values() for v in group.values()):
+            return
+        if physical['norm_collection'].get('source_queries') != 196608 or physical['norm_collection'].get('pair_table_insertions') != 7936:
+            return
+        if (physical['known.known_base_collection'].get('source_queries', 0) != 0 or
+            physical['known.known_base_collection'].get('pair_table_insertions') != 7936 or
+            physical['known.known_base_construction'].get('public_base_certificates_verified') != 128 or
+            physical['norm.shared_target_queries'].get('logical_target_requests') != 4608 or
+            physical['known.shared_target_queries'].get('logical_target_requests') != 768):
+            return
+        target_queries = sum(v.get('target_queries', 0) for v in physical.values())
+        for engine in ('scalar', 'batch'):
+            if any(type(v) is not int or v < 0 for v in engines[engine].values()):
+                return
+            namespace = 'query_'+engine+'.'
+            keys = {k[len(namespace):] for group in physical.values() for k in group if k.startswith(namespace)}
+            if keys != set(engines[engine]) or any(sum(group.get(namespace+k, 0) for group in physical.values()) != v for k, v in engines[engine].items()):
+                return
+        if engines['scalar'].get('Fp.group_add') != 196608+target_queries:
+            return
+        checkpoints = data['closed_curve_checkpoints']
+        if len(checkpoints) != 4 or {v['cell_id'] for v in checkpoints} != ids or any(
+            v['valid'] is not True or v['receipt']['returncode'] != 0 or v['receipt']['closed_curve'] != v['cell_id'] for v in checkpoints):
+            return
+        for arm in ('norm_joint', 'norm_cancel', 'known_direct', 'known_joint'):
+            if any(type(v) is not int or v < 0 for v in data['observed_arm_counters'][arm].values()):
+                return
+    except (KeyError, TypeError, ValueError, AttributeError):
+        return
+    common = dict(date=date, problem='prime-field-factor-bases', better='neutral', source=f'{path}@{ref}')
+    prefix = 'prym.prime_field.a13'
+    for key in ('verified_systems', 'verified_solver_calls', 'unknown_systems'):
+        emit(prefix+'.'+key, data[key], unit='objects', label='Actual finite census; dependent systems, producer standing unverified', **common)
+    for group, counts in physical.items():
+        for key in ('Fp.field_add', 'Fp.field_sub', 'Fp.field_mul', 'Fp.field_inv',
+                    'Fr.field_add', 'Fr.field_sub', 'Fr.field_mul', 'Fr.field_inv',
+                    'source_queries', 'target_queries', 'pair_table_insertions', 'public_base_certificates_verified'):
+            if key in counts:
+                emit(prefix+'.physical.'+group+'.'+key, counts[key], unit='calls',
+                     label='Physical component once; namespaces, cold/nested views and scalar/batch controls are not additive', **common)
+    for row in rows:
+        name = prefix+'.'+row['cell_id']+'.'+row['base_arm']+'.'+row['source_schedule']+'.'+row['target_policy']+'.target'+str(row['target_prefix'])+'.'+row['scope']
+        for key, unit in [('identified_targets', 'target slots'), ('identified_mask', 'bit mask'),
+                          ('source_rank', 'within-base rank'), ('delta', 'within-base rank'),
+                          ('target_rows', 'equations'), ('knowledge_rows', 'equations')]:
+            emit(name+'.'+key, row[key], unit=unit,
+                 label='Dependent within-base producer observation; known labels supplied, no rank/Delta comparison across bases', **common)
+
+
+def prime_field_mixed_known_helper_panel(ref, since):
+    """Committed A14 observations; supplied information stays on old coordinates."""
+    date = '2026-11-06'
+    if date < since:
+        return
+    path = 'research/prime_field_a14_execution_20261106/runs/a14-mixed-known-helpers-4bbcf6/metrics.json'
+    raw = show(ref, path)
+    if raw is None:
+        return
+    try:
+        data = json.loads(raw)
+        if (data['schema'] != 'prime-field-a14-metrics/v1' or data['panel_complete'] is not True or
+            data['physical_attempts'] != 1 or data['planned_systems'] != 1248 or data['planned_solver_calls'] != 2496 or
+            data['verified_systems'] != 1248 or data['verified_solver_calls'] != 2496 or
+            data['verified_information_audits'] != 576 or data['unknown_systems'] != 0 or data['partial_work_unknown'] is not False):
+            return
+        columns = data['columns']
+        rows = [dict(zip(columns, value, strict=True)) for value in data['rows']]
+        if len(set(columns)) != len(columns) or len(rows) != 1248 or {v['case_id'] for v in rows} != set(range(1248)):
+            return
+        ids = {f'p{p}-i{i}' for p in (262139, 524287) for i in (0, 1)}
+        expected = {(cid, base, kind+str(seed), 128, policy, budget, scope)
+            for cid in ids for base in ('norm','hybrid') for seed in range(3) for kind in ('ap','hash')
+            for policy in ('walk','hash_offset','general') for budget in (1,2,4,8) for scope in ('relations','anchors')}
+        expected |= {(cid, base, 'known', 0, policy, budget, 'supplied') for cid in ids for base in ('known32','known48')
+            for policy in ('walk','hash_offset','general') for budget in (1,2,4,8)}
+        keys = ('cell_id','base_arm','source_schedule','source_prefix','target_policy','target_prefix','scope')
+        if {tuple(v[k] for k in keys) for v in rows} != expected:
+            return
+        fields = ('base_columns','native_columns','supplied_columns','source_rank','native_source_rank','outside_rank',
+            'delta','after_cancellation_rank','identified_targets','identified_mask','source_rows','target_rows','decomposition_rows','knowledge_rows')
+        for v in rows:
+            if v['verified'] is not True or any(type(v[k]) is not int or v[k] < 0 for k in fields):
+                return
+            width = 32 if v['base_arm'] in ('norm','known32') else 48
+            if (v['native_columns'] != width or v['base_columns']+v['supplied_columns'] != width or
+                v['native_source_rank'] != v['source_rank']+v['supplied_columns'] or
+                v['native_source_rank'] > min(width,v['source_rows']) or v['source_rank']+v['delta'] != v['after_cancellation_rank'] or
+                v['after_cancellation_rank'] > v['base_columns'] or v['outside_rank'] > min(8,v['target_rows']) or
+                v['identified_targets'] > 8 or v['identified_mask'] > 255 or v['identified_mask'].bit_count() != v['identified_targets'] or
+                v['decomposition_rows']+v['knowledge_rows'] != v['target_rows'] or v['scope']=='relations' and v['knowledge_rows'] != 0):
+                return
+            if v['base_arm'].startswith('known') and (v['base_columns'],v['source_rank'],v['delta'],v['source_rows']) != (0,0,0,width):
+                return
+        if any(len({v['base_columns'] for v in rows if v['cell_id']==cid and v['base_arm'] in ('norm','hybrid')}) != 1 for cid in ids):
+            return
+        physical, engines = data['physical_counters'], data['query_engine_totals']
+        if any(type(v) is not int or v < 0 for group in physical.values() for v in group.values()):
+            return
+        for size in (16,32,48):
+            if physical['public_base'+str(size)+'.known_base_construction'].get('public_base_certificates_verified') != 4*size:
+                return
+        for base in ('norm','hybrid'):
+            geometric = physical[base+'.norm_prelude']['geometry_classes_stored']
+            if not 128 <= geometric <= (128 if base=='norm' else 192):
+                return
+            if physical[base+'.source_construction'].get('signed_point_queries') != 2*128*6*geometric:
+                return
+            if physical[base+'.native_collection'].get('signed_point_queries') != 2*8*geometric:
+                return
+        for base,size in [('known32',32),('known48',48)]:
+            if physical.get(base+'.source_construction',{}).get('signed_point_queries',0) != 0:
+                return
+            if physical[base+'.native_collection'].get('signed_point_queries') != 4*2*8*size:
+                return
+            if physical[base+'.native_collection'].get('pair_table_insertions') != 4*2*size*(size-1):
+                return
+        for engine in ('scalar','batch'):
+            if any(type(v) is not int or v < 0 for v in engines[engine].values()):
+                return
+            namespace = 'query_'+engine+'.'
+            names = {k[len(namespace):] for group in physical.values() for k in group if k.startswith(namespace)}
+            if names != set(engines[engine]) or any(sum(group.get(namespace+k,0) for group in physical.values()) != v for k,v in engines[engine].items()):
+                return
+        if engines['scalar'].get('Fp.group_add') != sum(v.get('signed_point_queries',0) for v in physical.values()):
+            return
+        checkpoints = data['closed_curve_checkpoints']
+        if len(checkpoints) != 4 or {v['cell_id'] for v in checkpoints} != ids or any(
+            v['valid'] is not True or v['receipt']['returncode'] != 0 or v['receipt']['closed_curve'] != v['cell_id'] for v in checkpoints):
+            return
+        for base in ('norm','hybrid','known32','known48'):
+            for method in ('partial_joint','sparse_joint'):
+                if any(type(v) is not int or v < 0 for v in data['observed_arm_counters'][base+'.'+method].values()):
+                    return
+    except (KeyError,TypeError,ValueError,AttributeError):
+        return
+    common = dict(date=date,problem='prime-field-factor-bases',better='neutral',source=f'{path}@{ref}')
+    prefix = 'prym.prime_field.a14'
+    for key in ('verified_systems','verified_solver_calls','verified_information_audits','unknown_systems'):
+        emit(prefix+'.'+key,data[key],unit='objects',label='Actual finite producer census; dependent cases and separate diagnostics, unverified standing',**common)
+    for group,counts in physical.items():
+        for key in ('Fp.field_add','Fp.field_sub','Fp.field_mul','Fp.field_inv','Fr.field_add','Fr.field_sub','Fr.field_mul','Fr.field_inv',
+            'signed_point_queries','pair_table_insertions','public_base_certificates_verified'):
+            if key in counts:
+                emit(prefix+'.physical.'+group+'.'+key,counts[key],unit='calls',
+                    label='Physical component once; diagnostic overhead, both engine controls and conditional references remain separate',**common)
+    for v in rows:
+        name = prefix+'.'+v['cell_id']+'.'+v['base_arm']+'.'+v['source_schedule']+'.'+v['target_policy']+'.target'+str(v['target_prefix'])+'.'+v['scope']
+        for key,unit in [('identified_targets','target slots'),('identified_mask','bit mask'),('base_columns','old unknown columns'),
+            ('supplied_columns','supplied units'),('source_rank','old-coordinate rank'),('native_source_rank','native supplied-plus-collected rank'),
+            ('delta','within-case rank'),('target_rows','equations'),('knowledge_rows','equations')]:
+            emit(name+'.'+key,v[key],unit=unit,label='Dependent producer observation; supplied logs are not learned rank, no cross-base Delta comparison',**common)
+
+
+
+def prime_field_target_effort_admission_failure(ref, since):
+    """Only committed zero-data admission failure telemetry; no recovery inference."""
+    date='2026-11-07'
+    if date<since:return
+    path='research/prime_field_a16_execution_20261107/runs/a16-target-effort-3d7f9e/metrics.json'
+    raw=show(ref,path)
+    if raw is None:return
+    try:
+        d=json.loads(raw)
+        census=('physical_attempts','planned_systems','planned_solver_calls','unknown_systems','verified_systems','verified_solver_calls','verified_information_audits','observed_certified_systems','observed_completed_solver_calls','observed_failed_solver_calls')
+        if any(type(d[k])is not int or d[k]<0 for k in census):return
+        if (d['schema']!='prime-field-a16-metrics/v1' or d['panel_complete'] is not False or d['physical_attempts']!=1 or
+            d['planned_systems']!=1260 or d['planned_solver_calls']!=2520 or d['unknown_systems']!=1260 or d['partial_work_unknown']is not True or
+            any(d[k]!=0 for k in ('verified_systems','verified_solver_calls','verified_information_audits','observed_certified_systems','observed_completed_solver_calls','observed_failed_solver_calls')) or
+            d['physical_counters'] or d['observed_arm_counters'] or any(d['query_engine_totals'][e] for e in ('scalar','batch'))):return
+        if len(set(d['columns']))!=len(d['columns']):return
+        rows=[dict(zip(d['columns'],v,strict=True)) for v in d['rows']]
+        if len(rows)!=1260 or {v['case_id'] for v in rows}!=set(range(1260)) or any(v['verified']is not False or v['certificate_checked']is not False or v['identified_mask']is not None for v in rows):return
+        cp=d['closed_curve_checkpoints']
+        if len(cp)!=4 or any(v['valid']is not False or v['receipt']is not None for v in cp):return
+    except (KeyError,TypeError,ValueError,AttributeError):return
+    for key in ('physical_attempts','verified_systems','unknown_systems','observed_completed_solver_calls','verified_information_audits'):
+        emit('prym.prime_field.a16.admission_failure.'+key,d[key],unit='objects',date=date,problem='prime-field-factor-bases',better='neutral',source=f'{path}@{ref}',
+            label='One failed Git admission attempt, zero native data; unknown planned cases do not measure mathematical recovery')
+
+
+def prime_field_unknown_pool_cancellation_panel(ref, since):
+    """Committed A19 original-base information; auxiliary rank is not base gain."""
+    date='2026-11-07'
+    if date<since:return
+    path='research/prime_field_a19_execution_20261107/runs/a19-unknown-pool-a8fa30/metrics.json'
+    raw=show(ref,path)
+    if raw is None:return
+    try:
+        data=json.loads(raw);run=path.rsplit('/',1)[0]
+        execution=json.loads(show(ref,run+'/execution.json'));analysis=json.loads(show(ref,run+'/analysis.json'))
+        if any(type(data[k])is not int for k in ('physical_attempts','planned_systems','planned_batch_calls','verified_systems','unknown_systems','observed_batch_starts','observed_completed_batch_calls','observed_failed_batch_calls')):return
+        if (data['schema']!='prime-field-a19-metrics/v1' or data['panel_complete']is not True or data['physical_attempts']!=1 or
+            (data['planned_systems'],data['planned_batch_calls'],data['verified_systems'],data['unknown_systems'])!=(12,24,12,0)or
+            (data['observed_batch_starts'],data['observed_completed_batch_calls'],data['observed_failed_batch_calls'])!=(24,24,0)or data['partial_work_unknown']is not False):return
+        if (execution['returncode']!=0 or execution['timeout']is not False or execution['exception']is not None or execution['source_unchanged_after']is not True or
+            execution['source_commit']!=data['source_commit']or execution['protocol_sha256']!=data['protocol_sha256']or
+            analysis['schema']!='prime-field-a19-analysis/v1'or analysis['metrics_sha256']!=hashlib.sha256(raw.encode()).hexdigest()or
+            analysis['physical_counters']!=data['physical_counters']or analysis['observed_algorithm_counters']!=data['observed_algorithm_counters']):return
+        columns=data['columns'];rows=[dict(zip(columns,v,strict=True))for v in data['rows']]
+        ids=['p'+str(p)+'-i'+str(i)for p in (262139,524287)for i in (0,1)];programs=('norm32','unknown16','known16')
+        if len(columns)!=len(set(columns))or len(rows)!=12 or {v['case_id']for v in rows}!=set(range(12))or {(v['cell_id'],v['program'])for v in rows}!={(c,p)for c in ids for p in programs}:return
+        fields=('case_id','native_columns','old_columns','auxiliary_slots','source_rows','target_rows','identified_targets','identified_mask',
+            'source_delta','full_delta','supplied_K_delta','collected_after_K','target_marginal_delta','direct_base_gain','cross_row_gain','reference_rank','base_rank_after','outside_rank','geometric_queries')
+        for v in rows:
+            if v['verified']is not True or v['certificate_checked']is not True or any(type(v[k])is not int or v[k]<0 for k in fields):return
+            aux=0 if v['program']=='norm32'else 16
+            if ((v['native_columns'],v['auxiliary_slots'])!=(32+aux,aux)or not 0<=v['reference_rank']<=v['base_rank_after']<=v['old_columns']<=32 or
+                v['base_rank_after']!=v['reference_rank']+v['full_delta']or v['identified_mask']>255 or v['identified_mask'].bit_count()!=v['identified_targets']or
+                v['source_delta']>v['full_delta']or v['full_delta']!=v['supplied_K_delta']+v['collected_after_K']or v['full_delta']!=v['direct_base_gain']+v['cross_row_gain']or
+                v['full_delta']-v['source_delta']!=v['target_marginal_delta']or v['outside_rank']>aux+8 or not 8<=v['geometric_queries']<=64 or v['source_rows']+v['target_rows']>4096):return
+            prefix=run+'/raw/'+v['cell_id']+'.'+v['program']+'.'
+            info=json.loads(show(ref,prefix+'information-check.json'))['verification']
+            unit=json.loads(show(ref,prefix+'aux_cancel_joint-check.json'))['verification']
+            joint=json.loads(show(ref,prefix+'sparse_joint-check.json'))['verification']
+            case=json.loads(show(ref,prefix+'case-check.json'))['verification']
+            primary=json.loads(show(ref,prefix+'aux_cancel_joint.json'))
+            digest=hashlib.sha256(json.dumps(primary,sort_keys=True,separators=(',',':'),allow_nan=False).encode()).hexdigest()
+            if unit['producer_output_sha256']!=digest:return
+            if any(p['checked']is not True for p in (info,unit,joint,case)):return
+            if any(p['input_case_sha256']!=case['producer_output_sha256']or p['prepared_sha256']!=case['prepared_sha256']for p in (info,unit,joint)):return
+            if unit['identified']!=v['identified_targets']or joint['identified']!=v['identified_targets']or len(primary['recoveries'])!=8:return
+            mask=0
+            for t,rec in enumerate(primary['recoveries']):
+                if rec['target_index']!=t or type(rec['identifiable'])is not bool:return
+                if rec['identifiable']:mask|=1<<t
+            if mask!=v['identified_mask']or len(info['old_kernel'])+v['reference_rank']!=v['old_columns']:return
+            total=info['views']['full']['total'];supplied=info['views']['full']['supplied'];source=info['views']['source']['total']
+            mapping=dict(full_delta='delta',reference_rank='reference_rank',base_rank_after='base_rank_after',outside_rank='outside_rank',direct_base_gain='direct_base_gain',cross_row_gain='cross_row_gain')
+            if any(v[k]!=total[key]for k,key in mapping.items())or v['supplied_K_delta']!=supplied['delta']or v['source_delta']!=source['delta']:return
+        for ordinal,cid in enumerate(ids,1):
+            related=[v for v in rows if v['cell_id']==cid]
+            if len({(v['old_columns'],v['reference_rank'])for v in related})!=1:return
+            checkpoint=json.loads(show(ref,run+'/checkpoint-'+cid+'.json'))
+            if (checkpoint['returncode']!=0 or checkpoint['command']!=['bash','scripts/checkpoint.sh','push']or checkpoint['closed_curve']!=cid or
+                (checkpoint['completed_curves'],checkpoint['checked_cases'],checkpoint['checked_batch_solver_calls'],checkpoint['completed_online_engines'])!=(ordinal,3*ordinal,6*ordinal,0)or
+                's3://setec-astronomy-artifacts/checkpoints/'not in checkpoint['stdout']):return
+        physical=data['physical_counters']
+        if any(type(v)is not int or v<0 for group in physical.values()for v in group.values()):return
+        if set(data['observed_algorithm_counters'])!={v for p in programs for v in (p,'joint_on_'+p)}:return
+        if any(type(v)is not int or v<0 for group in data['observed_algorithm_counters'].values()for v in group.values()):return
+        for engine in ('scalar','batch'):
+            expected={}
+            for group in physical.values():
+                for k,v in group.items():
+                    prefix='query_'+engine+'.'
+                    if k.startswith(prefix):expected[k[len(prefix):]]=expected.get(k[len(prefix):],0)+v
+            if {k:v for k,v in expected.items()if v}!={k:v for k,v in analysis['checked_query_engine_totals'][engine].items()if v}or analysis['query_engine_totals'][engine]!=analysis['checked_query_engine_totals'][engine]:return
+    except(KeyError,ValueError,TypeError,AttributeError):return
+    common=dict(date=date,problem='prime-field-factor-bases',better='neutral',source=path+'@'+ref)
+    prefix='prym.prime_field.a19'
+    for k in ('verified_systems','unknown_systems','observed_completed_batch_calls'):
+        emit(prefix+'.'+k,data[k],unit='objects',label='Finite12case/24call census; producer-unverified standing',**common)
+    for row in rows:
+        for k in fields[1:]:
+            emit(prefix+'.'+row['cell_id']+'.'+row['program']+'.'+k,row[k],unit='bit mask'if k=='identified_mask'else'objects',label='Original-base information cancels auxiliary AND target columns; own K separate, no calibrated gain',**common)
+    for group,counts in physical.items():
+        for k in ('Fp.field_add','Fp.field_sub','Fp.field_mul','Fp.field_inv','Fr.field_add','Fr.field_sub','Fr.field_mul','Fr.field_inv','pair_array_allocated_bytes','query_array_allocated_bytes'):
+            if k in counts:emit(prefix+'.physical.'+group+'.'+k,counts[k],unit='bytes'if k.endswith('_bytes')else'calls',label='Separate actual primitive/array vector; information diagnostics charged separately, no weighted cost',**common)
+
+
+def prime_field_direct_formal_algebra_panel(ref, since):
+    """Conditioned same-input producer counters; no extra information or holdout."""
+    date='2026-11-07'
+    if date<since:return
+    path='research/prime_field_a21_execution_20261107/runs/a21-direct-formal-a4de6f/metrics.json';raw=show(ref,path)
+    if raw is None:return
+    try:
+        data=json.loads(raw);run=path.rsplit('/',1)[0];execution=json.loads(show(ref,run+'/execution.json'));analysis=json.loads(show(ref,run+'/analysis.json'))
+        ints=('physical_attempts','planned_systems','planned_batch_calls','verified_systems','unknown_systems','observed_batch_starts','observed_completed_batch_calls','observed_failed_batch_calls')
+        if any(type(data[k])is not int for k in ints):return
+        if (data['schema']!='prime-field-a21-metrics/v1' or data['panel_complete']is not True or
+            tuple(data[k]for k in ints)!=(1,12,12,12,0,12,12,0)or analysis['schema']!='prime-field-a21-analysis/v1' or
+            analysis['metrics_sha256']!=hashlib.sha256(raw.encode()).hexdigest()or analysis['physical_counters']!=data['physical_counters']or
+            (analysis['new_curves'],analysis['new_targets'])!=(0,0)):return
+        if (execution['returncode']!=0 or execution['timeout']is not False or execution['exception']is not None or execution['source_unchanged_after']is not True or
+            execution['source_commit']!=data['source_commit']or execution['protocol_sha256']!=data['protocol_sha256']):return
+        columns=data['columns'];rows=[dict(zip(columns,v,strict=True))for v in data['rows']]
+        ids=['p'+str(p)+'-i'+str(i)for p in (262139,524287)for i in (0,1)];methods=('direct_formal','aux_cancel_joint','sparse_joint')
+        if len(columns)!=len(set(columns))or len(rows)!=12 or {(v['case_id'],v['cell_id'],v['method'])for v in rows}!={(i,c,m)for i,c in enumerate(ids)for m in methods}:return
+        fields=('identified_targets','identified_mask','system_columns','system_rank',*[f+'_'+op for f in ('fp','fr')for op in ('add','sub','mul','inv')])
+        physical={};all_phases=[];outcomes={};ranks={}
+        for v in rows:
+            if v['verified']is not True or type(v['case_id'])is not int or any(type(v[k])is not int or v[k]<0 for k in fields):return
+            if v['identified_mask']>255 or v['identified_targets']!=v['identified_mask'].bit_count()or v['system_rank']>v['system_columns']or v['system_columns']>64:return
+            prefix=run+'/raw/'+v['cell_id']+'.'+v['method'];result=json.loads(show(ref,prefix+'.json'));proof=json.loads(show(ref,prefix+'-check.json'))['verification']
+            complete=json.loads(show(ref,run+'/raw/'+v['cell_id']+'.complete.json'));d=complete['descriptor'];producer=d['producer']
+            if (complete['complete']is not True or complete['case_id']!=v['case_id']or complete['actual_solver_calls']!=3 or
+                complete['all_methods_agree']is not True or complete['historical_outcomes_agree']is not True or d['cell_id']!=v['cell_id']):return
+            input_data={k:show(ref,b['path'])for k,b in producer.items()}
+            if any(input_data[k]is None or hashlib.sha256(input_data[k].encode()).hexdigest()!=b['sha256']for k,b in producer.items()):return
+            case,prep=json.loads(input_data['case']),json.loads(input_data['prepared'])
+            digest=lambda x:hashlib.sha256(json.dumps(x,sort_keys=True,separators=(',',':'),allow_nan=False).encode()).hexdigest()
+            if (proof['checked']is not True or proof['producer_output_sha256']!=digest(result)or proof['input_case_sha256']!=digest(case)or
+                proof['prepared_sha256']!=digest(prep)or case['width']!=48 or case['target_count']!=8 or prep['norm_size']!=32 or len(prep['formal_definitions'])!=16):return
+            if len(result['recoveries'])!=8 or proof['identified']!=v['identified_targets']or result['arm']!=v['method']:return
+            mask=0
+            for t,rec in enumerate(result['recoveries']):
+                if rec['target_index']!=t or type(rec['identifiable'])is not bool:return
+                if rec['identifiable']:mask|=1<<t
+            if mask!=v['identified_mask']or result['system']['columns']!=v['system_columns']or result['system']['rank']!=v['system_rank']:return
+            native_rank=proof['joint_rank']if v['method']=='sparse_joint'else proof['native_joint_rank']
+            if v['method']=='direct_formal' and (proof['direct_rank']!=v['system_rank']or native_rank!=v['system_rank']+len(prep['known'])+16):return
+            expected_width=56 if v['method']=='sparse_joint'else prep['projection']['U']+8
+            if v['system_columns']!=expected_width:return
+            ranks.setdefault(v['cell_id'],set()).add(native_rank)
+            outcomes.setdefault(v['cell_id'],set()).add(tuple((r['identifiable'],r['scalar'])for r in result['recoveries']))
+            total={}
+            for phase in result['phases']:
+                if phase['status']!='complete' or any(type(x)is not int or x<0 for x in phase['counters'].values()):return
+                for k,x in phase['counters'].items():total[k]=total.get(k,0)+x
+                all_phases.append(dict(cell_id=v['cell_id'],method=v['method'],**phase))
+            if {k:x for k,x in total.items()if x}!={k:x for k,x in result['counters'].items()if x}:return
+            for field in ('Fp','Fr'):
+                for op in ('add','sub','mul','inv'):
+                    if v[field.lower()+'_'+op]!=result['counters'].get(field+'.field_'+op,0):return
+            for k,x in total.items():physical[k]=physical.get(k,0)+x
+        if any(len(v)!=1 for v in outcomes.values())or any(len(v)!=1 for v in ranks.values()):return
+        if all_phases!=analysis['phases']or {k:x for k,x in physical.items()if x}!={k:x for k,x in data['physical_counters'].items()if x}:return
+        for i,cid in enumerate(ids,1):
+            cp=json.loads(show(ref,run+'/checkpoint-'+cid+'.json'))
+            if (cp['returncode']!=0 or cp['command']!=['bash','scripts/checkpoint.sh','push']or cp['closed_curve']!=cid or
+                (cp['completed_curves'],cp['checked_cases'],cp['checked_batch_solver_calls'],cp['completed_online_engines'])!=(i,i,3*i,0)or
+                's3://setec-astronomy-artifacts/checkpoints/'not in cp['stdout']):return
+    except(KeyError,ValueError,TypeError,AttributeError):return
+    common=dict(date=date,problem='prime-field-factor-bases',better='neutral',source=path+'@'+ref);prefix='prym.prime_field.a21'
+    for k in ('verified_systems','unknown_systems','observed_completed_batch_calls'):
+        emit(prefix+'.'+k,data[k],unit='objects',label='Four conditioned saved cases/12actual calls; no new curves or target holdouts, producer-unverified',**common)
+    for row in rows:
+        for k in fields:emit(prefix+'.'+row['cell_id']+'.'+row['method']+'.'+k,row[k],unit='bit mask'if k=='identified_mask'else'calls'if k.startswith(('fp_','fr_'))else'objects',label='Actual same-input component vector; ranks not information gains, no calibrated cost',**common)
+    for phase in all_phases:
+        for k in ('Fr.field_mul','Fr.field_inv','Fp.field_mul'):
+            emit(prefix+'.'+phase['cell_id']+'.'+phase['method']+'.phase.'+phase['phase']+'.'+k,phase['counters'].get(k,0),unit='calls',label='Paid mapping/expansion/elimination/target/native-lift/check phase, unweighted partial vector',**common)
+
+
+def prime_field_larger_formal_transfer_panel(ref, since):
+    """Committed A20 original-base information; auxiliary rank is not base gain."""
+    date='2026-11-07'
+    if date<since:return
+    path='research/prime_field_a22_execution_20261107/runs/a22-larger-formal-ddbe8b/metrics.json'
+    raw=show(ref,path)
+    if raw is None:return
+    try:
+        data=json.loads(raw);run=path.rsplit('/',1)[0]
+        execution=json.loads(show(ref,run+'/execution.json'));analysis=json.loads(show(ref,run+'/analysis.json'))
+        if any(type(data[k])is not int for k in ('physical_attempts','planned_systems','planned_batch_calls','verified_systems','unknown_systems','observed_batch_starts','observed_completed_batch_calls','observed_failed_batch_calls')):return
+        if (data['schema']!='prime-field-a22-metrics/v1' or data['panel_complete']is not True or data['physical_attempts']!=1 or
+            (data['planned_systems'],data['planned_batch_calls'],data['verified_systems'],data['unknown_systems'])!=(16,36,16,0)or
+            (data['observed_batch_starts'],data['observed_completed_batch_calls'],data['observed_failed_batch_calls'])!=(36,36,0)or data['partial_work_unknown']is not False):return
+        if (execution['returncode']!=0 or execution['timeout']is not False or execution['exception']is not None or execution['source_unchanged_after']is not True or
+            execution['source_commit']!=data['source_commit']or execution['protocol_sha256']!=data['protocol_sha256']or
+            analysis['schema']!='prime-field-a22-analysis/v1'or analysis['metrics_sha256']!=hashlib.sha256(raw.encode()).hexdigest()or
+            analysis['physical_counters']!=data['physical_counters']or analysis['observed_algorithm_counters']!=data['observed_algorithm_counters']):return
+        columns=data['columns'];rows=[dict(zip(columns,v,strict=True))for v in data['rows']]
+        ids=['p'+str(p)+'-i'+str(i)for p in (1048573,2097143)for i in (0,1)];programs=('norm32','unknown16','formalpair16','known16')
+        if len(columns)!=len(set(columns))or len(rows)!=16 or {v['case_id']for v in rows}!=set(range(16))or {(v['cell_id'],v['program'])for v in rows}!={(c,p)for c in ids for p in programs}:return
+        fields=('case_id','native_columns','old_columns','auxiliary_slots','source_rows','target_rows','identified_targets','identified_mask',
+            'source_delta','full_delta','supplied_K_delta','collected_after_K','target_marginal_delta','direct_base_gain','cross_row_gain','reference_rank','base_rank_after','outside_rank','geometric_queries','formal_definition_rows')
+        for v in rows:
+            if v['verified']is not True or v['certificate_checked']is not True or any(type(v[k])is not int or v[k]<0 for k in fields):return
+            aux=0 if v['program']=='norm32'else 16
+            if ((v['native_columns'],v['auxiliary_slots'])!=(32+aux,aux)or not 0<=v['reference_rank']<=v['base_rank_after']<=v['old_columns']<=32 or
+                v['base_rank_after']!=v['reference_rank']+v['full_delta']or v['identified_mask']>255 or v['identified_mask'].bit_count()!=v['identified_targets']or
+                v['source_delta']>v['full_delta']or v['full_delta']!=v['supplied_K_delta']+v['collected_after_K']or v['full_delta']!=v['direct_base_gain']+v['cross_row_gain']or
+                v['full_delta']-v['source_delta']!=v['target_marginal_delta']or v['outside_rank']>aux+8 or not 8<=v['geometric_queries']<=64 or v['source_rows']+v['target_rows']>4096):return
+            prefix=run+'/raw/'+v['cell_id']+'.'+v['program']+'.'
+            info=json.loads(show(ref,prefix+'information-check.json'))['verification']
+            unit=json.loads(show(ref,prefix+'aux_cancel_joint-check.json'))['verification']
+            joint=json.loads(show(ref,prefix+'sparse_joint-check.json'))['verification']
+            case=json.loads(show(ref,prefix+'case-check.json'))['verification']
+            primary=json.loads(show(ref,prefix+'aux_cancel_joint.json'))
+            digest=hashlib.sha256(json.dumps(primary,sort_keys=True,separators=(',',':'),allow_nan=False).encode()).hexdigest()
+            if unit['producer_output_sha256']!=digest:return
+            if any(p['checked']is not True for p in (info,unit,joint,case)):return
+            if any(p['input_case_sha256']!=case['producer_output_sha256']or p['prepared_sha256']!=case['prepared_sha256']for p in (info,unit,joint)):return
+            if unit['identified']!=v['identified_targets']or joint['identified']!=v['identified_targets']or len(primary['recoveries'])!=8:return
+            mask=0
+            for t,rec in enumerate(primary['recoveries']):
+                if rec['target_index']!=t or type(rec['identifiable'])is not bool:return
+                if rec['identifiable']:mask|=1<<t
+            expanded=json.loads(show(ref,prefix+'expanded-check.json'))['verification']
+            formal=v['program']=='formalpair16'
+            if (expanded['checked']is not True or expanded['applicable']is not formal or expanded['input_case_sha256']!=case['producer_output_sha256']or
+                expanded['prepared_sha256']!=case['prepared_sha256']or expanded['primary_sha256']!=unit['producer_output_sha256']or
+                expanded['information_sha256']!=info['producer_output_sha256']or v['formal_definition_rows']!=(16 if formal else 0)):return
+            if formal:
+                if (type(v['expanded_old_joint_rank'])is not int or not 0<=v['expanded_old_joint_rank']<=40 or v['definition_only_delta']!=0 or type(v['definition_only_delta'])is not int or
+                    expanded['expanded_joint_rank']!=v['expanded_old_joint_rank']or expanded['native_joint_rank']!=joint['joint_rank']or
+                    expanded['native_joint_rank']!=v['expanded_old_joint_rank']+16 or expanded['target_mask']!=v['identified_mask']or
+                    expanded['old_base_rank_after']!=v['base_rank_after']or expanded['accepted_definitions_public_checked']!=16 or
+                    expanded['public_expanded_rows_checked']!=v['source_rows']+v['target_rows']or
+                    (expanded['definition_only_auxiliary_rank'],expanded['definition_only_old_base_delta'])!=(16,0)):return
+            elif v['expanded_old_joint_rank']is not None or v['definition_only_delta']is not None:return
+            direct_fields=('direct_identified_targets','direct_identified_mask','direct_fr_mul','direct_fr_inv')
+            if formal:
+                direct=json.loads(show(ref,prefix+'direct_formal.json'));proof=json.loads(show(ref,prefix+'direct_formal-check.json'))['verification']
+                if (proof['checked']is not True or proof['producer_output_sha256']!=hashlib.sha256(json.dumps(direct,sort_keys=True,separators=(',',':'),allow_nan=False).encode()).hexdigest()or
+                    proof['input_case_sha256']!=case['producer_output_sha256']or proof['prepared_sha256']!=case['prepared_sha256']or
+                    proof['native_joint_rank']!=joint['joint_rank']or any(type(v[k])is not int or v[k]<0 for k in direct_fields)):return
+                if (v['direct_identified_mask']!=v['identified_mask']or v['direct_identified_targets']!=v['identified_targets']or proof['identified']!=v['identified_targets']or
+                    v['direct_fr_mul']!=direct['counters'].get('Fr.field_mul',0)or v['direct_fr_inv']!=direct['counters'].get('Fr.field_inv',0)or
+                    len(direct['recoveries'])!=8 or [(r['identifiable'],r['scalar'])for r in direct['recoveries']]!=[(r['identifiable'],r['scalar'])for r in primary['recoveries']]):return
+                cold=next(x for x in analysis['cold_views']if(x['cell_id'],x['program'])==(v['cell_id'],'formalpair16'))
+                alternative=next(x for x in analysis['direct_cold_views']if(x['cell_id'],x['program'])==(v['cell_id'],'formalpair16'))
+                if alternative['algorithm']!='direct_formal'or not alternative['acquisition_shared_with']:return
+                if alternative['components']!=dict(cold['components'],primary_target_algebra=direct['counters']):return
+                for engine in ('scalar','batch'):
+                    old=cold['single_engine_counters'][engine];new=alternative['single_engine_counters'][engine]
+                    keys=set(old)|set(new)|set(primary['counters'])|set(direct['counters'])
+                    if any(type(new.get(k,0))is not int or new.get(k,0)<0 or new.get(k,0)!=old.get(k,0)-primary['counters'].get(k,0)+direct['counters'].get(k,0)for k in keys):return
+            elif any(v[k]is not None for k in direct_fields):return
+
+            if mask!=v['identified_mask']or len(info['old_kernel'])+v['reference_rank']!=v['old_columns']:return
+            total=info['views']['full']['total'];supplied=info['views']['full']['supplied'];source=info['views']['source']['total']
+            mapping=dict(full_delta='delta',reference_rank='reference_rank',base_rank_after='base_rank_after',outside_rank='outside_rank',direct_base_gain='direct_base_gain',cross_row_gain='cross_row_gain')
+            if any(v[k]!=total[key]for k,key in mapping.items())or v['supplied_K_delta']!=supplied['delta']or v['source_delta']!=source['delta']:return
+        for ordinal,cid in enumerate(ids,1):
+            related=[v for v in rows if v['cell_id']==cid]
+            if len({(v['old_columns'],v['reference_rank'])for v in related})!=1:return
+            checkpoint=json.loads(show(ref,run+'/checkpoint-'+cid+'.json'))
+            if (checkpoint['returncode']!=0 or checkpoint['command']!=['bash','scripts/checkpoint.sh','push']or checkpoint['closed_curve']!=cid or
+                (checkpoint['completed_curves'],checkpoint['checked_cases'],checkpoint['checked_batch_solver_calls'],checkpoint['completed_online_engines'])!=(ordinal,4*ordinal,9*ordinal,0)or
+                's3://setec-astronomy-artifacts/checkpoints/'not in checkpoint['stdout']):return
+        if len(analysis['direct_cold_views'])!=4:return
+        physical=data['physical_counters']
+        if any(type(v)is not int or v<0 for group in physical.values()for v in group.values()):return
+        if set(data['observed_algorithm_counters'])!={v for p in programs for v in ([p,'joint_on_'+p,'direct_on_'+p]if p=='formalpair16'else[p,'joint_on_'+p])}:return
+        if any(type(v)is not int or v<0 for group in data['observed_algorithm_counters'].values()for v in group.values()):return
+        for engine in ('scalar','batch'):
+            expected={}
+            for group in physical.values():
+                for k,v in group.items():
+                    prefix='query_'+engine+'.'
+                    if k.startswith(prefix):expected[k[len(prefix):]]=expected.get(k[len(prefix):],0)+v
+            if {k:v for k,v in expected.items()if v}!={k:v for k,v in analysis['checked_query_engine_totals'][engine].items()if v}or analysis['query_engine_totals'][engine]!=analysis['checked_query_engine_totals'][engine]:return
+    except(KeyError,ValueError,TypeError,AttributeError):return
+    common=dict(date=date,problem='prime-field-factor-bases',better='neutral',source=path+'@'+ref)
+    prefix='prym.prime_field.a22'
+    for k in ('verified_systems','unknown_systems','observed_completed_batch_calls'):
+        emit(prefix+'.'+k,data[k],unit='objects',label='Fresh20/21-bit16case/36call census; producer-unverified standing',**common)
+    for row in rows:
+        for k in (*fields[1:],'expanded_old_joint_rank','definition_only_delta','direct_identified_targets','direct_identified_mask','direct_fr_mul','direct_fr_inv'):
+            emit(prefix+'.'+row['cell_id']+'.'+row['program']+'.'+k,row[k],unit='bit mask'if k in ('identified_mask','direct_identified_mask')else'calls'if k in ('direct_fr_mul','direct_fr_inv')else'objects',label='Fresh fixed collector information cancels auxiliary AND target U; actual direct parity/costs, no calibrated gain',**common)
+    for group,counts in physical.items():
+        for k in ('Fp.field_add','Fp.field_sub','Fp.field_mul','Fp.field_inv','Fr.field_add','Fr.field_sub','Fr.field_mul','Fr.field_inv','pair_array_allocated_bytes','query_array_allocated_bytes'):
+            if k in counts:emit(prefix+'.physical.'+group+'.'+k,counts[k],unit='bytes'if k.endswith('_bytes')else'calls',label='Separate actual primitive/array vector; information diagnostics charged separately, no weighted cost',**common)
+
+
+def prime_field_formal_pair_dictionary_panel(ref, since):
+    """Committed A20 original-base information; auxiliary rank is not base gain."""
+    date='2026-11-07'
+    if date<since:return
+    path='research/prime_field_a20_execution_20261107/runs/a20-formal-pair-c4d124/metrics.json'
+    raw=show(ref,path)
+    if raw is None:return
+    try:
+        data=json.loads(raw);run=path.rsplit('/',1)[0]
+        execution=json.loads(show(ref,run+'/execution.json'));analysis=json.loads(show(ref,run+'/analysis.json'))
+        if any(type(data[k])is not int for k in ('physical_attempts','planned_systems','planned_batch_calls','verified_systems','unknown_systems','observed_batch_starts','observed_completed_batch_calls','observed_failed_batch_calls')):return
+        if (data['schema']!='prime-field-a20-metrics/v1' or data['panel_complete']is not True or data['physical_attempts']!=1 or
+            (data['planned_systems'],data['planned_batch_calls'],data['verified_systems'],data['unknown_systems'])!=(16,32,16,0)or
+            (data['observed_batch_starts'],data['observed_completed_batch_calls'],data['observed_failed_batch_calls'])!=(32,32,0)or data['partial_work_unknown']is not False):return
+        if (execution['returncode']!=0 or execution['timeout']is not False or execution['exception']is not None or execution['source_unchanged_after']is not True or
+            execution['source_commit']!=data['source_commit']or execution['protocol_sha256']!=data['protocol_sha256']or
+            analysis['schema']!='prime-field-a20-analysis/v1'or analysis['metrics_sha256']!=hashlib.sha256(raw.encode()).hexdigest()or
+            analysis['physical_counters']!=data['physical_counters']or analysis['observed_algorithm_counters']!=data['observed_algorithm_counters']):return
+        columns=data['columns'];rows=[dict(zip(columns,v,strict=True))for v in data['rows']]
+        ids=['p'+str(p)+'-i'+str(i)for p in (262139,524287)for i in (0,1)];programs=('norm32','unknown16','formalpair16','known16')
+        if len(columns)!=len(set(columns))or len(rows)!=16 or {v['case_id']for v in rows}!=set(range(16))or {(v['cell_id'],v['program'])for v in rows}!={(c,p)for c in ids for p in programs}:return
+        fields=('case_id','native_columns','old_columns','auxiliary_slots','source_rows','target_rows','identified_targets','identified_mask',
+            'source_delta','full_delta','supplied_K_delta','collected_after_K','target_marginal_delta','direct_base_gain','cross_row_gain','reference_rank','base_rank_after','outside_rank','geometric_queries','formal_definition_rows')
+        for v in rows:
+            if v['verified']is not True or v['certificate_checked']is not True or any(type(v[k])is not int or v[k]<0 for k in fields):return
+            aux=0 if v['program']=='norm32'else 16
+            if ((v['native_columns'],v['auxiliary_slots'])!=(32+aux,aux)or not 0<=v['reference_rank']<=v['base_rank_after']<=v['old_columns']<=32 or
+                v['base_rank_after']!=v['reference_rank']+v['full_delta']or v['identified_mask']>255 or v['identified_mask'].bit_count()!=v['identified_targets']or
+                v['source_delta']>v['full_delta']or v['full_delta']!=v['supplied_K_delta']+v['collected_after_K']or v['full_delta']!=v['direct_base_gain']+v['cross_row_gain']or
+                v['full_delta']-v['source_delta']!=v['target_marginal_delta']or v['outside_rank']>aux+8 or not 8<=v['geometric_queries']<=64 or v['source_rows']+v['target_rows']>4096):return
+            prefix=run+'/raw/'+v['cell_id']+'.'+v['program']+'.'
+            info=json.loads(show(ref,prefix+'information-check.json'))['verification']
+            unit=json.loads(show(ref,prefix+'aux_cancel_joint-check.json'))['verification']
+            joint=json.loads(show(ref,prefix+'sparse_joint-check.json'))['verification']
+            case=json.loads(show(ref,prefix+'case-check.json'))['verification']
+            primary=json.loads(show(ref,prefix+'aux_cancel_joint.json'))
+            digest=hashlib.sha256(json.dumps(primary,sort_keys=True,separators=(',',':'),allow_nan=False).encode()).hexdigest()
+            if unit['producer_output_sha256']!=digest:return
+            if any(p['checked']is not True for p in (info,unit,joint,case)):return
+            if any(p['input_case_sha256']!=case['producer_output_sha256']or p['prepared_sha256']!=case['prepared_sha256']for p in (info,unit,joint)):return
+            if unit['identified']!=v['identified_targets']or joint['identified']!=v['identified_targets']or len(primary['recoveries'])!=8:return
+            mask=0
+            for t,rec in enumerate(primary['recoveries']):
+                if rec['target_index']!=t or type(rec['identifiable'])is not bool:return
+                if rec['identifiable']:mask|=1<<t
+            expanded=json.loads(show(ref,prefix+'expanded-check.json'))['verification']
+            formal=v['program']=='formalpair16'
+            if (expanded['checked']is not True or expanded['applicable']is not formal or expanded['input_case_sha256']!=case['producer_output_sha256']or
+                expanded['prepared_sha256']!=case['prepared_sha256']or expanded['primary_sha256']!=unit['producer_output_sha256']or
+                expanded['information_sha256']!=info['producer_output_sha256']or v['formal_definition_rows']!=(16 if formal else 0)):return
+            if formal:
+                if (type(v['expanded_old_joint_rank'])is not int or not 0<=v['expanded_old_joint_rank']<=40 or v['definition_only_delta']!=0 or type(v['definition_only_delta'])is not int or
+                    expanded['expanded_joint_rank']!=v['expanded_old_joint_rank']or expanded['native_joint_rank']!=joint['joint_rank']or
+                    expanded['native_joint_rank']!=v['expanded_old_joint_rank']+16 or expanded['target_mask']!=v['identified_mask']or
+                    expanded['old_base_rank_after']!=v['base_rank_after']or expanded['accepted_definitions_public_checked']!=16 or
+                    expanded['public_expanded_rows_checked']!=v['source_rows']+v['target_rows']or
+                    (expanded['definition_only_auxiliary_rank'],expanded['definition_only_old_base_delta'])!=(16,0)):return
+            elif v['expanded_old_joint_rank']is not None or v['definition_only_delta']is not None:return
+            if mask!=v['identified_mask']or len(info['old_kernel'])+v['reference_rank']!=v['old_columns']:return
+            total=info['views']['full']['total'];supplied=info['views']['full']['supplied'];source=info['views']['source']['total']
+            mapping=dict(full_delta='delta',reference_rank='reference_rank',base_rank_after='base_rank_after',outside_rank='outside_rank',direct_base_gain='direct_base_gain',cross_row_gain='cross_row_gain')
+            if any(v[k]!=total[key]for k,key in mapping.items())or v['supplied_K_delta']!=supplied['delta']or v['source_delta']!=source['delta']:return
+        for ordinal,cid in enumerate(ids,1):
+            related=[v for v in rows if v['cell_id']==cid]
+            if len({(v['old_columns'],v['reference_rank'])for v in related})!=1:return
+            checkpoint=json.loads(show(ref,run+'/checkpoint-'+cid+'.json'))
+            if (checkpoint['returncode']!=0 or checkpoint['command']!=['bash','scripts/checkpoint.sh','push']or checkpoint['closed_curve']!=cid or
+                (checkpoint['completed_curves'],checkpoint['checked_cases'],checkpoint['checked_batch_solver_calls'],checkpoint['completed_online_engines'])!=(ordinal,4*ordinal,8*ordinal,0)or
+                's3://setec-astronomy-artifacts/checkpoints/'not in checkpoint['stdout']):return
+        physical=data['physical_counters']
+        if any(type(v)is not int or v<0 for group in physical.values()for v in group.values()):return
+        if set(data['observed_algorithm_counters'])!={v for p in programs for v in (p,'joint_on_'+p)}:return
+        if any(type(v)is not int or v<0 for group in data['observed_algorithm_counters'].values()for v in group.values()):return
+        for engine in ('scalar','batch'):
+            expected={}
+            for group in physical.values():
+                for k,v in group.items():
+                    prefix='query_'+engine+'.'
+                    if k.startswith(prefix):expected[k[len(prefix):]]=expected.get(k[len(prefix):],0)+v
+            if {k:v for k,v in expected.items()if v}!={k:v for k,v in analysis['checked_query_engine_totals'][engine].items()if v}or analysis['query_engine_totals'][engine]!=analysis['checked_query_engine_totals'][engine]:return
+    except(KeyError,ValueError,TypeError,AttributeError):return
+    common=dict(date=date,problem='prime-field-factor-bases',better='neutral',source=path+'@'+ref)
+    prefix='prym.prime_field.a20'
+    for k in ('verified_systems','unknown_systems','observed_completed_batch_calls'):
+        emit(prefix+'.'+k,data[k],unit='objects',label='Finite16case/32call census; producer-unverified standing',**common)
+    for row in rows:
+        for k in (*fields[1:],'expanded_old_joint_rank','definition_only_delta'):
+            emit(prefix+'.'+row['cell_id']+'.'+row['program']+'.'+k,row[k],unit='bit mask'if k=='identified_mask'else'objects',label='Original-base information cancels auxiliary AND target columns; own K separate, no calibrated gain',**common)
+    for group,counts in physical.items():
+        for k in ('Fp.field_add','Fp.field_sub','Fp.field_mul','Fp.field_inv','Fr.field_add','Fr.field_sub','Fr.field_mul','Fr.field_inv','pair_array_allocated_bytes','query_array_allocated_bytes'):
+            if k in counts:emit(prefix+'.physical.'+group+'.'+k,counts[k],unit='bytes'if k.endswith('_bytes')else'calls',label='Separate actual primitive/array vector; information diagnostics charged separately, no weighted cost',**common)
+
+
+def prime_field_certified_query_transfer_panel(ref, since):
+    """Committed A18 causal scheduling observations; no calibrated advantage."""
+    date='2026-11-07'
+    if date<since:return
+    path='research/prime_field_a18_execution_20261107/runs/a18-certified-transfer-8f1213/metrics.json'
+    raw=show(ref,path)
+    if raw is None:return
+    try:
+        data=json.loads(raw);run=path.rsplit('/',1)[0]
+        execution=json.loads(show(ref,run+'/execution.json'))
+        if (data['schema']!='prime-field-a18-metrics/v1' or data['panel_complete']is not True or data['physical_attempts']!=1 or
+            data['planned_systems']!=8 or data['verified_systems']!=8 or data['unknown_systems']!=0 or
+            data['planned_batch_solver_calls']!=12 or data['planned_online_engines']!=4 or data['planned_export_execution_rows']!=16 or
+            data['verified_export_execution_rows']!=16 or data['observed_certified_systems']!=8 or data['partial_work_unknown']is not False or
+            (data['observed_batch_solver_starts'],data['observed_completed_batch_solver_calls'],data['observed_failed_batch_solver_calls'],
+             data['observed_online_starts'],data['observed_completed_online_engines'],data['observed_failed_online_engines'])!=(12,12,0,4,4,0)):
+            return
+        if (execution['returncode']!=0 or execution['timeout']is not False or execution['exception']is not None or execution['source_unchanged_after']is not True or
+            execution['source_commit']!=data['source_commit'] or execution['protocol_sha256']!=data['protocol_sha256']):return
+        columns=data['columns'];rows=[dict(zip(columns,v,strict=True)) for v in data['rows']]
+        if len(columns)!=len(set(columns)) or len(rows)!=8 or {v['case_id'] for v in rows}!=set(range(8)):return
+        ids=['p'+str(p)+'-i'+str(i) for p in (1048573,2097143) for i in (0,1)]
+        expected={(cid,arm) for cid in ids for arm in ('suppress','full')}
+        if {(v['cell_id'],v['program']) for v in rows}!=expected:return
+        fields=('case_id','target_horizon','native_columns','supplied_columns','base_columns','source_rows','target_rows','identified_targets',
+            'identified_mask','geometric_queries','skipped_slots','executed_extra_slots','certified_targets','formal_endpoints','omitted_reference_rows')
+        physical=data['physical_counters'];engines=data['query_engine_totals']
+        if any(type(v)is not int or v<0 for group in physical.values() for v in group.values()):return
+        for v in rows:
+            if (v['verified']is not True or v['certificate_checked']is not True or any(type(v[k])is not int or v[k]<0 for k in fields) or
+                v['base_arm']!='known48' or v['target_horizon']!=24 or v['target_policy']!='general' or v['scope']!='supplied' or
+                (v['native_columns'],v['supplied_columns'],v['base_columns'],v['source_rows'],v['formal_endpoints'])!=(48,48,0,48,192) or
+                v['target_rows']>4048 or v['identified_mask']>255 or v['identified_mask'].bit_count()!=v['identified_targets'] or
+                not 8<=v['geometric_queries']<=8+v['executed_extra_slots'] or v['skipped_slots']+v['executed_extra_slots']!=184 or
+                v['program']=='full' and(v['skipped_slots']!=0 or v['certified_targets']!=0) or
+                v['program']=='suppress' and v['certified_targets']!=v['identified_targets']):return
+            attribution=('construction_mask','natural_mask','extra_mask','construction_certified','natural_certified','extra_certified','construction_registry_rows','construction_target_rank')
+            if v['program']=='suppress':
+                if any(type(v[k])is not int or v[k]<0 for k in attribution):return
+                masks=[v[k] for k in ('construction_mask','natural_mask','extra_mask')]
+                if any(mask>255 for mask in masks) or masks[0]&masks[1] or masks[0]&masks[2] or masks[1]&masks[2] or masks[0]|masks[1]|masks[2]!=v['identified_mask']:return
+                if any(v[key]!=mask.bit_count() for key,mask in zip(('construction_certified','natural_certified','extra_certified'),masks)):return
+                if not v['construction_certified']<=v['construction_target_rank']<=8 or v['construction_registry_rows']>v['target_rows']:return
+                checked=json.loads(show(ref,run+'/raw/'+v['cell_id']+'.suppress.query-check.json'))['verification']
+                snapshots=checked['prefix_diagnostics']
+                if checked['checked']is not True or len(snapshots)<2:return
+                first,second=snapshots[:2]
+                if (first['origin']!='complete_paid_construction' or second['origin']!='all_mandatory_natural_rows' or
+                    first['target_column_rank']!=v['construction_target_rank'] or first['native_target_rows']!=v['construction_registry_rows'] or
+                    first['identified_mask']!=v['construction_mask'] or second['identified_mask']!=v['construction_mask']|v['natural_mask'] or
+                    snapshots[-1]['identified_mask']!=v['identified_mask']):return
+            elif any(v[k]is not None for k in attribution):return
+            prefix=v['cell_id']+'.'+v['program']+'.'
+            if (physical[prefix+'known_base_construction'].get('public_base_certificates_verified')!=48 or
+                physical[prefix+'native_collection'].get('pair_table_insertions')!=4512 or
+                physical[prefix+'native_collection'].get('signed_point_queries')!=768 or
+                physical[prefix+'native_collection'].get('pair_array_allocated_bytes',0)<=0 or
+                physical[prefix+'construction'].get('fully_preconstructed_endpoint_slots')!=192 or
+                physical[prefix+'query_scheduling'].get('extra_slots_considered')!=184 or
+                physical[prefix+'query_scheduling'].get('certified_slots_skipped',0)!=v['skipped_slots'] or
+                physical[prefix+'shared_target_queries'].get('logical_target_requests')!=8+v['executed_extra_slots']):return
+        for ordinal,cid in enumerate(ids,1):
+            pair={v['program']:v for v in rows if v['cell_id']==cid};a,b=pair['suppress'],pair['full']
+            if a['identified_mask']!=b['identified_mask'] or a['omitted_reference_rows']!=b['omitted_reference_rows'] or a['target_rows']+a['omitted_reference_rows']!=b['target_rows']:return
+            receipt=json.loads(show(ref,run+'/checkpoint-'+cid+'.json'))
+            if (receipt['returncode']!=0 or receipt['command']!=['bash','scripts/checkpoint.sh','push'] or receipt['closed_curve']!=cid or
+                receipt['completed_curves']!=ordinal or receipt['checked_cases']!=2*ordinal or receipt['checked_batch_solver_calls']!=3*ordinal or
+                receipt['completed_online_engines']!=ordinal or 's3://setec-astronomy-artifacts/checkpoints/'not in receipt['stdout']):return
+        if set(data['observed_algorithm_counters'])!={'suppress','full','joint_on_suppress','joint_on_full'}:return
+        if any(type(v)is not int or v<0 for group in data['observed_algorithm_counters'].values() for v in group.values()):return
+        for engine in ('scalar','batch'):
+            if any(type(v)is not int or v<0 for v in engines[engine].values()):return
+            expected_totals={}
+            for group in physical.values():
+                for key,value in group.items():
+                    prefix='query_'+engine+'.'
+                    if key.startswith(prefix):
+                        bare=key[len(prefix):];expected_totals[bare]=expected_totals.get(bare,0)+value
+            if {k:v for k,v in engines[engine].items() if v}!={k:v for k,v in expected_totals.items() if v}:return
+        if engines['scalar'].get('Fp.group_add')!=sum(v.get('signed_point_queries',0) for v in physical.values()):return
+    except(KeyError,TypeError,ValueError,AttributeError):return
+    common=dict(date=date,problem='prime-field-factor-bases',better='neutral',source=f'{path}@{ref}')
+    prefix='prym.prime_field.a18'
+    for key in ('verified_systems','verified_export_execution_rows','observed_completed_batch_solver_calls','observed_completed_online_engines','unknown_systems'):
+        emit(prefix+'.'+key,data[key],unit='objects',label='Finite producer census: twelve batch calls and four online engines; unverified standing',**common)
+    for row in rows:
+        name=prefix+'.'+row['cell_id']+'.'+row['program']
+        for key in ('identified_targets','identified_mask','geometric_queries','skipped_slots','executed_extra_slots','target_rows','omitted_reference_rows','construction_mask','natural_mask','extra_mask','construction_certified','natural_certified','extra_certified','construction_registry_rows','construction_target_rank'):
+            emit(name+'.'+key,row[key],unit='bit mask'if key.endswith('_mask')else'objects',label='Dependent paired target/query observation; all full24 construction paid, no calibrated gain',**common)
+    for group,counts in physical.items():
+        for key in ('Fp.field_add','Fp.field_sub','Fp.field_mul','Fp.field_inv','Fr.field_add','Fr.field_sub','Fr.field_mul','Fr.field_inv','pair_array_allocated_bytes','query_array_allocated_bytes'):
+            if key in counts:emit(prefix+'.physical.'+group+'.'+key,counts[key],unit='bytes'if key.endswith('_bytes')else'calls',label='Separate physical component vector, both engines retained; no weighted cost',**common)
+
+
+def prime_field_certified_query_panel(ref, since):
+    """Committed A17 causal scheduling observations; no calibrated advantage."""
+    date='2026-11-07'
+    if date<since:return
+    path='research/prime_field_a17_execution_20261107/runs/a17-certified-query-178e0d/metrics.json'
+    raw=show(ref,path)
+    if raw is None:return
+    try:
+        data=json.loads(raw);run=path.rsplit('/',1)[0]
+        execution=json.loads(show(ref,run+'/execution.json'))
+        if (data['schema']!='prime-field-a17-metrics/v1' or data['panel_complete']is not True or data['physical_attempts']!=1 or
+            data['planned_systems']!=8 or data['verified_systems']!=8 or data['unknown_systems']!=0 or
+            data['planned_batch_solver_calls']!=12 or data['planned_online_engines']!=4 or data['planned_export_execution_rows']!=16 or
+            data['verified_export_execution_rows']!=16 or data['observed_certified_systems']!=8 or data['partial_work_unknown']is not False or
+            (data['observed_batch_solver_starts'],data['observed_completed_batch_solver_calls'],data['observed_failed_batch_solver_calls'],
+             data['observed_online_starts'],data['observed_completed_online_engines'],data['observed_failed_online_engines'])!=(12,12,0,4,4,0)):
+            return
+        if (execution['returncode']!=0 or execution['timeout']is not False or execution['exception']is not None or execution['source_unchanged_after']is not True or
+            execution['source_commit']!=data['source_commit'] or execution['protocol_sha256']!=data['protocol_sha256']):return
+        columns=data['columns'];rows=[dict(zip(columns,v,strict=True)) for v in data['rows']]
+        if len(columns)!=len(set(columns)) or len(rows)!=8 or {v['case_id'] for v in rows}!=set(range(8)):return
+        ids=['p'+str(p)+'-i'+str(i) for p in (262139,524287) for i in (0,1)]
+        expected={(cid,arm) for cid in ids for arm in ('suppress','full')}
+        if {(v['cell_id'],v['program']) for v in rows}!=expected:return
+        fields=('case_id','target_horizon','native_columns','supplied_columns','base_columns','source_rows','target_rows','identified_targets',
+            'identified_mask','geometric_queries','skipped_slots','executed_extra_slots','certified_targets','formal_endpoints','omitted_reference_rows')
+        physical=data['physical_counters'];engines=data['query_engine_totals']
+        if any(type(v)is not int or v<0 for group in physical.values() for v in group.values()):return
+        for v in rows:
+            if (v['verified']is not True or v['certificate_checked']is not True or any(type(v[k])is not int or v[k]<0 for k in fields) or
+                v['base_arm']!='known48' or v['target_horizon']!=24 or v['target_policy']!='general' or v['scope']!='supplied' or
+                (v['native_columns'],v['supplied_columns'],v['base_columns'],v['source_rows'],v['formal_endpoints'])!=(48,48,0,48,192) or
+                v['target_rows']>4048 or v['identified_mask']>255 or v['identified_mask'].bit_count()!=v['identified_targets'] or
+                not 8<=v['geometric_queries']<=8+v['executed_extra_slots'] or v['skipped_slots']+v['executed_extra_slots']!=184 or
+                v['program']=='full' and(v['skipped_slots']!=0 or v['certified_targets']!=0) or
+                v['program']=='suppress' and v['certified_targets']!=v['identified_targets']):return
+            prefix=v['cell_id']+'.'+v['program']+'.'
+            if (physical[prefix+'known_base_construction'].get('public_base_certificates_verified')!=48 or
+                physical[prefix+'native_collection'].get('pair_table_insertions')!=4512 or
+                physical[prefix+'native_collection'].get('signed_point_queries')!=768 or
+                physical[prefix+'native_collection'].get('pair_array_allocated_bytes',0)<=0 or
+                physical[prefix+'construction'].get('fully_preconstructed_endpoint_slots')!=192 or
+                physical[prefix+'query_scheduling'].get('extra_slots_considered')!=184 or
+                physical[prefix+'query_scheduling'].get('certified_slots_skipped',0)!=v['skipped_slots'] or
+                physical[prefix+'shared_target_queries'].get('logical_target_requests')!=8+v['executed_extra_slots']):return
+        for ordinal,cid in enumerate(ids,1):
+            pair={v['program']:v for v in rows if v['cell_id']==cid};a,b=pair['suppress'],pair['full']
+            if a['identified_mask']!=b['identified_mask'] or a['omitted_reference_rows']!=b['omitted_reference_rows'] or a['target_rows']+a['omitted_reference_rows']!=b['target_rows']:return
+            receipt=json.loads(show(ref,run+'/checkpoint-'+cid+'.json'))
+            if (receipt['returncode']!=0 or receipt['command']!=['bash','scripts/checkpoint.sh','push'] or receipt['closed_curve']!=cid or
+                receipt['completed_curves']!=ordinal or receipt['checked_cases']!=2*ordinal or receipt['checked_batch_solver_calls']!=3*ordinal or
+                receipt['completed_online_engines']!=ordinal or 's3://setec-astronomy-artifacts/checkpoints/'not in receipt['stdout']):return
+        if set(data['observed_algorithm_counters'])!={'suppress','full','joint_on_suppress','joint_on_full'}:return
+        if any(type(v)is not int or v<0 for group in data['observed_algorithm_counters'].values() for v in group.values()):return
+        for engine in ('scalar','batch'):
+            if any(type(v)is not int or v<0 for v in engines[engine].values()):return
+            expected_totals={}
+            for group in physical.values():
+                for key,value in group.items():
+                    prefix='query_'+engine+'.'
+                    if key.startswith(prefix):
+                        bare=key[len(prefix):];expected_totals[bare]=expected_totals.get(bare,0)+value
+            if {k:v for k,v in engines[engine].items() if v}!={k:v for k,v in expected_totals.items() if v}:return
+        if engines['scalar'].get('Fp.group_add')!=sum(v.get('signed_point_queries',0) for v in physical.values()):return
+    except(KeyError,TypeError,ValueError,AttributeError):return
+    common=dict(date=date,problem='prime-field-factor-bases',better='neutral',source=f'{path}@{ref}')
+    prefix='prym.prime_field.a17'
+    for key in ('verified_systems','verified_export_execution_rows','observed_completed_batch_solver_calls','observed_completed_online_engines','unknown_systems'):
+        emit(prefix+'.'+key,data[key],unit='objects',label='Finite producer census: twelve batch calls and four online engines; unverified standing',**common)
+    for row in rows:
+        name=prefix+'.'+row['cell_id']+'.'+row['program']
+        for key in ('identified_targets','identified_mask','geometric_queries','skipped_slots','executed_extra_slots','target_rows','omitted_reference_rows'):
+            emit(name+'.'+key,row[key],unit='bit mask'if key=='identified_mask'else'objects',label='Dependent paired target/query observation; all full24 construction paid, no calibrated gain',**common)
+    for group,counts in physical.items():
+        for key in ('Fp.field_add','Fp.field_sub','Fp.field_mul','Fp.field_inv','Fr.field_add','Fr.field_sub','Fr.field_mul','Fr.field_inv','pair_array_allocated_bytes','query_array_allocated_bytes'):
+            if key in counts:emit(prefix+'.physical.'+group+'.'+key,counts[key],unit='bytes'if key.endswith('_bytes')else'calls',label='Separate physical component vector, both engines retained; no weighted cost',**common)
+
+
+def prime_field_target_effort_panel(ref, since):
+    """Committed A16 owned-horizon observations; no future setup or rank inflation."""
+    date = '2026-11-07'
+    if date < since:
+        return
+    path = 'research/prime_field_a16_execution_20261107/runs/a16-target-effort-c4b950/metrics.json'
+    raw = show(ref, path)
+    if raw is None:
+        return
+    try:
+        data = json.loads(raw)
+        if (data['schema'] != 'prime-field-a16-metrics/v1' or data['panel_complete'] is not True or
+            data['physical_attempts'] != 1 or data['planned_systems'] != 1260 or data['planned_solver_calls'] != 2520 or
+            data['verified_systems'] != 1260 or data['verified_solver_calls'] != 2520 or
+            data['verified_information_audits'] != 576 or data['unknown_systems'] != 0 or data['partial_work_unknown'] is not False):
+            return
+        columns = data['columns']
+        rows = [dict(zip(columns, value, strict=True)) for value in data['rows']]
+        if len(set(columns)) != len(columns) or len(rows) != 1260 or {v['case_id'] for v in rows} != set(range(1260)):
+            return
+        ids = {f'p{p}-i{i}' for p in (262139, 524287) for i in (0, 1)}
+        programs={'norm8':('norm',8),'hybrid8':('hybrid',8),'known32_8':('known32',8),'known48_8':('known48',8),'known48_24':('known48',24)}
+        expected={(cid,pid,base,horizon,kind+str(seed),128,policy,budget,scope)
+            for cid in ids for pid,(base,horizon) in programs.items() if pid in ('norm8','hybrid8')
+            for seed in range(3) for kind in ('ap','hash') for policy in ('walk','hash_offset','general')
+            for budget in (1,2,4,8) for scope in ('relations','anchors')}
+        expected|={(cid,pid,base,horizon,'known',0,policy,budget,'supplied')
+            for cid in ids for pid,(base,horizon) in programs.items() if pid.startswith('known')
+            for policy in ('walk','hash_offset','general') for budget in ([24] if horizon==24 else [1,2,4,8])}
+        keys=('cell_id','program','base_arm','target_horizon','source_schedule','source_prefix','target_policy','target_prefix','scope')
+        if {tuple(v[k] for k in keys) for v in rows} != expected:
+            return
+        fields = ('base_columns','native_columns','supplied_columns','source_rank','native_source_rank','outside_rank',
+            'delta','after_cancellation_rank','identified_targets','identified_mask','source_rows','target_rows','decomposition_rows','knowledge_rows')
+        for v in rows:
+            if v['verified'] is not True or v['certificate_checked'] is not True or any(type(v[k])is not int for k in ('case_id','target_horizon','source_prefix','target_prefix')) or any(type(v[k]) is not int or v[k] < 0 for k in fields):
+                return
+            width = 32 if v['base_arm'] in ('norm','known32') else 48
+            if (v['native_columns'] != width or v['base_columns']+v['supplied_columns'] != width or
+                v['native_source_rank'] != v['source_rank']+v['supplied_columns'] or
+                v['native_source_rank'] > min(width,v['source_rows']) or v['source_rank']+v['delta'] != v['after_cancellation_rank'] or
+                v['after_cancellation_rank'] > v['base_columns'] or v['outside_rank'] > min(8,v['target_rows']) or
+                v['identified_targets'] > 8 or v['identified_mask'] > 255 or v['identified_mask'].bit_count() != v['identified_targets'] or
+                v['decomposition_rows']+v['knowledge_rows'] != v['target_rows'] or v['scope']=='relations' and v['knowledge_rows'] != 0):
+                return
+            if v['base_arm'].startswith('known') and (v['base_columns'],v['source_rank'],v['delta'],v['source_rows']) != (0,0,0,width):
+                return
+        if any(len({v['base_columns'] for v in rows if v['cell_id']==cid and v['base_arm'] in ('norm','hybrid')}) != 1 for cid in ids):
+            return
+        physical, engines = data['physical_counters'], data['query_engine_totals']
+        if any(type(v) is not int or v < 0 for group in physical.values() for v in group.values()):
+            return
+        if data['observed_completed_solver_calls']!=2520 or data['observed_failed_solver_calls']!=0 or data['observed_certified_systems']!=1260:
+            return
+        for pid,size in [('hybrid8',16),('known32_8',32),('known48_8',48),('known48_24',48)]:
+            if physical['public_base.'+pid+'.known_base_construction'].get('public_base_certificates_verified')!=4*size:
+                return
+        for pid in ('norm8','hybrid8'):
+            geometric=physical[pid+'.norm_prelude']['geometry_classes_stored']
+            if not 128<=geometric<=(128 if pid=='norm8' else 192):return
+            if physical[pid+'.source_construction'].get('signed_point_queries')!=2*128*6*geometric:return
+            if physical[pid+'.native_collection'].get('signed_point_queries')!=2*8*geometric:return
+        for pid,size in [('known32_8',32),('known48_8',48),('known48_24',48)]:
+            if physical.get(pid+'.source_construction',{}).get('signed_point_queries',0)!=0:return
+            if physical[pid+'.native_collection'].get('signed_point_queries')!=4*2*8*size:return
+            if physical[pid+'.native_collection'].get('pair_table_insertions')!=4*2*size*(size-1):return
+            if physical[pid+'.native_collection'].get('pair_array_allocated_bytes',0)<=0:return
+        for engine in ('scalar','batch'):
+            if any(type(v) is not int or v < 0 for v in engines[engine].values()):
+                return
+            namespace = 'query_'+engine+'.'
+            names = {k[len(namespace):] for group in physical.values() for k in group if k.startswith(namespace)}
+            if names != set(engines[engine]) or any(sum(group.get(namespace+k,0) for group in physical.values()) != v for k,v in engines[engine].items()):
+                return
+        if engines['scalar'].get('Fp.group_add') != sum(v.get('signed_point_queries',0) for v in physical.values()):
+            return
+        checkpoints = data['closed_curve_checkpoints']
+        if len(checkpoints) != 4 or {v['cell_id'] for v in checkpoints} != ids or any(
+            v['valid'] is not True or v['receipt']['returncode'] != 0 or v['receipt']['closed_curve'] != v['cell_id'] for v in checkpoints):
+            return
+        for ordinal,value in enumerate(checkpoints,1):
+            receipt=value['receipt']
+            if receipt['command']!=['bash','scripts/checkpoint.sh','push'] or receipt['completed_curves']!=ordinal or receipt['checked_cases']!=ordinal*315:return
+        for base in programs:
+            for method in ('partial_joint','sparse_joint'):
+                if any(type(v) is not int or v < 0 for v in data['observed_arm_counters'][base+'.'+method].values()):
+                    return
+    except (KeyError,TypeError,ValueError,AttributeError):
+        return
+    common = dict(date=date,problem='prime-field-factor-bases',better='neutral',source=f'{path}@{ref}')
+    prefix = 'prym.prime_field.a16'
+    for key in ('verified_systems','verified_solver_calls','verified_information_audits','unknown_systems'):
+        emit(prefix+'.'+key,data[key],unit='objects',label='Actual finite producer census; dependent cases and separate diagnostics, unverified standing',**common)
+    for group,counts in physical.items():
+        for key in ('Fp.field_add','Fp.field_sub','Fp.field_mul','Fp.field_inv','Fr.field_add','Fr.field_sub','Fr.field_mul','Fr.field_inv',
+            'signed_point_queries','pair_table_insertions','public_base_certificates_verified','pair_array_allocated_bytes','query_array_allocated_bytes'):
+            if key in counts:
+                emit(prefix+'.physical.'+group+'.'+key,counts[key],unit='bytes' if key.endswith('_bytes') else 'calls',
+                    label='Physical component once; diagnostic overhead, both engine controls and conditional references remain separate',**common)
+    for v in rows:
+        name = prefix+'.'+v['cell_id']+'.'+v['program']+'.h'+str(v['target_horizon'])+'.'+v['source_schedule']+'.'+v['target_policy']+'.target'+str(v['target_prefix'])+'.'+v['scope']
+        for key,unit in [('identified_targets','target slots'),('identified_mask','bit mask'),('base_columns','old unknown columns'),
+            ('supplied_columns','supplied units'),('source_rank','old-coordinate rank'),('native_source_rank','native supplied-plus-collected rank'),
+            ('delta','within-case rank'),('target_rows','equations'),('knowledge_rows','equations')]:
+            emit(name+'.'+key,v[key],unit=unit,label='Dependent producer observation; supplied logs are not learned rank, no cross-base Delta comparison',**common)
+
+
+
+
+def prime_field_batched_pair_panel(ref, since):
+    """Committed A15 component vectors; retained queries never become new targets."""
+    from collections import Counter
+    date = '2026-11-07'
+    if date < since:
+        return
+    path = 'research/prime_field_a15_execution_20261107/runs/a15-batched-pairs-06ab77/metrics.json'
+    raw = show(ref, path)
+    if raw is None:
+        return
+    try:
+        data = json.loads(raw)
+        if (data['schema'] != 'prime-field-a15-metrics/v1' or data['panel_complete'] is not True or
+            data['physical_attempts'] != 1 or data['conditioned_input_reuse'] is not True or
+            data['new_target_solver_calls'] != 0 or data['independent_new_target_draws'] != 0 or
+            data['verified_builds'] != 32 or data['verified_query_calls'] != 17920 or
+            data['partial_work_unknown'] is not False or data['errors']):
+            return
+        curves = [f'p{p}-i{i}' for p in (262139,524287) for i in (0,1)]
+        tables = {cid+'.'+base for cid in curves for base in ('norm','hybrid','known32','known48')}
+        rows = data['rows']
+        if len(rows) != 32 or {(r['table'],r['method']) for r in rows} != {(t,m) for t in tables for m in ('scalar','batched')}:
+            return
+        checkpoints = data['checkpoints']
+        if len(checkpoints) != 4 or {c['closed_curve'] for c in checkpoints} != set(curves) or any(
+            c['returncode'] != 0 or c['completed_tables'] != 4*(curves.index(c['closed_curve'])+1) or
+            c['command'] != ['bash','scripts/checkpoint.sh','push'] for c in checkpoints):
+            return
+        total = Counter()
+        for row in rows:
+            b = row['build']
+            expected_queries = 944 if row['table'].split('.')[1] in ('norm','hybrid') else 176
+            if (row['verified'] is not True or row['pair_verified'] is not True or row['method_complete'] is not True or
+                row['queries'] != expected_queries or row['verified_queries'] != expected_queries or
+                b['method'] != row['method'] or not re.fullmatch('[0-9a-f]{64}',b['pairs_sha256'])):
+                return
+            groups = [b['counters'],row['query_counters'],row['observed_phase_counters'],row['pair_stage_counters']]
+            if any(type(value) is not int or value < 0 for group in groups for value in group.values()):
+                return
+            phases = Counter()
+            for phase in b['phases']:
+                if phase['status'] != 'complete' or phase['wall_valid'] is not False:
+                    return
+                phases.update(phase['counters'])
+            if phases != Counter(b['counters']) or Counter(b['counters'])+Counter(row['query_counters']) != Counter(row['observed_phase_counters']):
+                return
+            n = b['counters']['pair_input_points_validated']
+            width = 32 if row['table'].split('.')[1] in ('norm','known32') else 48
+            if n != width or b['ordered_pairs'] != 2*n*(n-1) or b['counters']['pair_table_insertions'] != b['ordered_pairs']:
+                return
+            expected_group = b['ordered_pairs'] if row['method']=='scalar' else 0
+            expected_inv = b['ordered_pairs'] if row['method']=='scalar' else 1
+            if b['counters'].get('Fp.group_add',0) != expected_group or b['counters'].get('Fp.field_inv',0) != expected_inv:
+                return
+            total.update(row['observed_phase_counters'])
+        if total != Counter(data['physical_counters']):
+            return
+        for ident in tables:
+            paired = [row for row in rows if row['table']==ident]
+            if len({row['build']['pairs_sha256'] for row in paired}) != 1 or paired[0]['query_counters'] != paired[1]['query_counters']:
+                return
+    except (KeyError,TypeError,ValueError,AttributeError):
+        return
+    common = dict(date=date,problem='prime-field-factor-bases',better='neutral',source=f'{path}@{ref}')
+    prefix = 'prym.prime_field.a15'
+    for key in ('verified_builds','verified_query_calls','new_target_solver_calls','independent_new_target_draws'):
+        emit(prefix+'.'+key,data[key],unit='objects',label='Actual component census; retained inputs, no new target recovery, producer unverified',**common)
+    for row in rows:
+        name = prefix+'.'+row['table']+'.'+row['method']
+        for group,counts in [('construction',row['build']['counters']),('pair_stages',row['pair_stage_counters']),('query_replay',row['query_counters'])]:
+            for key in ('Fp.field_add','Fp.field_sub','Fp.field_mul','Fp.field_inv','Fp.group_add','pair_table_insertions',
+                        'pair_array_allocated_bytes','pair_array_allocations','signed_point_queries'):
+                emit(name+'.'+group+'.'+key,counts.get(key,0),unit='bytes' if key.endswith('_bytes') else 'calls',
+                    label='Separate actual component vector; array traffic is not RSS, no calibrated runtime/full-cost claim',**common)
+        for key in ('queries','verified_queries','rows'):
+            emit(name+'.'+key,row[key],unit='objects',label='Retained component query/native-row checks, not target solver calls or new targets',**common)
+
+
 def degree_five_continuation(ref, since):
     """Latest committed high-memory snapshot per day, including capped inputs.
 
@@ -1006,6 +2110,20 @@ def main():
     prime_field_cancellation_solver_panel(a.ref, a.since)
     prime_field_sparse_functional_panel(a.ref, a.since)
     prime_field_json_functional_panel(a.ref, a.since)
+    prime_field_ap_holdout_panel(a.ref, a.since)
+    prime_field_affine_holdout_panel(a.ref, a.since)
+    prime_field_batched_holdout_panel(a.ref, a.since)
+    prime_field_paid_known_base_panel(a.ref, a.since)
+    prime_field_mixed_known_helper_panel(a.ref, a.since)
+    prime_field_batched_pair_panel(a.ref, a.since)
+    prime_field_target_effort_admission_failure(a.ref, a.since)
+    prime_field_target_effort_panel(a.ref, a.since)
+    prime_field_certified_query_panel(a.ref, a.since)
+    prime_field_certified_query_transfer_panel(a.ref, a.since)
+    prime_field_unknown_pool_cancellation_panel(a.ref, a.since)
+    prime_field_formal_pair_dictionary_panel(a.ref, a.since)
+    prime_field_larger_formal_transfer_panel(a.ref, a.since)
+    prime_field_direct_formal_algebra_panel(a.ref, a.since)
     degree_five_continuation(a.ref, a.since)
     semaev_panel_snapshots(a.ref, a.since)
 

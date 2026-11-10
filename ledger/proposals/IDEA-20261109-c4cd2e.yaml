@@ -1,0 +1,134 @@
+idea:
+  id: IDEA-20261109-c4cd2e
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: 'Degree equals yes-size: a tree of rational tests on a prime-field ECDLP target that is correct
+    on epsilon N inputs has a path of total degree at least epsilon N - 1, and every balanced algebraic
+    predicate on E(F_p) has degree at least N/2'
+  class: barrier
+  claim: 'Let E/F_p have prime order N, P a generator, Q = kP. Consider any deterministic decision tree
+    whose nodes test "f_i(Q) = 0" for nonzero f_i in F_p(E), possibly built from computed points aP +
+    bQ (then deg(f o tau o [b]) <= b^2 deg f), and whose leaves output k. (T1) A test is answered yes
+    by at most deg(f_i) targets, so if the tree is correct on epsilon N targets, the all-no path satisfies
+    sum deg(f_i) >= epsilon N - 1. (T2) A nonconstant g in F_p(E) with values in {0,1} on E(F_p) and |g^{-1}(1)|
+    = s has deg g >= max(s, N - s) >= N/2, since g and g - 1 each have at most deg g zeros. Consequences:
+    constant-degree tests on a window of L consecutive multiples need at least N/(d L^2) tests; a bit
+    predictor that is a rational function of Q has degree at least N/2. The bound does not exclude the
+    regime L = (N/d)^{1/3}, and bit-extraction tests are outside the model. Exponent delta claimed: 0.'
+  mechanism: Divisor degree bounds zeros; multiplication by b has degree b^2. The always-no adversary
+    is the standard algebraic-decision-tree argument. The new content is the yes-size accounting that
+    shows divisor degree is the only algebraic quantity such an attack can spend, that balanced predicates
+    cost N/2 of it, and that the (N/d)^{1/3} window is the honest gap left to exponential-sum methods.
+  novelty_status: adaptation
+  citations:
+  - ref: KR-RHO-13bf67
+    provenance: internal
+    claim: Generic Omega(sqrt p) bound in group operations; the present bound is in a different model
+      and weaker in the window regime.
+    verified_by: REPO BRIEF section 3 frontier map, Mythos run 2026-11-09; file not opened.
+  - ref: IDEA-20260801-021
+    provenance: internal
+    claim: Proves |F_p| <= 3 d_p for a degree-d_p algebraic predicate on the factor base; the same Bezout
+      ingredient is applied here to adaptive tests on the target.
+    verified_by: REPO BRIEF section 2 ledger excerpt; record body not opened.
+  assumptions:
+  - Tests are exact zero tests of rational functions on E; comparisons, bit extraction and interval tests
+    are outside the model.
+  - Randomised algorithms are handled by fixing the coin value attaining the success probability.
+  predictions:
+  - metric: min_deg(S), the least d with an element of L(dO) equal to 1 on S and 0 on E(F_p) minus S,
+      random S of size s
+    direction: higher
+    minimum_effect: at least max(s, N - s) for every S (theorem) and at least N - 2 for at least 90 percent
+      of random S at each tested s
+  - metric: maximal zero count on E(F_p) of random f in L(dO)
+    direction: different
+    minimum_effect: never exceeds d over 10^4 samples per d
+  minimal_test:
+    design: On three prime-order toy curves with p in [2^10, 2^14] from crypto/docs/ECDLP_CALIBRATION_PRIMES.md
+      (next agent reads the file for the curve list), build the basis 1, x, y, x^2, xy, x^3, ... of L(dO),
+      evaluate at all affine points, (a) solve for the indicator of random S with s in {2, N/4, N/2} to
+      obtain min_deg(S), (b) count zeros of random f in L(dO) for d up to N. Report both against T1 and
+      T2.
+    controls:
+    - Replace E(F_p) by N random points of A^2 and L(dO) by total-degree-d polynomials; the zero bound
+      becomes d^2 (plane Bezout), confirming the curve is load-bearing.
+    - Any min_deg below max(s, N - s) is an implementation error and halts the run, since T2 is a theorem.
+    required_metrics:
+    - p, N, d range
+    - min_deg(S) per S and s
+    - max zero count per d
+    - fraction of S with min_deg(S) >= N - 2
+  falsification_conditions:
+  - An f in L(dO) with more than d zeros on E(F_p) (invalidates the run as a formula error).
+  - A ledger record exhibiting an algorithm in the stated model correct on epsilon N inputs with all-no
+    path degree below epsilon N - 1.
+  - A proof that bit-extraction tests can be charged in divisor degree, which would void the dichotomy
+    reading.
+  confounders:
+  - L(dO) is a slice of F_p(E); the theorem is for all rational functions with divisor degree, the test
+    probes only this slice.
+  - At s near N/2 the bounds max(s, N - s) and N - 2 nearly coincide; the s = 2 arm separates them.
+  interpretation_limits:
+  - Exponent delta is 0; the record prices one attack class and documents the (N/d)^{1/3} regime it does
+    not exclude.
+  - Nothing is said about algorithms using bit operations or comparisons on coordinates.
+  heuristic_assumptions:
+  - id: H1
+    statement: For random S the interpolating degree is N - O(1), not merely max(s, N - s).
+    rigorous_support: Dimension count only; L(dO) has dimension d against N interpolation conditions.
+      Not proven for the specific point set.
+    validation_plan: Prediction 1 on three curves; if min_deg(S) is often far below N at s = N/4 the record
+      is corrected to the proven bound alone.
+  target_complexity:
+    time_exponent: No algorithm proposed; total test degree >= epsilon N - 1 along one path, which rho
+      meets with one test of degree about N.
+    memory_exponent: not applicable
+    best_known: Pollard rho, Theta(sqrt N) group operations (KR-RHO-13bf67).
+    hidden_overhead: none; theorem plus toy measurement
+    tradeoff_note: In the bounded-degree window model the bound allows cost (N/d)^{1/3} at L = (N/d)^{1/3};
+      closing that gap needs a different tool.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  dominated_by: KR-RHO-13bf67 dominates any exponent reading. No row states the degree-yes-size accounting
+    or the N/2 floor for balanced predicates.
+  sota_delta: Exponent delta 0. Supplies a provable lower-bound tool for a restricted algebraic model
+    where the wave-2 complexity lead recorded none, and names the regime it fails to exclude.
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/generic-rho
+    rows_checked:
+    - KR-RHO-13bf67
+    - KR-RHO-93979e
+    - KR-RHO-5b1c0a
+    - KR-IC-5931ee
+    - KR-IC-5a43e5
+    nearest:
+    - ref: KR-RHO-13bf67
+      provenance: internal
+      relation: adjacent
+      delta: Shoup counts group operations and equality tests; this record counts divisor degree of arbitrary
+        rational tests.
+    - ref: KR-IC-5931ee
+      provenance: internal
+      relation: orthogonal
+      delta: YYTK bound naive index calculus under statistical assumptions; this record prices adaptive
+        single-target tests without assumption.
+    searched:
+      corpus_grep:
+      - REPO BRIEF section 2 for decision tree, Bezout, algebraic adversary
+      - Wave 1 and 2 lead lists for interpolation degree, algebraic immunity, natural proofs
+      web: []
+      blocked:
+      - no tool access; ledger files not opened
+    lead: LEAD-ICP-pkm-tower-algebraic-oracle
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: On three prime-order toy curves with p in [2^10, 2^14] from crypto/docs/ECDLP_CALIBRATION_PRIMES.md
+        (next agent reads the file for the curve list), build the basis 1, x, y, x^2, xy, x^3, ... of
+        L(dO), evaluate at all affine points, (a) solve for the indicator of random S with s in {2, N/4,
+        N/2} to obtain min_deg(S), (b) count zeros of random f in L(dO) for d up to N. Report both against
+        T1 and T2.'

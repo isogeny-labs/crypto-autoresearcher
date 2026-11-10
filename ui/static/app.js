@@ -2768,6 +2768,8 @@ async function viewIntegrity() {
     h('tbody', {}, rows)));
 
   const pending = body.unparseable_state !== 'complete';
+  const parsedCopies = pending ? 0
+    : body.unparseable.filter((u) => u.parsed_correction_path).length;
 
   fill(root, h('div', { class: 'stack' },
     snapshotBanner(),
@@ -2778,14 +2780,17 @@ async function viewIntegrity() {
     body.ecc_policy_error ? h('div', { class: 'banner warn' },
       `ECC priority policy could not be loaded: ${body.ecc_policy_error}. ECC ordering is off.`)
       : null,
-    section(`Unparseable ledger records${pending ? '' : ` (${body.unparseable.length})`}`,
-      'exact YAML parse of every record under ledger/',
+    section(`Unparseable ledger records${pending ? '' : ` (${body.unparseable.length}; ${parsedCopies} parsed copies)`}`,
+      'exact YAML parse of every original under ledger/; a hash-bound copy does not repair or validate the original',
       pending
         ? h('div', { class: 'panel-body' }, loading('deep scan running — not yet measured'))
         : (body.unparseable.length
-          ? table(['path', 'parser error'], body.unparseable.map((u) => h('tr', {},
+          ? table(['path', 'parser error', 'parsed correction'], body.unparseable.map((u) => h('tr', {},
               h('td', { class: 'mono' }, pathLink(u.path)),
-              h('td', { class: 'mono faint' }, u.error))))
+              h('td', { class: 'mono faint' }, u.error),
+              h('td', {}, u.parsed_correction_path
+                ? pathLink(u.parsed_correction_path, 'view copy')
+                : h('span', { class: 'faint' }, '—')))))
           : h('div', { class: 'empty' }, 'every ledger record parses'))),
     body.goal_flags.length ? section(`Goal policy flags (${body.goal_flags.length})`,
       'checked against CLAUDE.md rules 10 and 11',

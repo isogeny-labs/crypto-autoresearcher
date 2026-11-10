@@ -879,13 +879,13 @@ class DriverContradictionTests(unittest.TestCase):
         return {"run": {"experiment_id": self.EXP, "run_id": self.RUN,
                         "attack_claimed": False, "metrics": {"m": 1}}}
 
-    def complete(self, manifest, raw=None, command_txt=None):
+    def complete(self, manifest, raw=None, command_txt=None, raw_text=None):
         temporary = tempfile.TemporaryDirectory()
         self.addCleanup(temporary.cleanup)
         directory = Path(temporary.name)
         text = manifest if isinstance(manifest, str) else json.dumps(manifest)
         (directory / "manifest.yaml").write_text(text)
-        (directory / "raw-result.json").write_text(json.dumps(
+        (directory / "raw-result.json").write_text(raw_text if raw_text is not None else json.dumps(
             raw if raw is not None else {"attack_claimed": False, "m": 1}))
         (directory / "command.txt").write_text(
             command_txt if command_txt is not None else json.dumps(self.ARGV) + "\n")
@@ -984,8 +984,8 @@ class DriverContradictionTests(unittest.TestCase):
         run["code"] = {"commit": "a" * 40, "command": " ".join(self.ARGV)}
         run["environment"] = {"python": "3.12.1", "platform": "Linux-6.18.55-x86_64",
                               "host": "driver-only"}
-        run["inputs"] = {"seed": 1, "parameters": {"field_bits": 20, "derived": 3},
-                         "extra": "driver-only"}
+        run["inputs"] = {"seed": 1, "parameters": {"field_bits": 20},
+                         "derived": {"field_bits_effective": 3}, "extra": "driver-only"}
         run["timing"] = {"started_at": "2026-10-28T00:00:00Z", "wall_seconds": 4.5}
         completion = self.complete(manifest)
         self.assertEqual(completion["action"], "completed")
@@ -997,6 +997,122 @@ class DriverContradictionTests(unittest.TestCase):
         self.assertEqual(published["inputs"], run["inputs"])
         self.assertEqual(published["timing"], run["timing"])
         self.assertNotIn("run.inputs", completion["added"])
+
+    # SHF-20261106-a114e7 LGX-2 (LGN-2 residual): driver values outside the
+    # enumerated locations that still have a publish-time source.
+    def test_run_level_seed_contradicting_the_trial_is_refused(self):  # G1
+        manifest = self.partial()
+        manifest["run"]["seed"] = 99
+        self.assert_refused(manifest, pattern=r"run\.seed=99 contradicts the frozen trial")
+
+    def test_flat_shape_seed_contradicting_the_trial_is_refused(self):  # G2
+        manifest = {"run_id": self.RUN, "experiment_id": self.EXP, "attack_claimed": False,
+                    "metrics": {"m": 1}, "seed": 99}
+        self.assert_refused(manifest, pattern=r"run\.seed=99 contradicts the frozen trial")
+
+    def test_run_level_parameters_contradicting_the_trial_are_refused(self):  # G3
+        manifest = self.partial()
+        manifest["run"]["parameters"] = {"field_bits": 64}
+        self.assert_refused(manifest, pattern=r"run\.parameters=.* contradicts")
+
+    def test_run_level_curve_id_contradicting_the_trial_is_refused(self):
+        trial = self.TRIAL
+        try:
+            self.TRIAL = {**trial, "curve_id": "ICV1-fixture"}
+            manifest = self.partial()
+            manifest["run"]["curve_id"] = "ICV1-other"
+            self.assert_refused(manifest, pattern=r"run\.curve_id=.* contradicts")
+        finally:
+            self.TRIAL = trial
+
+    def test_parameter_extras_are_refused(self):  # G4
+        manifest = self.partial()
+        manifest["run"]["inputs"] = {"parameters": {"field_bits": 20, "bits_effective": 64}}
+        self.assert_refused(manifest, pattern=r"keys outside the plan \['bits_effective'\]")
+
+    def test_missing_parameters_are_refused(self):  # G5
+        manifest = self.partial()
+        manifest["run"]["inputs"] = {"parameters": {}}
+        self.assert_refused(manifest, pattern=r"plan keys missing \['field_bits'\]")
+
+    def test_hypothesis_without_a_plan_hypothesis_is_refused(self):  # G6
+        plan = self.PLAN
+        try:
+            self.PLAN = {k: v for k, v in plan.items() if k != "hypothesis_id"}
+            manifest = self.partial()
+            manifest["run"]["hypothesis_id"] = "H-ECDLP-ffffff"
+            self.assert_refused(manifest, pattern="plan names no hypothesis")
+        finally:
+            self.PLAN = plan
+
+    def test_seed_without_a_trial_seed_is_refused(self):  # G7
+        trial = self.TRIAL
+        try:
+            self.TRIAL = {k: v for k, v in trial.items() if k != "seed"}
+            for where in ("inputs", "run"):
+                with self.subTest(where=where):
+                    manifest = self.partial()
+                    if where == "inputs":
+                        manifest["run"]["inputs"] = {"seed": 12345}
+                    else:
+                        manifest["run"]["seed"] = 12345
+                    self.assert_refused(manifest, pattern="the frozen trial declares no seed")
+            manifest = self.partial()  # control: an empty mapping states nothing
+            self.TRIAL = {k: v for k, v in trial.items() if k not in ("seed", "parameters")}
+            manifest["run"]["inputs"] = {"parameters": {}}
+            self.assertEqual(self.complete(manifest)["action"], "completed")
+        finally:
+            self.TRIAL = trial
+
+    def test_started_after_finished_is_refused(self):  # G8
+        manifest = self.partial()
+        manifest["run"]["timing"] = {"started_at": self.FINISHED, "finished_at": self.STARTED}
+        self.assert_refused(manifest, pattern="is after run.timing.finished_at")
+
+    def test_python_must_name_the_exact_version(self):  # G9
+        for stated in ("not 3.12.1; ran under 3.12.19", "3.12.19", "3.12.1rc1", "python"):
+            with self.subTest(stated=stated):
+                manifest = self.partial()
+                manifest["run"]["environment"] = {"python": stated}
+                self.assert_refused(manifest)
+        for stated in ("3.12.1", "3.12.1 (main, Oct 1 2026)", "CPython 3.12.1"):
+            with self.subTest(control=stated):
+                manifest = self.partial()
+                manifest["run"]["environment"] = {"python": stated}
+                self.assertEqual(self.complete(manifest)["action"], "completed")
+
+    def test_raw_result_with_a_repeated_key_is_refused(self):  # G11
+        temporary_raw = '{"attack_claimed": true, "attack_claimed": false, "m": 1}'
+        with self.assertRaisesRegex(execution.EnvelopeRefused, "repeats the key 'attack_claimed'"):
+            self.complete(self.partial(), raw=None, raw_text=temporary_raw)
+        self.assertTrue(self.unchanged)
+
+    def test_case_variant_of_a_checked_key_is_refused(self):  # G17
+        for where, key in (("inputs", "Seed"), ("run", "Seed"), ("run", "Hypothesis_ID")):
+            with self.subTest(where=where, key=key):
+                manifest = self.partial()
+                if where == "inputs":
+                    manifest["run"]["inputs"] = {key: 99}
+                else:
+                    manifest["run"][key] = 99
+                self.assert_refused(manifest, pattern="case variant")
+
+    def test_specification_hash_contradicting_the_plan_is_refused(self):  # G18
+        plan = self.PLAN
+        try:
+            self.PLAN = {**plan, "specification": f"experiments/{self.EXP}/specification.yaml",
+                         "specification_sha256": "5" * 64}
+            for key, value in (("specification_sha256", "6" * 64),
+                               ("specification", "experiments/other/specification.yaml")):
+                with self.subTest(key=key):
+                    manifest = self.partial()
+                    manifest["run"]["inputs"] = {key: value}
+                    self.assert_refused(manifest, pattern=rf"run\.inputs\.{key}=")
+            manifest = self.partial()  # control: the plan's own hash is kept
+            manifest["run"]["inputs"] = {"specification_sha256": "5" * 64}
+            self.assertEqual(self.complete(manifest)["action"], "completed")
+        finally:
+            self.PLAN = plan
 
     def test_python_of_another_interpreter_is_the_drivers_own(self):
         manifest = self.partial()

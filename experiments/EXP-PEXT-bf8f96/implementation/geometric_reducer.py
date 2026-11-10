@@ -12,9 +12,68 @@ from pathlib import Path
 from candidate_batch import expected_units, read_chunk, verify_complete_index
 from candidate_binding import CandidateBinder
 from independent_check import read_bounded_gzip
+from prospective_unit_descent import summarize as summarize_prospective_descent
 
 
 GENERIC_ORDER = "left-pgl2-fq/v1"
+
+
+def canonical_hash(value):
+    return hashlib.sha256(json.dumps(value, sort_keys=True, separators=(",", ":"),
+                                     allow_nan=False).encode()).hexdigest()
+
+
+def checked_generic_descent(unit, binding, review, raw_sha256):
+    """Check compact theorem identity against sealed bytes and bound review."""
+    certificate = review.get("generic_descent")
+    independent = review.get("independent", {})
+    if not isinstance(certificate, dict) or not isinstance(binding, dict):
+        raise ValueError("generic descent certificate absent")
+    expected = {"schema": "pext.generic-interval-descent/v1",
+                "theorem": "disjoint-conjugate-quartics-order-n-permutation/v1",
+                "scope": "generic_complement_only",
+                "candidate_unit_sha256": canonical_hash(unit),
+                "candidate_raw_sha256": raw_sha256,
+                "exceptional_ordinals_sha256": canonical_hash([row[0] for row in unit["rows"]]),
+                "independent_exceptional_count": independent.get("exceptional"),
+                "generic_intervals_sha256": canonical_hash(unit["generic_intervals"]),
+                "generic_interval_count": len(unit["generic_intervals"]),
+                "generic_count": sum(stop-start for start, stop in unit["generic_intervals"]),
+                "geometric_rank": binding["field"]["degree"],
+                "arithmetic_rank": binding["field"]["degree"],
+                "geometrically_connected": True, "descends_to_base_field": True,
+                "genus": 1 + (binding["field"]["degree"] - 1)
+                           * (1 << binding["field"]["degree"]),
+                "status": "prospective_generic_theorem; collision_completeness_review_and_full_cohort_admission_pending"}
+    expected["premises"] = {
+        "odd_characteristic": True, "squarefree_binary_quartic": True,
+        "exact_coefficient_q_frobenius_orbit": True,
+        "pairwise_disjoint_projective_support_on_complement": True,
+        "all_nonempty_subset_geometric_and_arithmetic_square_relations_absent": True,
+        "radical_action": "sigma(c)=c^q; sigma(x)=x; sigma(y_i)=y_(i+1 mod n)",
+        "radical_action_order": binding["field"]["degree"]}
+    for key in ("cohort", "class_index", "T_index", "field", "model", "target",
+                "quotient_form", "input_sha256", "manifest_sha256",
+                "join_plan_sha256", "structure_offset", "structure_end_exclusive"):
+        expected[key] = binding[key]
+    if (review.get("raw_sha256") != raw_sha256
+            or independent.get("valid") is not True
+            or independent.get("structures") != unit["structures"]
+            or independent.get("exceptional") != unit["exceptional"]
+            or independent.get("generic_intervals") != len(unit["generic_intervals"])
+            or unit["field"] != binding["field"]
+            or unit["form"] != binding["quotient_form"]
+            or unit["structures"] != binding["structures_per_T"]
+            or expected["generic_count"] != unit["generic"]
+            or certificate != expected):
+        raise ValueError("generic descent certificate differs from sealed unit and review")
+    return {"status": certificate["status"],
+            "candidate_raw_sha256": raw_sha256,
+            "generic_intervals_sha256": certificate["generic_intervals_sha256"],
+            "generic_interval_count": certificate["generic_interval_count"],
+            "generic_count": certificate["generic_count"],
+            "geometrically_connected": True, "descends_to_base_field": True,
+            "genus": certificate["genus"]}
 
 
 def expected_pattern(target_count, t_index):
@@ -54,12 +113,14 @@ def complement_intervals(ordinals, structures):
 
 
 def unit_summary(unit, *, n, target_count, t_index, expected_structures,
-                 reverse_exceptional=False):
+                 reverse_exceptional=False, generic_binding=None,
+                 generic_review=None, raw_sha256=None):
     """Recompute counted geometric metrics from one exact unit JSON record."""
     if (type(n) is not int or n not in (3, 5)
             or not isinstance(unit, dict)
             or unit.get("schema") != "pext.checked-candidate-unit/v1"
             or unit.get("structure_order") != GENERIC_ORDER
+            or unit.get("candidate_order_aa") != "reverse-cocycle-build-representatives-buckets-and-roots/v1"
             or unit.get("structures") != expected_structures
             or type(expected_structures) is not int or expected_structures < 1):
         raise ValueError("geometric unit identity or structure count")
@@ -114,13 +175,20 @@ def unit_summary(unit, *, n, target_count, t_index, expected_structures,
                        (1 << (n-1))*(n-1)+1, generic_genus}
     violations = None if allowed is None else sum(row[4] not in allowed for row in rows) + (
         generic if generic_genus not in allowed else 0)
-    return {"factor_pattern": pattern, "expected_factor_pattern": wanted_pattern,
+    result = {"factor_pattern": pattern, "expected_factor_pattern": wanted_pattern,
+            "candidate_order_aa": unit["candidate_order_aa"],
             "branch_type_mismatch_count": int(pattern != wanted_pattern),
             "geometric_spectrum_violation_count": violations,
             "spectrum": sorted(set(genera)), "geometric_minimum": min(genera),
             "m_r_histogram": dict(sorted(mr_counts.items())),
             "structures": expected_structures, "exceptional": exceptional,
             "generic": generic}
+    if generic_review is not None:
+        if generic_binding is None or raw_sha256 is None:
+            raise ValueError("generic descent readback inputs absent")
+        result["generic_descent"] = checked_generic_descent(
+            unit, generic_binding, generic_review, raw_sha256)
+    return result
 
 
 def curve_summary(cohort, class_index, model, units):
@@ -304,7 +372,9 @@ def reduce_cohort(cohort_dir, binder, binary_sha256, *, read_order="canonical"):
             result = unit_summary(unit, n=binder.plan["field"]["degree"],
                                   target_count=len(targets), t_index=row["T_index"],
                                   expected_structures=binder.plan["structures_per_T"],
-                                  reverse_exceptional=read_order == "reverse")
+                                  reverse_exceptional=read_order == "reverse",
+                                  generic_binding=binding, generic_review=review,
+                                  raw_sha256=review["raw_sha256"])
             if type2_rows is not None:
                 counts, witness_ordinals = type2_witness_ordinals(
                     unit, review, row, type2_rows[name])
@@ -317,6 +387,8 @@ def reduce_cohort(cohort_dir, binder, binary_sha256, *, read_order="canonical"):
                     or review["independent"].get("structures") != result["structures"]
                     or review.get("geometry_ordinals") != [item[0] for item in unit["rows"]]):
                 raise ValueError("geometric counts differ from independent review")
+            result["prospective_descent"] = summarize_prospective_descent(
+                raw, binding, review)
             result["T_index"] = row["T_index"]
             result["unit_name"] = name
             result["candidate_unit_sha256"] = review["raw_sha256"]

@@ -1,8 +1,14 @@
 # Formalization targets
 
-One file per frozen formal task, consumed by
+One file per frozen formal target, consumed by
 `autoresearch formal formalize --task-file <path>` and turned into a dispatch
-queue stanza by `tools/formal_task.py`.
+queue stanza by `tools/formal_task.py`. A producing task can own more than one
+target: `task_id` records that producer, while `claim_id` and `theorem_name`
+distinguish its target claims. For example, `TASK-20261105-9e5cbb` produced
+both the Boolean normalization repair and last-fall upper-bound targets; its
+handoff and separate target receipts are archived under
+`analysis/rigorous-lfd-solving-20261105/` and
+`docs/reports/2026-11-05-lfd-publication-readiness/`.
 
 A target is a **pointer plus a claim, not an approval**. Writing one here
 queues nothing and approves nothing; the Coordinator decides what runs, and a
@@ -273,10 +279,14 @@ into something that is not the claim.
 `quotient-translation-descent.yaml` proves the group-law identity of
 `THM_QUOTIENT_DESCENT1`: τ_T commutes with ι_S = [−1] ∘ τ_S, for every S,
 exactly when 2T = 0. It is stated in any additive commutative group. The
-[independent semantic review of 2026-10-29](../../docs/reports/2026-10-29-quotient-translation-descent-review/review.md)
-finds it faithful to the target's claim (`faithful_scoped`, `validated_scoped`
-for that claim only). It does **not** support the note's descent Lemma as
-titled: degree-2 maps as quotients by ι_S, and descent ⟺ commutation, are
+[review of 2026-10-29](../../docs/reports/2026-10-29-quotient-translation-descent-review/review.md)
+is a same-session, single-reviewer fidelity check, not an independent semantic
+review. DEC-20261106-2f9a94 rules its recorded `validated_scoped` outcome
+inadmissible (sheriff case SHF-20261106-a114e7, LNX-2) and reads it as
+`machine_status: passed`, fidelity not independently supported, review outcome
+`inconclusive`. `semantic_review` stays pending until the independent round
+that decision opens reports. Even as a fidelity check, it does **not** support
+the note's descent Lemma as titled: degree-2 maps as quotients by ι_S, and descent ⟺ commutation, are
 prose. It does not support the summation-polynomial Corollary either.
 
 ## Nagao 2015/984 Lemma 4 counterexample

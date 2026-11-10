@@ -1,0 +1,106 @@
+idea:
+  id: IDEA-20261109-cc4e42
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECC-9d5d44
+  title: Edwards25519 unified addition with hoisted k = 2d and a four-coordinate readdition cache (1I
+    + 12 fe_mul per add down to 8M)
+  class: algorithm
+  claim: Curve $-x^2+y^2=1+dx^2y^2$ over $\mathbb F_p$, $p=2^{255}-19$, $d=-121665/121666$, extended coordinates
+    $(X:Y:Z:T)$, $x=X/Z$, $y=Y/Z$, $XY=ZT$, $Z\ne 0$. As quoted in the BRIEF, EdPoint::add costs 1 fe_inv
+    + 12 fe_mul + 9 add/sub per call (ed25519_d() rebuilds $d$ with an inversion, $C$ takes three fe_mul,
+    $D$ two). (i) With a module constant $k=2d$ the sequence $A=(Y_1-X_1)(Y_2-X_2)$, $B=(Y_1+X_1)(Y_2+X_2)$,
+    $C=k\,(T_1T_2)$, $D=Z_1Z_2+Z_1Z_2$, $E=B-A$, $F=D-C$, $G=D+C$, $H=B+A$, $(X_3:Y_3:Z_3:T_3)=(EF:GH:FG:EH)$
+    returns the same four field elements as the current code at 8M + 1c + 9a and 0I. (ii) With the cache
+    $\kappa(P_2)=(Y_2^+,Y_2^-,Z_2',T_2')=(Y_2+X_2,\ Y_2-X_2,\ 2Z_2,\ kT_2)$, built once for 1c + 3a, readdition
+    is $A=(Y_1-X_1)Y_2^-$, $B=(Y_1+X_1)Y_2^+$, $C=T_1T_2'$, $D=Z_1Z_2'$, then the same $E,F,G,H$ and outputs,
+    at 8M + 6a and 0c, again the same four field elements. (iii) $\kappa(-P_2)=(Y_2^-,Y_2^+,Z_2',-T_2')$,
+    so subtraction is (ii) with $Y_2^+\leftrightarrow Y_2^-$ and $F\leftrightarrow G$, also 8M + 6a. No
+    count below HWCD 2008 is claimed. The delta is against the repository.
+  mechanism: 'Expanding, $E=2(X_1Y_2+Y_1X_2)$, $H=2(Y_1Y_2+X_1X_2)$, $G=2(Z_1Z_2+dT_1T_2)$, $F=2(Z_1Z_2-dT_1T_2)$,
+    so $X_3/Z_3=E/G$ and $Y_3/Z_3=H/F$ are the affine sums $(x_1y_2+y_1x_2)/(1+dx_1x_2y_1y_2)$ and $(y_1y_2+x_1x_2)/(1-dx_1x_2y_1y_2)$,
+    and $X_3Y_3=EFGH=Z_3T_3$. Two symmetries do the work. Projective scaling: $\kappa(P_2)$ is defined
+    up to a common scalar, so the factors 2 and $k$ are paid once per addend instead of once per addition.
+    Negation $x\mapsto -x$, that is $(X:Y:Z:T)\mapsto(-X:Y:Z:-T)$, swaps $Y^+$ and $Y^-$ and negates $T''$,
+    which turns subtraction into a swap. Torsion: $\kappa(\mathcal O)=(1,1,2,0)$ gives $(4X_1Z_1:4Y_1Z_1:4Z_1^2:4X_1Y_1)=P_1$;
+    $\kappa((0,-1))=(-1,-1,2,0)$ gives $(-x_1,-y_1)$. The sequence is straight-line with no data-dependent
+    branch or index; BigUint field arithmetic underneath is not constant-time.'
+  novelty_status: unverified
+  citations:
+  - ref: BRIEF section 1, src/ecc/ed25519.rs excerpt
+    provenance: internal
+    claim: EdPoint::add calls ed25519_d() per addition and multiplies by the BigUint constant two twice.
+    verified_by: idea-generator session 2026-11-09, call count read from the quoted code
+  - ref: Hisil, Wong, Carter, Dawson 2008, Twisted Edwards Curves Revisited
+    provenance: recalled
+    claim: Unified a = -1 addition in extended coordinates at 8M + 1D.
+    verified_by: none; recalled pointer, not support
+  assumptions:
+  - fe_mul and fe_sub return canonical residues, so equal field elements compare equal.
+  - fe_inv is a modular exponentiation costing far more than one fe_mul; curve25519.rs is not quoted in
+    the BRIEF.
+  - Inputs satisfy XY = ZT with Z nonzero.
+  predictions:
+  - metric: fe_inv calls per addition
+    direction: lower
+    minimum_effect: from 1 to 0
+  - metric: fe_mul calls per addition
+    direction: lower
+    minimum_effect: from 12 to 9 without the cache and to 8 with it
+  - metric: coordinate-wise equality with the legacy add
+    direction: different
+    minimum_effect: 0 mismatches over all tested pairs
+  minimal_test:
+    design: Add thread-local call counters to fe_mul, fe_sq, fe_inv, fe_add and fe_sub under cfg(test).
+      Keep the legacy add as add_legacy. For 1000 pairs (iB, jB) with fixed-seed i, j, and for all 64
+      pairs of the eight torsion points, assert add_legacy, hoisted add, and readd against kappa return
+      identical (X,Y,Z,T); assert sub against kappa equals add_legacy of the negated point; assert the
+      counter deltas.
+    controls:
+    - RFC 8032 section 7.1 vectors already in the module still pass.
+    - 'Power control: replace k by d in the new code; the equality assertion must fail.'
+    - Pairs including the identity, (0,-1), and P with -P.
+    required_metrics:
+    - fe_inv, fe_mul, fe_sq, add/sub calls per add, legacy and new
+    - number of coordinate mismatches
+    - number of pairs tested
+  falsification_conditions:
+  - Any coordinate mismatch between legacy and new outputs.
+  - fe_inv count per new addition is not 0.
+  - fe_mul count per new addition is not 9 (hoisted) or 8 (cached).
+  - A crash or timeout is infrastructure, not a result.
+  confounders:
+  - Call counts are not time; BigUint allocation and reduction may dominate.
+  - If ed25519_d() is already memoised outside the quoted excerpt, the inversion saving is zero.
+  interpretation_limits:
+  - Operation counts only; no measured bound and no ECBND record is claimed.
+  - Says nothing about ECDLP cost or constant-time behaviour of BigUint.
+  heuristic_assumptions:
+  - id: H1
+    statement: One fe_inv costs at least 250 field multiplications.
+    rigorous_support: None in the BRIEF; Fermat inversion for this p needs about 254 squarings.
+    validation_plan: Count fe_mul and fe_sq calls inside one fe_inv.
+  target_complexity:
+    time_exponent: not applicable; constant factor per group addition
+    memory_exponent: one cached 4-tuple per stored addend
+    best_known: 8M per unified a = -1 addition (HWCD 2008, recalled)
+    hidden_overhead: 1c + 3a once per cached point
+    tradeoff_note: Caching pays from the first reuse of an addend; a single-use addend should use form
+      (i).
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: high
+  dominated_by: HWCD 2008 and common Ed25519 implementations already reach 8M (recalled). Nothing in BRIEF
+    section 2 files it.
+  sota_delta: 0M against HWCD 2008. Against the repository, minus 1I and minus 3 fe_mul (hoisted) or minus
+    4 fe_mul (cached) per addition, so h inversions are removed from a double-and-add of Hamming weight
+    h.
+  prior_art:
+    frontier_map: not_applicable
+    not_applicable_reason: Curve25519 explicit-formula campaign; an implementation operation count, not
+      an ECDLP mechanism.
+    none_found_after:
+    - BRIEF section 2 index, all 30 lines, read for extended coordinates, readdition, cached point, 2d
+    - BRIEF section 1 code excerpts for an existing cached or Niels type

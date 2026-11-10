@@ -1,0 +1,126 @@
+review_plan:
+  status: prospective_before_reviewer_dispatch
+  source_commit: 36ee18fa3d0e6d527e1b36e3e2a09180c5fcf055
+  claim_id: THM-SEMAEV-FALL1-LEMMA-1
+  producer_task: TASK-20260916-a17f66
+  archival_task: TASK-20261109-166da6
+  conductor_tasks:
+    TASK-20261109-b2993e: T-1974
+    TASK-20261109-ca597b: T-1975
+    TASK-20261109-115f30: T-1976
+    TASK-20261109-166da6: T-1977
+    plan: T-1978
+  claim_under_review: |
+    Let p be prime, q = p^e, and K a field of characteristic p. Let
+    R = K[x_1,...,x_M], I_q = (x_i^q - x_i : i), and phi(a) = a^q on K.
+    For every polynomial g in R, g^q is congruent to the coefficientwise
+    Frobenius twist g^phi modulo I_q.
+  interpretation_under_review: >-
+    The source note calls this a structural mechanism for Frobenius-conjugate
+    redundancy in Weil-descended Semaev systems. Review whether the named
+    theorem itself covers that interpretation, and separate the adjacent
+    free-degree-fall corollary and any solver or complexity inference.
+  immutable_inputs:
+    claim_source: research/THM_SEMAEV_FALL1.md
+    claim_source_sha256: 11b61f4f4bdaed0c323ec852f19fc4c0a7ff3972715bfe637604fb675db7fee4
+    target: formal/targets/semaev-frobenius-collapse.yaml
+    target_sha256: e2b083a617fadec962d855e8dde425fef1fe010a15ea1652098ae4e57096ce7c
+    theorem: formal/CryptoResearch/Semaev/FrobeniusCollapse.lean
+    theorem_sha256: f408877908fc156006c2b24cb38b26610461e03093ff88aadbf11d4bc2c2e398
+    named_declaration: CryptoResearch.Semaev.pow_q_eq_frobeniusTwist_mod_fieldEquations
+    lean_toolchain: leanprover/lean4:v4.35.0
+    lean_toolchain_sha256: ca5f1f601d34c49079e38d7e7041eb0f2a9c227fbc1df0f404820069a052330c
+    lake_manifest_sha256: b46170db7f5631f573ff808cf1bc53655f3bd5385aeecc717c009a42dc01cec7
+    prior_hosted_sweep_run: 42423957020
+    prior_hosted_sweep_checkout: 8f63ad373ea30b7a74230e4a589d1a8807291c5f
+    fresh_hosted_run_pending: 42665763089
+    fresh_hosted_run_head: d25ed16abcaaa942857e5e3a6d72637aaf8aa5c5
+    blind_card: docs/reports/2026-11-09-semaev-frobenius-fidelity/blind-card.md
+    blind_card_sha256: b530095988cf497d34f884d813f79f67592f52572480e21e8ac8b1c41b107a0b
+  coordinator_prior:
+    recorded_before_this_round: true
+    expectation: >-
+      The polynomial congruence is likely valid and semantically faithful for
+      the stated positive-characteristic field claim. I expect the source
+      interpretation to need separate bridges to a concrete descended system
+      and a bounded degree-fall statement. The fresh named machine receipt is
+      pending, so no current-run machine verdict is assumed.
+    possible_disconfirmation: >-
+      A mismatch in q/p assumptions, the coefficient Frobenius map, the field
+      equation ideal, or a known-false control accepted by the theorem would
+      change the fidelity verdict. A missing named audit or input/pin drift
+      would prevent a machine-passed verdict.
+  joints:
+    - joint: J1 blind algebra and finite controls
+      assigned_to: TASK-20261109-b2993e
+      attack_plan: >-
+        Derive the congruence without source access. Work the F2, F4, empty
+        variable and e=0 cases, and show that literal equality or a q not
+        matched to the characteristic is not implied. Seal before comparison.
+      breaking_artifact: >-
+        A concrete counterexample under the stated prime-characteristic
+        assumptions, or a supposedly false nearby claim that is actually true.
+    - joint: J2 source and Lean statement fidelity
+      assigned_to: TASK-20261109-ca597b
+      attack_plan: >-
+        Compare the exact producer lemma, target and Lean type on pinned
+        bytes. Inspect ExpChar, q=0/e=0, coefficient map, field-equation
+        ideal, and use of quotient equality. Separate Lemma 1 from Corollary
+        1, Semaev-system instantiation and complexity interpretation. Read no
+        sibling report.
+      breaking_artifact: >-
+        An assumed conclusion, wrong ideal/map/quantifier, missing characteristic
+        bridge, or a source claim stronger than the named theorem.
+    - joint: J3 hosted machine evidence and false-success controls
+      assigned_to: TASK-20261109-115f30
+      attack_plan: >-
+        Verify an actual hosted run, artifact digest, named receipt, theorem,
+        target, source, toolchain and manifest pins, axiom audit and input
+        closure. Test wrong-name, changed-input and synthetic-receipt controls.
+        Wait on the existing fresh run; launch no duplicate build. Read no
+        sibling report.
+      breaking_artifact: >-
+        A nonmatching hash or revision, missing named audit, unapproved axiom,
+        accepted known-false control, or unauthenticated execution claim.
+  blindness:
+    mutual: true
+    lifted_for: []
+    rationale: null
+    blind_task_input: blind-card.md
+    blind_task_forbidden:
+      - research/THM_SEMAEV_FALL1.md
+      - formal/targets/semaev-frobenius-collapse.yaml
+      - formal/CryptoResearch/Semaev/FrobeniusCollapse.lean
+      - review-plan.yaml
+      - prior reports and receipts
+      - sibling reports and Git history
+  proves_too_much:
+    objects:
+      - literal equality g^q = g^phi in K[x] for g=x and q=2
+      - q=3 over F2 for g=x+y modulo the x^3-x and y^3-y ideal
+      - inference of a solving-degree or complexity bound from the congruence
+    failure_signature: >-
+      The first two nearby statements must fail in the indicated polynomial
+      models. The third requires additional, explicit descent and propagation
+      evidence; it cannot follow from the named identity alone.
+    assigned_to: TASK-20261109-b2993e
+  blind_rederivation:
+    required: true
+    quantity: polynomial q-power congruence modulo coordinate field equations
+    parameters: >-
+      F2, q=2 and q=3, F4 with a^2+a+1=0, zero variables and e=0, exactly
+      as stated in the isolated blind card.
+    blind_from:
+      - research/THM_SEMAEV_FALL1.md
+      - formal/targets/semaev-frobenius-collapse.yaml
+      - formal/CryptoResearch/Semaev/FrobeniusCollapse.lean
+      - docs/reports/2026-10-20-formal-validation/
+      - docs/reports/2026-11-08-formal-target-inventory/
+      - docs/reports/2026-11-09-semaev-frobenius-fidelity/review-plan.yaml
+    assigned_to: TASK-20261109-b2993e
+  procedure_deviations: []
+  publication_rule: >-
+    Machine validity, Lemma 1 semantic fidelity and source interpretation
+    receive distinct verdicts. Composition follows only after three sealed
+    reports and a passing independence check. No official claim transition
+    follows automatically from this technical packet.

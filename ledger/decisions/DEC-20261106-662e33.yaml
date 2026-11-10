@@ -1,0 +1,100 @@
+# DEC-20261106-662e33: Coordinator redesign and freeze approval of the IC layout=lines tournament, protocol version 6 (fp28, walk incumbent), after the v5 fp20 qualification failed the L2 1 ms solve minimum.
+coordinator_decision:
+  id: DEC-20261106-662e33
+  id_provenance: Allocated by the top-level session with tools/allocate_id.py --next coordinator_decision --date 20261106
+    and confirmed with --check. The Coordinator had no shell and minted no identifier.
+  recorded_at: '2026-11-06'
+  decided_at: '2026-11-06'
+  decided_by: coordinator
+  recorded_by: coordinator
+  source: isogeny-labs/crypto research/ic_line_layout_tournament_20261031/DECISION-V6-REDESIGN-20261106.md (sha256 924a095b4fba073c4314b8460dc75c41ffef319affd5f999f6f4f2cc0caf0af6;
+    transcribed from its sections 11, 12 and 13, crypto PR 3527)
+  subject: 'IC-LINE-LAYOUT-E2E-FP28-V6-20261106: revise the fp20 design (v5) to fp28 and approve the version 6 freeze,
+    conditional on pre-freeze check F6b (recorded as passing before the freeze)
+
+    '
+  context: 'v5 (IC-LINE-LAYOUT-E2E-FP20-V3A2-20261106) stopped at its qualification: 108/108 verified and audit OK, but
+    the L2 gate refused 102/108 executions as solves under the 1.0 ms minimum (fp20 rho, BSGS and kangaroo 44-314 us,
+    ic-mitm 549-996 us on ecbench 73362eed). At fp20 the qualification also recorded rho.plain faster than rho.negation in
+    wall time, contrary to the v3 positive-control prediction. Owner sign-off 2026-11-06: "Use walk, accept the B1/B2 fixes,
+    freeze and run v6"; the noise-rerun clause was not adopted; the USD 5 ceiling and the ea8e9ef7 pin stand.
+
+    '
+  decision: approve
+  target_ids:
+  - IC-LINE-LAYOUT-E2E-FP20-V3A2-20261106
+  - IC-LINE-LAYOUT-E2E-FP28-V6-20261106
+  rationale:
+  - 'Revision 0 (revise): size fp28, where the deterministic oracle set-up floors every IC solve well above 1 ms; rho moves
+    to a counted-only L2 companion session (matched rho and the section 5a band, no wall field read); positive control
+    pc-fb2x (size=814, a counted slowdown by construction); purpose-built fp28 qualification; two 576-execution wall
+    sessions; keep the ea8e9ef7 / 73362eed pin, the only image with layout=lines.'
+  - 'Revision 1 (revise), B1: run-ecbench refuses fewer than 5 rounds and any isolation level but L2, so the qualification
+    is 2 targets x 4 arms x (1 warmup + 5 rounds) = 48 executions with 10 A/A pairs, and the counted session runs at L2
+    under the exit 0/42/43 acceptance clause.'
+  - 'Revision 1, B2: run-ecbench compares the first reference arm with the first control arm, so roles are incumbent=baseline,
+    incumbent-aa=control, candidate=candidate, pc-fb2x=reference (arm order unchanged); the A/A gate reads aa_ci95 from
+    the candidate comparison and from control-comparison.json.'
+  - 'Revision 1, F2: the incumbent is the recipe merged on main (prime-abscissa:size=407, mitm:negation_folded=1,
+    targets=walk, max_trials=26479085); v6 does not wait for crypto PR 2826 (stride-renew).'
+  - 'Revision 2 (approve): freeze approved conditional on F6b; F6 seeds 2026110628904/905/906 are development-only;
+    the director''s verdict precedence adopted; counted bootstrap seed 20261002 (binary default); corrected worst case
+    6.5 node-hours, with the launch card returned before launch if 6.5 x on-demand price plus CodeBuild could exceed USD 5;
+    incumbent confirmed against crypto main 23cf569058.'
+  - 'Pre-freeze checks F1, F4, F6 and F6b recorded as passing in prefreeze-checks-v6.md (local, development seeds, no
+    candidate wall data read). Frozen protocol_sha256 12415faa3330276b6ccbed718a03bc598d9717576c332577024ebc4e9752543c
+    at crypto commit 7c173e5a1d418dce4c734c43a25718a71107a36c, filed before affected data.'
+  - 'Revision 3 (approve, 2026-11-06): the budget rule uses the hard bound (100-minute CodeBuild timeout); before every launch,
+    actual spend + this launch''s hard bound + the hard bound of every unlaunched first-attempt job must be at most USD 5
+    (USD 0.931 per 3,600 s job). The wall launch passes at USD 2.84. The qualification card''s CodeBuild undercount is an
+    accounting error with no effect (actual spend about USD 0.05). Concurrency: the two wall jobs are submitted back
+    to back, each on its own fresh L2 node.'
+  - 'Qualification ic-line-v6-qual-20261106 passed every PROTOCOL-V6.md section 5.1 condition (48/48 verified, all
+    graded L2, minimum solve >= 5 ms); its wall fields stay sealed.'
+  - 'Revision 4 (revise, 2026-11-06, decision section 15, before any wall data was read): s1 and s2 both exited 0 with full
+    integrity but ran sequentially on the same node ip-10-84-67-216, so the frozen host_epoch condition (each wall job on
+    its own fresh node with distinct node identity) was unmet. Pod anti-affinity prevents co-scheduling only; Karpenter
+    reused the idle node (an infrastructure fact). Option (a), accepting a within-host pair, rejected as relaxing a preregistered
+    cross-host condition on a host-sensitive cache-layout claim; (b) alone rejected, since no frozen rule can supply a second
+    epoch; (c) adopted as the pre-data versioned amendment V6-AMENDMENT-1: s1 and s2 form host epoch H1 and both still decide,
+    one added session s3 on a verified-distinct node forms H2, and support requires all three sessions to pass, so nothing
+    is selected or dropped. The counted companion launch was released. Limitations: node distinctness rests on node name
+    plus providerID or instance id where the launcher records them (host.json carries no hostname or boot_id); three-session
+    support is less likely than two-session support, accepted as the cost of the miss.'
+  - 'Revision 4.1 (approve, 2026-11-06, decision section 15.5, addendum to Revision 4): V6-AMENDMENT-1 approved for re-freeze
+    once the rulings were mirrored into the protocol-v6.json amendments[] entry. (p1) The EC2 non-terminated-instance check
+    (DNS and IP, both 0) is accepted in place of kubectl NotFound; (p2) node_name decides, EC2 data is recorded only, and
+    the failure mode is conservative; (p3) a host-epoch failure turns supported_within_scope into inconclusive, and other
+    verdicts stand; (p4) s1 is matched by an identical absolute dir in both analysis runs, recorded on the card; (p5) a non-zero
+    s3 job-exit, analyze exit 2 or double host loss gives s3 invalid_measurement; (p6) no -r2 file is frozen; it is generated
+    at rerun time, and the card checks del(.job.job_name) equality and the name suffix; (p7) the job_name plus provenance
+    label difference is confirmed; (p8) the director''s additions are confirmed (P-wall minimum_effect and decisive_scope,
+    P-parity decisive_scope, controls.positive.expected_detection, budget_note and the budget stopping rule). Re-freeze:
+    the freeze block is the new canonical hash of the final amended document (2ce7400c is stale); the prior freeze 12415faa
+    (reproducible with amendments=[]) is recorded in PROTOCOL-V6-AMENDMENT-1.md, and in the json entry if the schema allows.
+    The coordinator edited PROTOCOL-V6-AMENDMENT-1.md section 2 items 2 and 4 and section 6. V6-AMENDMENT-1 was merged in
+    crypto PR 3531.'
+  evidence_refs:
+  - isogeny-labs/crypto:research/ic_line_layout_tournament_20261031/DECISION-V6-REDESIGN-20261106.md
+  - isogeny-labs/crypto:research/ic_line_layout_tournament_20261031/TERMINAL-OBSERVATION-V3A2-20261106.md
+  - isogeny-labs/crypto:research/ic_line_layout_tournament_20261031/protocol-v6.json
+  - isogeny-labs/crypto:research/ic_line_layout_tournament_20261031/PROTOCOL-V6.md
+  - isogeny-labs/crypto:research/ic_line_layout_tournament_20261031/prefreeze-checks-v6.md
+  - isogeny-labs/crypto:research/ic_line_layout_tournament_20261031/analyze-v6.sh
+  - isogeny-labs/crypto:research/ic_line_layout_tournament_20261031/QUALIFICATION-V6-20261106.md
+  - isogeny-labs/crypto:research/ic_line_layout_tournament_20261031/PROTOCOL-V6-AMENDMENT-1.md
+  limitations:
+  - F6 and F6b grade L2 on the local host, not on a c8a node; the qualification is the c8a check.
+  - The launcher's control-comparison.json and the full 576-record and 128-pair counts are first exercised by the qualification.
+  - The pc-fb2x stand-in tests the comparison shape that the candidate comparison is expected to share.
+  - The AWS price list was not read; the budget rule is a launch-card gate.
+  - pc-fb2x checks direction fidelity, not few-percent sensitivity; the v6 claim is fp28-only on the pinned executable.
+  knowledge_promotion:
+    promoted: []
+    not_warranted: Protocol redesign, freeze approval and pre-data amendment; no evidence reviewed in this record. The
+      outcome review is DEC-20261106-859e56.
+  next_actions:
+  - 'Main session: merge crypto PR 3527 (the freeze), then publication receipt, checkpoint gate, director card for the qualification,
+    executor-mechanical launch.'
+  - Only on a qualification pass, the two wall sessions, then the counted companion; then analyze-v6.sh, an independent
+    validator and an evidence-review decision.

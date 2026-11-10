@@ -9,6 +9,10 @@ description: >-
 
 # Choose a workflow
 
+For a request to do or continue research through one entry point, invoke
+`.claude/skills/autoresearch/SKILL.md`. This skill remains the read-only lookup
+for questions about which workflow or tool to use.
+
 Read `docs/skill-routing.md` and `docs/skill-catalog.json`. Use `python3 tools/skill_catalog.py list` for the exact catalog; use `route --intent inspect --topic endo` to inspect a declared intent/topic pair. This selector performs no execution.
 
 1. Preserve the user's named repo, goal, experiment, tool, artifact, and stopping point.
@@ -20,3 +24,11 @@ Read `docs/skill-routing.md` and `docs/skill-catalog.json`. Use `python3 tools/s
 Use `skill_catalog.py check` when maintaining the catalog, not before a scientific run. A catalog entry is a navigation aid, never a mathematical or performance certificate.
 
 Follow current `AGENTS.md` authority, provenance and immutable-record rules. This profile adds no prerequisite to `run`; preserve explicit execution requests.
+
+## Default challenge research loop
+
+Research goals follow [the default research loop](../../../docs/challenge-research-loop.md). Use `autoresearch campaign next --goal <GOAL-ID>` to identify the current phase, then select the existing lifecycle skill. Preserve explicit run requests: do not insert the planner as a launch prerequisite.
+
+For goal-level boundary work, `autoresearch campaign frontier --goal <GOAL-ID>`
+shows the fixed comparison domain, reviewed points, remaining gap and next test.
+Carry those references; keep measured, modeled and unresolved claims distinct.

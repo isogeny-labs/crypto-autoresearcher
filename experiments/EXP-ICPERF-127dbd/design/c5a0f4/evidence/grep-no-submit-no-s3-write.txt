@@ -1,0 +1,7 @@
+$ grep -n -i -E "launch-remote|codebuild|start-build|batch-get-builds|s3api|put-object|delete-object|s3 (rm|mv|sync|mb|rb|presign)" implementation/reconcile_run.sh implementation/locate_results.sh
+grep exit=1 (1 = no match)
+
+$ grep -n -E "(^|[^[:alnum:]_.-])aws([[:space:]]|$)" implementation/reconcile_run.sh implementation/locate_results.sh | grep -v ":[0-9]*:[[:space:]]*#"
+experiments/EXP-ICPERF-127dbd/implementation/reconcile_run.sh:32:  aws s3 cp "$1" "$2" "${@:3}" --only-show-errors
+experiments/EXP-ICPERF-127dbd/implementation/locate_results.sh:35:  aws s3 cp "$1" "$2" "${@:3}" --only-show-errors
+experiments/EXP-ICPERF-127dbd/implementation/locate_results.sh:39:  aws s3 ls "$1"

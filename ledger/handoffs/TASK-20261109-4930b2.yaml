@@ -1,0 +1,53 @@
+handoff:
+  id: TASK-20261109-4930b2
+  from: coordinator
+  to: coordinator
+  role: coordinator
+  recorded_at: '2026-11-09'
+  goal_id: GOAL-PEXT-4a1d6b
+  objective: Add prospective independent C6/C7 arithmetic and seed replay over the existing sealed census-run custody records.
+  uncertainty_reduced: The checker now requires exact sealed custody, rebinds every published C6 source and regenerates all seeded slots, replays every C7 draw and geometry check, and refuses missing source closure or altered control bytes.
+  inputs: &artifacts
+  - experiments/EXP-PEXT-bf8f96/implementation/c67_independent_check_stage.py
+  - experiments/EXP-PEXT-bf8f96/implementation/test_c67_independent_check_stage.py
+  - experiments/EXP-PEXT-bf8f96/reports/c67-independent-check-source-20261109/report.md
+  - experiments/EXP-PEXT-bf8f96/specification.yaml
+  - experiments/EXP-PEXT-bf8f96/protocol.json
+  - problems/pext-degree2-squareclass-census-launcher.md
+  - ledger/handoffs/TASK-20261109-4930b2.yaml
+  - coordination/sessions/receipts/20261109/SR-20261109-091c11.yaml
+  constraints:
+  - No C6 or C7 control generation, scientific cohort trial, benchmark, cloud job, protocol approval or freeze.
+  - Preserve P1-P4, C0-C7, H1 q13 and six-run, 4 GB, 24 CPU-hour, 24-hour, zero-cloud-dollar, no-retry ceilings.
+  - Fixed placeholder tests prove wiring and refusal, not full-cohort resource fit or external Reviewer acceptance.
+  deliverables:
+  - experiments/EXP-PEXT-bf8f96/archives/TASK-20261109-4930b2/receipt.json
+  artifact_paths: *artifacts
+  write_scope:
+  - experiments/EXP-PEXT-bf8f96/implementation/c67_independent_check_stage.py
+  - experiments/EXP-PEXT-bf8f96/implementation/test_c67_independent_check_stage.py
+  - experiments/EXP-PEXT-bf8f96/reports/c67-independent-check-source-20261109/report.md
+  - experiments/EXP-PEXT-bf8f96/specification.yaml
+  - experiments/EXP-PEXT-bf8f96/protocol.json
+  - problems/pext-degree2-squareclass-census-launcher.md
+  - ledger/handoffs/TASK-20261109-4930b2.yaml
+  - coordination/sessions/receipts/20261109/SR-20261109-091c11.yaml
+  - experiments/EXP-PEXT-bf8f96/archives/TASK-20261109-4930b2/receipt.json
+  archived_by: TASK-20261109-4930b2
+  inference:
+    policy: coordinator-orchestration-code
+    reasoning_effort: high
+    fallback_allowed: false
+    degraded_allowed: false
+    independent_session_required: false
+    delivery: interactive
+  budget:
+    wall_clock_seconds: 1800
+    memory_gb: 4
+    maximum_runs: 0
+  completion_gate:
+  - Sealed custody is required before exact C6 slot and C7 seed/geometry replay; incomplete draw-cap coverage stays inconclusive.
+  - Fixed source tests, protocol schema and native snapshot archive verify; PR is published.
+  - Launcher integration, external review and full-stage resource qualification remain open.
+  state: queued
+  return_format: Exact archive and publication receipt with source-only replay scope.

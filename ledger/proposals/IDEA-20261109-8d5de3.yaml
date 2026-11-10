@@ -1,0 +1,105 @@
+idea:
+  id: IDEA-20261109-8d5de3
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECC-9d5d44
+  title: The swap-odd addition law on Edwards25519; exact exceptional set E[4] and a validity condition
+    for double-and-add
+  class: mechanism
+  claim: Formula-engineering claim, not an ECDLP claim. On $-x^2+y^2=1+dx^2y^2$ over $p=2^{255}-19$ in
+    $(X:Y:Z:T)$, the law $A=(Y_1-X_1)(Y_2+X_2)$, $B=(Y_1+X_1)(Y_2-X_2)$, $C=2Z_1T_2$, $D=2T_1Z_2$, $E=D+C$,
+    $F=B-A$, $G=B+A$, $H=D-C$, $X_3=EF$, $Y_3=GH$, $Z_3=FG$, $T_3=EH$ costs 8M + 0c + 10a and uses no
+    curve constant. (C1) Swapping the inputs exchanges $A\leftrightarrow B$ and $C\leftrightarrow D$ and
+    sends $(X_3,Y_3,Z_3,T_3)$ to its negative; the unified law fixes every product and the vector. (C2)
+    Any law whose output vector is swap-odd is zero at $P_1=P_2$, so it cannot double. (C3) $Z_3=0$ iff
+    $P_1-P_2\in\{(0,1),(0,-1),(\pm\sqrt{-1},0)\}=E(\mathbb F_p)[4]$; otherwise the output equals the unified
+    sum. (C4) In MSB-first double-and-add with $\mathrm{ord}(P)=\ell$ the add step is never exceptional
+    for $0\le k<\ell$, and is exceptional for clamped scalars with $\lfloor k/8\rfloor=(\ell+1)/2$.
+  mechanism: $F=2(X_1Y_2-Y_1X_2)$ and $G=2(Y_1Y_2-X_1X_2)$. With $t=x_1x_2y_1y_2$, $x(P_1-P_2)=(x_1y_2-y_1x_2)/(1-dt)$
+    and $y(P_1-P_2)=(y_1y_2-x_1x_2)/(1+dt)$, and $1\pm dt\ne0$ on rational points because $d$ is a non-square.
+    So $F=0$ iff $x(P_1-P_2)=0$ and $G=0$ iff $y(P_1-P_2)=0$, which are the four points of order dividing
+    4. For (C2), a polynomial vector with $\Phi(P_2,P_1)=-\Phi(P_1,P_2)$ gives $2\Phi(P,P)=0$. For (C4),
+    before the add the accumulator is $mP$ with $m=2\lfloor k/2^{j+1}\rfloor$, so $P_1-P_2=(m-1)P$ and
+    the step fails iff $\ell\mid m-1$; $m-1\le k-1<\ell$ and $m-1$ is odd when $k<\ell$, while $m=\ell+1$
+    is reachable from a clamped scalar.
+  novelty_status: unverified
+  citations:
+  - ref: BRIEF section 1, src/ecc/ed25519.rs excerpt (EdPoint::add, scalar_mul)
+    provenance: internal
+    claim: scalar_mul is MSB-first double-and-add; add recomputes d with one fe_inv per call and uses
+      12 fe_mul.
+    verified_by: idea-generator session 2026-11-09 read the BRIEF excerpt
+  - ref: Hisil, Wong, Carter, Dawson 2008, Twisted Edwards curves revisited
+    provenance: recalled
+    claim: Source of the dedicated law; pointer only.
+    verified_by: null
+  assumptions:
+  - $d$ non-square, $-1$ square, $E(\mathbb F_p)[8]$ cyclic of order 8.
+  - Inputs are valid extended points with $XY=ZT$.
+  proof_search_map:
+    not_applicable_reason: Finite identity checks on one curve, not an exponent claim.
+    bottleneck: not_applicable
+    baseline_embedding:
+      parameter_slice: not_applicable
+      reproduction_check: not_applicable
+    observation_collision:
+      observable: not_applicable
+      distinct_preimage_search: not_applicable
+    constructive_transforms: []
+    quantifier_order: not_applicable
+    method_ceiling:
+      strongest_certifiable_claim: not_applicable
+      nearby_object_control: not_applicable
+    proof_obligations: []
+  predictions:
+  - metric: hwcd4(P2,P1) + hwcd4(P1,P2) componentwise (A5)
+    direction: different
+    minimum_effect: exactly 0 on every sampled pair
+  - metric: Z3 on pairs with P1 - P2 in E[4] versus random pairs (A8)
+    direction: different
+    minimum_effect: 0 on all four cosets, nonzero on random pairs
+  minimal_test:
+    design: Assertions A5 and A8 of scripts/ed25519_law_ansatz.py, then a Rust test comparing the law
+      with EdPoint::add on RFC 8032 scalars reduced mod l.
+    controls:
+    - Scalar with floor(k/8) = (l+1)/2 must hit Z3 = 0.
+    - Unified law on the same pairs must stay valid.
+    required_metrics:
+    - count of sampled pairs and mismatches
+    - Z3 on the four E[4] cosets
+    - fe_mul and fe_inv calls per add before and after
+  falsification_conditions:
+  - A pair with P1 - P2 outside E[4] gives Z3 = 0 or a wrong sum.
+  - A scalar below l triggers the exception for a point of order l.
+  confounders:
+  - Points with a torsion component change the order and the lemma in C4.
+  interpretation_limits:
+  - Not complete; not a replacement for the unified law on untrusted input.
+  - Double-and-add stays variable-time on BigUint.
+  heuristic_assumptions:
+  - id: H1
+    statement: None beyond the stated identities.
+    rigorous_support: Hand derivation in this session.
+    validation_plan: Assertions A5 and A8.
+  target_complexity:
+    time_exponent: not applicable, constant-factor formula cost
+    memory_exponent: not applicable
+    best_known: HWCD 2008, 8M + 1c unified
+    hidden_overhead: Scalar reduction mod l before the loop.
+    tradeoff_note: Trades completeness for a constant-free law.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  dominated_by: HWCD 2008 states the law and its count. Not dominated on the exact exceptional set, the
+    swap-odd argument or the scalar condition.
+  sota_delta: 0M and -1c against the unified law. Against the repository add as coded, 12 fe_mul + 1 fe_inv
+    becomes 8 fe_mul.
+  prior_art:
+    frontier_map: not_applicable
+    not_applicable_reason: Curve25519 explicit-formula campaign; no ECDLP mechanism is claimed.
+    none_found_after:
+    - BRIEF section 2 ledger index, terms dual addition, dedicated, 4-torsion, exceptional
+    - BRIEF section 2 summary of IDEA-20260905-05648a (torsion subgroup, truncated)
+    - BRIEF section 1 excerpt of ed25519.rs

@@ -1,0 +1,149 @@
+idea:
+  id: IDEA-20261109-4a3247
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: Transporting coordinate-defined factor bases along horizontal isogenies of a crater gives overlap
+    B^2/N, a pre-registered null for isogeny-coupled prime-field index calculus
+  class: barrier
+  claim: 'Let E_a, E_b be curves in one toy prime-order F_p-isogeny class (N ~ p in [2^22, 2^28]) joined
+    by an F_p-rational horizontal ell-isogeny phi, ell <= 13, and let F_a, F_b be factor bases of size
+    B defined on each curve by its own x-interval [0, B) or by x^B = 1 with B | p-1. Define I(phi) = |phi(F_a)
+    intersect F_b|. Claim: I(phi) is an even integer with mean B^2/N (1+o(1)) and Poisson-type variance,
+    statistically indistinguishable from the overlap of phi(F_a) with a uniformly random +-closed B-subset
+    of E_b(F_p). Charged consequences: coupling the relation matrices of r isogenous curves through such
+    identifications removes at most r B^2/N unknowns, below one unknown unless B >= sqrt(N) (the rho regime);
+    defining the base on E_b as the pullback phi(F_a) makes membership a degree-ell rational function
+    of x and multiplies the per-variable Semaev degree by ell. Positive control: on a j = 0 crater with
+    phi = omega and the x^B = 1 base with 3 | B, I(omega) = B exactly (the mu_3 port already filed), so
+    the instrument detects structure when present. The record is a kill test for any proposal that spreads
+    one instance over several isogenous curves.'
+  mechanism: phi is a bijection E_a(F_p) -> E_b(F_p) commuting with negation, so phi(F_a) is a +-closed
+    B-set on E_b placed by the degree-ell rational map phi_x on x; the interval or power-residue predicate
+    defining F_b is a coordinate condition unrelated to phi_x, and two independent +-closed B-subsets
+    of an N-set overlap in B^2/N on average. Exceeding it needs a predicate compatible with phi, which
+    over F_p for a prime-order curve means an automorphism (omega on j = 0) and yields the constant 3
+    already recorded. Isogeny structure adds identifications, not relations, and too few of them to matter.
+  novelty_status: adaptation
+  citations:
+  - ref: KR-RHO-755e35
+    provenance: internal
+    claim: ECDLP is random-self-reducible across an F_p-isogeny class; this record quantifies what transporting
+      a factor base, rather than an instance, buys.
+    verified_by: REPO BRIEF 2026-11-09 section 3 row text
+  - ref: KR-IC-b0fcda
+    provenance: internal
+    claim: Frobenius-invariant factor bases on subfield curves gain n and n^2; over F_p Frobenius is trivial
+      and the analogue is the automorphism port, not an isogeny.
+    verified_by: REPO BRIEF 2026-11-09 section 3 row text
+  - ref: KR-IC-5931ee
+    provenance: internal
+    claim: Prime-field Semaev index calculus does not beat generic methods; the null removes one proposed
+      way around the row.
+    verified_by: REPO BRIEF 2026-11-09 section 3 row text
+  assumptions:
+  - Toy classes are built with Sage isogenies_prime_degree on ordinary prime-order curves; crypto/research/isogeny_conductor_gap_20261007
+    and crypto/ecdlp-isogenous-curves-a480cf may already hold a builder and must be read first.
+  - The Hecke-lane experiments in the repos line are read before the run to record which statistic they
+    measured, so this extends rather than repeats them.
+  predictions:
+  - metric: I(phi) divided by B^2/N, pooled over 30 (class, phi) pairs with B^2/N >= 16
+    direction: different
+    minimum_effect: within 0.7 and 1.4
+  - metric: Kolmogorov-Smirnov distance between the I(phi) sample and the random-subset control sample
+    direction: lower
+    minimum_effect: below the 5 percent critical value at n = 30
+  - metric: I(omega) on the x^B = 1 base with 3 | B on a j = 0 crater
+    direction: higher
+    minimum_effect: equal to B
+  minimal_test:
+    design: 'Build 10 toy prime-order classes at p ~ 2^24: 5 random ordinary curves with horizontal ell-isogenies
+      for ell in {3,5,7,11,13} split in the CM field, and 5 j = 0 curves descended one level to a crater
+      of size h(-3f^2) >= 3 (f = 11 or 13 gives 4). For each class pick 3 horizontal phi, set B = 2^14
+      (B^2/N ~ 16), compute I(phi) for the x-interval base and for the x^B = 1 base when B | p-1, and
+      the control overlap against 50 random +-closed subsets. On the j = 0 craters compute I(omega) for
+      the 3 | B base. For one pair build the pullback base phi(F_a) on E_b and record its membership degree
+      and S_3 system size against the native base.'
+    controls:
+    - Random +-closed subsets of E_b(F_p) of size B, 50 per pair.
+    - Identity control I(id) = B on the same curve, to fix the scale.
+    - Point count equals N on every curve in every class (invalid run otherwise).
+    required_metrics:
+    - I(phi) per pair and base type
+    - control overlap mean and variance per pair
+    - KS distance per base type
+    - I(omega) on j = 0 craters
+    - membership degree and S_3 system size for the pullback base
+  falsification_conditions:
+  - Pooled I(phi)/(B^2/N) outside [0.7, 1.4] with the control inside it (the overlap is structured; the
+    null fails and the route reopens).
+  - I(omega) differs from B on the 3 | B base (positive control fails; instrument broken, invalid run).
+  - A timeout is infrastructure, not a falsification and not support.
+  confounders:
+  - x^B = 1 bases need B | p-1; intervals are used where no divisor fits, and the two base types are reported
+    separately.
+  - Horizontal isogenies on a crater of size 1 are endomorphisms and would reproduce the omega control;
+    only craters of size >= 3 are used for the null arm.
+  interpretation_limits:
+  - A confirmed null at p ~ 2^24 is a count; it extends by the same equidistribution heuristic and says
+    nothing about structured predicates not tested.
+  heuristic_assumptions:
+  - id: H1
+    statement: phi(F_a) and F_b behave as independent +-closed B-subsets of E_b(F_p) for overlap counting.
+    rigorous_support: The mean B^2/N follows from equidistribution of phi_x on intervals (Weil-type bounds
+      give the main term for B > p^{3/4}); below that independence is heuristic.
+    validation_plan: Direct count at p ~ 2^24 over 30 pairs with the KS comparison to the random-subset
+      control.
+  target_complexity:
+    time_exponent: N^{1/2} unchanged, delta 0
+    memory_exponent: unchanged
+    best_known: Pollard rho in Theta(N^{1/2}) (KR-RHO-13bf67); prime-field index calculus not below generic
+      (KR-IC-5931ee).
+    hidden_overhead: Pullback bases multiply the Semaev per-variable degree by ell; the record charges
+      this explicitly.
+    tradeoff_note: Identifications remove B^2/N unknowns; a tradeoff needs B ~ sqrt(N), where rho already
+      wins.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  dominated_by: KR-RHO-755e35 dominates the instance-transport reading; the port-wave mu_3 record dominates
+    the omega control. Neither counts factor-base overlap along isogenies.
+  sota_delta: 'Exponent delta 0. New number: the overlap of transported coordinate-defined bases is B^2/N,
+    pre-registered with a positive control, closing the isogeny-coupling route unless the count is structured.'
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/index-calculus
+    rows_checked:
+    - KR-RHO-755e35
+    - KR-IC-b0fcda
+    - KR-IC-5931ee
+    - KR-IC-5a43e5
+    - KR-IC-73db3f
+    - KR-RHO-0528e7
+    - KR-RHO-13bf67
+    nearest:
+    - ref: KR-IC-b0fcda
+      provenance: internal
+      relation: adjacent
+      delta: The row gains from a factor base closed under Frobenius on a subfield curve; here the only
+        closure over F_p is under automorphisms, and isogeny transport is shown to give B^2/N.
+    - ref: KR-RHO-755e35
+      provenance: internal
+      relation: adjacent
+      delta: The row transports the instance; this record transports the factor base and counts the overlap.
+    searched:
+      corpus_grep:
+      - brief section 1b ecdlp-hecke-* experiment names
+      - brief synthesis-wave lead 'Isogeny-transported relation economy — audit of the Hecke lane'
+      - brief section 2 for IDEA-20260731-016, IDEA-20260731-017, IDEA-20260805-38aebb, IDEA-20260805-4243e6
+      web: []
+      blocked: []
+    lead: LEAD-ICP-isogeny-transported-relation-yield
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: Build 10 toy prime-order classes at p ~ 2^24: 5 random ordinary curves with
+        horizontal ell-isogenies for ell in {3,5,7,11,13} split in the CM field, and 5 j = 0 curves descended
+        one level to a crater of size h(-3f^2) >= 3 (f = 11 or 13 gives 4). For each class pick 3 horizontal
+        phi, set B = 2^14 (B^2/N ~ 16), compute I(phi) for the x-interval base and for the x^B = 1 base
+        when B | p-1, and the con'

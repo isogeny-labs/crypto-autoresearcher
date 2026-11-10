@@ -1,0 +1,135 @@
+idea:
+  id: IDEA-20261109-506334
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: Nullstellensatz degree of a non-decomposing prime-field membership system equals the degree of
+    the reduced inverse of S plus deg S, is m(B'-1) + deg S for all but about 1/p of targets, and does
+    not see whether the factor base is a multiplicative subgroup, an interval or a random set
+  class: barrier
+  claim: 'Let X be a set of B'' x-coordinates, g(x) = prod_{a in X}(x - a), and for a target x_R with
+    no zero of S_{m+1}(x_1..x_m; x_R) on X^m consider the system S = 0, g(x_j) = 0 (j = 1..m). (T1) S
+    is a unit in the quotient by the grid ideal; every certificate 1 = h''S + sum h_j g(x_j) has h'' congruent
+    to the reduced inverse h (per-variable degree below B''), hence the Nullstellensatz (Macaulay-of-generators,
+    XL) degree is exactly D_NS = deg h + deg_tot S. (T2) deg h = m(B''-1) iff the Combinatorial Nullstellensatz
+    coefficient c_top = sum_{x in X^m} S(x)^{-1} prod_j g''(x_j)^{-1} is nonzero. Prediction: c_top =
+    0 for a fraction of targets between 0 and 3/p for each of three bases of equal B'' (mu_B with B |
+    p-1, interval [0, B''), random subset), with no base type differing from the others by more than 2/p
+    in that fraction. So linearisation needs degree m(B''-1) + deg S, a factor about m above the F4 wall
+    near B'', and coordinate structure of the base is invisible to it. Exponent delta: 0.'
+  mechanism: The grid polynomials form a Groebner basis with pure-power leading terms in every order,
+    so division is degree-non-increasing and the certificate degree is forced by the normal form of S^{-1}.
+    Its top coefficient is the standard Combinatorial Nullstellensatz sum, a single F_p value computed
+    in B'^m operations. Base structure enters only through the values g'(a), and a random-looking sum
+    vanishes with probability about 1/p regardless.
+  novelty_status: adaptation
+  citations:
+  - ref: KR-IC-fbdb61
+    provenance: internal
+    claim: Solving degree, last fall degree and degree of regularity are distinct invariants; this record
+      adds the exact Nullstellensatz degree as a fourth, with a closed form on grids.
+    verified_by: REPO BRIEF section 3 frontier map; file not opened.
+  - ref: IDEA-20260801-002
+    provenance: internal
+    claim: Exact row-echelonisation of Macaulay-like matrices by degree decides regularity questions for
+      boolean chained Semaev systems; the same instrument over F_p measures D_F4 here.
+    verified_by: REPO BRIEF section 2 ledger excerpt; record not opened.
+  assumptions:
+  - Non-decomposition is checked by enumeration over X^m before a target enters the sample.
+  - deg_tot S_3 = 4; deg_tot S_4 is computed in the run from the coefficient list, not recalled.
+  predictions:
+  - metric: fraction of targets with c_top = 0, per base type and (m, B')
+    direction: different
+    minimum_effect: within [0, 3/p] for each base and within 2/p across bases
+  - metric: D_NS measured by exact Macaulay echelon minus m(B'-1) minus deg_tot S on targets with c_top
+      nonzero
+    direction: different
+    minimum_effect: exactly 0 on every tested target
+  - metric: D_F4 (first degree at which an F4 run derives 1) difference between base types at fixed (m,
+      B')
+    direction: different
+    minimum_effect: at most 1 for at least 95 percent of targets
+  minimal_test:
+    design: p in [2^10, 2^12] with p - 1 having a divisor B' in {8, 12, 16, 24}; m = 2 for all B', m =
+      3 for B' <= 10. For each base type and 200 non-decomposing targets compute c_top, then D_NS by exact
+      echelon of the degree-D Macaulay matrix of the original generators, then D_F4 with a Groebner engine
+      (surface named in crypto/RESEARCH_GROEBNER_F4.md, to be read). Also 20 targets with c_top = 0 if
+      any, to record the drop.
+    controls:
+    - Random polynomial of the same multidegree as S_{m+1} on the same grids, as the generic reference
+      for c_top vanishing.
+    - j = 0 curve with 3 | B on the mu_B base, where weighted homogeneity may force structured vanishing.
+    required_metrics:
+    - p, m, B', base type
+    - c_top zero fraction
+    - D_NS and D_F4 per target
+    - wall-clock of echelon and F4 per target
+  falsification_conditions:
+  - Any target with c_top nonzero and D_NS different from m(B'-1) + deg_tot S (T1 or T2 wrong, or an arithmetic
+    error).
+  - One base type with c_top zero fraction exceeding the others by more than 2/p over 200 targets at two
+    sizes.
+  - D_F4 lower by at least 2 for one base type on at least 5 percent of targets (structure visible to
+    F4, worth a follow-up).
+  confounders:
+  - Targets whose S has a zero on the twist part of E(F_{p^2}) with x in X are decomposing for the algebra
+    and are excluded by the enumeration check.
+  - F4 engine heuristics (selection strategy) can shift D_F4 by one; two engines if available.
+  interpretation_limits:
+  - Degree is not time; the record prices XL-type solvers exactly and F4 only by measurement at toy sizes.
+  - Nothing is said about bit-level or lattice solvers for interval bases.
+  heuristic_assumptions:
+  - id: H1
+    statement: c_top behaves like a random F_p element for every base type.
+    rigorous_support: none beyond genericity; the mu_B case has extra symmetry.
+    validation_plan: Prediction 1 with the random-polynomial control and the 3 | B arm.
+  target_complexity:
+    time_exponent: Linearisation floor B'^{m} up to the Macaulay column count at degree m(B'-1) + deg
+      S; no attack proposed.
+    memory_exponent: Macaulay column count at degree D_NS
+    best_known: Relation stage at enumeration B^m per target (complexity-wave PC record); rho sqrt N overall.
+    hidden_overhead: none
+    tradeoff_note: not applicable
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  dominated_by: KR-IC-5931ee dominates any exponent reading; the complexity-wave PC record states the
+    F4 floor for mu_B only. No row gives the closed-form D_NS or the cross-base blindness statement.
+  sota_delta: Exponent delta 0. Replaces a measured F4 wall with an exact theorem for linearisation and
+    extends the floor from mu_B to interval and random bases.
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/index-calculus
+    rows_checked:
+    - KR-IC-fbdb61
+    - KR-IC-0d2021
+    - KR-IC-5931ee
+    - KR-IC-f5c584
+    - KR-IC-5a43e5
+    nearest:
+    - ref: KR-IC-fbdb61
+      provenance: internal
+      relation: adjacent
+      delta: Published work bounds last fall and solving degree of Weil-descent systems; this record gives
+        an exact Nullstellensatz degree on prime-field grids.
+    - ref: KR-IC-5931ee
+      provenance: internal
+      relation: special_case
+      delta: YYTK conclude naive prime-field index calculus cannot beat generic methods; this record supplies
+        one exact mechanism behind that conclusion for linearisation solvers.
+    searched:
+      corpus_grep:
+      - REPO BRIEF section 2 for Nullstellensatz, Macaulay, Hilbert function, degree wall
+      - Wave 2 complexity and relations records for PC degree and mu_B
+      web: []
+      blocked:
+      - no tool access; RESEARCH_FFD_PROOF_COMPLEXITY.md not opened
+    lead: LEAD-ICP-algebraic-membership-factor-base
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: p in [2^10, 2^12] with p - 1 having a divisor B'' in {8, 12, 16, 24}; m =
+        2 for all B'', m = 3 for B'' <= 10. For each base type and 200 non-decomposing targets compute
+        c_top, then D_NS by exact echelon of the degree-D Macaulay matrix of the original generators,
+        then D_F4 with a Groebner engine (surface named in crypto/RESEARCH_GROEBNER_F4.md, to be read).
+        Also 20 targets with c_top = 0 if any, to re'

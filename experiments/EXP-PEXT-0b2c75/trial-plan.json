@@ -7,6 +7,7 @@
  },
  "experiment_id": "EXP-PEXT-0b2c75",
  "frozen": true,
+ "hypothesis_id": "H-PEXT-ad0073",
  "input_sha256": {
   "experiments/EXP-PEXT-0b2c75/implementation/fixtures/pilot-n3-q3-cosets.jsonl": "5003d258d9146d6650ac70d77ea373b4e4979713abbbebd82e1007c6394573ff",
   "experiments/EXP-PEXT-212d5c/implementation/fixtures/D-n5-q3-cosets.jsonl": "8f03e3d1a28a989108a038cfffab51e0362d2397dd03e06fc0ccfe442d9123fa"
@@ -54,10 +55,25 @@
     "experiments/EXP-PEXT-0b2c75/trial-plan.json",
     "regression"
    ],
+   "curve_id": null,
    "depends_on": [],
    "id": "regression",
    "memory_mb": 2048,
+   "parameters": {
+    "inputs_from": {},
+    "negative_count": 1000,
+    "plan": "experiments/EXP-PEXT-0b2c75/trial-plan.json",
+    "rustc_flags": [
+     "--edition",
+     "2021",
+     "-O"
+    ],
+    "stage": "regression",
+    "threads": 4,
+    "trial_id": "regression"
+   },
    "run_id": "RUN-PEXT-8c15bf",
+   "seed": 20261101,
    "stage": "regression",
    "watchdog_reason": "Machine protection only; expiry is failed_infrastructure for the unfinished trial, never a metric value.",
    "watchdog_seconds": 3600
@@ -88,12 +104,27 @@
     "experiments/EXP-PEXT-0b2c75/trial-plan.json",
     "n5core"
    ],
+   "curve_id": null,
    "depends_on": [
     "regression"
    ],
    "id": "n5core",
    "memory_mb": 2048,
+   "parameters": {
+    "inputs_from": {},
+    "negative_count": 1000,
+    "plan": "experiments/EXP-PEXT-0b2c75/trial-plan.json",
+    "rustc_flags": [
+     "--edition",
+     "2021",
+     "-O"
+    ],
+    "stage": "n5core",
+    "threads": 4,
+    "trial_id": "n5core"
+   },
    "run_id": "RUN-PEXT-ff55f2",
+   "seed": 20261101,
    "stage": "n5core",
    "watchdog_reason": "Machine protection only; expiry is failed_infrastructure for the unfinished trial, never a metric value.",
    "watchdog_seconds": 7200
@@ -124,12 +155,27 @@
     "experiments/EXP-PEXT-0b2c75/trial-plan.json",
     "n7"
    ],
+   "curve_id": null,
    "depends_on": [
     "regression"
    ],
    "id": "n7",
    "memory_mb": 2048,
+   "parameters": {
+    "inputs_from": {},
+    "negative_count": 1000,
+    "plan": "experiments/EXP-PEXT-0b2c75/trial-plan.json",
+    "rustc_flags": [
+     "--edition",
+     "2021",
+     "-O"
+    ],
+    "stage": "n7",
+    "threads": 4,
+    "trial_id": "n7"
+   },
    "run_id": "RUN-PEXT-e4ce49",
+   "seed": 20261101,
    "stage": "n7",
    "watchdog_reason": "Machine protection only; expiry is failed_infrastructure for the unfinished trial, never a metric value.",
    "watchdog_seconds": 28800
@@ -160,12 +206,27 @@
     "experiments/EXP-PEXT-0b2c75/trial-plan.json",
     "negative"
    ],
+   "curve_id": null,
    "depends_on": [
     "regression"
    ],
    "id": "negative",
    "memory_mb": 2048,
+   "parameters": {
+    "inputs_from": {},
+    "negative_count": 1000,
+    "plan": "experiments/EXP-PEXT-0b2c75/trial-plan.json",
+    "rustc_flags": [
+     "--edition",
+     "2021",
+     "-O"
+    ],
+    "stage": "negative",
+    "threads": 4,
+    "trial_id": "negative"
+   },
    "run_id": "RUN-PEXT-a19d45",
+   "seed": 20261101,
    "stage": "negative",
    "watchdog_reason": "Machine protection only; expiry is failed_infrastructure for the unfinished trial, never a metric value.",
    "watchdog_seconds": 3600
@@ -196,12 +257,27 @@
     "experiments/EXP-PEXT-0b2c75/trial-plan.json",
     "n5ext"
    ],
+   "curve_id": null,
    "depends_on": [
     "regression"
    ],
    "id": "n5ext",
    "memory_mb": 4096,
+   "parameters": {
+    "inputs_from": {},
+    "negative_count": 1000,
+    "plan": "experiments/EXP-PEXT-0b2c75/trial-plan.json",
+    "rustc_flags": [
+     "--edition",
+     "2021",
+     "-O"
+    ],
+    "stage": "n5ext",
+    "threads": 4,
+    "trial_id": "n5ext"
+   },
    "run_id": "RUN-PEXT-c0fbcd",
+   "seed": 20261101,
    "stage": "n5ext",
    "watchdog_reason": "Machine protection only; expiry is failed_infrastructure for the unfinished trial, never a metric value.",
    "watchdog_seconds": 28800
@@ -233,6 +309,7 @@
     "experiments/EXP-PEXT-0b2c75/trial-plan.json",
     "analyze"
    ],
+   "curve_id": null,
    "depends_on": [
     "regression",
     "n5core",
@@ -248,7 +325,27 @@
     "regression": "RUN-PEXT-8c15bf"
    },
    "memory_mb": 2048,
+   "parameters": {
+    "inputs_from": {
+     "n5core": "RUN-PEXT-ff55f2",
+     "n5ext": "RUN-PEXT-c0fbcd",
+     "n7": "RUN-PEXT-e4ce49",
+     "negative": "RUN-PEXT-a19d45",
+     "regression": "RUN-PEXT-8c15bf"
+    },
+    "negative_count": 1000,
+    "plan": "experiments/EXP-PEXT-0b2c75/trial-plan.json",
+    "rustc_flags": [
+     "--edition",
+     "2021",
+     "-O"
+    ],
+    "stage": "analyze",
+    "threads": 4,
+    "trial_id": "analyze"
+   },
    "run_id": "RUN-PEXT-87ac49",
+   "seed": 20261101,
    "stage": "analyze",
    "watchdog_reason": "Machine protection only; expiry is failed_infrastructure for the unfinished trial, never a metric value.",
    "watchdog_seconds": 1800
