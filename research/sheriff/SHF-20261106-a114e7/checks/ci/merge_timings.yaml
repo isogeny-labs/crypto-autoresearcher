@@ -1,0 +1,30 @@
+# Observed 2026-11-06 via GitHub API (MCP pull_request_read get_check_runs, actions_get get_workflow_run)
+# on aburan28/crypto-autoresearcher (redirects to isogeny-labs/crypto-autoresearcher). Times UTC.
+source: github_api_readback
+prs:
+  - pr: 3065
+    head: 4a55bcc5f65eaf5b20183f219d6cc002bb713f05
+    merged_at: "2026-11-06T02:20:55Z"
+    head_validate_run: {id: 42149688322, event: pull_request, created_at: "2026-11-06T02:20:27Z"}
+    completed_before_merge: [progress-fidelity 02:20:41, formal workspace 02:20:49, artifacts 02:20:52, parity 02:20:35, tier-gate 02:20:38, gate 02:20:44, kernel-controls 02:20:47]
+    pending_at_merge: [changes(validate) 02:21:10, merge-hygiene 02:23:24, static-checks 02:23:43, records 02:25:11, ledger 02:25:44, ledger-and-harness 02:25:50, harness-tests(1-4) 02:21:14-02:21:17, runtime-regressions 02:21:16]
+    all_pending_later_succeeded: true
+  - pr: 3056
+    head: 51a2e0fa34aa291d19cebaedc947a565ae3a8b58
+    merged_at: "2026-11-06T02:20:46Z"
+    failed_at_merge: {check: parity, workflow: lab-parity, run: 42137487481, event: pull_request, completed: "2026-11-06T00:32:00Z", conclusion: failure}
+    post_merge_masking: {check: parity, run: 42149730300, event: pull_request_target, created_at: "2026-11-06T02:20:50Z", head_sha_reported: 51a2e0fa, conclusion: success}
+    note: post-merge pull_request_target(closed) runs on validate.yml and lab-parity.yml post results against the PR head SHA, so the PR rollup now reads green for checks that were failed or pending at merge.
+  - pr: 3058
+    head: 834b70d1f8e0486df62de96d84b09d078b97c4d2
+    merged_at: "2026-11-06T02:13:15Z"
+    result: every head check from run 42145426535 etc. completed success by 01:45:11, before merge
+  - pr: 3059
+    head: 9947aba8b48997ff10ca2846bedcc7c1fa3b92af
+    merged_at: "2026-11-06T02:16:26Z"
+    result: head pull_request run 42146279723 all success by 02:00:35, before merge
+rulesets: not_covered (no ruleset API in this session; gh CLI limited to search). problems/pr-merge-checks-not-enforced.md (last updated 2026-10-28) records required = progress-fidelity, artifacts, formal workspace; the #3065 timeline is consistent with exactly that set.
+workflows_state_2026_11_06:   # actions_list list_workflows readback
+  active: [artifact-autofix, artifacts, bench-records, blobstore, CI tier, curvesmash-verifier, formal-module-rss, kb-usage-report, lab-parity, lean-verification, main-health, merge-sweeper, pages, pcc-gate, pcc-sign, PEXT n7 Lean proof, progress-fidelity, reports-s3, scoped-evidence, shared-research-kb, validate]
+  disabled_manually: [audit-runner, autofix-queue, claude-pr-review, claude, daily-literature, Groebner comparison protocol, kb, main-events, polynomial-solver-ml, repo-radar, sync-branches, sync-main, weekly-evals]
+  note: AGENTS.md "Merge main in to stay current" says sync-branches.yml runs every six hours; it is disabled_manually (since 2026-10-12).
