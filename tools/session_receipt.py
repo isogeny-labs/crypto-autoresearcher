@@ -40,6 +40,9 @@ from typing import Any
 
 import yaml
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import token_usage  # noqa: E402  (ported from crypto; reads Claude Code transcripts)
+
 try:  # libyaml, with the pure loader's errors (orchestration/fast_yaml.py)
     import fast_yaml
 except ImportError:  # imported as tools.<name>, the repository root importable
@@ -70,7 +73,8 @@ def detect_runtime(env: dict[str, str] | None = None) -> str | None:
         return env["AUTORESEARCH_RUNTIME"]
     if env.get("CURSOR_AGENT") or env.get("CURSOR_CONVERSATION_ID"):
         return "cursor_cloud" if env.get("CURSOR_WORKLOAD_CGROUP") else "cursor"
-    if env.get("CLAUDECODE") or env.get("CLAUDE_CODE_ENTRYPOINT"):
+    if (env.get("CLAUDECODE") or env.get("CLAUDE_CODE_ENTRYPOINT")
+            or env.get("CLAUDE_CODE_SESSION") or env.get("CLAUDE_CODE_SESSION_ID")):
         return "claude_code"
     if env.get("CODEX_SANDBOX") or env.get("CODEX_CLI"):
         return "codex_cli"
@@ -117,6 +121,71 @@ def _git(repo_root: Path, *args: str) -> str | None:
     return out.stdout.strip() or None
 
 
+UNAVAILABLE = "unavailable"
+TRANSCRIPT_SOURCE = "claude_code_transcript"
+
+
+class UsageRefused(ValueError):
+    """A transcript exists but cannot be read: no receipt without usage."""
+
+
+def projects_root(env: dict[str, str]) -> Path | None:
+    """~/.claude/projects from the given environment's HOME; None when no HOME."""
+    override = env.get("CLAUDE_PROJECTS_DIR")
+    if override:
+        return Path(override)
+    home = env.get("HOME")
+    return Path(home) / ".claude" / "projects" if home else None
+
+
+def usage_from_transcript(args: argparse.Namespace, runtime: str | None, repo_root: Path,
+                          env: dict[str, str]) -> dict[str, Any] | None:
+    """Usage fields from the newest Claude Code transcript, or None when absent.
+
+    Raises UsageRefused when a transcript is found but yields no usage. Never
+    estimates: every number is token_usage's deduplicated, priced total.
+    """
+    root = projects_root(env)
+    explicit = getattr(args, "transcript", None)
+    if not explicit:
+        if root is None or not root.is_dir():
+            return None
+        if runtime != "claude_code":
+            # Only a runtime that identifies itself as Claude Code may read a
+            # transcript implicitly; a plain shell on a developer machine must
+            # not attach an unrelated session's usage to its receipt.
+            return None
+        explicit = token_usage.newest_transcript(str(root), cwd=str(repo_root))
+        if not explicit:
+            return None
+    try:
+        prices = token_usage.load_prices()
+        rec = token_usage.session_record(prices, explicit)
+    except (OSError, UnicodeDecodeError, SystemExit, KeyError, TypeError, ValueError) as error:
+        raise UsageRefused(f"transcript {explicit} is unreadable ({error}); no receipt without usage "
+                           "(fix it, or pass --allow-null-usage '<reason>')") from error
+    total = rec["total"]
+    if not total["requests"]:
+        raise UsageRefused(f"transcript {explicit} holds no API responses; no receipt without usage "
+                           "(pass --allow-null-usage '<reason>' to override)")
+    tk = total["tokens"]
+    return {
+        "usage": {
+            "input_tokens": tk["input"],
+            "cache_creation_input_tokens": tk["cache_write_5m"] + tk["cache_write_1h"],
+            "cache_read_input_tokens": tk["cache_read"],
+            "output_tokens": tk["output"],
+            "thinking_tokens": tk["thinking"],
+            "prompt_tokens": total["prompt_tokens"],
+            "output_lower_bound_requests": total["output_lower_bound_requests"],
+        },
+        "cost_usd": total["cost_usd"],
+        "cache_hit_ratio": total["cache_hit_ratio"],
+        "requests": total["requests"],
+        "transcript": os.path.basename(explicit),
+    }
+
+
 def created_by_kind(ids: list[str]) -> dict[str, list[str]]:
     by_kind: dict[str, list[str]] = defaultdict(list)
     for rid in ids:
@@ -138,6 +207,26 @@ def receipt(args: argparse.Namespace, *, repo_root: Path, now: datetime | None =
         usage = json.loads(args.usage_json)
         if not isinstance(usage, dict):
             raise ValueError("--usage-json must be a JSON object of the runtime's own counters")
+    usage_source = args.usage_source if usage else None
+    extra: dict[str, Any] = {"cost_usd": None, "cache_hit_ratio": None, "requests": None}
+    runtime = args.runtime or detect_runtime(env)
+    override = getattr(args, "allow_null_usage", None)
+    if override is not None and not override.strip():
+        raise ValueError("--allow-null-usage needs a reason string")
+    if usage is None and (runtime in (None, "claude_code")):
+        try:
+            found = usage_from_transcript(args, runtime, repo_root, env)
+        except UsageRefused:
+            if override is None:
+                raise
+            found = None
+        if found:
+            usage, usage_source = found.pop("usage"), TRANSCRIPT_SOURCE
+            extra = {k: found[k] for k in ("cost_usd", "cache_hit_ratio", "requests")}
+        elif runtime == "claude_code" or override is not None:
+            usage_source = UNAVAILABLE
+            print("session_receipt: warning: no Claude Code transcript found; "
+                  "usage: null, usage_source: unavailable", file=sys.stderr)
     ids = [s for s in (args.created or "").split(",") if s.strip()]
     rec = {
         "schema": SCHEMA,
@@ -146,7 +235,7 @@ def receipt(args: argparse.Namespace, *, repo_root: Path, now: datetime | None =
         "skill": args.skill,
         "role": args.role,
         "mode": args.mode,
-        "runtime": args.runtime or detect_runtime(env),
+        "runtime": runtime,
         "model": args.model or detect_model(env),
         "provider": getattr(args, "provider", None) or env.get("AUTORESEARCH_PROVIDER"),
         "backend": getattr(args, "backend", None) or env.get("AUTORESEARCH_BACKEND"),
@@ -159,7 +248,9 @@ def receipt(args: argparse.Namespace, *, repo_root: Path, now: datetime | None =
         "files_read": args.files_read,
         "bounced": args.bounced,
         "usage": usage,
-        "usage_source": args.usage_source if usage else None,
+        "usage_source": usage_source,
+        **extra,
+        "usage_override_reason": override.strip() if override else None,
         "branch": _git(repo_root, "rev-parse", "--abbrev-ref", "HEAD"),
         "commit": _git(repo_root, "rev-parse", "HEAD"),
         "goal_id": args.goal,
@@ -207,13 +298,31 @@ def summary(rows: list[dict[str, Any]]) -> dict[str, Any]:
     usage_known = 0
     runtime_known = model_known = provider_known = provenance_complete = 0
     high_input_zero_record: list[str] = []
+    cost_total = 0.0
+    cost_known = costed_records = costed_ev = costed_supported = 0
+    by_runtime: dict[str, list[int]] = defaultdict(lambda: [0, 0])
+    for r in rows:
+        rt = r.get("runtime") or "unknown"
+        by_runtime[rt][0] += 1
+        by_runtime[rt][1] += bool(r.get("usage"))
+        if isinstance(r.get("cost_usd"), (int, float)):
+            made = r.get("records_created") or {}
+            cost_total += float(r["cost_usd"])
+            cost_known += 1
+            costed_records += int(r.get("records_created_count") or 0)
+            costed_ev += len(made.get("EV") or [])
+            # Proxy for a `supported` outcome (no ledger join): a reviewed or
+            # approved session that created an EV-* or H-* record.
+            costed_supported += bool(r.get("outcome") in ("approved", "reviewed")
+                                     and (made.get("EV") or made.get("H")))
     for r in rows:
         by_skill[r.get("skill") or "?"][r.get("outcome") or "?"] += 1
         created[r.get("skill") or "?"] += int(r.get("records_created_count") or 0)
         bounced[r.get("skill") or "?"] += int(r.get("bounced") or 0)
         if r.get("usage"):
             usage_known += 1
-            input_tokens = (r.get("usage") or {}).get("input_tokens")
+            u = r.get("usage") or {}
+            input_tokens = u.get("prompt_tokens", u.get("input_tokens"))
             if (isinstance(input_tokens, int) and input_tokens >= 500_000
                     and not r.get("records_created_count")):
                 high_input_zero_record.append(str(r.get("id") or "?"))
@@ -230,6 +339,14 @@ def summary(rows: list[dict[str, Any]]) -> dict[str, Any]:
         "provider_known": provider_known,
         "provenance_complete": provenance_complete,
         "high_input_zero_record": high_input_zero_record,
+        "cost_usd_total": round(cost_total, 6),
+        "cost_known": cost_known,
+        "cost_per_record": round(cost_total / costed_records, 6) if costed_records else None,
+        "cost_per_evidence_record": round(cost_total / costed_ev, 6) if costed_ev else None,
+        "supported_proxy_receipts": costed_supported,
+        "cost_per_supported": round(cost_total / costed_supported, 6) if costed_supported else None,
+        "usage_by_runtime": {k: {"receipts": v[0], "usage_known": v[1]}
+                             for k, v in sorted(by_runtime.items())},
         "by_skill": {k: dict(v) for k, v in sorted(by_skill.items())},
         "records_created_by_skill": dict(created),
         "bounced_by_skill": {k: v for k, v in bounced.items() if v},
@@ -245,6 +362,16 @@ def render_summary(s: dict[str, Any]) -> str:
              f"model {s.get('model_known', 0)}/{s['receipts']}, "
              f"provider {s.get('provider_known', 0)}/{s['receipts']}, "
              f"complete {s.get('provenance_complete', 0)}/{s['receipts']}"]
+    def usd(x):
+        return "n/a" if x is None else f"US${x:,.4f}"
+    lines.append(
+        f"  cost (receipts with usage, {s.get('cost_known', 0)}): total {usd(s.get('cost_usd_total', 0.0))}; "
+        f"per evidence record (EV-*) {usd(s.get('cost_per_evidence_record'))}; "
+        f"per supported outcome {usd(s.get('cost_per_supported'))} "
+        f"(proxy: {s.get('supported_proxy_receipts', 0)} approved/reviewed receipts with EV-*/H-* records, no ledger join)")
+    if s.get("usage_by_runtime"):
+        lines.append("  usage coverage by runtime: " + ", ".join(
+            f"{k} {v['usage_known']}/{v['receipts']}" for k, v in s["usage_by_runtime"].items()))
     if s.get("high_input_zero_record"):
         lines.append("  process anomaly: >=500k input tokens and zero records: " +
                      ", ".join(s["high_input_zero_record"]))
@@ -283,6 +410,11 @@ def main(argv: list[str] | None = None) -> int:
         p.add_argument("--policy", help="requested inference policy")
         p.add_argument("--usage-json", help="runtime's own usage counters as JSON; never an estimate")
         p.add_argument("--usage-source", help="where --usage-json came from (e.g. cursor run-info)")
+        p.add_argument("--allow-null-usage", metavar="REASON",
+                       help="write the receipt with usage null although the transcript is unreadable; "
+                            "the reason is stored in the receipt")
+        p.add_argument("--transcript", help="Claude Code session .jsonl to read usage from "
+                                            "(default: newest under ~/.claude/projects)")
         p.add_argument("--goal", help="GOAL-* the session worked, if one")
         p.add_argument("--notes", help="one line; anything longer belongs in a record")
         p.add_argument("--supersedes", help="id of the receipt this one corrects")

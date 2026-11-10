@@ -77,3 +77,13 @@ Per role, backend, model policy, and task class, record:
 
 Optimization decisions should use token cost per validated task outcome rather
 than raw token volume or cache-hit rate alone.
+
+## Transcript reader
+
+`tools/token_usage.py` (ported from the crypto repository, prices in
+`tools/token_prices.json`, record schema `crypto.autoresearch.token-usage.v1`)
+reads Claude Code transcripts and handles the accounting traps: dedupe by
+message id, subagent snapshot lower bounds, cache write tiers. `tools/session_receipt.py`
+calls it to fill each Claude Code receipt's usage; run it directly with
+`python3 tools/token_usage.py session [path]`. Tests:
+`python3 -m unittest tools.test_token_usage`.

@@ -92,3 +92,18 @@ a status wake that reads 40 files is a cost), `deep-research`,
 an impediment writes `--outcome impeded`; a `run` that found nothing to
 execute writes `nothing_executable`, which is the number P0.3 of the review
 wants driven to zero.
+
+## Usage or no receipt
+
+A receipt from a Claude Code session carries usage, read from the newest
+transcript under `~/.claude/projects/` by `tools/token_usage.py` (deduplicated
+by message id, subagent output counted as a lower bound, cache tiers priced):
+`usage`, `usage_source: claude_code_transcript`, `cost_usd`, `cache_hit_ratio`,
+`requests`. `--usage-json` still wins where the runtime gives its own counters.
+A transcript that exists but cannot be read refuses the receipt (exit 2).
+No transcript at all writes `usage: null`, `usage_source: unavailable` and
+prints a warning. `--allow-null-usage '<reason>'` overrides a refusal and stores
+the reason as `usage_override_reason`. Usage is never estimated. `summary`
+prints total cost, cost per evidence record, cost per supported outcome (a
+proxy: approved or reviewed receipts that created EV-*/H-* records) and usage
+coverage by runtime.
