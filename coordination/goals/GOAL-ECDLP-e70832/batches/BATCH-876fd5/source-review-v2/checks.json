@@ -1,0 +1,285 @@
+{
+  "schema": "classical.ecdlp.independent-static-source-delta-review/v1",
+  "task_id": "TASK-20261106-a2cc4a",
+  "review_attestation": {
+    "task_id": "TASK-20261106-a2cc4a",
+    "joints_owned": [
+      "J1"
+    ],
+    "sources_read": [
+      "ledger/handoffs/TASK-20261106-a2cc4a.yaml",
+      "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/claims/TASK-20261106-a2cc4a.1.claim.json",
+      "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/source-contract-v2.json",
+      "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/source-materialization-v2.json",
+      "problems/classical-ecdlp-public-reference-claim-validation.md",
+      "experiments/EXP-ECDLP-ca93ac/specification.yaml",
+      "experiments/EXP-ECDLP-ca93ac/protocol.json",
+      "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/input-manifest.json",
+      "harness/classical_ecdlp_public_reference_audit_v2/solver.py",
+      "harness/classical_ecdlp_public_reference_audit_v2/driver.py",
+      "harness/classical_ecdlp_public_reference_audit_v2/verify.py",
+      "harness/classical_ecdlp_public_reference_audit/solver.py",
+      "harness/classical_ecdlp_public_reference_audit/driver.py",
+      "harness/classical_ecdlp_public_reference_audit/verify.py",
+      "/tmp/ecd-next-science-20261106/Delta-claim-pub/review-plan.json",
+      "/workspace/classical-ecdlp-endpoint-reuse/host-reference-cost-audit-20261030/root-literature/hac-chapter3.txt",
+      "/workspace/classical-ecdlp-endpoint-reuse/fresh48-20261105-witness-primary-sources/sec1-v2.txt"
+    ],
+    "read_sibling_reports": false,
+    "blind_from_respected": true,
+    "verdicts": {
+      "J1": "breaks"
+    },
+    "independent_session": "/root/independent_reference_source_review_20261106",
+    "independence_statement": "Independent of V2 implementer; same reviewer as prior adverse V1 review, openly post hoc delta review, not independent replication of own prior review."
+  },
+  "plan_sha256_sorted_compact_json": "08a3003f7196d897707b9c213c76629f892f1bdc1265ab5a19b53ab0d19d3d9d",
+  "plan_objects_equal_external": true,
+  "claim": {
+    "acquired_at": "2026-11-06T17:03:20Z",
+    "branch": "experiment/classical-ecdlp-endpoint-reuse-20261026",
+    "epoch": 1,
+    "expires_at": "2026-11-06T17:13:20Z",
+    "forced": false,
+    "owner": "independent-reference-delta-reviewer",
+    "schema": "crypto.autoresearch.task_claim.v1",
+    "session": "independent_reference_source_review_20261106",
+    "supersedes": null,
+    "supersedes_lost_completion": null,
+    "task_id": "TASK-20261106-a2cc4a",
+    "worktree": "/tmp/classical-ecdlp-validation-20261106",
+    "write_scope": [
+      "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/source-review-v2/report.md",
+      "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/source-review-v2/checks.json",
+      "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/source-review-v2/diagram.svg",
+      "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/source-review-v2/report.pdf",
+      "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/source-review-v2/visual-inspection.json"
+    ]
+  },
+  "source_commit_supplied": "59fdb82778ffaf1b134f3b8bd1e1a4f71b5920ee",
+  "draft_commit_supplied": "f38a1775f9a008d150f8eeae066cedcc02d0360e",
+  "claim_publication_commit_supplied": "1cf21bee57e589f79f3b5326bac570e948566705",
+  "git_or_remote_publication_independently_queried": false,
+  "source_sha256": {
+    "harness/classical_ecdlp_public_reference_audit_v2/solver.py": "d462b17ffb10772852d6024a92be71eb768b27d3d4b619cd582c868f88953031",
+    "harness/classical_ecdlp_public_reference_audit_v2/driver.py": "99a6a535dda612a762d4b56c3fed8749321ddc849f2200b19474ba1d79010849",
+    "harness/classical_ecdlp_public_reference_audit_v2/verify.py": "a1cf6bdcb243caf5f4564f47b1dc86e2e7ea9dd3b368ab0da14dc019f8a5c667"
+  },
+  "original_source_sha256": {
+    "harness/classical_ecdlp_public_reference_audit/solver.py": "d462b17ffb10772852d6024a92be71eb768b27d3d4b619cd582c868f88953031",
+    "harness/classical_ecdlp_public_reference_audit/driver.py": "e0d7e4c2690f707a26edf0552e25c59327fe9b5637ee7d512c6dafdc06438124",
+    "harness/classical_ecdlp_public_reference_audit/verify.py": "a19cfc02c5f95726466eb6fdef9506eb569b04e6a0ffdeb1d322bf9ff4049c8d"
+  },
+  "unchanged_kernel_AST": {
+    "solver.py:prime": true,
+    "solver.py:inverse": true,
+    "solver.py:Curve": true,
+    "solver.py:BabyGiant": true,
+    "verify.py:is_prime": true,
+    "verify.py:Projective": true
+  },
+  "solver_identical_bytes": true,
+  "delta_matrix": [
+    {
+      "id": "F1",
+      "assessment": "exact original counterexample closed statically",
+      "lines": "verify.py:461-470,490-499,509",
+      "reason": "Every joined cell context is appended. RECOVERED with empty words, null scalar and empty recovered_scalars gets a cell.status undefined event and is included in claimed_cells. This does not assert any such raw row exists."
+    },
+    {
+      "id": "F2",
+      "assessment": "exact original counterexample closed statically",
+      "lines": "verify.py:414-425,433-435",
+      "reason": "Exact integer coefficients must satisfy1<=a,b<r before normalization. F17r19,a20,b1,k=x2 raises ValueError and is retained undefined; it cannot be valid after reduction. Original/transformed equations and normalization remain checked."
+    },
+    {
+      "id": "G1",
+      "assessment": "shared carry implemented with operational qualifications",
+      "lines": "driver.py:104-137,145-197,223-241; verify.py:161-196,242-262,521-525",
+      "reason": "Driver aggregates self/reaped/live CPU, samples at0.2s, decreases each child OS allowance and writes prior charge with2s finalization reserve. Checker rejects missing/negative/nonfinite/inconsistent/stale ledger and carries prior charge into its guard and remaining OS allowance. Same run/stop/pid/launch/source are checked. This closes fresh1800-per-phase reset in ordinary source flow. Sampling, fixed finalization reserve and native hard-guard dependency are retained; no hard instantaneous/cgroup enforcement was independently reviewed."
+    },
+    {
+      "id": "G2",
+      "assessment": "substantial census/context/join correction; residual R1 breaks pinned false-object requirement",
+      "lines": "verify.py:353-395,438-510",
+      "reason": "Top-level trace/cell statuses, word statuses, line/byte offset/length/SHA, all trace/cell contexts, arm and provided optional ID joins are retained. Missing optional IDs are recorded absent, and a separately labelled digest uses trace/curve/target/a/b/G/Q/arm rather than inventing a source ID. Dependent event multiplicities are retained. However arbitrary text statuses are accepted/censused without any admissible vocabulary check, and unknown-status cells/words can reach complete summary. Trace scan373 and context389-392 do not traverse original/incremental nested statuses; any full nested-status census remains unestablished. Their schema was mentioned by Coordinator but not independently read here."
+    },
+    {
+      "id": "G3",
+      "assessment": "original stop carried; source checks added; hard outer guarantee remains conditional",
+      "lines": "driver.py:70-96,125-137,170-192,234-261; verify.py:161-195,349,512,525",
+      "reason": "Driver requires native process group and monitors worker membership, waits/reaps direct children, and guards successful writes. Checker reuses original stop, guards before/after final serialization/write calls and does not reset stop. Current worker has no child spawning. Cleanup grace and cooperative checks remain; unchanged native process-group/claim/watchdog behavior was not independently inspected in this scoped review."
+    },
+    {
+      "id": "G4",
+      "assessment": "named source/manifest/seal/order checks implemented statically",
+      "lines": "driver.py:204-213; verify.py:234-287,291-302,329-349",
+      "reason": "Checker binds native launch/environment/runtime guard, current manifest and all source hashes; compares source bytes to authority Git blobs (code inspected, not executed). Public and certificate hashes/bytes, exact original curve/control/target order, duplicate IDs, canonical scalars and every equation are checked before reference seal and candidate open. Actual published-commit/native-environment runtime evidence remains a future execution dependency."
+    }
+  ],
+  "residual_findings": [
+    {
+      "id": "R1",
+      "joint": "J1",
+      "assessment": "breaks pinned proves_too_much requirement",
+      "locations": [
+        "verify.py:373-374",
+        "verify.py:474-478",
+        "verify.py:490-513"
+      ],
+      "static_input_shape": {
+        "precondition": "Otherwise valid unique cell/trace/public joins and matching enclosing immutable payload binding",
+        "cell": {
+          "status": "__UNREGISTERED_STATUS__",
+          "words": [],
+          "scalar": null,
+          "recovered_scalars": []
+        }
+      },
+      "derivation": "scan merely JSON-encodes status as a census key. The cell branch never validates a status vocabulary or even its type. An unknown text cell status does not trigger RECOVERED handling, has zero events, remains in all_cell_contexts, and can reach status complete. Likewise a word with any unfamiliar text status passes the text-only check and is skipped as non-RECOVERED. No vocabulary check distinguishes a legitimate negative status from an unknown one.",
+      "scope": "The plan explicitly says unknownstatuses mustnotpassfullcoverage/custody. Retention is implemented but does not establish that rejection gate. No raw-prefix occurrence or executed counterexample is claimed.",
+      "next_action": "Prospectively define authoritative permitted status vocabularies and optional-status rules, reject/classify unexpected statuses under an explicit incomplete/invalid gate, then publish/review a new source version; do not scan raw outcomes merely to select an accepted vocabulary."
+    }
+  ],
+  "proves_too_much": {
+    "method": "Static analytical branch review only; all frozen false objects included",
+    "objects": [
+      {
+        "object": "empty RECOVERED cell",
+        "static_assessment": "retained undefined by490-495; exact F1 closed"
+      },
+      {
+        "object": "F17r19 noncanonical a20,b1,k=x2",
+        "static_assessment": "fails415-416 and retained undefined433-435; exact F2 closed"
+      },
+      {
+        "object": "CPU carry reaches cap or ledger is missing/stale/negative",
+        "static_assessment": "161-190 reject named malformed/stale/cap cases and include prior charge; native hard outer/sampling qualifications remain"
+      },
+      {
+        "object": "omitted unclaimed/negative cells",
+        "static_assessment": "all contexts are appended470; source-stream omission changes checked digest/bytes377-378; no selective claim-only context retention"
+      },
+      {
+        "object": "unknown statuses",
+        "static_assessment": "R1: arbitrary text survives373-374/476-478 and can reach513 complete; pinned false-object condition breaks"
+      },
+      {
+        "object": "duplicate/missing/reordered IDs; wrong arm; present transformation-ID mismatch",
+        "static_assessment": "public/reference duplicates/inventory/order213-230/274-302; trace/cell uniqueness385-386/440-441; cell trace prefix447-448; cell arm/curve/target449-451; optional provided IDs453-455 reject mismatches"
+      },
+      {
+        "object": "wrong source/manifest seal or modified point binding",
+        "static_assessment": "source/manifest/native custody234-262, public hash203-205, point/equation checks217-225/293-294 and raw target join445-446 reject named mismatches"
+      },
+      {
+        "object": "absent optional source transformation IDs",
+        "static_assessment": "392/452/456-469 retain actual present/absent provenance and separately label derived binding digest; no source ID fabricated"
+      }
+    ]
+  },
+  "scientific_execution": {
+    "solver": 0,
+    "fixtures": 0,
+    "controls": 0,
+    "units": 0,
+    "raw_scans": 0,
+    "source_imports": 0,
+    "syntax_compiles": 0,
+    "static_AST_parse_only": true
+  },
+  "budget": {
+    "claim_acquired_epoch_seconds": 1793984600,
+    "fixed_stop_epoch_seconds": 1793985200,
+    "maximum_wall_seconds": 600,
+    "maximum_memory_gib": 4,
+    "extensions": 0,
+    "resets": 0,
+    "review_retries": 0,
+    "reviewer_memory_enforcement_or_measurement": "not instrumented; compliance unverified",
+    "final_artifact_accounting_epoch_seconds": 1793984964.4131238,
+    "elapsed_seconds_at_final_accounting": 364.4131238460541,
+    "whole_wall_cap_met": true
+  },
+  "historical_review": {
+    "task_id": "TASK-20261106-2ff273",
+    "J1": "breaks",
+    "wall_seconds": 305.13559222221375,
+    "maximum_wall_seconds": 300,
+    "wall_cap": "UNMET; unchanged and unwaived",
+    "memory_compliance": "unverified; unchanged"
+  },
+  "read_accounting": {
+    "this_task_sources": [
+      "ledger/handoffs/TASK-20261106-a2cc4a.yaml",
+      "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/claims/TASK-20261106-a2cc4a.1.claim.json",
+      "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/source-contract-v2.json",
+      "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/source-materialization-v2.json",
+      "problems/classical-ecdlp-public-reference-claim-validation.md",
+      "experiments/EXP-ECDLP-ca93ac/specification.yaml",
+      "experiments/EXP-ECDLP-ca93ac/protocol.json",
+      "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/input-manifest.json",
+      "harness/classical_ecdlp_public_reference_audit_v2/solver.py",
+      "harness/classical_ecdlp_public_reference_audit_v2/driver.py",
+      "harness/classical_ecdlp_public_reference_audit_v2/verify.py",
+      "harness/classical_ecdlp_public_reference_audit/solver.py",
+      "harness/classical_ecdlp_public_reference_audit/driver.py",
+      "harness/classical_ecdlp_public_reference_audit/verify.py",
+      "/tmp/ecd-next-science-20261106/Delta-claim-pub/review-plan.json",
+      "/workspace/classical-ecdlp-endpoint-reuse/host-reference-cost-audit-20261030/root-literature/hac-chapter3.txt",
+      "/workspace/classical-ecdlp-endpoint-reuse/fresh48-20261105-witness-primary-sources/sec1-v2.txt"
+    ],
+    "prior_session_contracts_retained": [
+      "AGENTS.md",
+      "agents/validator.md",
+      ".claude/skills/research-visuals/SKILL.md",
+      "docs/agent-contract-extended.md"
+    ],
+    "raw_payloads_read": false,
+    "sibling_reports_read": false,
+    "new_V2_source_reads": "Exact source displays, static diff, SHA256 and AST parsing. Initial combined diff/spec display was truncated; relevant source sections were displayed separately.",
+    "primary_passages": "HAC3.6.2 lines1000-1040 and SEC1v2 2.2.1 lines442-494 reread before delta source analysis.",
+    "coordinator_schema_message": "Coordinator mentioned proposed engine.py status vocabularies and original/incremental nested trace status fields. They were not independently read or used to invent enum values; report explicitly qualifies nested status coverage."
+  },
+  "literature": [
+    {
+      "source": "/workspace/classical-ecdlp-endpoint-reuse/host-reference-cost-audit-20261030/root-literature/hac-chapter3.txt",
+      "passage": "HAC3.6.2 Algorithm3.56/Fact3.57",
+      "provenance": "retrieved local primary text",
+      "verified_by": "/root/independent_reference_source_review_20261106",
+      "supports": "Complete baby/giant decomposition; no new performance assertion."
+    },
+    {
+      "source": "/workspace/classical-ecdlp-endpoint-reuse/fresh48-20261105-witness-primary-sources/sec1-v2.txt",
+      "passage": "SEC1v2 2.2.1",
+      "provenance": "retrieved local primary text",
+      "verified_by": "/root/independent_reference_source_review_20261106",
+      "supports": "Prime-field nonsingularity and identity/inverse/add/double laws."
+    }
+  ],
+  "scope_limits": [
+    "No actual native environment, authority Git command, process control, preapproval or empirical certificate was executed/validated. Publication commits are supplied identities with independently checked local source hashes.",
+    "Old review remains adverse and over budget. No scientific admission or claim promotion.",
+    "Canonical scientific graphs outside scope, unchanged; this diagram documents static implementation flow."
+  ],
+  "render_and_inspection": {
+    "compile_command": "/workspace/classical-ecdlp-endpoint-reuse/runtime-20261028/bin/python -c \"import typst; typst.compile('/tmp/independent-reference-source-review-v2-render-20261106/report.typ',output='/tmp/independent-reference-source-review-v2-20261106/report.pdf',root='/'); print('Typst updated-report compile succeeded')\"",
+    "compile_attempts": 2,
+    "compile_results": [
+      "success; initial report",
+      "success; added explicit nested-trace status scope qualification"
+    ],
+    "final_compile_stdout": "Typst updated-report compile succeeded",
+    "final_compile_exit_code": 0,
+    "pdfinfo_command": "pdfinfo /tmp/independent-reference-source-review-v2-20261106/report.pdf",
+    "pdfinfo_result": "Typst0.15.0; PDF1.7; A4;3pages;50223bytes; unencrypted",
+    "raster_command": "pdftoppm -r 80 -png /tmp/independent-reference-source-review-v2-20261106/report.pdf /tmp/independent-reference-source-review-v2-render-20261106/final-page",
+    "raster_exit_code": 0,
+    "view_tool": "tools.view_image via functions.exec",
+    "final_pages_actually_viewed": [
+      1,
+      2,
+      3
+    ]
+  }
+}

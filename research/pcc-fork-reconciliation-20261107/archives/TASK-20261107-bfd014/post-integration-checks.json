@@ -1,0 +1,347 @@
+{
+  "schema": "administrative-post-integration-checks/v1",
+  "recorded_at": "2026-11-07T02:10:36.745006+00:00",
+  "archived_by": "TASK-20261107-bfd014",
+  "main_observed_before_receipt": "5f9d6fb501d408f3e8ad6ee89afbbbdadb8b560e",
+  "passed": [
+    "Native PCC chain and main-prefix check",
+    "Native generated benchmark report reproducibility",
+    "Native benchrec record gate after lossless hydration",
+    "Exactly two registry authority pointers; all original manifest/hash/status fields unchanged"
+  ],
+  "blocked": {
+    "merge_hygiene": {
+      "path": "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-9576ee/interstage-recovery-a33086/archives/TASK-20261105-ad13ba/pcc-ledger-snapshot.json",
+      "sha256": "00e0e4b4542b2342a9aa301cff63c469278d82f19eea3551b1f97fc3572891c1",
+      "bytes": 6790,
+      "valid_json_lines": 17,
+      "reason": "Receipt-bound original is a multi-entry JSONL snapshot with a .json suffix. Native absolute JSON parser rejects it. Existing schema-supersession route does not admit this coordination archive path. Original bytes/path remain unchanged; no parser bypass or baseline exception."
+    },
+    "whole_ledger": "Local native validator refuses sparse checkout; existing full-checkout CI remains pending."
+  },
+  "recovery_history": "Bench record gate first lacked sparse metadata, then four logical analysis files. Existing committed manifests and encoding receipts were materialized. Native hydration first lacked AWS CLI on PATH, then hit full default cache filesystem; third invocation used ARTIFACTS_AWS and supported ARTIFACTS_CACHE=/tmp override, downloaded four existing S3 objects and checked encoded/decoded hashes. Final native benchrec gate returned 0. These were maintenance reads, not scientific runs.",
+  "science": {
+    "new_experiments": 0,
+    "paid_compute_jobs": 0,
+    "hypothesis_or_goal_status_changes": 0,
+    "pcc_promotions": 0,
+    "all_19_original_standings": "unverified, unchanged"
+  },
+  "publication": "Merge c5d7ce82f4e1cacfeb53f91977b2fb96a2505193 already pushed and remote-confirmed. Receipt/authority-link follow-up commit and continuation PR are still pending at this record timestamp. Old PR remains open/unmerged/auto-off.",
+  "commands": {
+    "pre-receipt-fetch": {
+      "started_at": "2026-11-07T02:07:27.992790+00:00",
+      "argv": [
+        "git",
+        "fetch",
+        "--filter=blob:none",
+        "origin",
+        "main"
+      ],
+      "cwd": "/tmp/ecd-git-repair-20261106/repository",
+      "returncode": 0,
+      "wait_returned": true,
+      "finished_at": "2026-11-07T02:07:28.990163+00:00",
+      "elapsed_seconds": 0.9972845660013263,
+      "files": {
+        "stdout.txt": {
+          "path": "/tmp/ecd-reconcile-20261107/pre-receipt-fetch.stdout.txt",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stderr.txt": {
+          "path": "/tmp/ecd-reconcile-20261107/pre-receipt-fetch.stderr.txt",
+          "bytes": 164,
+          "sha256": "57d74276428aa256308ccbbb66de37525b9a9cb771ed3aa4c418d693c15bd50f"
+        }
+      },
+      "stdout.txt": "",
+      "stderr.txt": "From https://github.com/isogeny-labs/crypto-autoresearcher\n * branch                  main       -> FETCH_HEAD\n   a0ca384c7a..5f9d6fb501  main       -> origin/main\n"
+    },
+    "pcc-postmerge": {
+      "started_at": "2026-11-07T02:07:36.003231+00:00",
+      "argv": [
+        "/workspace/classical-ecdlp-endpoint-reuse/runtime-20261028/bin/python",
+        "-B",
+        "tools/pcc/pcc.py",
+        "ledger",
+        "verify",
+        "--base",
+        "origin/main"
+      ],
+      "cwd": "/tmp/ecd-git-repair-20261106/repository",
+      "returncode": 0,
+      "wait_returned": true,
+      "finished_at": "2026-11-07T02:07:36.101552+00:00",
+      "elapsed_seconds": 0.09793675599939888,
+      "files": {
+        "stdout.txt": {
+          "path": "/tmp/ecd-reconcile-20261107/pcc-postmerge.stdout.txt",
+          "bytes": 29,
+          "sha256": "9425c7011f9b5879151aeb5360b3516aef517cff620ce71d68a4e8355d6aa394"
+        },
+        "stderr.txt": {
+          "path": "/tmp/ecd-reconcile-20261107/pcc-postmerge.stderr.txt",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "stdout.txt": "ledger: 96 entries, chain ok\n",
+      "stderr.txt": ""
+    },
+    "bench-check": {
+      "started_at": "2026-11-07T02:00:41.324536+00:00",
+      "argv": [
+        "/workspace/classical-ecdlp-endpoint-reuse/runtime-20261028/bin/python",
+        "-B",
+        "tools/benchrec.py",
+        "report",
+        "--check"
+      ],
+      "cwd": "/tmp/ecd-git-repair-20261106/repository",
+      "returncode": 0,
+      "wait_returned": true,
+      "finished_at": "2026-11-07T02:00:41.476515+00:00",
+      "elapsed_seconds": 0.15189529200142715,
+      "files": {
+        "stdout.txt": {
+          "path": "/tmp/ecd-reconcile-20261107/bench-check.stdout.txt",
+          "bytes": 24,
+          "sha256": "ee7cc37971a68ed54dfff911437d645c054e0eece6d30b054481fd4596e8688d"
+        },
+        "stderr.txt": {
+          "path": "/tmp/ecd-reconcile-20261107/bench-check.stderr.txt",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "stdout.txt": "progress report current\n",
+      "stderr.txt": ""
+    },
+    "bench-gate-first": {
+      "started_at": "2026-11-07T02:03:39.778955+00:00",
+      "argv": [
+        "/workspace/classical-ecdlp-endpoint-reuse/runtime-20261028/bin/python",
+        "-B",
+        "tools/benchrec.py",
+        "gate"
+      ],
+      "cwd": "/tmp/ecd-git-repair-20261106/repository",
+      "returncode": 1,
+      "wait_returned": true,
+      "finished_at": "2026-11-07T02:03:40.087747+00:00",
+      "elapsed_seconds": 0.308702758004074,
+      "files": {
+        "stdout.txt": {
+          "path": "/tmp/ecd-reconcile-20261107/bench-gate-first.stdout.txt",
+          "bytes": 60649,
+          "sha256": "852d23953943585520301659ffe4ffc2731375436aeda34c42381a21904cb3ce"
+        },
+        "stderr.txt": {
+          "path": "/tmp/ecd-reconcile-20261107/bench-gate-first.stderr.txt",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "stdout.txt": {
+        "bytes": 60649,
+        "sha256": "852d23953943585520301659ffe4ffc2731375436aeda34c42381a21904cb3ce",
+        "excerpt_last_1500": "push\nFAIL: docs/benchmarks/records/20261107T0042Z-prime-field-batched-pairs.json: raw research/prime_field_a15_execution_20261107/runs/a15-batched-pairs-06ab77/raw/p524287-i1.norm/outputs.jsonl.gz is neither in Git, nor in a .artifacts.json manifest, nor marked uploaded; run benchrec.py upload or artifacts.py push\nFAIL: docs/benchmarks/records/20261107T0042Z-prime-field-batched-pairs.json: report research/prime_field_a15_execution_20261107/reports/a15-batched-pairs-06ab77-v2/report.pdf is not in the checkout or a .artifacts.json manifest\nFAIL: docs/benchmarks/records/20261107T0042Z-prime-field-batched-pairs.json: graph research/prime_field_a15_execution_20261107/reports/a15-batched-pairs-06ab77-v2/construction-arithmetic.svg is not in the checkout or a .artifacts.json manifest\nFAIL: docs/benchmarks/records/20261107T0042Z-prime-field-batched-pairs.json: graph research/prime_field_a15_execution_20261107/reports/a15-batched-pairs-06ab77-v2/explicit-array-traffic.svg is not in the checkout or a .artifacts.json manifest\nFAIL: docs/benchmarks/records/20261107T0042Z-prime-field-batched-pairs.json: validation file research/prime_field_a15_execution_20261107/runs/a15-batched-pairs-06ab77/analysis.json is not in the checkout or a .artifacts.json manifest\nFAIL: docs/benchmarks/records/20261107T0042Z-prime-field-batched-pairs.json: entry directory research/prime_field_a15_execution_20261107/runs/a15-batched-pairs-06ab77 is not in the checkout\nbenchrec: 209 problem(s) across 16 record(s)\n"
+      },
+      "stderr.txt": ""
+    },
+    "bench-gate": {
+      "started_at": "2026-11-07T02:07:35.382647+00:00",
+      "argv": [
+        "/workspace/classical-ecdlp-endpoint-reuse/runtime-20261028/bin/python",
+        "-B",
+        "tools/benchrec.py",
+        "gate"
+      ],
+      "cwd": "/tmp/ecd-git-repair-20261106/repository",
+      "returncode": 1,
+      "wait_returned": true,
+      "finished_at": "2026-11-07T02:07:35.865811+00:00",
+      "elapsed_seconds": 0.4830742720005219,
+      "files": {
+        "stdout.txt": {
+          "path": "/tmp/ecd-reconcile-20261107/bench-gate.stdout.txt",
+          "bytes": 1023,
+          "sha256": "441be52fab5a42a66a8608f36e11f34550166d7b72cde40e4f86a40d02db4dc8"
+        },
+        "stderr.txt": {
+          "path": "/tmp/ecd-reconcile-20261107/bench-gate.stderr.txt",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "stdout.txt": "FAIL: docs/benchmarks/records/20261106T1910Z-prime-field-affine-target-holdout.json: validation file research/prime_field_a11_execution_20261106/runs/a11-affine-holdout-30245e/analysis.json is not in the checkout or a .artifacts.json manifest\nFAIL: docs/benchmarks/records/20261106T2021Z-prime-field-batched-target-holdout.json: validation file research/prime_field_a12_execution_20261106/runs/a12-batched-holdout-6ba98a/analysis.json is not in the checkout or a .artifacts.json manifest\nFAIL: docs/benchmarks/records/20261106T2115Z-prime-field-paid-known-base-control.json: validation file research/prime_field_a13_execution_20261106/runs/a13-paid-known-base-62d664/analysis.json is not in the checkout or a .artifacts.json manifest\nFAIL: docs/benchmarks/records/20261106T2359Z-prime-field-mixed-known-helpers.json: validation file research/prime_field_a14_execution_20261106/runs/a14-mixed-known-helpers-4bbcf6/analysis.json is not in the checkout or a .artifacts.json manifest\nbenchrec: 4 problem(s) across 16 record(s)\n",
+      "stderr.txt": ""
+    },
+    "hydrate-native": {
+      "started_at": "2026-11-07T02:08:54.038810+00:00",
+      "argv": [
+        "/workspace/classical-ecdlp-endpoint-reuse/runtime-20261028/bin/python",
+        "-B",
+        "tools/hydrate_bench_validations.py"
+      ],
+      "cwd": "/tmp/ecd-git-repair-20261106/repository",
+      "returncode": 1,
+      "wait_returned": true,
+      "finished_at": "2026-11-07T02:08:54.296379+00:00",
+      "elapsed_seconds": 0.25747812400368275,
+      "files": {
+        "stdout.txt": {
+          "path": "/tmp/ecd-reconcile-20261107/hydrate-native.stdout.txt",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stderr.txt": {
+          "path": "/tmp/ecd-reconcile-20261107/hydrate-native.stderr.txt",
+          "bytes": 1049,
+          "sha256": "8acc4bf28834552a82505626475b51e683ec374e81e9b7f2766cdd13c35dba4d"
+        }
+      },
+      "stdout.txt": "",
+      "stderr.txt": "artifacts: `aws` not found; install the AWS CLI or set ARTIFACTS_AWS\nartifacts: `aws` not found; install the AWS CLI or set ARTIFACTS_AWS\nartifacts: `aws` not found; install the AWS CLI or set ARTIFACTS_AWS\nartifacts: `aws` not found; install the AWS CLI or set ARTIFACTS_AWS\nvalidation hydration failed: Command '['/workspace/classical-ecdlp-endpoint-reuse/runtime-20261028/bin/python', '/tmp/ecd-git-repair-20261106/repository/tools/artifacts/artifacts.py', 'pull', '/tmp/ecd-git-repair-20261106/repository/research/prime_field_a11_execution_20261106/runs/a11-affine-holdout-30245e/analysis.json.gz', '/tmp/ecd-git-repair-20261106/repository/research/prime_field_a12_execution_20261106/runs/a12-batched-holdout-6ba98a/analysis.json.gz', '/tmp/ecd-git-repair-20261106/repository/research/prime_field_a13_execution_20261106/runs/a13-paid-known-base-62d664/analysis.json.gz', '/tmp/ecd-git-repair-20261106/repository/research/prime_field_a14_execution_20261106/runs/a14-mixed-known-helpers-4bbcf6/analysis.json.gz']' returned non-zero exit status 2.\n"
+    },
+    "hydrate-native-2": {
+      "started_at": "2026-11-07T02:09:12.212662+00:00",
+      "argv": [
+        "/workspace/classical-ecdlp-endpoint-reuse/runtime-20261028/bin/python",
+        "-B",
+        "tools/hydrate_bench_validations.py"
+      ],
+      "cwd": "/tmp/ecd-git-repair-20261106/repository",
+      "returncode": 1,
+      "wait_returned": true,
+      "finished_at": "2026-11-07T02:09:14.079219+00:00",
+      "elapsed_seconds": 1.866439392004395,
+      "files": {
+        "stdout.txt": {
+          "path": "/tmp/ecd-reconcile-20261107/hydrate-native-2.stdout.txt",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stderr.txt": {
+          "path": "/tmp/ecd-reconcile-20261107/hydrate-native-2.stderr.txt",
+          "bytes": 2824,
+          "sha256": "c380f416e783629921a1e0abc4d57e26a9ce51e48a5453eb4baffedc11e1f1fd"
+        }
+      },
+      "stdout.txt": "",
+      "stderr.txt": "Traceback (most recent call last):\n  File \"/tmp/ecd-git-repair-20261106/repository/tools/artifacts/artifacts.py\", line 745, in <module>\n    sys.exit(main())\n             ^^^^^^\n  File \"/tmp/ecd-git-repair-20261106/repository/tools/artifacts/artifacts.py\", line 738, in main\n    return {\n           ^\n  File \"/tmp/ecd-git-repair-20261106/repository/tools/artifacts/artifacts.py\", line 586, in cmd_pull\n    list(ex.map(one, todo))\n  File \"/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/concurrent/futures/_base.py\", line 619, in result_iterator\n    yield _result_or_cancel(fs.pop())\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/concurrent/futures/_base.py\", line 317, in _result_or_cancel\n    return fut.result(timeout)\n           ^^^^^^^^^^^^^^^^^^^\n  File \"/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/concurrent/futures/_base.py\", line 456, in result\n    return self.__get_result()\n           ^^^^^^^^^^^^^^^^^^^\n  File \"/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/concurrent/futures/_base.py\", line 401, in __get_result\n    raise self._exception\n  File \"/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/concurrent/futures/thread.py\", line 59, in run\n    result = self.fn(*self.args, **self.kwargs)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/tmp/ecd-git-repair-20261106/repository/tools/artifacts/artifacts.py\", line 582, in one\n    c = ensure_cached(cfg, remote, e[\"sha256\"], e[\"bytes\"])\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/tmp/ecd-git-repair-20261106/repository/tools/artifacts/artifacts.py\", line 425, in ensure_cached\n    c.parent.mkdir(parents=True, exist_ok=True)\n  File \"/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py\", line 1311, in mkdir\n    os.mkdir(self, mode)\nOSError: [Errno 28] No space left on device: '/home/agent/.cache/crypto-store/sha256/f2'\nvalidation hydration failed: Command '['/workspace/classical-ecdlp-endpoint-reuse/runtime-20261028/bin/python', '/tmp/ecd-git-repair-20261106/repository/tools/artifacts/artifacts.py', 'pull', '/tmp/ecd-git-repair-20261106/repository/research/prime_field_a11_execution_20261106/runs/a11-affine-holdout-30245e/analysis.json.gz', '/tmp/ecd-git-repair-20261106/repository/research/prime_field_a12_execution_20261106/runs/a12-batched-holdout-6ba98a/analysis.json.gz', '/tmp/ecd-git-repair-20261106/repository/research/prime_field_a13_execution_20261106/runs/a13-paid-known-base-62d664/analysis.json.gz', '/tmp/ecd-git-repair-20261106/repository/research/prime_field_a14_execution_20261106/runs/a14-mixed-known-helpers-4bbcf6/analysis.json.gz']' returned non-zero exit status 1.\n"
+    },
+    "hydrate-native-3": {
+      "started_at": "2026-11-07T02:09:46.537911+00:00",
+      "argv": [
+        "/workspace/classical-ecdlp-endpoint-reuse/runtime-20261028/bin/python",
+        "-B",
+        "tools/hydrate_bench_validations.py"
+      ],
+      "cwd": "/tmp/ecd-git-repair-20261106/repository",
+      "returncode": 0,
+      "wait_returned": true,
+      "finished_at": "2026-11-07T02:09:48.427485+00:00",
+      "elapsed_seconds": 1.8894874630059348,
+      "files": {
+        "stdout.txt": {
+          "path": "/tmp/ecd-reconcile-20261107/hydrate-native-3.stdout.txt",
+          "bytes": 598,
+          "sha256": "a7211b6500ef1a586c065da163ddb87eff227939664203c25ce5837725118e65"
+        },
+        "stderr.txt": {
+          "path": "/tmp/ecd-reconcile-20261107/hydrate-native-3.stderr.txt",
+          "bytes": 45,
+          "sha256": "b460a6ee206008dc629cc53591bdfe8acb1c3bff53c6f8aed4c12373cb972b83"
+        }
+      },
+      "stdout.txt": "[\n  {\n    \"path\": \"research/prime_field_a11_execution_20261106/runs/a11-affine-holdout-30245e/analysis.json\",\n    \"status\": \"restored_verified\"\n  },\n  {\n    \"path\": \"research/prime_field_a12_execution_20261106/runs/a12-batched-holdout-6ba98a/analysis.json\",\n    \"status\": \"restored_verified\"\n  },\n  {\n    \"path\": \"research/prime_field_a13_execution_20261106/runs/a13-paid-known-base-62d664/analysis.json\",\n    \"status\": \"restored_verified\"\n  },\n  {\n    \"path\": \"research/prime_field_a14_execution_20261106/runs/a14-mixed-known-helpers-4bbcf6/analysis.json\",\n    \"status\": \"restored_verified\"\n  }\n]\n",
+      "stderr.txt": "hydrated 4 files (2.3 MB); 0 already present\n"
+    },
+    "bench-gate-hydrated": {
+      "started_at": "2026-11-07T02:09:57.181862+00:00",
+      "argv": [
+        "/workspace/classical-ecdlp-endpoint-reuse/runtime-20261028/bin/python",
+        "-B",
+        "tools/benchrec.py",
+        "gate"
+      ],
+      "cwd": "/tmp/ecd-git-repair-20261106/repository",
+      "returncode": 0,
+      "wait_returned": true,
+      "finished_at": "2026-11-07T02:09:57.531404+00:00",
+      "elapsed_seconds": 0.349454479997803,
+      "files": {
+        "stdout.txt": {
+          "path": "/tmp/ecd-reconcile-20261107/bench-gate-hydrated.stdout.txt",
+          "bytes": 52,
+          "sha256": "7051a21d735cddc23fab1e5014751262003de709ad60e272b523e90bdeaebeda"
+        },
+        "stderr.txt": {
+          "path": "/tmp/ecd-reconcile-20261107/bench-gate-hydrated.stderr.txt",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "stdout.txt": "benchrec: OK, 16 record(s), progress report current\n",
+      "stderr.txt": ""
+    },
+    "hygiene-after-links": {
+      "started_at": "2026-11-07T02:07:36.231482+00:00",
+      "argv": [
+        "/workspace/classical-ecdlp-endpoint-reuse/runtime-20261028/bin/python",
+        "-B",
+        "tools/check_merge_hygiene.py",
+        "--base",
+        "origin/main"
+      ],
+      "cwd": "/tmp/ecd-git-repair-20261106/repository",
+      "returncode": 1,
+      "wait_returned": true,
+      "finished_at": "2026-11-07T02:08:02.136420+00:00",
+      "elapsed_seconds": 25.90485445500235,
+      "files": {
+        "stdout.txt": {
+          "path": "/tmp/ecd-reconcile-20261107/hygiene-after-links.stdout.txt",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stderr.txt": {
+          "path": "/tmp/ecd-reconcile-20261107/hygiene-after-links.stderr.txt",
+          "bytes": 369,
+          "sha256": "a5ecdffc52aca437b05aef8bdabb80cbcd8cd1e6fcbe2929a834178edf97d4c6"
+        }
+      },
+      "stdout.txt": "",
+      "stderr.txt": "note: parseability scoped to 3239 committed, staged, or tracked-worktree candidate path(s) vs origin/main; the absolute sweep runs on main\nFAIL: 1 unparseable records:\n  - coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-9576ee/interstage-recovery-a33086/archives/TASK-20261105-ad13ba/pcc-ledger-snapshot.json: does not parse: Extra data: line 2 column 1 (char 367)\n\n"
+    },
+    "whole-ledger-local": {
+      "started_at": "2026-11-07T01:57:49.284499+00:00",
+      "argv": [
+        "/workspace/classical-ecdlp-endpoint-reuse/runtime-20261028/bin/python",
+        "-B",
+        "tools/validate_ledger.py"
+      ],
+      "cwd": "/tmp/ecd-git-repair-20261106/repository",
+      "returncode": 2,
+      "wait_returned": true,
+      "finished_at": "2026-11-07T01:57:49.558706+00:00",
+      "elapsed_seconds": 0.27411330999893835,
+      "files": {
+        "stdout.txt": {
+          "path": "/tmp/ecd-reconcile-20261107/whole-ledger-local.stdout.txt",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stderr.txt": {
+          "path": "/tmp/ecd-reconcile-20261107/whole-ledger-local.stderr.txt",
+          "bytes": 275,
+          "sha256": "2d06ce9823c1d2612a58e4bd582de37ef755dd76e17a27d1bf5ba4aa70345cf3"
+        }
+      },
+      "stdout.txt": "",
+      "stderr.txt": "validate_ledger: refused in a sparse checkout: 108137 tracked files are off disk and would read as missing records. Run it in a full checkout or after `python3 tools/sparse_checkout.py disable`; CRYPTO_AR_ALLOW_SPARSE=1 runs it over what is on disk (docs/sparse-checkout.md)\n"
+    }
+  }
+}

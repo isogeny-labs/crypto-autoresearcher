@@ -1,0 +1,76 @@
+{
+  "handoff": {
+    "archived_by": "TASK-20261106-286a45",
+    "artifact_paths": [
+      "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/source-review/report.md",
+      "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/source-review/checks.json",
+      "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/source-review/diagram.svg",
+      "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/source-review/report.pdf",
+      "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/source-review/visual-inspection.json"
+    ],
+    "budget": {
+      "maximum_scientific_runs": 0,
+      "maximum_wall_seconds": 300,
+      "memory_gb": 4
+    },
+    "completion_gate": [
+      "Explicit pass/gap per J1 with exact source references; no claim of empirical correctness, native gate or experiment approval.",
+      "All five artifacts complete; SVG and embedded editable PDF source retained, every PDF page rendered/viewed, visual-inspection.json records actual inspection. Exactly J1 source-fit verdict and honest read attestation pass unchanged native parser or explicit exact gap is retained."
+    ],
+    "constraints": [
+      "Review source only after producer snapshot/push; no solver/control/benchmark invocation or nativeformat claim.",
+      "Source-fit review only; no expected outcome counts or desired result threshold. This is declared post hoc source review, not a blind confirmatory outcome review.",
+      "Separate session from producer; read exact source snapshot and frozen contract.",
+      "Produce exactly the five declared artifacts: report.md, checks.json, editable diagram.svg, rendered/inspected report.pdf, visual-inspection.json. Embed editable Typst/report source in report.md or checks.json; do not add an undeclared sixth artifact.",
+      "checks.json may contain ONE honest review_attestation object with joints_owned:[\"J1\"]. Use either verdicts:{\"J1\":<actual native vocabulary verdict>} OR single-joint verdict:<actual verdict>, never both verdict and verdicts; do not prewrite holds. tools/check_review_independence.py uses explicit joint id J1 and prioritizes scalar verdict.",
+      "Record actual independent session/source reads and posthoc scope; no fabricated attestation or outcome count. Native source-fit check uses the original frozen producer handoff review_plan; exact external handoff/plan hash supplied by root when dispatched."
+    ],
+    "deliverables": [
+      "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/source-review/report.md",
+      "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/source-review/checks.json",
+      "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/source-review/diagram.svg",
+      "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/source-review/report.pdf",
+      "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/source-review/visual-inspection.json"
+    ],
+    "from": "coordinator",
+    "id": "TASK-20261106-2ff273",
+    "inference": {
+      "degraded_allowed": false,
+      "delivery": "interactive",
+      "fallback_allowed": false,
+      "independent_session_required": true,
+      "policy": "review-adversarial",
+      "reasoning_effort": "xhigh"
+    },
+    "inputs": [
+      "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/DESIGN.md",
+      "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/input-manifest.json",
+      "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/source-contract.json",
+      "harness/classical_ecdlp_public_reference_audit/solver.py",
+      "harness/classical_ecdlp_public_reference_audit/driver.py",
+      "harness/classical_ecdlp_public_reference_audit/verify.py",
+      "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/source-materialization.json"
+    ],
+    "objective": "Independent static source contract review; no scientific execution",
+    "review_plan": {
+      "blindness": {
+        "lifted_for": [],
+        "mutual": false
+      },
+      "claim_under_review": "Source implementation fits finite public-reference witness-search contract; no empirical result claim.",
+      "coordinator_prior": "Established BSGS and independently checked public equations should fit these tiny fixed domains; source review may expose omissions.",
+      "joints": [
+        {
+          "assigned_to": "TASK-20261106-2ff273",
+          "attack_plan": "Static review all branches including identity,y0,inverse,scalar canonical range; verify complete baby/giant coverage and no candidate imports/truthlabels; audit checker independence and RECOVERED normalization joins.",
+          "breaking_artifact": "Exact source location/input shape and missing branch or dependency counterexample.",
+          "id": "J1",
+          "joint": "Source arithmetic/coverage/domain/control and source independence fit the frozen specification."
+        }
+      ]
+    },
+    "role": "reviewer",
+    "to": "reviewer",
+    "uncertainty_reduced": "Independent static source contract review; no scientific execution"
+  }
+}
