@@ -84,7 +84,7 @@ manifests are blobs.
 
 - it was past its goal's cap when approved. The goal's current approved-unrun
   contracts are ordered by approval date, then id (unknown dates first); the
-  n-th is the n-th open contract at its approval, and breaks the cap when n is
+  n-th is the n-th open contract at its approval, and exceeds the cap when n is
   above the cap. Contracts since run are not in the list, so history can only
   look more lenient than it was.
 - its specification lacks a `first_measurement` block, or the block lacks a
