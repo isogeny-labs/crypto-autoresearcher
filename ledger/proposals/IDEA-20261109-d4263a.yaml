@@ -1,0 +1,98 @@
+idea:
+  id: IDEA-20261109-d4263a
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECC-9d5d44
+  title: Complete co-Z sum-and-difference on extended Edwards25519 in 13M + 1c
+  class: algorithm
+  claim: Formula-engineering claim, not an ECDLP claim. For extended points $P_j=(X_j:Y_j:Z_j:T_j)$ on
+    $-x^2+y^2=1+dx^2y^2$, $k=2d$, compute $U_j=Y_j+X_j$, $V_j=Y_j-X_j$, $A=V_1V_2$, $B=U_1U_2$, $A'=V_1U_2$,
+    $B'=U_1V_2$, $C=k\,(T_1T_2)$, $D=2Z_1Z_2$, $E=B-A$, $H=B+A$, $E'=B'-A'$, $H'=B'+A'$, $F=D-C$, $G=D+C$,
+    $Z_\pm=FG$. Then $P_1+P_2=(EF:GH:Z_\pm:EH)$ and $P_1-P_2=(E'G:FH':Z_\pm:E'H')$. Cost 13M + 1c + 11a
+    against 16M + 2c + 18a for two unified additions. Both outputs share one $Z$. The pair is complete
+    on $E(\mathbb F_p)$, including $P_1=\pm P_2$ and all torsion inputs, and is branch-free.
+  mechanism: 'Negating $P_2$ acts on layer 1 by $U_2\leftrightarrow V_2$ and $T_2\mapsto-T_2$, so $(A,B)\mapsto(A'',B'')$,
+    $C\mapsto-C$, $D\mapsto D$, hence $F\leftrightarrow G$. The unified outputs $X=EF$, $Y=GH$, $Z=FG$,
+    $T=EH$ become $E''G$, $FH''$, $GF$, $E''H''$. $Z=D^2-C^2$ is invariant because the two denominators
+    $1\pm d\,x_1x_2y_1y_2$ are exchanged. Shared work is $C$, $D$ and $Z_\pm$. Count: 4M for $A,B,A'',B''$;
+    2M + 1c for $C,D$; 1M for $Z_\pm$; 6M for the remaining outputs. Completeness is inherited from the
+    unified law since $d$ is a non-square.'
+  novelty_status: unverified
+  citations:
+  - ref: BRIEF section 1, src/ecc/ed25519.rs excerpt (EdPoint::add, EdPoint::neg)
+    provenance: internal
+    claim: A sum and a difference currently cost two add calls and a neg.
+    verified_by: idea-generator session 2026-11-09 read the BRIEF excerpt
+  - ref: Hisil, Wong, Carter, Dawson 2008, Twisted Edwards curves revisited
+    provenance: recalled
+    claim: Unified law used for both halves; pointer only.
+    verified_by: null
+  assumptions:
+  - $a=-1$, $d$ non-square; $k=2d$ is a cached constant.
+  - Inputs satisfy $XY=ZT$.
+  proof_search_map:
+    not_applicable_reason: Explicit formula with a finite identity check.
+    bottleneck: not_applicable
+    baseline_embedding:
+      parameter_slice: not_applicable
+      reproduction_check: not_applicable
+    observation_collision:
+      observable: not_applicable
+      distinct_preimage_search: not_applicable
+    constructive_transforms: []
+    quantifier_order: not_applicable
+    method_ceiling:
+      strongest_certifiable_claim: not_applicable
+      nearby_object_control: not_applicable
+    proof_obligations: []
+  predictions:
+  - metric: field multiplications per sum-and-difference pair
+    direction: lower
+    minimum_effect: 13M + 1c against 16M + 2c
+  - metric: Z of the sum minus Z of the difference (A9)
+    direction: different
+    minimum_effect: exactly 0 on every pair
+  minimal_test:
+    design: Assertion A9 of scripts/ed25519_law_ansatz.py on 20 random pairs and the diagonal; then a
+      Rust add_sub beside EdPoint::add with an fe_mul counter, used to build {A, B, A+B, A-B} for verification.
+    controls:
+    - Two separate EdPoint::add calls on the same inputs.
+    - Inputs P1 = P2, P1 = -P2 and the eight torsion points.
+    required_metrics:
+    - fe_mul count per pair for both arms
+    - affine equality of both outputs with the control
+    - equality of the two Z coordinates
+  falsification_conditions:
+  - Any pair where either output differs from the control.
+  - A measured count above 13 multiplications plus one constant multiply.
+  confounders:
+  - The repository add recomputes d with an inversion; fix that first.
+  interpretation_limits:
+  - Saves work only where both the sum and the difference are needed.
+  - No constant-time claim on BigUint arithmetic.
+  heuristic_assumptions:
+  - id: H1
+    statement: None; the claim is an identity.
+    rigorous_support: Hand derivation in this session.
+    validation_plan: Assertion A9.
+  target_complexity:
+    time_exponent: not applicable, constant-factor formula cost
+    memory_exponent: not applicable
+    best_known: Two HWCD unified additions, 16M + 2c
+    hidden_overhead: None claimed.
+    tradeoff_note: One extra stored pair of products for 3M + 1c saved.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: high
+  dominated_by: Not dominated by any formula in the BRIEF. Co-Z conjugate addition is known for Weierstrass
+    curves; this is the Edwards analogue.
+  sota_delta: -3M and -1c per pair (16M + 2c to 13M + 1c), plus a shared Z that lets one inversion normalise
+    both points.
+  prior_art:
+    frontier_map: not_applicable
+    not_applicable_reason: Curve25519 explicit-formula campaign; no ECDLP mechanism is claimed.
+    none_found_after:
+    - BRIEF section 2 ledger index, terms co-Z, conjugate addition, sum and difference
+    - BRIEF section 1 excerpt of ed25519.rs
