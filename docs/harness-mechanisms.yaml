@@ -1,0 +1,347 @@
+# Registry of harness mechanisms (harness review I7, 2026-11-10).
+# Each mechanism has a one-number use_metric (a shell command run from the repo
+# root) and 30 days: review_by = added_on + 30 days. A mechanism past review_by
+# with no measured use becomes optional and its text moves to docs/.
+# `python3 tools/mechanism_review.py` runs the metrics; `--overdue` lists them.
+# status: measured (the metric is a use or effect count and was > 0 when set),
+# unmeasured, retired. AGENTS.md section entries count the files that cite the
+# heading: a citation count, not an effect, hence unmeasured.
+# The 30-day clock starts at registry entry (added_on), not at the mechanism's
+# own introduction. Edit only by adding entries or changing status.
+mechanisms:
+- id: bus-pointers
+  name: Agent bus pointer messages
+  owner_doc: docs/inter-agent-messaging.md
+  use_metric: ls coordination/bus/receipts | wc -l
+  added_on: '2026-11-10'
+  review_by: '2026-12-10'
+  status: unmeasured
+- id: handoff-returns
+  name: Handoff returns (archived_by set)
+  owner_doc: AGENTS.md
+  use_metric: grep -l '^  archived_by:' ledger/handoffs/*.yaml | wc -l
+  added_on: '2026-11-10'
+  review_by: '2026-12-10'
+  status: unmeasured
+- id: challenge-loop
+  name: Challenge research loop
+  owner_doc: docs/challenge-research-loop.md
+  use_metric: python3 -c "import json,glob; print(sum(json.load(open(f)).get('completed_actions',0) for f in glob.glob('coordination/pilots/*/summary.json')))"
+  added_on: '2026-11-10'
+  review_by: '2026-12-10'
+  status: unmeasured
+- id: tune-skill
+  name: Tune-skill self-improvement loop
+  owner_doc: docs/self-improvement-loop.md
+  use_metric: 'python3 tools/self_improve.py plan | python3 -c "import sys,re; print(sum(int(x) for x in re.findall(r''\"outcomes\": (\d+)'', sys.stdin.read())))"'
+  added_on: '2026-11-10'
+  review_by: '2026-12-10'
+  status: unmeasured
+- id: throughput-autopilot
+  name: Throughput autopilot
+  owner_doc: docs/research-throughput-autopilot.md
+  use_metric: grep -rli autopilot coordination/sessions/receipts | wc -l
+  added_on: '2026-11-10'
+  review_by: '2026-12-10'
+  status: unmeasured
+- id: weekly-evals
+  name: Weekly eval workflow (results present)
+  owner_doc: .github/workflows/weekly-evals.yml
+  use_metric: ls evals/results 2>/dev/null | wc -l
+  added_on: '2026-11-10'
+  review_by: '2026-12-10'
+  status: unmeasured
+- id: session-receipts-usage
+  name: Session receipts with provider usage
+  owner_doc: tools/session_receipt.py
+  use_metric: python3 tools/session_receipt.py summary | sed -n 's/.*provider usage known for \([0-9]*\).*/\1/p' | head -1
+  added_on: '2026-11-10'
+  review_by: '2026-12-10'
+  status: unmeasured
+- id: instruction-budget
+  name: Instruction-budget check (always-loaded headroom, words)
+  owner_doc: tools/check_instruction_budget.py
+  use_metric: python3 tools/check_instruction_budget.py | sed -n 's/.*always loaded \([0-9]*\) words.*/\1/p' | awk '{print 6000-$1}'
+  added_on: '2026-11-10'
+  review_by: '2026-12-10'
+  status: unmeasured
+- id: pcc-canary
+  name: pcc canary (cases ok)
+  owner_doc: AGENTS.md
+  use_metric: python3 tools/pcc/pcc.py canary | grep -c '^ok'
+  added_on: '2026-11-10'
+  review_by: '2026-12-10'
+  status: unmeasured
+- id: approval-capacity-cap
+  name: 'Approval-capacity cap (receipts refused_capacity: times it bound)'
+  owner_doc: AGENTS.md
+  use_metric: grep -rl 'refused_capacity' coordination/sessions/receipts | wc -l
+  added_on: '2026-11-10'
+  review_by: '2026-12-10'
+  status: unmeasured
+- id: agents-md:literature-first
+  name: 'AGENTS.md section: Literature first'
+  owner_doc: AGENTS.md
+  use_metric: grep -rlF --include='*.md' --include='*.py' --include='*.yaml' --exclude=harness-mechanisms.yaml -e 'Literature first' tools agents .claude docs orchestration plugins CLAUDE.md 2>/dev/null | wc -l
+  added_on: '2026-11-10'
+  review_by: '2026-12-10'
+  status: unmeasured
+- id: agents-md:research-scope
+  name: 'AGENTS.md section: Research scope'
+  owner_doc: AGENTS.md
+  use_metric: grep -rlF --include='*.md' --include='*.py' --include='*.yaml' --exclude=harness-mechanisms.yaml -e 'Research scope' tools agents .claude docs orchestration plugins CLAUDE.md 2>/dev/null | wc -l
+  added_on: '2026-11-10'
+  review_by: '2026-12-10'
+  status: unmeasured
+- id: agents-md:observe-first-interpret-later
+  name: 'AGENTS.md section: Observe first; interpret later'
+  owner_doc: AGENTS.md
+  use_metric: grep -rlF --include='*.md' --include='*.py' --include='*.yaml' --exclude=harness-mechanisms.yaml -e 'Observe first; interpret later' tools agents .claude docs orchestration plugins CLAUDE.md 2>/dev/null | wc -l
+  added_on: '2026-11-10'
+  review_by: '2026-12-10'
+  status: unmeasured
+- id: agents-md:name-the-obstruction
+  name: 'AGENTS.md section: Name the obstruction'
+  owner_doc: AGENTS.md
+  use_metric: grep -rlF --include='*.md' --include='*.py' --include='*.yaml' --exclude=harness-mechanisms.yaml -e 'Name the obstruction' tools agents .claude docs orchestration plugins CLAUDE.md 2>/dev/null | wc -l
+  added_on: '2026-11-10'
+  review_by: '2026-12-10'
+  status: unmeasured
+- id: agents-md:cloud-budgets-and-github-custody
+  name: 'AGENTS.md section: Cloud budgets and GitHub custody'
+  owner_doc: AGENTS.md
+  use_metric: grep -rlF --include='*.md' --include='*.py' --include='*.yaml' --exclude=harness-mechanisms.yaml -e 'Cloud budgets and GitHub custody' tools agents .claude docs orchestration plugins CLAUDE.md 2>/dev/null | wc -l
+  added_on: '2026-11-10'
+  review_by: '2026-12-10'
+  status: unmeasured
+- id: agents-md:entry-points
+  name: 'AGENTS.md section: Entry points'
+  owner_doc: AGENTS.md
+  use_metric: grep -rlF --include='*.md' --include='*.py' --include='*.yaml' --exclude=harness-mechanisms.yaml -e 'Entry points' tools agents .claude docs orchestration plugins CLAUDE.md 2>/dev/null | wc -l
+  added_on: '2026-11-10'
+  review_by: '2026-12-10'
+  status: unmeasured
+- id: agents-md:skill-routing
+  name: 'AGENTS.md section: Skill routing'
+  owner_doc: AGENTS.md
+  use_metric: grep -rlF --include='*.md' --include='*.py' --include='*.yaml' --exclude=harness-mechanisms.yaml -e 'Skill routing' tools agents .claude docs orchestration plugins CLAUDE.md 2>/dev/null | wc -l
+  added_on: '2026-11-10'
+  review_by: '2026-12-10'
+  status: unmeasured
+- id: agents-md:default-research-loop
+  name: 'AGENTS.md section: Default research loop'
+  owner_doc: AGENTS.md
+  use_metric: grep -rlF --include='*.md' --include='*.py' --include='*.yaml' --exclude=harness-mechanisms.yaml -e 'Default research loop' tools agents .claude docs orchestration plugins CLAUDE.md 2>/dev/null | wc -l
+  added_on: '2026-11-10'
+  review_by: '2026-12-10'
+  status: unmeasured
+- id: agents-md:roles
+  name: 'AGENTS.md section: Roles'
+  owner_doc: AGENTS.md
+  use_metric: grep -rlF --include='*.md' --include='*.py' --include='*.yaml' --exclude=harness-mechanisms.yaml -e 'Roles' tools agents .claude docs orchestration plugins CLAUDE.md 2>/dev/null | wc -l
+  added_on: '2026-11-10'
+  review_by: '2026-12-10'
+  status: unmeasured
+- id: agents-md:visual-research-record
+  name: 'AGENTS.md section: Visual research record'
+  owner_doc: AGENTS.md
+  use_metric: grep -rlF --include='*.md' --include='*.py' --include='*.yaml' --exclude=harness-mechanisms.yaml -e 'Visual research record' tools agents .claude docs orchestration plugins CLAUDE.md 2>/dev/null | wc -l
+  added_on: '2026-11-10'
+  review_by: '2026-12-10'
+  status: unmeasured
+- id: agents-md:experiment-protocol-export-and-review
+  name: 'AGENTS.md section: Experiment protocol, export and review'
+  owner_doc: AGENTS.md
+  use_metric: grep -rlF --include='*.md' --include='*.py' --include='*.yaml' --exclude=harness-mechanisms.yaml -e 'Experiment protocol, export and review' tools agents .claude docs orchestration plugins CLAUDE.md 2>/dev/null | wc -l
+  added_on: '2026-11-10'
+  review_by: '2026-12-10'
+  status: unmeasured
+- id: agents-md:standing-user-authorization
+  name: 'AGENTS.md section: Standing user authorization'
+  owner_doc: AGENTS.md
+  use_metric: grep -rlF --include='*.md' --include='*.py' --include='*.yaml' --exclude=harness-mechanisms.yaml -e 'Standing user authorization' tools agents .claude docs orchestration plugins CLAUDE.md 2>/dev/null | wc -l
+  added_on: '2026-11-10'
+  review_by: '2026-12-10'
+  status: unmeasured
+- id: agents-md:model-policy
+  name: 'AGENTS.md section: Model policy'
+  owner_doc: AGENTS.md
+  use_metric: grep -rlF --include='*.md' --include='*.py' --include='*.yaml' --exclude=harness-mechanisms.yaml -e 'Model policy' tools agents .claude docs orchestration plugins CLAUDE.md 2>/dev/null | wc -l
+  added_on: '2026-11-10'
+  review_by: '2026-12-10'
+  status: unmeasured
+- id: agents-md:mandatory-progress-fidelity-gate
+  name: 'AGENTS.md section: Mandatory progress-fidelity gate'
+  owner_doc: AGENTS.md
+  use_metric: grep -rlF --include='*.md' --include='*.py' --include='*.yaml' --exclude=harness-mechanisms.yaml -e 'Mandatory progress-fidelity gate' tools agents .claude docs orchestration plugins CLAUDE.md 2>/dev/null | wc -l
+  added_on: '2026-11-10'
+  review_by: '2026-12-10'
+  status: unmeasured
+- id: agents-md:intermediate-cost-and-asymmetric-access-
+  name: 'AGENTS.md section: Intermediate-cost and asymmetric-access hypotheses'
+  owner_doc: AGENTS.md
+  use_metric: grep -rlF --include='*.md' --include='*.py' --include='*.yaml' --exclude=harness-mechanisms.yaml -e 'Intermediate-cost and asymmetric-access hypotheses' tools agents .claude docs orchestration plugins CLAUDE.md 2>/dev/null | wc -l
+  added_on: '2026-11-10'
+  review_by: '2026-12-10'
+  status: unmeasured
+- id: agents-md:core-rules
+  name: 'AGENTS.md section: Core rules'
+  owner_doc: AGENTS.md
+  use_metric: grep -rlF --include='*.md' --include='*.py' --include='*.yaml' --exclude=harness-mechanisms.yaml -e 'Core rules' tools agents .claude docs orchestration plugins CLAUDE.md 2>/dev/null | wc -l
+  added_on: '2026-11-10'
+  review_by: '2026-12-10'
+  status: unmeasured
+- id: agents-md:research-direction-integrity
+  name: 'AGENTS.md section: Research-direction integrity'
+  owner_doc: AGENTS.md
+  use_metric: grep -rlF --include='*.md' --include='*.py' --include='*.yaml' --exclude=harness-mechanisms.yaml -e 'Research-direction integrity' tools agents .claude docs orchestration plugins CLAUDE.md 2>/dev/null | wc -l
+  added_on: '2026-11-10'
+  review_by: '2026-12-10'
+  status: unmeasured
+- id: agents-md:goal-closure-quorum-suspended
+  name: 'AGENTS.md section: Goal closure quorum (suspended)'
+  owner_doc: AGENTS.md
+  use_metric: grep -rlF --include='*.md' --include='*.py' --include='*.yaml' --exclude=harness-mechanisms.yaml -e 'Goal closure quorum (suspended)' tools agents .claude docs orchestration plugins CLAUDE.md 2>/dev/null | wc -l
+  added_on: '2026-11-10'
+  review_by: '2026-12-10'
+  status: unmeasured
+- id: agents-md:goals-are-never-paused
+  name: 'AGENTS.md section: Goals are never paused'
+  owner_doc: AGENTS.md
+  use_metric: grep -rlF --include='*.md' --include='*.py' --include='*.yaml' --exclude=harness-mechanisms.yaml -e 'Goals are never paused' tools agents .claude docs orchestration plugins CLAUDE.md 2>/dev/null | wc -l
+  added_on: '2026-11-10'
+  review_by: '2026-12-10'
+  status: unmeasured
+- id: agents-md:ecc-comes-first-within-owner-cloud-limit
+  name: 'AGENTS.md section: ECC comes first within owner cloud limits'
+  owner_doc: AGENTS.md
+  use_metric: grep -rlF --include='*.md' --include='*.py' --include='*.yaml' --exclude=harness-mechanisms.yaml -e 'ECC comes first within owner cloud limits' tools agents .claude docs orchestration plugins CLAUDE.md 2>/dev/null | wc -l
+  added_on: '2026-11-10'
+  review_by: '2026-12-10'
+  status: unmeasured
+- id: agents-md:research-direction
+  name: 'AGENTS.md section: Research direction'
+  owner_doc: AGENTS.md
+  use_metric: grep -rlF --include='*.md' --include='*.py' --include='*.yaml' --exclude=harness-mechanisms.yaml -e 'Research direction' tools agents .claude docs orchestration plugins CLAUDE.md 2>/dev/null | wc -l
+  added_on: '2026-11-10'
+  review_by: '2026-12-10'
+  status: unmeasured
+- id: agents-md:handoffs
+  name: 'AGENTS.md section: Handoffs'
+  owner_doc: AGENTS.md
+  use_metric: grep -rlF --include='*.md' --include='*.py' --include='*.yaml' --exclude=harness-mechanisms.yaml -e 'Handoffs' tools agents .claude docs orchestration plugins CLAUDE.md 2>/dev/null | wc -l
+  added_on: '2026-11-10'
+  review_by: '2026-12-10'
+  status: unmeasured
+- id: agents-md:review-architecture
+  name: 'AGENTS.md section: Review architecture'
+  owner_doc: AGENTS.md
+  use_metric: grep -rlF --include='*.md' --include='*.py' --include='*.yaml' --exclude=harness-mechanisms.yaml -e 'Review architecture' tools agents .claude docs orchestration plugins CLAUDE.md 2>/dev/null | wc -l
+  added_on: '2026-11-10'
+  review_by: '2026-12-10'
+  status: unmeasured
+- id: agents-md:messaging-and-coordination
+  name: 'AGENTS.md section: Messaging and coordination'
+  owner_doc: AGENTS.md
+  use_metric: grep -rlF --include='*.md' --include='*.py' --include='*.yaml' --exclude=harness-mechanisms.yaml -e 'Messaging and coordination' tools agents .claude docs orchestration plugins CLAUDE.md 2>/dev/null | wc -l
+  added_on: '2026-11-10'
+  review_by: '2026-12-10'
+  status: unmeasured
+- id: agents-md:concurrency-many-agents-many-worktrees
+  name: 'AGENTS.md section: Concurrency: many agents, many worktrees'
+  owner_doc: AGENTS.md
+  use_metric: 'grep -rlF --include=''*.md'' --include=''*.py'' --include=''*.yaml'' --exclude=harness-mechanisms.yaml -e ''Concurrency: many agents, many worktrees'' tools agents .claude docs orchestration plugins CLAUDE.md 2>/dev/null | wc -l'
+  added_on: '2026-11-10'
+  review_by: '2026-12-10'
+  status: unmeasured
+- id: agents-md:durable-research-commits
+  name: 'AGENTS.md section: Durable research commits'
+  owner_doc: AGENTS.md
+  use_metric: grep -rlF --include='*.md' --include='*.py' --include='*.yaml' --exclude=harness-mechanisms.yaml -e 'Durable research commits' tools agents .claude docs orchestration plugins CLAUDE.md 2>/dev/null | wc -l
+  added_on: '2026-11-10'
+  review_by: '2026-12-10'
+  status: unmeasured
+- id: agents-md:research-states
+  name: 'AGENTS.md section: Research states'
+  owner_doc: AGENTS.md
+  use_metric: grep -rlF --include='*.md' --include='*.py' --include='*.yaml' --exclude=harness-mechanisms.yaml -e 'Research states' tools agents .claude docs orchestration plugins CLAUDE.md 2>/dev/null | wc -l
+  added_on: '2026-11-10'
+  review_by: '2026-12-10'
+  status: unmeasured
+- id: agents-md:artifact-policy
+  name: 'AGENTS.md section: Artifact policy'
+  owner_doc: AGENTS.md
+  use_metric: grep -rlF --include='*.md' --include='*.py' --include='*.yaml' --exclude=harness-mechanisms.yaml -e 'Artifact policy' tools agents .claude docs orchestration plugins CLAUDE.md 2>/dev/null | wc -l
+  added_on: '2026-11-10'
+  review_by: '2026-12-10'
+  status: unmeasured
+- id: agents-md:data-files-live-in-the-artifact-store
+  name: 'AGENTS.md section: Data files live in the artifact store'
+  owner_doc: AGENTS.md
+  use_metric: grep -rlF --include='*.md' --include='*.py' --include='*.yaml' --exclude=harness-mechanisms.yaml -e 'Data files live in the artifact store' tools agents .claude docs orchestration plugins CLAUDE.md 2>/dev/null | wc -l
+  added_on: '2026-11-10'
+  review_by: '2026-12-10'
+  status: unmeasured
+- id: agents-md:papers
+  name: 'AGENTS.md section: Papers'
+  owner_doc: AGENTS.md
+  use_metric: grep -rlF --include='*.md' --include='*.py' --include='*.yaml' --exclude=harness-mechanisms.yaml -e 'Papers' tools agents .claude docs orchestration plugins CLAUDE.md 2>/dev/null | wc -l
+  added_on: '2026-11-10'
+  review_by: '2026-12-10'
+  status: unmeasured
+- id: agents-md:knowledge-retrieval
+  name: 'AGENTS.md section: Knowledge retrieval'
+  owner_doc: AGENTS.md
+  use_metric: grep -rlF --include='*.md' --include='*.py' --include='*.yaml' --exclude=harness-mechanisms.yaml -e 'Knowledge retrieval' tools agents .claude docs orchestration plugins CLAUDE.md 2>/dev/null | wc -l
+  added_on: '2026-11-10'
+  review_by: '2026-12-10'
+  status: unmeasured
+- id: agents-md:curve-identity-and-measured-bounds
+  name: 'AGENTS.md section: Curve identity and measured bounds'
+  owner_doc: AGENTS.md
+  use_metric: grep -rlF --include='*.md' --include='*.py' --include='*.yaml' --exclude=harness-mechanisms.yaml -e 'Curve identity and measured bounds' tools agents .claude docs orchestration plugins CLAUDE.md 2>/dev/null | wc -l
+  added_on: '2026-11-10'
+  review_by: '2026-12-10'
+  status: unmeasured
+- id: agents-md:weak-curve-and-isogenous-representative-
+  name: 'AGENTS.md section: Weak-curve and isogenous-representative audits'
+  owner_doc: AGENTS.md
+  use_metric: grep -rlF --include='*.md' --include='*.py' --include='*.yaml' --exclude=harness-mechanisms.yaml -e 'Weak-curve and isogenous-representative audits' tools agents .claude docs orchestration plugins CLAUDE.md 2>/dev/null | wc -l
+  added_on: '2026-11-10'
+  review_by: '2026-12-10'
+  status: unmeasured
+- id: agents-md:cursor-cloud-specific-instructions
+  name: 'AGENTS.md section: Cursor Cloud specific instructions'
+  owner_doc: AGENTS.md
+  use_metric: grep -rlF --include='*.md' --include='*.py' --include='*.yaml' --exclude=harness-mechanisms.yaml -e 'Cursor Cloud specific instructions' tools agents .claude docs orchestration plugins CLAUDE.md 2>/dev/null | wc -l
+  added_on: '2026-11-10'
+  review_by: '2026-12-10'
+  status: unmeasured
+- id: agents-md:progress-metrics-daily-lab-report
+  name: 'AGENTS.md section: Progress metrics (daily lab report)'
+  owner_doc: AGENTS.md
+  use_metric: grep -rlF --include='*.md' --include='*.py' --include='*.yaml' --exclude=harness-mechanisms.yaml -e 'Progress metrics (daily lab report)' tools agents .claude docs orchestration plugins CLAUDE.md 2>/dev/null | wc -l
+  added_on: '2026-11-10'
+  review_by: '2026-12-10'
+  status: unmeasured
+- id: agents-md:resume-checkpoints-in-s3-before-every-ru
+  name: 'AGENTS.md section: Resume checkpoints in S3 before every run'
+  owner_doc: AGENTS.md
+  use_metric: grep -rlF --include='*.md' --include='*.py' --include='*.yaml' --exclude=harness-mechanisms.yaml -e 'Resume checkpoints in S3 before every run' tools agents .claude docs orchestration plugins CLAUDE.md 2>/dev/null | wc -l
+  added_on: '2026-11-10'
+  review_by: '2026-12-10'
+  status: unmeasured
+- id: agents-md:benchmark-records-data-in-s3-metadata-in
+  name: 'AGENTS.md section: Benchmark records: data in S3, metadata in Git, one progress report'
+  owner_doc: AGENTS.md
+  use_metric: 'grep -rlF --include=''*.md'' --include=''*.py'' --include=''*.yaml'' --exclude=harness-mechanisms.yaml -e ''Benchmark records: data in S3, metadata in Git, one progress report'' tools agents .claude docs orchestration plugins CLAUDE.md 2>/dev/null | wc -l'
+  added_on: '2026-11-10'
+  review_by: '2026-12-10'
+  status: unmeasured
+- id: agents-md:persistent-scientific-research-loop
+  name: 'AGENTS.md section: Persistent scientific research loop'
+  owner_doc: AGENTS.md
+  use_metric: grep -rlF --include='*.md' --include='*.py' --include='*.yaml' --exclude=harness-mechanisms.yaml -e 'Persistent scientific research loop' tools agents .claude docs orchestration plugins CLAUDE.md 2>/dev/null | wc -l
+  added_on: '2026-11-10'
+  review_by: '2026-12-10'
+  status: unmeasured

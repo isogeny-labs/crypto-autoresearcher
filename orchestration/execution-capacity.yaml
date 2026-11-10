@@ -1,0 +1,30 @@
+# Executable CPU-hours per week, by route (harness review I3, 2026-11-10).
+# Read by tools/execution_capacity.py at every Coordinator wake.
+# Every number below is `unverified`: an observation or a guess, not a quota
+# read from the provider. Replace a figure only with one you read this week and
+# set last_verified to that date. cpu_hours_per_week is a CEILING (vCPU x 168 h),
+# not a promise that Spot capacity is up.
+routes:
+  - name: isolab-eks cpu-spot
+    cpu_hours_per_week: 2352        # 14 vCPU x 168 h, one node
+    number_status: unverified
+    source_of_truth: >-
+      One 14 vCPU node observed 2026-11-10 (kubectl get nodes via isolab-eks);
+      quota and Spot interruption rate not read.
+    last_verified: 2026-11-10
+  - name: runpod
+    cpu_hours_per_week: 0           # balance-gated: 0 until topped up
+    number_status: unverified
+    source_of_truth: >-
+      Runpod billing balance (runpodctl / runpod-mcp). Set a figure only after a
+      top-up, as balance / hourly price.
+    last_verified: 2026-11-10
+  - name: local
+    cpu_hours_per_week: 672         # 4 vCPU x 168 h
+    number_status: unverified
+    source_of_truth: >-
+      Session host, 4 vCPU (nproc). Shared with the session itself.
+    last_verified: 2026-11-10
+# Demand default for an approved-unrun contract that declares no budget
+# (neither budget.total_cpu_hours nor wall_clock_seconds_per_run x maximum_runs).
+default_contract_cpu_hours: 0.5     # the modal declared total_cpu_hours in experiments/
