@@ -94,7 +94,7 @@ class RoundTripTests(unittest.TestCase):
                 "P": list(pcc._SECP_G), "Q": list(Q), "k": k}
         (self.repo / "cert.json").write_text(json.dumps(cert))
         r = run(["claim", "new", "--kind", "solve", "--statement", "k is the discrete log of Q",
-                 "--proof", "certificate:cert.json"], self.repo)
+                 "--claim-type", "data", "--proof", "certificate:cert.json"], self.repo)
         self.assertEqual(r.returncode, 0, r.stderr)
         return Path(r.stdout.strip()).stem
 
@@ -129,7 +129,7 @@ class RoundTripTests(unittest.TestCase):
         artifact = self.repo / "artifact.txt"
         artifact.write_text("producer observation, no independent signature\n")
         made = run(["claim", "new", "--kind", "statement", "--statement", "scoped observation",
-                    "--proof", "attestation:artifact.txt"], self.repo)
+                    "--claim-type", "data", "--proof", "attestation:artifact.txt"], self.repo)
         self.assertEqual(made.returncode, 0, made.stderr)
         path = self.repo / made.stdout.strip()
         claim = json.loads(path.read_text())
@@ -193,6 +193,101 @@ class RoundTripTests(unittest.TestCase):
         r = run(["ledger", "append-bypass", "--reason", "x", "--command", "y"], self.repo)
         self.assertEqual(r.returncode, 3)
         self.assertIn("broken ledger", r.stderr)
+
+
+class ClaimTypeTests(unittest.TestCase):
+    setUp = RoundTripTests.setUp
+    tearDown = RoundTripTests.tearDown
+    commit = RoundTripTests.commit
+    make_solve = RoundTripTests.make_solve
+    """claim_type, ledger verify, standing-by-type, sample-for-validation."""
+
+    def write_claim(self, cid: str, created: str, claim_type: str | None, kind: str = "statement") -> None:
+        c = {"schema": pcc.CLAIM_SCHEMA, "id": cid, "kind": kind, "statement": "s", "scope": "", "proofs": [],
+             "producer": {"commit": "a" * 40, "session": "", "model": ""}, "created_at": created}
+        if claim_type:
+            c["claim_type"] = claim_type
+        (self.repo / pcc.CLAIMS_DIR).mkdir(parents=True, exist_ok=True)
+        (self.repo / pcc.CLAIMS_DIR / f"{cid}.json").write_text(json.dumps(c))
+
+    def test_legacy_claim_without_type_is_data(self):
+        self.write_claim("PCC-20261105-aaaaaa", "2026-11-05T00:00:00Z", None)
+        r = run(["ledger", "verify"], self.repo)
+        self.assertEqual(r.returncode, 0, r.stdout)
+        self.assertEqual(json.loads(run(["standing-by-type", "--json"], self.repo).stdout)["data"],
+                         {"unverified": 1})
+
+    def test_new_claim_without_type_fails_ledger_verify(self):
+        self.write_claim("PCC-20261112-bbbbbb", "2026-11-12T00:00:00Z", None)
+        r = run(["ledger", "verify"], self.repo)
+        self.assertEqual(r.returncode, 1, r.stdout)
+        self.assertIn("claim_type is missing", r.stdout)
+
+    def test_backdated_created_at_does_not_exempt(self):
+        self.write_claim("PCC-20261112-cccccc", "2026-01-01T00:00:00Z", None)
+        self.assertEqual(run(["ledger", "verify"], self.repo).returncode, 1)
+
+    def test_invalid_type_fails_and_valid_new_passes(self):
+        self.write_claim("PCC-20261112-dddddd", "2026-11-12T00:00:00Z", "opinion")
+        self.assertEqual(run(["ledger", "verify"], self.repo).returncode, 1)
+        self.write_claim("PCC-20261112-dddddd", "2026-11-12T00:00:00Z", "literature")
+        self.assertEqual(run(["ledger", "verify"], self.repo).returncode, 0)
+
+    def test_validate_claim_rejects_new_untyped(self):
+        reasons: list[str] = []
+        c = {"schema": pcc.CLAIM_SCHEMA, "id": "PCC-20261112-eeeeee", "kind": "statement", "statement": "s",
+             "proofs": [], "producer": {"commit": "a" * 40}, "created_at": "2026-11-12T00:00:00Z"}
+        self.assertFalse(pcc.validate_claim(c, reasons))
+        self.assertTrue(any("claim_type" in r for r in reasons))
+        self.assertTrue(pcc.validate_claim(dict(c, claim_type="interpretive"), []))
+
+    def test_claim_new_records_type(self):
+        cid = self.make_solve()
+        c = json.loads((self.repo / pcc.CLAIMS_DIR / f"{cid}.json").read_text())
+        self.assertEqual(c["claim_type"], "data")
+
+    def populate(self):
+        for i in range(30):
+            self.write_claim(f"PCC-20261112-{i:06x}", "2026-11-12T00:00:00Z",
+                             ("data", "literature", "interpretive")[i % 3])
+
+    def test_standing_by_type_counts(self):
+        self.populate()
+        r = run(["standing-by-type"], self.repo)
+        self.assertEqual(r.returncode, 0, r.stderr)
+        self.assertIn("data: 10 claim(s): unverified=10", r.stdout)
+        self.assertIn("interpretive: 10 claim(s): unverified=10", r.stdout)
+
+    def test_sample_is_seeded_stratified_and_oversamples_interpretive(self):
+        self.populate()
+        out = self.repo / "sample.json"
+        args = ["sample-for-validation", "--rate-data", "1", "--rate-interpretive", "3", "--seed", "7",
+                "--base", "0.2", "--out", str(out)]
+        self.assertEqual(run(args, self.repo).returncode, 0)
+        first = out.read_text()
+        run(args, self.repo)
+        self.assertEqual(out.read_text(), first)  # deterministic given the seed
+        s = json.loads(first)
+        self.assertAlmostEqual(s["strata"]["interpretive"]["probability"], 0.6)
+        self.assertAlmostEqual(s["strata"]["data"]["probability"], 0.2)
+        for t in pcc.CLAIM_TYPES:
+            self.assertGreaterEqual(s["strata"][t]["sampled"], 1)
+        self.assertEqual(len(s["claims"]), sum(v["sampled"] for v in s["strata"].values()))
+        # Across seeds the interpretive stratum is drawn more often than data.
+        tot = {"data": 0, "interpretive": 0}
+        for seed in range(40):
+            st = pcc.sample_for_validation(self.repo, pcc.load_keyring(self.repo / pcc.KEYRING_PATH),
+                                           1, 3, seed, base=0.2)["strata"]
+            for t in tot:
+                tot[t] += st[t]["sampled"]
+        self.assertGreater(tot["interpretive"], 2 * tot["data"])
+
+    def test_sample_refuses_under_3x(self):
+        self.populate()
+        r = run(["sample-for-validation", "--rate-data", "1", "--rate-interpretive", "2", "--seed", "1",
+                 "--out", str(self.repo / "x.json")], self.repo)
+        self.assertEqual(r.returncode, 3)
+        self.assertIn("3x", r.stderr)
 
 
 class LeanScanTests(unittest.TestCase):

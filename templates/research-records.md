@@ -431,6 +431,13 @@ evidence:
       regresses_on: []                  # deciding axes clearly worse
       level_moved: constant | exponent | null   # only on an advance on ops
       improves_on: []                   # bound ids the new bound replaces
+  witness:                      # required on a measurement claim recorded on or
+                                # after 2026-11-11 (advisory until 2026-12-11, then an
+                                # error); tools/check_evidence_witness.py. One of:
+    kind: sampled_replay        # checker_path, shares_code_with_driver: false,
+                                # fraction (0 < f <= 1), miss_probability
+    # kind: independent_reexecution   # second_implementation_path, metric_agreement
+    # kind: certificate               # verifier, certificate_path
   reviewed_by: coordinator
 ```
 

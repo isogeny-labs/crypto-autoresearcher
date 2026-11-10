@@ -34,6 +34,14 @@ the tool is `tools/pcc/pcc.py` (byte-identical across the lab's repositories;
 - **Bypasses are recorded.** `CHECKPOINT_SKIP=<reason>` still works, and the
   hook now appends a `bypass` entry to the ledger and pushes a checkpoint
   before the command runs. Commit the ledger with the work.
+- **Claims have a type.** `--claim-type data|literature|interpretive` is
+  required for claims created on or after 2026-11-11 (older claims without it
+  count as `data`); `pcc ledger verify` fails a newer claim without it.
+  `pcc standing-by-type` counts standings per type, and
+  `pcc sample-for-validation --rate-data 1 --rate-interpretive 3 --seed N --out F`
+  draws a seeded, stratified sample for independent validation (interpretive
+  at least 3x the data rate; at least one claim per non-empty type). The sample
+  is a work list; it verifies nothing.
 - **The verifier is tested against sabotage.** `pcc canary` plants every
   sabotage class in the contract into a passing fixture and must reject each
   one; CI runs it on every pull request. A new way to cheat the gate becomes a

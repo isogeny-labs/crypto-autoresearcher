@@ -21,6 +21,8 @@ implementation, so a verdict verifies the same way on every host.
     pcc ledger verify [--base GITREF]
     pcc ledger append-bypass --reason R --command C
     pcc standing CLAIM-ID
+    pcc standing-by-type [--json]                    # standings per claim_type
+    pcc sample-for-validation --rate-data R --rate-interpretive R --seed N --out FILE
     pcc lint-prose FILE... | --stdin
     pcc canary                                       # the sabotage corpus
 
@@ -65,6 +67,11 @@ MINIMUM_PROOFS: dict[str, list[list[str]]] = {
     "absence": [["execution", "lean"]],
     "statement": [],
 }
+# Claim types (review 2026-11-10, I11): validation effort is stratified by what
+# kind of statement a claim is. Claims created before CLAIM_TYPE_REQUIRED_FROM
+# may omit the field and count as `data`; newer claims must carry it.
+CLAIM_TYPES = ("data", "literature", "interpretive")
+CLAIM_TYPE_REQUIRED_FROM = "2026-11-11"
 STANDARD_AXIOMS = ("propext", "Classical.choice", "Quot.sound")
 STRONG_CLAIM_RE = re.compile(
     r"\b(prove[sd]?|verified|verifies|beats?|breakthrough|speed-?ups?|faster|secure|weak curves?|"
@@ -931,6 +938,34 @@ def claim_digest(claim: dict[str, Any]) -> str:
     return sha256_obj(body)
 
 
+def claim_date(claim: dict[str, Any]) -> str:
+    """Latest of created_at and the id's date, as YYYY-MM-DD, so that
+    backdating one field does not exempt a claim from the claim_type rule."""
+    created = str(claim.get("created_at", ""))[:10]
+    m = re.match(r"^PCC-([0-9]{4})([0-9]{2})([0-9]{2})-", str(claim.get("id", "")))
+    from_id = f"{m.group(1)}-{m.group(2)}-{m.group(3)}" if m else ""
+    return max(created, from_id)
+
+
+def claim_type_of(claim: dict[str, Any], later_date: str = "") -> str | None:
+    """The claim's type: its claim_type, else `data` for a legacy claim (every
+    date known for it is before CLAIM_TYPE_REQUIRED_FROM), else None."""
+    ct = claim.get("claim_type")
+    if ct is not None:
+        return ct if ct in CLAIM_TYPES else None
+    date = max(claim_date(claim), later_date)
+    return "data" if date and date < CLAIM_TYPE_REQUIRED_FROM else None
+
+
+def claim_type_problem(claim: dict[str, Any], later_date: str = "") -> str | None:
+    if "claim_type" in claim and claim["claim_type"] not in CLAIM_TYPES:
+        return f"claim_type must be one of {list(CLAIM_TYPES)}, not {claim['claim_type']!r}"
+    if claim_type_of(claim, later_date) is None:
+        return (f"claim_type is missing; claims created on or after {CLAIM_TYPE_REQUIRED_FROM} "
+                f"must set it to one of {list(CLAIM_TYPES)}")
+    return None
+
+
 def validate_claim(claim: Any, reasons: list[str]) -> bool:
     if not isinstance(claim, dict) or claim.get("schema") != CLAIM_SCHEMA:
         reasons.append(f"claim: schema is not {CLAIM_SCHEMA}")
@@ -953,6 +988,10 @@ def validate_claim(claim: Any, reasons: list[str]) -> bool:
         if not isinstance(pr, dict) or pr.get("kind") not in PROOF_KINDS:
             reasons.append(f"claim: proofs[{i}] kind must be one of {sorted(PROOF_KINDS)}")
             ok = False
+    problem = claim_type_problem(claim)
+    if problem:
+        reasons.append(f"claim: {problem}")
+        ok = False
     prod = claim.get("producer")
     if not isinstance(prod, dict) or not re.match(r"^[0-9a-f]{40}$", str(prod.get("commit", ""))):
         reasons.append("claim: producer.commit must be a 40-hex commit")
@@ -1223,6 +1262,7 @@ class Fixture:
     def claim(self, name: str, kind: str, proofs: list[dict[str, Any]], statement: str = "fixture") -> dict[str, Any]:
         c = {"schema": CLAIM_SCHEMA, "id": f"PCC-20260101-{sha256_bytes(name.encode())[:6]}", "kind": kind,
              "statement": statement, "scope": "canary fixture", "proofs": proofs,
+             "claim_type": "data",
              "producer": {"commit": self.commit, "session": "fixture", "model": "none"}, "created_at": "2026-01-01T00:00:00Z"}
         self.write(f"{CLAIMS_DIR}/{c['id']}.json", c)
         self.claims[name] = c
@@ -1562,6 +1602,18 @@ def _ledger_canaries(fx: Fixture) -> list[tuple[str, str, str, list[str]]]:
         append_entry(led2, "verdict", failed_verdict,
                      make_signature(fx.secret, "fixture-ci", "verdict", verdict_subject(failed_verdict)))
         row("ledger:signed failing verdict", "failed", read_ledger(led2))
+        # A new claim that omits claim_type, or backdates only one field, is rejected.
+        errs: list[str] = []
+        fresh = {k: v for k, v in claim.items() if k != "claim_type"}
+        fresh["created_at"] = CLAIM_TYPE_REQUIRED_FROM + "T00:00:00Z"
+        rows.append(("ledger:new claim without claim_type", "fail",
+                     "fail" if claim_type_problem(fresh) else "pass", errs))
+        backdated = dict(fresh, created_at="2026-01-01T00:00:00Z", id="PCC-20261112-abcdef")
+        rows.append(("ledger:claim_type exemption by backdated created_at", "fail",
+                     "fail" if claim_type_problem(backdated) else "pass", errs))
+        legacy = {k: v for k, v in claim.items() if k != "claim_type"}
+        rows.append(("ledger:legacy claim without claim_type counts as data", "pass",
+                     "fail" if claim_type_problem(legacy) else "pass", errs))
     return rows
 
 
@@ -1625,6 +1677,94 @@ def _standings(repo: Path, kr: dict[str, Any]) -> dict[str, str]:
     return out
 
 
+def _claim_entry_dates(entries: list[dict[str, Any]]) -> dict[str, str]:
+    out: dict[str, str] = {}
+    for e in entries:
+        if e.get("type") == "claim" and isinstance(e.get("body"), dict):
+            out.setdefault(str(e["body"].get("claim_id")), str(e.get("at", ""))[:10])
+    return out
+
+
+def check_claim_types(repo: Path, entries: list[dict[str, Any]], errors: list[str]) -> None:
+    """Every claim file must carry a valid claim_type unless it is a legacy
+    claim; the ledger entry's own date also counts against the exemption."""
+    dates = _claim_entry_dates(entries)
+    for p in sorted((repo / CLAIMS_DIR).glob("*.json")) if (repo / CLAIMS_DIR).is_dir() else []:
+        try:
+            c = load_json(p)
+        except ValueError:
+            continue
+        if not isinstance(c, dict) or c.get("schema") != CLAIM_SCHEMA:
+            continue
+        problem = claim_type_problem(c, dates.get(str(c.get("id")), ""))
+        if problem:
+            errors.append(f"claim {c.get('id')}: {problem}")
+
+
+def _all_claims(repo: Path) -> list[dict[str, Any]]:
+    out = []
+    for p in sorted((repo / CLAIMS_DIR).glob("*.json")) if (repo / CLAIMS_DIR).is_dir() else []:
+        try:
+            c = load_json(p)
+        except ValueError:
+            continue
+        if isinstance(c, dict) and isinstance(c.get("id"), str):
+            out.append(c)
+    return out
+
+
+def standing_by_type(repo: Path, kr: dict[str, Any]) -> dict[str, dict[str, int]]:
+    entries = read_ledger(repo / LEDGER_PATH)
+    dates = _claim_entry_dates(entries)
+    table: dict[str, dict[str, int]] = {t: {} for t in CLAIM_TYPES}
+    for c in _all_claims(repo):
+        t = claim_type_of(c, dates.get(c["id"], "")) or "untyped"
+        st = standing(c, entries, kr)["standing"]
+        table.setdefault(t, {})
+        table[t][st] = table[t].get(st, 0) + 1
+    return table
+
+
+def sample_for_validation(repo: Path, kr: dict[str, Any], rate_data: float, rate_interpretive: float,
+                          seed: int, rate_literature: float | None = None, base: float = 0.1) -> dict[str, Any]:
+    """Stratified, seeded draw of claims for independent validation. A claim of
+    a type with weight w is drawn when u < min(1, base*w), u = H(seed, id) in
+    [0,1); each non-empty stratum yields at least its lowest-u claim."""
+    if rate_interpretive < 3 * rate_data:
+        raise PccError("--rate-interpretive must be at least 3x --rate-data (interpretive claims are sampled at "
+                       "three times the data rate or more)")
+    weights = {"data": rate_data, "literature": rate_data if rate_literature is None else rate_literature,
+               "interpretive": rate_interpretive}
+    if min(weights.values()) <= 0 or base <= 0:
+        raise PccError("rates and --base must be positive")
+    entries = read_ledger(repo / LEDGER_PATH)
+    dates = _claim_entry_dates(entries)
+    strata: dict[str, list[tuple[float, dict[str, Any]]]] = {t: [] for t in CLAIM_TYPES}
+    untyped = []
+    for c in _all_claims(repo):
+        t = claim_type_of(c, dates.get(c["id"], ""))
+        if t is None:
+            untyped.append(c["id"])
+            continue
+        u = int(sha256_bytes(f"{seed}:{c['id']}".encode())[:15], 16) / float(16 ** 15)
+        strata[t].append((u, c))
+    chosen: list[dict[str, Any]] = []
+    summary: dict[str, Any] = {}
+    for t in CLAIM_TYPES:
+        p = min(1.0, base * weights[t])
+        rows = sorted(strata[t], key=lambda r: (r[0], r[1]["id"]))
+        picked = [r for r in rows if r[0] < p]
+        if rows and not picked:
+            picked = rows[:1]
+        summary[t] = {"weight": weights[t], "probability": p, "population": len(rows), "sampled": len(picked)}
+        for _, c in picked:
+            chosen.append({"claim_id": c["id"], "claim_type": t, "kind": c.get("kind"),
+                           "standing": standing(c, entries, kr)["standing"]})
+    chosen.sort(key=lambda r: r["claim_id"])
+    return {"schema": "pcc.validation-sample/v1", "seed": seed, "base_probability": base, "strata": summary,
+            "untyped_claims_excluded": untyped, "claims": chosen}
+
+
 def _print_verdict(v: dict[str, Any], as_json: bool, out) -> None:
     if as_json:
         print(json.dumps(v, sort_keys=True), file=out)
@@ -1660,6 +1800,9 @@ def main(argv: list[str] | None = None) -> int:
     n.add_argument("--kind", required=True, choices=sorted(CLAIM_KINDS))
     n.add_argument("--statement", required=True)
     n.add_argument("--scope", default="")
+    n.add_argument("--claim-type", choices=list(CLAIM_TYPES), default=None,
+                   help="data, literature or interpretive (required for claims created on or after "
+                        f"{CLAIM_TYPE_REQUIRED_FROM})")
     n.add_argument("--proof", action="append", default=[], help="KIND:PATH, or KIND:JSON for lean/execution")
     n.add_argument("--session", default=os.environ.get("CLAUDE_SESSION_ID", ""))
     n.add_argument("--model", default="")
@@ -1693,6 +1836,17 @@ def main(argv: list[str] | None = None) -> int:
     s = sub.add_parser("standing")
     s.add_argument("claim")
     s.add_argument("--json", action="store_true")
+
+    s = sub.add_parser("standing-by-type")
+    s.add_argument("--json", action="store_true")
+
+    s = sub.add_parser("sample-for-validation")
+    s.add_argument("--rate-data", type=float, default=1.0)
+    s.add_argument("--rate-interpretive", type=float, default=3.0)
+    s.add_argument("--rate-literature", type=float, default=None, help="default: the data rate")
+    s.add_argument("--base", type=float, default=0.1, help="probability for weight 1 (default 0.1)")
+    s.add_argument("--seed", type=int, required=True)
+    s.add_argument("--out", type=Path, required=True)
 
     s = sub.add_parser("lint-prose")
     s.add_argument("files", nargs="*", type=Path)
@@ -1732,6 +1886,8 @@ def main(argv: list[str] | None = None) -> int:
                  "scope": a.scope, "proofs": proofs,
                  "producer": {"commit": head_commit(repo), "session": a.session, "model": a.model},
                  "created_at": utcnow()}
+        if a.claim_type:
+            claim["claim_type"] = a.claim_type
         reasons: list[str] = []
         if not validate_claim(claim, reasons):
             raise PccError("; ".join(reasons))
@@ -1797,6 +1953,8 @@ def main(argv: list[str] | None = None) -> int:
                 base = read_ledger_text(text)
                 check_chain(base, errors)
                 check_prefix(base, head, errors)
+        if not errors:
+            check_claim_types(repo, head, errors)
         for err in errors:
             print(err, file=out)
         print(f"ledger: {len(head)} entries, {'BROKEN' if errors else 'chain ok'}", file=out)
@@ -1813,6 +1971,24 @@ def main(argv: list[str] | None = None) -> int:
                 print(f"  seq {v['seq']}: {v['verdict']} at {v['commit'][:12]} key={v['key_id']} "
                       f"signed={v['signed']} current={v['current']}", file=out)
         return 0 if st["standing"] == "verified" else 2
+
+    if a.cmd == "standing-by-type":
+        table = standing_by_type(repo, kr)
+        if a.json:
+            print(json.dumps(table, sort_keys=True), file=out)
+        else:
+            for t, counts in table.items():
+                if not counts and t not in CLAIM_TYPES:
+                    continue
+                body = ", ".join(f"{k}={v}" for k, v in sorted(counts.items())) or "none"
+                print(f"{t}: {sum(counts.values())} claim(s): {body}", file=out)
+        return 0
+
+    if a.cmd == "sample-for-validation":
+        sample = sample_for_validation(repo, kr, a.rate_data, a.rate_interpretive, a.seed, a.rate_literature, a.base)
+        a.out.write_text(json.dumps(sample, indent=1, sort_keys=True) + "\n", encoding="utf-8")
+        print(f"sample: {len(sample['claims'])} claim(s) -> {a.out}", file=out)
+        return 0
 
     if a.cmd == "lint-prose":
         standings = _standings(repo, kr)

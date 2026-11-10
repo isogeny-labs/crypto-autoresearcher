@@ -118,3 +118,29 @@ byte-identically. The second implementation of the metric is the part that
 matters, and (a) is the cheap, always-available form of it. The `executor`
 role contract should also say plainly that a checker which only re-derives
 summaries from the driver's output is not a checker.
+
+## Status 2026-11-10
+
+The section 5 rule is now checked by `tools/check_evidence_witness.py`
+(review `crypto:docs/autoresearcher-harness-review-20261110.md`, I6b). It
+applies to an `EV-*` record dated (`recorded_at`, `created_at`, or the date in
+its id) on or after 2026-11-11 that makes a measurement claim: a run reference
+(`run_ids`, `runs`, `metrics`, `measured`) with a measurement `type`, or in an
+entry of `claims`. Such a record needs a `witness:` block of kind
+`sampled_replay` (checker path, `shares_code_with_driver: false`, fraction in
+(0, 1], miss probability), `independent_reexecution` (second implementation
+path, metric agreement) or `certificate` (verifier, certificate path). Findings
+are advisories until 2026-12-11 and errors from that day. The template is
+`templates/research-records.md`, Evidence. The check is not yet called from
+`tools/validate_ledger.py` main (wiring line: `check_evidence_witness(ctx,
+repo_root=REPO)` after `check_aged_handoffs(ctx)`).
+
+Not enforced: that a named checker really shares no code with the driver (the
+field is a declaration); that the stated fraction was replayed; that a
+certificate verifies (that is `pcc` and cairn's job); records with no date are
+exempt; the `independent_session: true` condition and the byte-identical
+`raw-result.json` of clause (b); the `external_verification` form of clause
+(c) is not accepted in place of `witness.kind: certificate`; and the
+`executor` role-contract sentence about checkers that only re-derive the
+driver's summaries is not added. Adopting the rule as program policy still
+needs its own `DEC-*` and an `AGENTS.md` amendment.
