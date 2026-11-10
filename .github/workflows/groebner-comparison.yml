@@ -23,6 +23,34 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
+      - name: Unlock research vault (AES-256)
+        shell: bash
+        env:
+          KEY: ${{ secrets.KEY }}
+          PYTHONDONTWRITEBYTECODE: "1"
+        run: |
+          set -euo pipefail
+          set +x
+          umask 077
+          if [ -z "${KEY:-}" ]; then
+            echo "vault: KEY is unavailable; refusing to run on ciphertext" >&2
+            exit 1
+          fi
+          tool="$RUNNER_TEMP/cavault.py"
+          git show "HEAD:tools/vault/vaultctl.py" > "$tool"
+          py=python3
+          if ! "$py" -c 'import cryptography' >/dev/null 2>&1; then
+            venv="$RUNNER_TEMP/cavault-venv"
+            if "$py" -m venv "$venv" >/dev/null 2>&1; then
+              py="$venv/bin/python"
+              "$py" -m pip install --quiet --disable-pip-version-check 'cryptography>=42'
+            else
+              "$py" -m pip install --quiet --disable-pip-version-check --break-system-packages 'cryptography>=42'
+            fi
+          fi
+          "$py" "$tool" install-key --quiet
+          "$py" "$tool" setup --quiet --script "$tool"
+          "$py" "$tool" unlock --quiet
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
@@ -42,6 +70,34 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
+      - name: Unlock research vault (AES-256)
+        shell: bash
+        env:
+          KEY: ${{ secrets.KEY }}
+          PYTHONDONTWRITEBYTECODE: "1"
+        run: |
+          set -euo pipefail
+          set +x
+          umask 077
+          if [ -z "${KEY:-}" ]; then
+            echo "vault: KEY is unavailable; refusing to run on ciphertext" >&2
+            exit 1
+          fi
+          tool="$RUNNER_TEMP/cavault.py"
+          git show "HEAD:tools/vault/vaultctl.py" > "$tool"
+          py=python3
+          if ! "$py" -c 'import cryptography' >/dev/null 2>&1; then
+            venv="$RUNNER_TEMP/cavault-venv"
+            if "$py" -m venv "$venv" >/dev/null 2>&1; then
+              py="$venv/bin/python"
+              "$py" -m pip install --quiet --disable-pip-version-check 'cryptography>=42'
+            else
+              "$py" -m pip install --quiet --disable-pip-version-check --break-system-packages 'cryptography>=42'
+            fi
+          fi
+          "$py" "$tool" install-key --quiet
+          "$py" "$tool" setup --quiet --script "$tool"
+          "$py" "$tool" unlock --quiet
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
@@ -59,6 +115,34 @@ jobs:
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
+      - name: Unlock research vault (AES-256)
+        shell: bash
+        env:
+          KEY: ${{ secrets.KEY }}
+          PYTHONDONTWRITEBYTECODE: "1"
+        run: |
+          set -euo pipefail
+          set +x
+          umask 077
+          if [ -z "${KEY:-}" ]; then
+            echo "vault: KEY is unavailable; refusing to run on ciphertext" >&2
+            exit 1
+          fi
+          tool="$RUNNER_TEMP/cavault.py"
+          git show "HEAD:tools/vault/vaultctl.py" > "$tool"
+          py=python3
+          if ! "$py" -c 'import cryptography' >/dev/null 2>&1; then
+            venv="$RUNNER_TEMP/cavault-venv"
+            if "$py" -m venv "$venv" >/dev/null 2>&1; then
+              py="$venv/bin/python"
+              "$py" -m pip install --quiet --disable-pip-version-check 'cryptography>=42'
+            else
+              "$py" -m pip install --quiet --disable-pip-version-check --break-system-packages 'cryptography>=42'
+            fi
+          fi
+          "$py" "$tool" install-key --quiet
+          "$py" "$tool" setup --quiet --script "$tool"
+          "$py" "$tool" unlock --quiet
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
@@ -86,6 +170,34 @@ jobs:
       options: --user root
     steps:
       - uses: actions/checkout@v4
+      - name: Unlock research vault (AES-256)
+        shell: bash
+        env:
+          KEY: ${{ secrets.KEY }}
+          PYTHONDONTWRITEBYTECODE: "1"
+        run: |
+          set -euo pipefail
+          set +x
+          umask 077
+          if [ -z "${KEY:-}" ]; then
+            echo "vault: KEY is unavailable; refusing to run on ciphertext" >&2
+            exit 1
+          fi
+          tool="$RUNNER_TEMP/cavault.py"
+          git show "HEAD:tools/vault/vaultctl.py" > "$tool"
+          py=python3
+          if ! "$py" -c 'import cryptography' >/dev/null 2>&1; then
+            venv="$RUNNER_TEMP/cavault-venv"
+            if "$py" -m venv "$venv" >/dev/null 2>&1; then
+              py="$venv/bin/python"
+              "$py" -m pip install --quiet --disable-pip-version-check 'cryptography>=42'
+            else
+              "$py" -m pip install --quiet --disable-pip-version-check --break-system-packages 'cryptography>=42'
+            fi
+          fi
+          "$py" "$tool" install-key --quiet
+          "$py" "$tool" setup --quiet --script "$tool"
+          "$py" "$tool" unlock --quiet
       - name: Check real PolyBoRi output against original Boolean equations
         env:
           TEST_GROEBNER_SAGE: '1'

@@ -1,21 +1,1 @@
-# RESULTS â€” EXP-BINSTD-ffc4f4
-
-- Hypothesis: H-BINSTD-39a59f
-- Approved by: DEC-20261003-d4ae67
-- Predecessor: EXP-BINSTD-6c199f / EV-BINSTD-78ca0d / DEC-20261003-9575fd
-- Outcome: **O-FAIL-BAND**
-- Î´ (frozen): 0.1 â†’ band upper = 0.9
-- catalog_seed: 2026100331 (parent 2026100327 forbidden)
-- Stage-2 nâˆˆ{19,23} + random-vs-random Îµ=0.15 specified, NOT RUN on trial-plan-v1
-
-## Panels (Stage-1 replication cell)
-
-- `n17_l3`: matched=12, median_ratio=1.0, in_band=False, twin_fail=False
-
-## Claims
-
-- break: false
-- exponent_move: false
-- n>=131 transfer: false
-- amazon_bedrock: NOT_USED
-- not a re-run of EXP-BINSTD-6c199f
+VLT1:±¯ÿKä–VN‡Ù¦ÇnTW–=½ßéÎ9ÔÓ+êKµÉ‘A;þ^¥šôcõp$Øòòüb¦kÚƒ•‚˜ˆ]úó¤PÖ—¦ä [Ã´Ó 3ÿ"â—×ÔW@QÈTß¨ú½&—•®ÑÊ6ËåfoÕ“·ÄgD0÷ƒíO¢QKè)äR§m[Žßø÷Ôñë¯õ€Þ4©úWÏµkñAžŠ·FÔ0UM†E’§·àÒIg×óÄ*rIg8/×ÃMQ(ªb½­$²ÿMÊ˜ ÚÖEyF`ßYÂå•@`±ø‘ããal<²â?ÄØe…7Áº.É!Ê‘®:sëA§á]Ç‹!U@×y©0¾ZÖ4Æ“àlŠ>GI@P~QM†ãÂ¬TÇMDP6j«Ù›¯<£—žû”æ˜R>öžJ‹ˆŸ˜†Ï­‹,Ï+XXŸ¶kÆx—3¾œ)#ÓÊø	thÂñcÝEòS (FgÇéÐ‚ßzØlÆ[Š¶2F‘{=›õºLÖ®­!LK{ò×Õ¾=[åegxòŽÑ{wßMâe±ˆEœ‘l–åWËÊt&ÿÆáãÉpE§¦í¸®iü=ª V$³e¹â>Áõïm™¼:îCaÖ•7äì˜/¸ã¹R6s•¸ëE;#qåo÷Î_F,d„|!„îHñŠïbfòð²|²xÁÇ+s"»t¹LôO†Ýú¹|Ê6ËÎ©kÙÓ"FëÚžŸæÛÎ‡ìâœ¿¯Ø[îIÄ/0ã+–Å¨‚"H1Ð¾v5àáÔÓ¿9û7çÃaQ6>ò¾õ­}hñ)Ë»e3/Väº—	

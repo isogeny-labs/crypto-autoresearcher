@@ -1,10 +1,1 @@
-```yaml
-execution_assessment:
-  card_id: CARD-CAL-ok-print-01
-  card_sha256: c0e8c02fd6ba9bd307d34f36f9fd4061c5b4df0e4746d3ea42564788f2c88d65
-  outcome: executed_as_specified
-  recommendation: proceed_to_analysis
-  reasons:
-  - 'Computed facts: outcome executed_as_specified.'
-  interpretation: not_assessed
-```
+VLT1ïlî8bò¡ùq/ýŸø˜óDå-œvøþ[+Èw{	0ÿÚÑ¢s…ÇìqeùMA.o¾àÜ.ÙžÂ†©‰²>ÎÙ±}"ó—»FçÀrÐÖ•4á¦¡á^(|ö7ß%Ü8†/Â/N¼°Ó ·+¥r`çÆ}ãFN‡µÙ=äªÏøÉ'¤Là—÷¾Bƒ$EÀ‹Ýë‡Rø&c}"oLC6Ê ä$ÜÚq`J´†JCá¨|³ÓÝÐLt6–†Ýx+è…<QÁ6,;E7Ä@Fú&òô™¥ú$‚Í¬”ÔJÆ°'`9RúÌ\o;þiEký+Ó;ô­3ô|È'™A…m	iãû÷¬ÛÎ8™ kÔûŽXõÕ“¡¡oê—H€ƒ+ŸÂ(ÕFó¬uÆâ£W‹å|X	ßö£qÀ¸‘(nÄ

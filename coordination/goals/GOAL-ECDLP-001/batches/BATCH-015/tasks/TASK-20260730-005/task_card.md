@@ -1,13 +1,2 @@
-# TASK-20260730-005 â€” Freeze EXP-STR-004 v3 discharging RT-20260730-001 B-1 remainder
-
-**MIRROR ONLY.** Authoritative card is the `tasks[]` entry in
-`coordination/goals/GOAL-ECDLP-001/batches/BATCH-015/dispatch_queue.json`.
-
-- **Role:** coordinator
-- **Depends on:** none
-- **Archived by:** TASK-20260730-006
-- **Write scope:** experiments/EXP-STR-004/specification.v3.yaml, experiments/EXP-STR-004/amendments, coordination/goals/GOAL-ECDLP-001/batches/BATCH-015/tasks/TASK-20260730-005
-
-## Objective
-
-Freeze EXP-STR-004 v3 that generalizes prediction_failed so every complete valid F-1/F-4 matrix outcome is labeled, discharging RT-20260730-001 B-1 remainder, without widening scope or authorizing a run.
+VLT1Ž+Z²Ü¼í¢¢oûð!",û¢{çhÙdóužF'½ä/•òlqS…õ:Yp#$å5˜› ¸èl…›—…õ–§¿“RŸ¯k¿ŽIHÜEgñÓH§e‘\¼•QñË…hó?Š3¦ø_é¨^	u¤n‚JøßyÔè•pä·rÀŒ@œT’Õíéto¿NW÷în}¡'6•8´ù3'ø4&Ò	tRcåSFÂœ+Š™Yë›2—ËÇTÚ‡¾GSá­;sqŠ^nE×ìý3ÆÝ§ŠX¶+yíïè(ËzOKÊæ¹|ž§TÉ‘=¼8¨ºÏá¹Àžù¨#Ï‘4œá„±)¡Ö&èŒÃµôtö‚¬CÕi»†Ê£îˆ#Ÿ½xrÏ-ŠlU¡J…±3¶±çææz6@ÕP±·‹x]„âpÞ…~‡í—À¬'bx7A|øÊQ]=yL_×öA}5æ$½%tŽš¥½q ¶Î¹Äþtþ ^hI£a‘7FÕÛÛ#àA2^iÂ’¬Ãô)‹-CÑ|M­=G·]FY”K“`&»a¼{4Žš™©iLéOû2›ÈÐÄFZ•ÀÚAíçOœe¯5±Ln×YÛßîÅÇ:Éð§F+H•Ù¯X¡¼e¾
+±—ˆ’ØG¯áeÎRÿº>Î!`+G”wŽ ^´¦T‚ñdþA°Aö¥ú-Ëó“†`Y£Uƒw3nnc8Øs¬vÏƒ|ðÁƒ"=VœÇúmí€+Å®®’j§±AêñUlÞBWÅ/ÒÆ×vu—Õ<èuÔmðÀL^Ë±ù9õ0hÃéÈ¨*˜=“‘j›u‚¸´Ë±¹%A»#p»ÎÎ5}a°50ÝYßÁùëûxú*Š;Sµ*ãÐ¿,v¯äâ0¶wçŒ­ÿAYN€¬S'2FPíšk.@ð÷cœ0M:è×<,R¨Êß´

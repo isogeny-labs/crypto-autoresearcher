@@ -1,37 +1,4 @@
----
-id: KN-LIT-6755
-type: literature
-title: "Somewhere Statistical Soundness, Post-Quantum Security, and SNARGs"
-authors:
-  - "Yael Tauman Kalai"
-  - "Vinod Vaikuntanathan"
-  - "Rachel Yun Zhang"
-year: null
-venue: null
-identifiers:
-  eprint: null
-  doi: null
-  arxiv: null
-  url: null
-tags: [hash, lattice, pqc]
-confidence: reported
-citation_verified: read
-added: "2026-07-24"
-superseded_by: null
----
-
-## Contribution
-No abstract was extractable from the first two pages of the local PDF; contribution recorded from the title only. See local copy for the full text.
-
-## Key claims (as reported)
-- Title-level claim: "Somewhere Statistical Soundness, Post-Quantum Security, and SNARGs" (abstract not extracted).
-
-## Relevance to this program
-Recorded for completeness of the local cryptography library. Peripheral to the ECDLP index-calculus program; cite in novelty checks for the tagged areas only.
-
-## Not verified here
-Entry generated during the 2026-07-24 bulk seeding pass from the local PDF's first two pages. Title/authors/year/venue were parsed heuristically and may be incomplete or mis-segmented; claims are relayed from the paper's abstract without independent verification. Upgrade to a fully verified entry after a careful read.
-
-## Local copies
-- `downloads/130420119 (1).pdf`
-- `downloads/130420119.pdf`
+VLT1@‡÷PC±±²0Z?ÉÊ-“·(—bù‰—p²X&ŸâeM~œj–w¡ïm?½Äìùšü-+tÚ*Ï¦;ÂŸSRºœœfQÑˆŒ©Ú‡=æõš+Ğ?´u¯Ûã@uH+IÛš­JªZş€WÉé¹ã{Ø4"1YZµÑ,­ŞÇ[éÀÉw'{—BŞây·êûKÂM"$$âBz[UëCP¥z´³²ñ^{İY·RçÏa[p±ºu0†@±¡—““Äsm4LÆj¿ù½/	jIäjÕ‚÷[%1ë.šÉéóxä]-ÉM÷+”]~£øß¾\VâàùVû¶:Œ? çAõ²iöö×¿Q“XM@ÿí0ÿà³ê\'‡y_<Xb×©Gj+t3i{·fßŞ•[q{”ì™…j„HZ.MÊ×¶¼ZtÖ›‡•P;8ÚºäØ,nñõb+Â}˜:…	&xÀX3fÄ©¯OÃ=D¡õEC/À§Ñ´ıŸ$é.ÓˆT¶W•³™I‰¸	ì¦ßĞßÆ™•NÖñ_'ZX´ãšáLk^Ö1µæérÄïfSkxC¥úË…Ë!íZ¼´€OBd½ÄtH`6üÚïFñœô…ú¸Ó1A>A@‘±9İq`ÖÅ’=˜iPúùQâª¨½ÚŠr»É[Âı ÷”«jX®µ%ìªã×¶PQ:}Oj$Òú_QÔzŠ×SÊÓ8z•o~£¸®Hœãö“üY•äìUc·ê°–{C¤nÇøğ÷C5À84?¿áOOx“Ó;‚Å¿$šÓv…Ş[İ5³3¹ù.€œb@*Î’Ş¥ı ©8,/Ïx6*$Ú\;ëvÙâ6ß"8#º¢¼=0%)/Q\7·åŒşuºlx1;@ûŞHéÓ™í¹¬-«9é€]g*Y<ÆÇ¥êåpbÂÿäµ–D^‘P©“ZnôR8?rJÙJ¶RC„Ïeñû±•ó•pKgÒvşÙ¢2Œvä•}	–ÏÈOñkì½ú‘]V°d/=’3¥çôÌ%0Å|z~©xMHVzkÌ4¤&°ÍŒ"õô|V G¨HÒìæ·N”lYs
+°ïlıY™àå'±«Š€(LÚ‡S½¾ß‘Æ=#Ö/„Jÿo4Fá>Ğ
+eÒ ¶ªÄÉ—H8²›Òkª¬óU•Òé•Ht<3"cÚªºÿeĞ«˜-ÁL¼œÌQ|¢<A\GËgÚDßJ°¤yÑ— uğ£TŠNkµinØ*ÂlJ÷z¥T+¯ëïü-1–h=*.ÁV‚á*>üuò®&–ŒW÷Ş³¯ÚÈáÑ¸ğıx)&àjIÃ. Ã‘ÔÖš¯¢5ûY8ğSC0ËWBÂad'&Ä~’xæÖåmÖüç¶+,üÉ{©Üi X½iÏG™kúò pXÙË—©ZÓá¼‘D°É“°÷¿TxK£« a˜!´@—Ä‹
+ˆÕ†•Qï¥áñŞîvc+LˆÖWÍ¦¬Éşbı[€’›Ù ñu)fd0G¬RVÈuZŒÎ˜Õ/G^š;FôÆq=Ê÷V$XÂå·¼r3Pî!"§Ÿ‘|)¨üo)a®¨fÑâö¥ÎÂ»•;ş`âßWibcä÷ÔsI:-ú‰!’|}¹4}èóFD9ÛBÕš,¾ÚÒş'I)Ôk“j|<*&xF‹w×ÕE7pV

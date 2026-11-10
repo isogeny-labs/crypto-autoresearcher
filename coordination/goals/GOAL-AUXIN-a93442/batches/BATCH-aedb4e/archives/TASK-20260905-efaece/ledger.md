@@ -1,9 +1,4 @@
-# Ledger archive â€” TASK-20260905-efaece
-
-Disposition ledger for BATCH-aedb4e: DEC-20260905-1c2b01 (revise -- design
-task failed twice, goal stays draft), the batch report, and this receipt.
-The goal head is deliberately untouched (draft, current_batch_id null --
-nothing to checkpoint). The design snapshot task TASK-20260905-038574 has
-no archive commit because there were no producer artifacts to bind; its
-queue archive block stays null. Opening scaffold verified at e1cc314f9.
-No hypothesis status moves; no scientific claim.
+VLT1þÜNh{÷ŠÎU>Õ‡>¦<oÑ<À},¯£_ìœõ7¸ê„ÃÞ (âÃ6¶ÛãRX¥E6, è=«¦³:Æ_¶\+E5Øy%ÔhŒu;!ª[×þMAÖÞ—E…/ÀŸµÑ¿õŠõå™~rœPU†´„£âU3WŽáFšÈ@j™îj±½›l—¡ÿùæÝˆØå ™ã‰Œ)6byp8ÑxþŒ(‚lúêœ\„øã¸Éj$Ãr
+¸nL…uË²¯ÕÍ)®òs»‚<ãyñÅM5lOtß€ØÕsL€-,&³YýÉ7|ˆ°V
+ð>9Ø>±ölY~Wk¸ gS	Ç0‰bm3{/€\9ÙÆ™<…@Y{Íä,†RˆØémDûÄÉÕ³¢Û¡CÒqœÖˆ5ÌÉæzZù¿ÿ½^”«ÞÜ†TW·`TÐˆÒI0Ú©rïäÂ»Å¶âe¢yò2/éœÓä€N®å
+éø¶Dæb3’ÒÁ1&G7iýA?ïI›ÅR&)ÓúMÞFL	Õ5ŠÐÜTûî’äš€›ÐÔx[â°¡‘IÁoåÌÌ_ìÈl€äÜf×¢Õßj0Çè 0#¥]Ë3Ô¸q"tpÚ‘l²Ï>«?˜ŽßÜSSµºÊçu‚¾*»AÓõ”ïxxóû/úWM½t‰ñ'sPÎk£+þÁÅâ›Ý~n'>‹ôcO¶DU,zM

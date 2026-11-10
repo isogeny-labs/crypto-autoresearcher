@@ -1,9 +1,2 @@
-# EXP-ECDLP-9090ce Stage 1
-
-outcome: O-ARTIFACT
-
-m5_ratio: 1.4833333333333332
-
-m3_false: 0
-
-No exponent-moving claim. Planted oracles only. amazon_bedrock NOT SELECTED.
+VLT1psã9À;ı£QÒ
+¦!Q¡¤ùìaìOI*&5l- ›¦Jò€*éèÓ2ùy‘c ¼P…Y^üö¤ñí,*ö õ¿ws@7ãm¶ÛÄĞlŸøÌWÈÄÆĞ$óƒÆ!ŞM==È´\lRËÓ]“”ú&]I9I¾ûc¸„XOÛŞ²<XòÔâ³¹Í$ğÙÇŒÍ{¤yØ:´yŞ¼xÆe³¤w…“³ìâå‘ì©Q1ò‘^Hjfœ_RF‹Ğ

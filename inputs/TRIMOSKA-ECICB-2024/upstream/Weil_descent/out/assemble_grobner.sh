@@ -1,2 +1,1 @@
-#!/bin/bash
-cat 1_vars.grobner > magma.in ; cat 2_corr.grobner >> magma.in ; cat 3_system.grobner >> magma.in ;
+VLT1I¥£‰³xúççy´TÍûàYÈ;Ro·;b†Áˆ÷ÄbS*ºü[MÐ!ÈÜÄ”¯Äú1rì%®!TûpÈ'¬ˆEî‘”x¯Q.H)m›E]Áó>À‚ß_5ãÖŒÞ²„¡÷wyÿ·~ñ† žüXÃ£]wWoì ”Á

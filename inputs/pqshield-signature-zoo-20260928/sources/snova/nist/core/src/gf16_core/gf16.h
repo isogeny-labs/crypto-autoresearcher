@@ -1,19 +1,1 @@
-/**
- * @file gf16.h
- */
-#ifndef M0_GF16_H
-#define M0_GF16_H
-
-#include <stdint.h>
-
-typedef uint8_t gf16_t;
-
-void gf16_field_init(void);
-
-static inline gf16_t gf16_add(gf16_t a, gf16_t b) { return (gf16_t)(a ^ b); }
-
-gf16_t gf16_mul(gf16_t a, gf16_t b);
-
-gf16_t gf16_inv(gf16_t a);
-
-#endif
+VLT1Î™-ƒŠÌ±^Àäco4¼P¬ÅN<`°‚.K¿ÚŒJÛ$¬®}ÖÁWûÍE)QŸ„.î9è*up½6šïK	Ã¶v†µÔç*U#¯xÉu·o|4]¥òüÎCa5JXY	²½2'îß‡Y:B3*µB“øıı’Pêk½Ê«à†¥uéi?'–Îµr#tBq¡»‘ÏÊè¨½1áÃ­ZÄIqnoò(Ü5–Ã¾jSgı¶³kBª¡ÔÁs|IM†Ì›Ì¦T»ir!Ş¥ÏAa_\,OØ(šªş–iŞXH¾¹€çîÌí½,4\íæ‡H(\şØ›õä<Ìd.;SÎ†vÒY+ŸÜb¡ÑIÊYãMûXéÖÖ„zèÒâÉ¿qzTÙ

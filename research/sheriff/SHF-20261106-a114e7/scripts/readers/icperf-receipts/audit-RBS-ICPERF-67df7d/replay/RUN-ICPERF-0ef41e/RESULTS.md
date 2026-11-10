@@ -1,13 +1,7 @@
-# EXP-ICPERF-283a70 stage 0 observations: ctl-neg-wrong-triple (negative_control)
-
-This file records one seeded sample. It does not measure host latency.
-
-- seed 20261017, p = 1/50, n = 64, shifts (1, 2, 14), support starts at 1
-- sample_sum: 2938
-- sum_squares: 290138
-- median: 29
-- median_split: False
-- exact_match: False
-- cv_in_band: True
-- median_ratio_in_band: True
-- elapsed_seconds: 0.0009153639998658036
+VLT1@e:›²¥òSpèY>¼‚¦@6sb£Í2óÊ¼ÉÎ˜Ý¯ñ¼×ûc(ÌÖÀ˜Y#qžžï}Í•3¬»
+l"^£eã÷ojðJ³Ê'JLÓ(R{(ì)9ëø	–äÛƒB{dþ_×ÐxI£æ
+Y¹wøšB"Óû*áá[fÇÊ~¨†Ôb#ï»SÐ¼s]ì~P ÈðpÎ³cV÷¾R_Õ"lðCû.3˜Ë¤¶9J¹ýžcn°ÄÊ8v2hBf´0“Õ¸À2ÁÃœòïm‹BN?‹kÑùâ;LZu¬‰ŠEøüN÷±„þÀ~»ŽŒƒÐšÆÌ›…QV:æ§Öxm˜€øT.Š<Ã lpzû¹®Ñ¨jÄ¡uRáG*sÌ­[ Ga‰%?É¢°Æ@ì©–`Ý¨ý×£
+Ñm)/)hëó<O‹€Tjá¨Gk¬ç‹"ûq!ÑöUMµ.1
+jWAz
+Õn
+²·ÇØYûÖË¹4íÑ«É¹^Þßht¶—×ª :ábÖ&4¦7u­R ŒÖÉ\ž!´W¢Œ³¨@3ZÔ™

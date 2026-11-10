@@ -1,3 +1,4 @@
-Proposal snapshot TASK-20260905-03d057
-
-BATCH-c86946 archives48 provisional idea bodies, the three producer source bundles, exact canonical filing, and the committed coverage authority for44 live ECC goals and58 questions. The content_first binding mode was declared before generation. All ideas remain proposed and novelty unverified. No experiment, scientific conclusion, or goal status change is asserted. Independent proposal-quality reviews follow this commit.
+VLT1&áÃrQº¶Mš<À€.Ãúù£şeÍò*FW»i0ªÚíï%ˆ|Œ´¦ªC=OX´ŸúÛø”‚l©ğ'Š@±/xPê.wg*ıv\>=¬–­¥Äd„8ì&?e ê
+ï96ØEı¼«NEïú™©30—tÒÆÁµpë%V›È-P„%y&ZÂÿT®¼ŒPÙ?86`Ôõó	*ÉêJ£ã>[<J\±€p19[™/G™è9„ˆı)qX>]ZHÜõÕ§·Yˆ‚ô¢ö_TÖß½‚ü¨UŒ.ÉLa7‡ú˜h¾¼åPœ-Ã¢ôU‰Ö²¨°Ö7'ÎGò}Íï òÏ/¾‰{SµNø"¨jæû2³ˆÂ‚mŒÄR/lè¼ÉN·¿Èƒ­L_Ahb-$S.R>\
+Áµ3ŞÖ»•–wãŠ-Ï%Å”sQšÆq¼`l1F,´Vº!ñ×mÏ›}RñMA±ÚõĞØšb@ÈB“(ğŒª~? ğ;Œê—½÷Õ¬–'İµÕÂ‘Œá\ÃœSÍä~©ï1v	Şsèâ‚"F”Øh/ÀÁ44CqÈjIF
+µ÷ŒÌÑ™ÄÅÆ±¬4^ŒÆì$p-ä‰´“ä½DÍJ›‹t

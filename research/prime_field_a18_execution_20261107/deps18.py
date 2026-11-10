@@ -1,8 +1,1 @@
-"""Pinned A17 scientific components; imports perform no native generation."""
-from pathlib import Path
-import sys
-HERE=Path(__file__).resolve().parent;ROOT=HERE.parents[1]
-sys.path.insert(0,str(ROOT/'research/prime_field_a17_execution_20261107'))
-from deps17 import core,solver,NATIVE_CAPABILITY,public_base,check_base,checker,check_source,old_check
-from deps17 import collection16,checks16,partial_solver,check_partial,known_checks,public_verify,commitment
-import custody17 as prior
+VLT1Ë/'*,ÖŽ:šDL3ptŠ5µíçÝÅ |çö(ãí#Yˆê(„>ˆŸÀ¿GS·v)þç]‡$GNûñlPBí>_VÔù¶ËD ×îšùa`Z]w–/Mñ-qM<;Ê\è"Ö¬ ö>‡¸b•Çl_ÄiœíU6ï3ITAé%×YQk¡¤Áå©°J qþV×<oSõ-ü”‰2ñ§ã%â8ŠŒÕ®HÐPÑTÉ•ðy=ÉÖ)Kp<³ù.Ñº¹ÒFøÇ2;™[z=“³ÔµŽûá¯®t›$?1ôWwMPiŽ’€ö®F"w~‰æ< ­óúÔôù6\ð}1¾[ÖhLâèÏ'¯g®ß§×ö"vÖ2w\¤›Ñ_î…5”ÌD—Â°r$@¸nCx-¤µ#@bNøB3å²‘|p~jS¨-•Ýñ$ðØ¾ì%Å¼õÉûS´ZÈ‘û,œãŸ5iÙ6!è}§6Hu°Æ›˜îyö ìœ‘™?~TY³QOr‰ÅíœC*$à=‚"1êÕ;„è»¯%¨6¢©£ß´ÿø”äû×$Y–Þ°êI$=ÔpDø—PMjX¿§q½˜&Fï5á¶ÅÌ´"‘IÏLc¥±rX<D"Ï¸hn=KÜí¬“	¿9^

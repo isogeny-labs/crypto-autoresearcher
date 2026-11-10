@@ -1,12 +1,1 @@
-"""Control driver for EXP-INSTR-36c8cf (GOAL-ENDO-001 / BATCH-d7e255).
-
-New package, owned by TASK-20260810-c98659. It is a DRIVER OVER
-harness/exp_icinv.py, harness/exp_icinv_fullgroup.py, harness/isogeny_class.py
-and harness/toycurve.py; none of those is edited (contract
-source_constraints).
-
-Every reference value used here is READ FROM A COMMITTED RECORD AT RUN TIME and
-bound by a sha256 in baseline-provenance.json. No reference value is
-transcribed into this source at any precision (EXP-ICINV-4d33aa amendment v2
-change A4, CORR-20260807-a24675).
-"""
+VLT1ŽñÊySP×hch¬1ï²…õ>Ò÷ýEýöÁÑ9ŠñÛñÉù[ˆ¨	HB™?pM± 7KwÜ<•òU={ÄVDdÎò’Ç³›ž÷_JÑÿÕß9O>‰HÈ’7BT¦6lŠ4ã}¯î²@v(ê¥Þ4Œ"„Œ2…,riVäs<=½Ü±ªû$ž´,æÙöØ¿ò$K00ŽPŒtÄÀPò¼ø$ë“£ÏvÖåº*ð¡xT[¥­Ýñxq³U¬ŸÖ>±‡ÑAQÌøÌj.©ð³5À*Bø³áµWDh>tz±LH¥ì€ÎJú£B(âêFäÓEEëz’}ÃG7ÙU—©Lï ú’‹‚¡JÚV²rVÑü™Ü+6JÀ@‚Ÿ˜¹cmllö­³ìÁdÖnÅÊUä‰ú¿óÀÉ«íô|í®¦W$f˜ÃÌ™(gÖ¨J0ÝúÆ3’|?FÅÆ“^bµaçÃÅ#z]nÃò¥{<t–òðsW,*M¿ú¥ô¨¡ÂèC÷]ÈbÄÎ‹P-»¦[†QAD á0þ¢XÝ­’ñ£;ìuu2)þ³/—IÞ~v>¯è"ú“‚sVÕ¡¡\ËýÉ	ÛtÑÜÂ»GÉ¡t(Eb=xrÕú6µ×í:¡Êês°2u†—¸Ï¢›’ÒgyV¡¹ÿømjrf×ZMâüÄ5?ngr–{žîCÃDÚæ•Ñš“|¦œVØ±cð‹ìì‹u÷¨ž‹xá7iæ[Ë±†û(á&†‡~30

@@ -1,10 +1,2 @@
-#ifndef CONFIG_H
-#define CONFIG_H
-
-// XKCP configuration.
-#define XKCP_has_KeccakP1600
-#define XKCP_has_KeccakP1600times2
-#define XKCP_has_KeccakP1600times4
-/* #define XKCP_has_KeccakP1600times8 */
-
-#endif
+VLT1TfÚ»~‚0ÈzÌ‹ñíá©ßÏ¶ipÀ÷£«¬hhÉ&Š›š•}ËŠh*©ÀÔşlK¾·yOt#¡9•§•ÒÛªÈÜàşDpĞÀ"^{4.ê¸Ü³W4æá†ïÉê•)a
+E§q*5s×ge”d'aM»e‘â‚Ñ‹¢«©%Üi¡P¢5‡oA#¨Îµ·×{qm::-Ï¿î¤äåÃ? ıcÀ0AÑ:±›Ï‘dÈAÈlL¶½¥ï„@/ùF	c0ÆájX³ïÚxu+.

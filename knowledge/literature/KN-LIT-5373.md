@@ -1,37 +1,6 @@
----
-id: KN-LIT-5373
-type: literature
-title: "On Perfect Correctness in (Lockable) Obfuscation"
-authors:
-  - "Rishab Goyal"
-  - "Venkata Koppula"
-  - "Satyanarayana Vusirikala"
-year: null
-venue: null
-identifiers:
-  eprint: null
-  doi: null
-  arxiv: null
-  url: null
-tags: [lattice, pairing, provable-security, zk-proof]
-confidence: reported
-citation_verified: read
-added: "2026-07-24"
-superseded_by: null
----
-
-## Contribution
-No abstract was extractable from the first two pages of the local PDF; contribution recorded from the title only. See local copy for the full text.
-
-## Key claims (as reported)
-- Title-level claim: "On Perfect Correctness in (Lockable) Obfuscation" (abstract not extracted).
-
-## Relevance to this program
-Relevant to pairing-based reductions and endomorphism speedups (MOV/Frey-RÃ¼ck special cases, GLV/GLS) that bound which curve classes are safe baselines.
-
-## Not verified here
-Entry generated during the 2026-07-24 bulk seeding pass from the local PDF's first two pages. Title/authors/year/venue were parsed heuristically and may be incomplete or mis-segmented; claims are relayed from the paper's abstract without independent verification. Upgrade to a fully verified entry after a careful read.
-
-## Local copies
-- `downloads/12550118 (1).pdf`
-- `downloads/12550118.pdf`
+VLT1iìú ÞW-¦ N¸¹BmÛk¦wºx¼O& …AFyÙö+0±{6t³wÙ@H/ãfÑš«¹žÄÁ]ju?pW¡SÙ¦ÇŠÊ)äÇÕÃÖÊ§Ñ%yYm©‹KØ:½j
+²i¢ujC^mo©t;›1—+[píÏwE'XŠZœðÐ^‹|b	ohÂMç;¦E0Œ¢ù0ØU{—¥ÉÆbj.˜Ê˜´V:•ø31Öa/:k±Æ[ÍÃ¨L~A½»P§)Æµï¢Áb`oË…iÅÉ>™ÜeÌÖ÷ ½A¤¥·¥ðoE…†¥b*´'ÔÔî!L‡ºC£¦m§yyeýÖªØ’YÎäIåô'Ù‡\ñ9ƒÝt&…Ž‘d¤,=-ð‰™@lûþ\`Â®…(¼r¾×
+ÉlÓÑJk¤—–sß÷MxÂÖrŽ~Ñ
+íŠÓkYÊÅ@ÁéÒ¥[ú)îóWZØÖ+À,§ë<PÄÕ'Hœ áê­÷&;•ûö<?Ÿ&€w“’Á7K/`Ý;*‚°-(~#‡Lq3Á­‡ƒIwÖ$ß;;Âåñ˜²¹¬•£Ò˜¤öÝ¢ÈŒ–½÷µ³J¹Ø±_ç"äNí3°d²q%5qŒ›Ä[ø•Ò8!]’òB"ú;—Æ«R:À­Û±Eµ¸yÿŠˆ‘4ÿÀ.©æËéæ¤Æª¤ 9®¿ˆM	×)•Ä6²€¹DÖaèóªÔ8¨¾Aíœ8*º®­Ru¾&­Iõk°$|„Úú²|O4#;¨^FÊoÎYÐ%à*g?Ñ¶_a$#Ä»£q(†Kri­N\tÂ¢¬*¾^\ó’—~K´³~FîÅÙ¼O²­V6Ö”v¿L_ï»+$…VTK•ñ·©ø–¾	è\§“Ý.hË‰÷ø”Ñ‡ïL0^Öo©¥G?Ì±¡¿á	@ëVÂSU‰Òñš¥DaZTèƒ›wtsóO%îõ¼ŸÆ-«ÅhNV/YEiNŸu¡l»mï\&1/–_?ƒg–
+,úkuM‘b?ßKó³û²/lm¤ÇÍ!!‚Ø‹…A…åùdþÎTK¤!
+’"GÓê°ý]=5R`£I¦gVláèÎù5K½‡r½ê4‚AŒeÐÍçÏ]>P¨£Çš³g/raÛ}p~;ÉÝ‡æAžæ!¿¼xºU„ÿŒ(ßŽï¸0&I †´U j`È­ÐÁéØä»ÞóE»t¥Îá~äîl%")Õ+úO:$Ùkˆ¾;DÉêºYC.’/ Þ j™+E–=×¨ù•Øg(ˆ6L^ÿƒ=*%.L‰f±‹È2~LžÛž HþwúGôvªhÅ=K}†ù#ÝËç²Ÿ…nˆŽ­8×ÅÈ*¨ŸÕÛÞ‡Y{Àò˜íóåÒwäÞáÊM(»üo.ö£Øã½«˜‹F9e?”°]H„wG€H7Û‘Õ[Ô‡âN¥í2†HE9ªVµgX:ˆN¬¾¼-õÝM‰müŒÙsí²iAíSÏ¥¦–9"SÞ®Þ˜±â]±5¨Ž‹¡ðP†£'Õ‰ÁÅó=vcp‹‹Ï†R“)Æû‚ìN™ñ‹žÍ<Ìa¤¸cÝ¦ô&É{½Þºg¸|*²ž'mÆdaS¡'xùµÿ…Û@”gÖË†ën»q«»ø\9¬ÔÝAdW.î_6 k(·;Øç*ûÖ«jqùJììh·h²

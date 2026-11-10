@@ -1,37 +1,6 @@
----
-id: KN-LIT-4967
-type: literature
-title: "MPC-Friendly Symmetric Cryptography from Alternating Moduli:"
-authors: []
-year: null
-venue: null
-identifiers:
-  eprint: null
-  doi: null
-  arxiv: null
-  url: null
-tags: [cryptanalysis, hash, mpc, quantum, signature, symmetric]
-confidence: reported
-citation_verified: read
-added: "2026-07-24"
-superseded_by: null
----
-
-## Contribution
-We study new candidates for symmetric cryptographic primitives that leverage alternation between linear functions over Z2 and Z3 to support fast protocols for secure multiparty computation (MPC). This continues the study of weak pseudorandom functions of this kind initiated by Boneh et al.
-
-## Key claims (as reported)
-- (TCC 2018) and Cheon et al.
-- We make the following contributions. â€¢ Candidates.
-- We propose new designs of symmetric primitives based on alternating moduli.
-- These include candidate one-way functions, pseudorandom generators, and weak pseudorandom functions.
-
-## Relevance to this program
-Recorded for completeness of the local cryptography library. Peripheral to the ECDLP index-calculus program; cite in novelty checks for the tagged areas only.
-
-## Not verified here
-Entry generated during the 2026-07-24 bulk seeding pass from the local PDF's first two pages. Title/authors/year/venue were parsed heuristically and may be incomplete or mis-segmented; claims are relayed from the paper's abstract without independent verification. Upgrade to a fully verified entry after a careful read.
-
-## Local copies
-- `downloads/12826377 (1).pdf`
-- `downloads/12826377.pdf`
+VLT1(8<<œË³æÉÈB*¶¾s¢¯¡>×à\‚²ª²3#Å˜ã¾È0­¬"ÊL¢4¾x}‘º²vÑóËo%L6F]¾éH·¬H½î[4İ †ÕˆîšŠQ·	ã?ïIé†ªƒ&\–-U²ÊNAÇ°À§³q©Ã5òE[¹IÉâ&»yMp`Ò»ù´@—7ô§†çØ¼´7e¿$i‹¿2ÜÍ’ÁÂJdû?"Èé@9h(´5Úh~Ø:¼šË~4¯Hçn™?$@t‘xâ›TŸQSJ:{¿ƒÄ¡ñÕFÅI»ÖÌ$Ÿ^ş²Låa+”nÎÈdäøa’mÛdë8!¸wŞÆú‰ÜŞ¡lü¨,g67oÓ-…FÌ¢àLÖS@ÙüŠÄ8¨?	ıIè“©ã¢çT ½ Jß	Ë¯6Ko±ÊvD«4î†…ÃnV})óz“İš**²®áÄd€êÔÉ{KÅŸœà©¢„R¸+ÈÒ¡±NàyŒ‚‘\4ïTD £/Û*½p`éÊĞEÈRuQÊ`mM ^GÏşfîô¸>”H–~.^‰€z§1!‚öòèÓÖ‡t~‰l £dfòöà¬EÛçÓèöVl‡´:d3TwRWá&bö½ÓÇ‹5åG.¾$ÍìPÖLp
+¥çƒ®É²)/¹5^× {‘(°óâ×<ËBoúäÑõ– Öø6úåÂvt¹SO&4œÑÚ™„ÁÀ™õ-Ìø¤Ïì	Sè Lú<"î@È]BAt(ÌÔk»º˜IÂTµrµDÌ õ„ñĞ!šW€Ñª	wWÍw´Cò¡ùÉÓ‘âqÎ	pŸìEÇòÌihˆšl	)ôT‡ø}wW³C>èéGäç²DJd‘iÛš›ëíïs)(ÀÅ,ş†dãhşşYm£¢Ä§Á7ešµ†ÇèN¸G«*Îß1‰ïÕÿm¹J`ÆSñÅC}ë,:o_«.ëO¼ŞEoéJÄãî¼³3Æ';ò!ÑA³ÒÆNjX\
+Kzı"›ocÒÆC+õVS¸Ç`CÊ¿qóh6À+bêúMz…H&Ù	"ûµqZUMğãÉ€ûÖ>eÑa†zu…’÷ïò¸”ë&l~ğÂ†ÔÓ…ßuªäØh=Ë\yWs¨€…(¤±¨ÕDùcXæ‰Ìd+‰ıåÓ®Û‹X•t(fîsöC:Sœ•9M²kMj
+rPºc|™_’v„^Àrïÿ…+^zp3¿ä}ğt…Àq*b™è	†á#J„8ïœ C£€sh‡„íT_Ó
+Á4
+ˆ›§U2’ÇR‡Y‘ çŒU'şæ%°Jÿ×R†VZ.ÚãeÏJ”+7¨¤gÕêõAôùª=~‘f´toRWîY^µÉów!(ğ¥yáá"¤	„¯ÉxÉõÎRø–›>‡œ8¯B3ó˜´i®÷`òq.¸ä¹ól,RC£ƒ=`{àüDÒD‚…âAãfä‹z	2Ù8[ik€D€Â5O[ä·%¸­Xç’]ÆüçàÖçuãvé¼Ñ)upÂ9´SJp¤ìJeDQƒÿ„ôò3ÊÚ0gL+¶W¤1ƒ'¾ow¹Fó)Îg®×jé!e÷š„˜óa;c¸G°4¤åS*£¨-¾ùAS?²èJnø…$?¥İO5‘öøhLjOZ •K4íêŠ5¿Ê»“í—æ¹³õÌ C'ÂFcìŒÊÂ'µZ%Ë|ÒÍ	ÀñÉ‡[ìvá­³¸iÈ$xHÃİxTI‡‚,ƒí•İAÌZ\÷õZ£;ÈI×pÏ2÷HX“M}Ç¢3ÇZÍŠx[	}yó3HZ(=°á›ŞëÓáŒLU}ş‹eâµÙÈÀy¶‡ûñˆ~ùkÍF;Mšr?Èü'äİp«Øx„¨²”÷§aû8ùÄµòµÕÉ©,µk#¤–¨C|‘b5˜?øµzVÙom“¡Æˆ3à²Ì¥^õ ÍğiºU¨«æk±'Ry¾“zaºáñŒüËşÓ‹;éÕ-±ÇİzN¨&*¹‚2o­Ì€sÃò¦­`°

@@ -1,10 +1,3 @@
-# TASK-20260730-005 validation notes
-
-Independent recomputation of the first p=7 eligible-with-relation surface
-from RUN-XEDN-006-MAIN reproduced `n_slots=6`, `max_|coeff|=1` (group-law),
-specialisation 20/20, Î¼â‚ƒ absent.
-
-Controls pass. Snapshot TASK-20260730-004 verified via dispatcher.
-
-Primary finding: p=31 density-blocked â€” do not treat as coefficient
-falsification. Narrow the four-prime claim of H-XEDN-005 accordingly.
+VLT1‹Ú÷&:qGIä¨…$ª |ÕKî°ÂğÕZ;3Ş¡eÙŠurÛsyã$içzC®=Ì²O]ı„/	·Åfğ²·²–\eÚwzü^é+õŸ6™ØâY™§ŞD¬;ğf¨´ïÚ'=¨­9Ñ3qe‘*wõO1KdÚø”€õü&î&zc òr
+Åºij5x#Á¥§î”à*öõÓü¹ˆ×Qw6sóíŠ¡‰%4ŠÅ&îR<	:M‚ÎE€WúÁ1İãäü:U6#@_Û’·@±n†©)Õ,‡õEYç3œPsu‘ex0ç3ÄìÀĞÁï)!ÙD›˜™9šæ½8à\ŸQ-Uy•cúDgÉ”á‰z.HKªaª|ÙšÖ$¹\e“¼ËÓÖ«Gl–0Iö`Ç f•Têú€(,íg6ùd+®µÀÀ?ı<³;[vIxI`-àË{+ŠÙÒâ£Î³oıèK~s+))ç<€d
+ì¬õ¦HéQ'Nº8¨‘±ëm›PJ²œkÍô¥ZKÁ7q-v8W§ÆoèÑ†ÌÆŸ§õiJ>Îşv–À¦×@

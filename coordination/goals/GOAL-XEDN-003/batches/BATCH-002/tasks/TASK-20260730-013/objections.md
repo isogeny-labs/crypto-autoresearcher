@@ -1,9 +1,2 @@
-# TASK-20260730-013 objections
-
-## RT-XEDN-007-01 â€” thin p=31 sample
-
-Only 2 verified relations in 120 surfaces. Support at p=31 is real but sparse.
-
-## RT-XEDN-007-02 â€” not B2
-
-Toy only.
+VLT1|$l„ÉV¹.Í4G˜}c·ŽÛØ¥ß£Æã¹Ùí¼‹áà8Â×XläkÈ‰Š´5o8òãg·ø6v{Š€m/	ä4¡/ß‰Xƒ»Œvc—ÕÅ7Óãè˜qÕe±’¾·HU’\¦ëã¡EîyTáý²Úvüi—¡„a-GI½ñ$=5”¸Hsœº÷âà{åA3HU”âT4Žoˆ¿½ì#Ý¢y*áé
+Ià\z¢wt#i]\ÍÿØ’‡T€šä2(>bÞ¦Àœ‰qLïÖÀöwÁ

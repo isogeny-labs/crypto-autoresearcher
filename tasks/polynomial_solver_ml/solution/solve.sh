@@ -1,3 +1,1 @@
-#!/usr/bin/env bash
-set -euo pipefail
-python -m polynomial_ml run --profile quick --seed 20260904 --fit-seed 0 --output /app/output/run
+VLT1(Ð‹ÒÂ:JxÙur~Lš”Š…ü?€þ&‡ÿ³‹BK¹­M»;ÃEÁ¡;0{¤J‹*ìyäÙÃ(kðÂ€ýºùÙ´“0>ñ)#6®¸­`y‰þé+Š÷dJqØžŸð>stéÖÃ¨¹ê¬5”±2û´ûœ½´=w;·i¥ô'ì 4	þ¯E	?ÇÈÄ¦‡d#mš

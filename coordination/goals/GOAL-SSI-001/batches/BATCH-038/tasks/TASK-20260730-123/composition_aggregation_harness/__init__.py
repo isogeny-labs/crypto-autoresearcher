@@ -1,1 +1,1 @@
-"""Composition/aggregation schema harness (zero compute)."""
+VLT1hwğå¿XWAC«sEò\o…ÌÿÙø°÷ıfó˜šñ¤ƒOC¨KÑ¼6¨ŠÃdãœ¼óÆSüO•áÛñ·d¾³ğ_‹Z»Ü

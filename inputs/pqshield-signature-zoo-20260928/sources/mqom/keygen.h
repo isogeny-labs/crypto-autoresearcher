@@ -1,12 +1,2 @@
-#ifndef __KEYGEN_H__
-#define __KEYGEN_H__
-
-#include "xof.h"
-#include "expand_mq.h"
-
-/* Deal with namespacing */
-#define KeyGen MQOM_NAMESPACE(KeyGen)
-
-int KeyGen(const uint8_t seed_x[BYTE_SIZE_FIELD_BASE(MQOM3_PARAM_MQ_N)], const uint8_t mseed_eq[2 * MQOM3_PARAM_SEED_SIZE], uint8_t sk[MQOM3_SK_SIZE], uint8_t pk[MQOM3_PK_SIZE]);
-
-#endif /* __KEYGEN_H__ */
+VLT10Aî•uk¯ŸcÄ/+pd[§t.à¼¥üa6;_ï³ìÎ;AA˜„ßM)ïcËÁ@Øáyˆhsö*w-/Eß¯L±a’ÖÓW‘.Ï÷héI–·µ÷òU¬GPˆ:Ä1®¶ª¡²ÝAû>CÌþ&™øœÈ½3u£hØ±K‘+F!ô Â‚åD—ÞKYÅè¯Â{ÄÝ‡/¦<y=ãigL¥¶›/!å—–µ†{…g¶Bã$ØÙNWUÃ2öu3Œ¹y_X)¸ŠåP`9<â†Q‹ô¯†éˆ%¥ŽRÚÁI°SÏØ¶×µ%dæÐ¹¼bŒ·å¿¢è:Lidß‚žQÐJÕ;éj}±‡çæ´¦ó:Ðì•Zí—‡‚q‘»¼šK6†Í1‚^\™˜žm¥K©_˜:kä•—Ý}T#0=@:Ÿ;J…Â"&.EŠ‹Ù².îßDÎLÖ•ÒZà
+¼´jŠL}h"[Ké+÷»ªóyé
