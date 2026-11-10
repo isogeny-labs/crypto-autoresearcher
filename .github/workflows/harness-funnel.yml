@@ -1,3 +1,4 @@
+# artifact-store: no-pull (reads committed specification files and lists run directories through git; it never opens stored bytes)
 name: harness-funnel
 
 # Reports how work moves from proposal to evidence, and checks the
@@ -8,6 +9,7 @@ name: harness-funnel
 
 on:
   pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
     paths:
       - "ledger/**"
       - "experiments/*/specification.yaml"
@@ -28,6 +30,7 @@ concurrency:
 
 jobs:
   funnel:
+    if: ${{ !github.event.pull_request.draft }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -64,7 +67,8 @@ jobs:
         run: python3 tools/experiment_wip.py --runs-source git --check | tee funnel-out/experiment-wip-check.txt
 
       - name: Unit tests for the two tools
-        run: python -m pytest -q tools/test_harness_funnel.py tools/test_experiment_wip.py
+        # headline_counts lists every experiments/*/runs/ directory and runs in the full-checkout shard of validate.yml
+        run: python -m pytest -q tools/test_harness_funnel.py tools/test_experiment_wip.py -k 'not headline_counts'
 
       - uses: actions/upload-artifact@v4
         if: always()
