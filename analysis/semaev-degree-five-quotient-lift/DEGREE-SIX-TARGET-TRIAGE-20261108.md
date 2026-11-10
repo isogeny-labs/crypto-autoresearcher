@@ -5,7 +5,7 @@ allocation profiles. It is not a new closure run or a degree-six bound.
 
 | Original system | Recorded exact count | Checked D4 quotient dimension | D5 source-derived envelope | Current D5 state |
 | --- | ---: | ---: | ---: | --- |
-| `fresh-n47-rand-00`, 48 variables | 0, independently repeated | 61,196 | 86,599,881,493 bytes | Frozen one-shot local plan, USD 20 reserved, output root absent |
+| `fresh-n47-rand-00`, 48 variables | 0, independently repeated | 61,196 | 86,599,881,493 bytes | One-shot lift terminal: `projection_kills_one`; no D5 certificate |
 | `fresh-n50-poly-03`, 50 variables | 0 | 38,629 | 38,017,488,971 bytes at 4096-row chunks | Frozen one-shot local plan, output root absent; finite USD reservation still a launch gate |
 | `fresh-n51-poly-01`, 52-variable original system | 0 | 45,615 | 64,677,063,002 bytes at 60000-row chunks | Prior cloud D5 attempt failed after seed checking, with no candidate object |
 
@@ -17,6 +17,9 @@ second enumeration, published in `N47-X1-COUNT-RESULT-20261109.md`
 `3a45f84b50c4aeefcc6e1e75d341d60a24c551b25238efb170dbc3425ab0f778`).
 The D5 memory figure and USD 20 reservation are in
 `n47-rand00-d5-local-plan-002.json`.
+The terminal result, checked receipt hashes and claim boundary are in
+`N47-D5-RESULT-20261110.md`. The producer did not emit a D5 map; its status
+does not independently prove degree-five membership.
 
 For n50 polynomial-03, the separate checker accepted `1 not in W_4` with
 codimension at least 38,629, and the recorded count is zero. The D4 map has
@@ -52,8 +55,9 @@ to the original presentation's LFD, so the slice is not used in the table.
 
 The n50 polynomial-03 input is the smallest *source-estimated memory*
 candidate among these three, and it uses a polynomial factor base. That does
-not predict its D5 outcome or runtime. The already authorized n47 count and
-D5 attempts retain their frozen identities. Any n50 D5 launch needs its own
+not predict its D5 outcome or runtime. The completed n47 count and D5 attempt
+retain their frozen identities. Any n50 D5 launch needs its own
 finite dollar reservation, current budget admission, exact source and input
 readback, and an independent D5 checker acceptance before an LFD-at-least-six
-claim. The three candidates must not run concurrently on the shared host.
+claim. The November 10 monthly Budget readback is already above the
+owner-authorized USD 1,300 ceiling; no new experiment is admitted under it.
