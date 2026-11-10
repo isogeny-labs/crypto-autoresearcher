@@ -1,0 +1,172 @@
+idea:
+  id: IDEA-20261109-aa4c12
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: Multipoint-evaluation port of the mu_B resultant tower across targets is priced by a target-degree
+    identity, deg_T G_B = 2^{m-1} B^{m-1} minus additive-energy collisions
+  class: barrier
+  claim: 'Let B divide p-1, F_B the points with x^B = 1, and G_B(X,T) = prod over (z_2..z_m) in mu_B^{m-1}
+    of S_{m+1}(X, z_2, .., z_m, T), reduced modulo X^B - 1. Amortising decomposition over many targets
+    by precomputing G_B and evaluating at T = x_R (Kedlaya-Umans multipoint, the exact-polynomial sibling
+    of F4 trace replay) needs B times deg_T G_B below N^{1/2}. Claim: deg_T G_B = 2^{m-1} B^{m-1} generically,
+    every T-root is x(e_1 P_1 + .. + e_m P_m) with x(P_i) in mu_B and e_i signs, hence the stored object
+    has at least c_m B^m coefficients, which with B^m near m! N is at least N. The port moves no exponent
+    unless the sum set of F_B collapses, i.e. F_B has a constant fraction of additive coincidences. Toy
+    prediction at m = 3: deg_T G_B = 4 B^2, distinct roots about 2 B^2 + 2 B (the symmetric-group doubling),
+    extra collisions O(B).'
+  mechanism: The tower eliminates X_m .. X_2 by resultants with X_i^B - 1, which are products over roots
+    of unity because X^B - 1 is monic and split. So the final univariate polynomial is a specialisation
+    of a single bivariate G_B(X,T). Its T-degree counts, with multiplicity, the x-coordinates of all signed
+    sums of m base points sharing x(P_1) = X. Collisions beyond the (m-1)! permutation doubling are additive
+    coincidences inside F_B. The port therefore reduces to one measurable integer, the collision deficit
+    D_coll = (multiplicity-corrected root count) - (distinct roots).
+  novelty_status: unverified
+  citations:
+  - ref: KR-IC-f3da82
+    provenance: internal
+    claim: Trace replay amortises the Groebner step across similar systems. This record prices the exact-polynomial
+      analogue and finds it stores N.
+    verified_by: brief section 3 row text, 2026-11-09 session
+  - ref: KR-IC-5a43e5
+    provenance: internal
+    claim: S_{m+1} has degree 2^{m-1} in each variable, which fixes deg_T of the product at 2^{m-1} B^{m-1}.
+    verified_by: brief section 3 row text, 2026-11-09 session
+  - ref: KR-IC-955fd6
+    provenance: internal
+    claim: The (m-1)! doubling of roots is the known S_m symmetry, credited to the symmetrisation literature
+      and not counted as a collision here.
+    verified_by: brief section 3 row text, 2026-11-09 session
+  - ref: Kedlaya-Umans 2011 fast multipoint evaluation
+    provenance: recalled
+    claim: Multipoint evaluation of a bivariate polynomial costs quasi-linear in its size plus the number
+      of points, so size is the binding cost.
+    verified_by: not verified this session; next agent should confirm the cost statement
+  assumptions:
+  - B divides p-1 and the curve has prime order N, checked by the script.
+  - S_4 is taken in the normalisation of RESEARCH_SEMAEV_DECOMPOSITION.md; a different normalisation rescales
+    coefficients, not degrees or roots.
+  - Roots are counted over F_{p^2}; twist points with x in mu_B contribute roots in F_{p^2} minus F_p
+    and are reported separately.
+  proof_search_map:
+    not_applicable_reason: This is a degree and root-count identity with a toy measurement, not a claim
+      that an exponent changes.
+    bottleneck: not_applicable
+    baseline_embedding:
+      parameter_slice: not_applicable
+      reproduction_check: not_applicable
+    observation_collision:
+      observable: not_applicable
+      distinct_preimage_search: not_applicable
+    constructive_transforms: []
+    quantifier_order: not_applicable
+    method_ceiling:
+      strongest_certifiable_claim: not_applicable
+      nearby_object_control: not_applicable
+    proof_obligations: []
+  predictions:
+  - metric: deg_T G_B divided by 4 B^2 at m = 3
+    direction: different
+    minimum_effect: equals 1 for every B tested
+  - metric: D_coll divided by B at m = 3
+    direction: lower
+    minimum_effect: at most 100 for B in 7, 13, 19, 31
+  - metric: fraction of T-roots that equal x of an enumerated signed sum
+    direction: higher
+    minimum_effect: equals 1
+  minimal_test:
+    design: Sage script under crypto/sage. For each B in 7, 13, 19, 31 pick the smallest calibration prime
+      p = 1 mod B with a prime-order curve. Build S_4, form G_B as the product over mu_B^2 reduced modulo
+      X^B - 1 (compute the product in F_p[X,T] with X-reduction after each factor), record deg_T, the
+      root multiset over F_{p^2} for each X = x_1 in mu_B, the distinct count, D_coll, and the coefficient
+      count. Independently enumerate all signed sums of three base points and compare root sets. One matched
+      run at B^3 near 6 N (p near 2^14, B near 47) to report coefficient count against N and against N^{1/2}.
+    controls:
+    - Replace S_4 by a random polynomial of multidegree (4,4,4,4) over F_p and repeat; expect deg_T =
+      4 B^2 and distinct roots near 4 B^2, no permutation doubling, D_coll near 0.
+    - Replace mu_B by a random B-subset of F_p and repeat; roots are then not sums of base points and
+      the enumeration check must fail.
+    required_metrics:
+    - deg_T
+    - n_distinct_roots
+    - n_roots_in_Fp
+    - n_roots_in_Fp2_minus_Fp
+    - D_coll
+    - coefficient_count
+    - coefficient_count divided by N
+    - enumeration_match_fraction
+  falsification_conditions:
+  - deg_T G_B is below 4 B^2 by a factor of 2 or more at any B.
+  - D_coll is at least B^2 / 4 at B = 19 or 31, which would open the port.
+  - A T-root is not the x-coordinate of any enumerated signed sum, which would mean the tower encodes
+    something other than decompositions.
+  - A timeout or memory failure is infrastructure, not evidence.
+  confounders:
+  - Roots of multiplicity from S_4 symmetry are structural and removed before D_coll is formed; the removal
+    rule is fixed to the (m-1)! permutation count and reported.
+  - Curves with a = 0 and 3 dividing B add a weighted-homogeneity factor 3; report separately.
+  interpretation_limits:
+  - Confirmation shows the precomputation object has size at least N at matched B; it says nothing about
+    per-target tower cost, which is the wave-1 relations record's question.
+  - The measurement is at B at most 47 and p at most 2^26.
+  heuristic_assumptions:
+  - id: H1
+    statement: Beyond the (m-1)! permutation doubling, coincidences among the signed sums of base points
+      are at the random level, about (2 B^2)^2 / N at m = 3.
+    rigorous_support: The expected count follows from a uniform model of sums; no theorem on the additive
+      energy of mu_B pulled back to E(F_p) was opened.
+    validation_plan: Measure D_coll directly at the four B values and at the matched (p, B) run; compare
+      with 4 B^4 / N.
+  target_complexity:
+    time_exponent: precomputation at least N^{1} in this port, online Õ(B) per target; no exponent below
+      1/2 is reached
+    memory_exponent: at least N^{1} coefficients at matched B
+    best_known: Pollard rho at N^{1/2} (KR-RHO-13bf67); per-target tower cost from the wave-1 relations
+      record
+    hidden_overhead: Multipoint evaluation constants are irrelevant because size alone exceeds N^{1/2}.
+    tradeoff_note: Delta against best known is 0. The record exists to convert a tempting amortisation
+      into one measurable integer, D_coll.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  dominated_by: KR-RHO-13bf67 dominates any exponent reading. KR-IC-f3da82 covers the Groebner-side amortisation
+    but not the exact-polynomial size identity.
+  sota_delta: Exponent delta 0. New content is the identity deg_T G_B = 2^{m-1} B^{m-1} and its reduction
+    of the amortisation question to the collision deficit of F_B, measurable at toy sizes.
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/index-calculus
+    rows_checked:
+    - KR-IC-f3da82
+    - KR-IC-5a43e5
+    - KR-IC-955fd6
+    - KR-IC-5931ee
+    - KR-RHO-13bf67
+    - KR-RHO-ea34b8
+    nearest:
+    - ref: KR-IC-f3da82
+      provenance: internal
+      relation: adjacent
+      delta: Trace replay reuses an elimination trace; this record prices the exact bivariate object and
+        shows its size is at least N.
+    - ref: KR-RHO-ea34b8
+      provenance: internal
+      relation: adjacent
+      delta: Bernstein-Lange precomputation stores N^{1/3} points for N^{1/3} online; this port would
+        store N for Õ(B) online and is dominated.
+    searched:
+      corpus_grep:
+      - brief section 2 ledger excerpts for multipoint, Kedlaya, amortis, precompute
+      - wave-1 relations and port lead lists for resultant tower and trace replay
+      web: []
+      blocked:
+      - crypto/RESEARCH_SEMAEV_DECOMPOSITION.md not opened; read for the S_4 normalisation
+    lead: LEAD-ICB-multi-target-and-portfolio
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: Sage script under crypto/sage. For each B in 7, 13, 19, 31 pick the smallest
+        calibration prime p = 1 mod B with a prime-order curve. Build S_4, form G_B as the product over
+        mu_B^2 reduced modulo X^B - 1 (compute the product in F_p[X,T] with X-reduction after each factor),
+        record deg_T, the root multiset over F_{p^2} for each X = x_1 in mu_B, the distinct count, D_coll,
+        and the coefficient count. I'
