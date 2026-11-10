@@ -39,6 +39,8 @@ it; never edit a copy.
     python3 tools/task_card.py lint <card.yaml>
     python3 tools/task_card.py prompt <card.yaml>
     python3 tools/task_card.py run <card.yaml>            # frozen_command only
+    python3 tools/task_card.py wait <card.yaml> [--interval 30] [--max-seconds 540]
+    python3 tools/task_card.py status <card.yaml>
     python3 tools/task_card.py check-relay <card.yaml> --report <executor-report.txt>
     python3 tools/task_card.py request compile --design <spec> [--bind <path>]... --out <card.yaml>
     python3 tools/task_card.py request assess <card.yaml> [--report <executor-report.txt>]
@@ -64,9 +66,29 @@ models that cost nothing are called (self-hosted, local, and with `public` the
 free remote tiers, which may log prompts: public or synthetic designs only);
 a paid model is substituted from Delphi's free map or refused.
 
+DETACHED STEPS. The executor's shell is killed at 600 s, and a container
+restart kills whatever that shell started. So a command whose
+`timeout_seconds` exceeds the card's `detach_above_seconds` (default 540) is
+not run in the foreground: `run` starts a detached supervisor (`setsid`, SIGHUP
+ignored, stdin closed) that runs the argv under its timeout and retry, with
+stdout and stderr written straight to the command's log paths (lint requires
+both), and records `<run dir>/<step>.pid.json` (pid, process start ticks, boot
+id, start time). The run directory is the receipt path without `.json` and
+`.receipt`, plus `.run` (`cards/CARD-x.receipt.json` -> `cards/CARD-x.run/`).
+`run` then writes the receipt with `status: detached` and exits 4. `wait`
+polls the pid file every `--interval` seconds for at most `--max-seconds`
+(exit 4 again when the window ends with the step still running: run `wait`
+again); when the supervisor's exit record appears it finishes that command's
+entry and runs the remaining commands, detaching again where they are long,
+and writes the final receipt. `status` reports each detached step as
+running, exited or lost. Lost (pid gone or reused, no exit record) is final:
+`wait` writes `status: lost at command N` and both print the suggested
+`tools/loss_ledger.py add` line for the infrastructure-loss ledger.
+
 Exit status: 0 clean / completed, 1 findings, 2 the card could not be read or
 `run` refused to start, 3 `run` stopped at a failing command (a result to
-report, not a problem to fix).
+report, not a problem to fix), 4 a detached step is still running (run
+`wait`), 5 a detached step was lost.
 """
 from __future__ import annotations
 
@@ -75,7 +97,9 @@ import hashlib
 import json
 import os
 import re
+import shlex
 import shutil
+import signal
 import subprocess
 import sys
 import time
@@ -108,6 +132,16 @@ VAGUE = re.compile(
 # Text a mechanical executor would have to fill in itself.
 UNFILLED = re.compile(r"<[^<>\n]{1,60}>")
 TAIL_LINES = 20
+# Above this many seconds a command runs detached: below the executor
+# runtime's 600 s shell cap, with a minute to spare for the tool itself.
+DETACH_ABOVE_SECONDS = 540
+WAIT_INTERVAL_SECONDS = 30
+WAIT_MAX_SECONDS = 540
+PID_SCHEMA = "crypto.autoresearch.task-card-detached-step.v1"
+EXIT_RUNNING, EXIT_LOST = 4, 5
+# Supervisors this process started: held so a long-lived caller (a test, `lane`) reaps
+# them with poll() instead of leaving zombies; the `run` CLI exits and init reaps them.
+_STARTED: list[subprocess.Popen] = []
 REQUIRED = ("schema", "card_id", "experiment_id", "author_role", "executor_role",
             "kind", "bus_address", "background", "write_scope", "stop_when")
 
@@ -297,6 +331,12 @@ def _command_findings(repo: Path, card: dict[str, Any], scope: list[str]) -> lis
     commands = card.get("commands")
     if not isinstance(commands, list) or not commands:
         return findings + ["commands: a frozen-command card lists at least one command"]
+    threshold = card.get("detach_above_seconds", DETACH_ABOVE_SECONDS)
+    if not isinstance(threshold, int) or isinstance(threshold, bool) or threshold <= 0:
+        findings.append("detach_above_seconds: must be a positive integer (default "
+                        f"{DETACH_ABOVE_SECONDS}, below the executor's 600 s shell cap)")
+        threshold = DETACH_ABOVE_SECONDS
+    detached_scope_checked = False
     for index, command in enumerate(commands):
         at = f"commands[{index}]"
         if not isinstance(command, dict):
@@ -317,6 +357,20 @@ def _command_findings(repo: Path, card: dict[str, Any], scope: list[str]) -> lis
         timeout = command.get("timeout_seconds")
         if not isinstance(timeout, int) or isinstance(timeout, bool) or timeout <= 0:
             findings.append(f"{at}.timeout_seconds: must be a positive integer")
+        elif timeout > threshold:
+            missing = [stream for stream in ("stdout", "stderr") if not command.get(stream)]
+            if missing and "detach_above_seconds" in card:
+                findings.append(f"{at}: timeout_seconds {timeout} exceeds detach_above_seconds {threshold}, "
+                                f"so run launches it detached; it needs the log path(s) {missing}")
+            # A card frozen before detached steps existed (no explicit
+            # detach_above_seconds) and without log paths keeps the legacy
+            # inline run, so the 2026-11-10 rule does not fail frozen cards.
+            if not detached_scope_checked and isinstance(card.get("receipt"), str):
+                detached_scope_checked = True
+                try:
+                    findings += _in_scope(f"{at}: detached run directory", scope, run_dir(card))
+                except CardError:
+                    pass   # the receipt finding already names the bad path
         codes = command.get("success_exit_codes")
         if not (isinstance(codes, list) and codes and all(isinstance(c, int) for c in codes)):
             findings.append(f"{at}.success_exit_codes: must list the exit codes that mean success")
@@ -434,6 +488,14 @@ def render_prompt(card_path: str, card_sha: str, card: dict[str, Any], repo: Pat
             "Exit 0: completed. Exit 3: stopped at a failing command, which is a result "
             "to report. Exit 2: refused to start; return `refused` with the IMPEDIMENT line.",
         ]
+        if any(isinstance(c, dict) and isinstance(c.get("timeout_seconds"), int) and _detaches(card, c)
+               for c in card.get("commands") or []):
+            lines += [
+                "A command on this card runs detached. Exit 4: it is still running; then run exactly "
+                f"`python3 tools/task_card.py wait {card_path}` and run it again each time it exits 4. "
+                "Exit 5: a detached command was lost; report the output, including its "
+                "`record the loss:` line, and run nothing else.",
+            ]
     lines += ["", "Write only inside:"] + [f"  - {entry}" for entry in card["write_scope"]]
     lines += ["", "Stop and return `refused`, naming the condition, when:"]
     lines += [f"  - {text}" for text in card["stop_when"]]
@@ -475,6 +537,234 @@ def _execute(repo: Path, command: dict[str, Any], env: dict[str, str]):
     return (*result, round(time.monotonic() - started, 3))
 
 
+def _result_entry(repo: Path, index: int, command: dict[str, Any], code, out: bytes, err: bytes,
+                  timed_out: bool, elapsed: float, attempts: list[dict[str, Any]]) -> dict[str, Any]:
+    outputs = {path: (sha256_file(repo / path) if (repo / path).is_file() else None)
+               for path in command.get("outputs") or []}
+    # A declared output the command did not write is a failure: the card
+    # said the command writes it.
+    ok = (not timed_out) and code in command["success_exit_codes"] and None not in outputs.values()
+    return {"index": index, "id": command.get("id"), "cwd": command.get("cwd") or ".",
+            "argv": command["argv"], "exit_code": code, "attempts": len(attempts),
+            "attempt_log": attempts,
+            "timed_out": timed_out, "seconds": elapsed, "succeeded": ok,
+            "stdout_sha256": sha256_bytes(out), "stderr_sha256": sha256_bytes(err),
+            "stdout_tail": _tail(out), "stderr_tail": _tail(err), "outputs": outputs}
+
+
+def _run_inline(repo: Path, index: int, command: dict[str, Any]) -> dict[str, Any]:
+    env = dict(os.environ, **(command.get("env") or {}))
+    retry = command.get("retry") or {}
+    attempts = []
+    for _attempt in range(retry.get("max_attempts", 1)):
+        code, out, err, timed_out, elapsed = _execute(repo, command, env)
+        attempts.append({"exit_code": code, "timed_out": timed_out, "seconds": elapsed})
+        if timed_out or code not in (retry.get("exit_codes") or []):
+            break
+    for stream, data in (("stdout", out), ("stderr", err)):
+        if command.get(stream):
+            _write(repo, command[stream], data)
+    return _result_entry(repo, index, command, code, out, err, timed_out, elapsed, attempts)
+
+
+# -- detached steps ---------------------------------------------------------
+
+def detach_threshold(card: dict[str, Any]) -> int:
+    value = card.get("detach_above_seconds", DETACH_ABOVE_SECONDS)
+    return value if isinstance(value, int) and not isinstance(value, bool) and value > 0 else DETACH_ABOVE_SECONDS
+
+
+def _detaches(card: dict[str, Any], command: dict[str, Any]) -> bool:
+    """Long steps detach; a legacy card without log paths stays inline."""
+    if command["timeout_seconds"] <= detach_threshold(card):
+        return False
+    has_logs = all(command.get(stream) for stream in ("stdout", "stderr"))
+    return has_logs or "detach_above_seconds" in card
+
+
+def run_dir(card: dict[str, Any]) -> str:
+    """`<receipt without .json and .receipt>.run`: cards/CARD-x.receipt.json -> cards/CARD-x.run."""
+    stem = safe_relative(str(card["receipt"]))
+    for suffix in (".json", ".receipt"):
+        if stem.endswith(suffix):
+            stem = stem[: -len(suffix)]
+    return stem + ".run"
+
+
+def _step(index: int, command: dict[str, Any]) -> str:
+    return f"{index:02d}-{command.get('id') or 'command'}"
+
+
+def _now() -> str:
+    return time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+
+
+def _boot_id() -> str | None:
+    try:
+        return Path("/proc/sys/kernel/random/boot_id").read_text().strip()
+    except OSError:
+        return None
+
+
+def _proc_start_ticks(pid: int) -> int | None:
+    """Field 22 of /proc/<pid>/stat: the process start time, which tells a reused pid apart."""
+    try:
+        stat = Path(f"/proc/{pid}/stat").read_text()
+    except OSError:
+        return None
+    fields = stat[stat.rindex(")") + 2:].split()
+    return None if fields[0] == "Z" else int(fields[19])
+
+
+def _alive(pid: int, ticks: int | None, boot: str | None) -> bool:
+    if boot and _boot_id() and boot != _boot_id():
+        return False
+    if Path("/proc").is_dir() and Path(f"/proc/{os.getpid()}/stat").is_file():
+        now = _proc_start_ticks(pid)
+        return now is not None and (ticks is None or now == ticks)
+    try:
+        os.kill(pid, 0)
+    except ProcessLookupError:
+        return False
+    except PermissionError:
+        return True
+    return True
+
+
+def _atomic_json(path: Path, doc: dict[str, Any]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    tmp = path.with_name(path.name + ".tmp")
+    tmp.write_text(json.dumps(doc, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    os.replace(tmp, path)
+
+
+def _launch_detached(repo: Path, card: dict[str, Any], index: int, command: dict[str, Any]) -> dict[str, Any]:
+    """Start the supervisor in its own session and return the receipt's `detached` entry."""
+    directory = run_dir(card)
+    step = _step(index, command)
+    spec_rel, pid_rel, exit_rel = (f"{directory}/{step}.{kind}.json" for kind in ("spec", "pid", "exit"))
+    for relative in (pid_rel, exit_rel):
+        if (repo / relative).exists():
+            raise CardError(f"{relative} already exists; a detached step starts once")
+    spec = {"argv": command["argv"], "cwd": command.get("cwd") or ".",
+            "timeout_seconds": command["timeout_seconds"], "retry": command.get("retry") or {},
+            "stdout": command["stdout"], "stderr": command["stderr"], "exit_file": exit_rel}
+    _atomic_json(repo / spec_rel, spec)
+    env = dict(os.environ, **(command.get("env") or {}))
+    log = open(repo / f"{directory}/{step}.supervisor.log", "ab")  # noqa: SIM115
+    try:
+        proc = subprocess.Popen([sys.executable, str(Path(__file__).resolve()), "_supervise",
+                                 "--repo", str(repo), spec_rel],
+                                cwd=repo, env=env, stdin=subprocess.DEVNULL, stdout=log, stderr=log,
+                                start_new_session=True, close_fds=True)
+    finally:
+        log.close()
+    _STARTED.append(proc)
+    record = {"schema": PID_SCHEMA, "card_id": card["card_id"], "index": index, "id": command.get("id"),
+              "step": step, "argv": command["argv"], "pid": proc.pid,
+              "pid_start_ticks": _proc_start_ticks(proc.pid), "boot_id": _boot_id(),
+              "started_at": _now(), "started_epoch": round(time.time(), 3),
+              "timeout_seconds": command["timeout_seconds"], "stdout": command["stdout"],
+              "stderr": command["stderr"], "exit_file": exit_rel, "spec_file": spec_rel}
+    _atomic_json(repo / pid_rel, record)
+    return {"index": index, "id": command.get("id"), "cwd": command.get("cwd") or ".",
+            "argv": command["argv"], "status": "detached", "pid_file": pid_rel, "pid": proc.pid,
+            "started_at": record["started_at"], "stdout": command["stdout"], "stderr": command["stderr"]}
+
+
+def _supervise(repo: Path, spec_rel: str) -> int:
+    """The detached supervisor: run the argv under its timeout and retry, logs to files, then
+    write the exit record (atomically, last). Its absence after the pid is gone is a loss."""
+    signal.signal(signal.SIGHUP, signal.SIG_IGN)
+    spec = json.loads((repo / spec_rel).read_text(encoding="utf-8"))
+    retry, attempts = spec["retry"], []
+    started = time.monotonic()
+    for attempt in range(retry.get("max_attempts", 1)):
+        t0 = time.monotonic()
+        code, timed_out = None, False
+        paths = [repo / safe_relative(spec[s]) for s in ("stdout", "stderr")]
+        for path in paths:
+            path.parent.mkdir(parents=True, exist_ok=True)
+        with open(paths[0], "wb") as out, open(paths[1], "wb") as err:
+            try:
+                child = subprocess.Popen(spec["argv"], cwd=repo / safe_relative(spec["cwd"]),
+                                         stdin=subprocess.DEVNULL, stdout=out, stderr=err)
+            except OSError as exc:
+                err.write(str(exc).encode())
+            else:
+                _atomic_json(repo / spec_rel.replace(".spec.json", ".child.json"),
+                             {"child_pid": child.pid, "attempt": attempt + 1, "started_at": _now()})
+                try:
+                    code = child.wait(timeout=spec["timeout_seconds"])
+                except subprocess.TimeoutExpired:
+                    child.kill()
+                    child.wait()
+                    timed_out = True
+        attempts.append({"exit_code": code, "timed_out": timed_out, "seconds": round(time.monotonic() - t0, 3)})
+        if timed_out or code not in (retry.get("exit_codes") or []):
+            break
+    _atomic_json(repo / spec["exit_file"], {"exit_code": code, "timed_out": timed_out,
+                                            "seconds": round(time.monotonic() - started, 3),
+                                            "attempt_log": attempts, "finished_at": _now()})
+    return 0
+
+
+def step_state(repo: Path, pid_rel: str) -> dict[str, Any]:
+    """running | exited | lost, for one detached step, from its pid file and exit record."""
+    for proc in _STARTED:
+        proc.poll()
+    record = json.loads((repo / pid_rel).read_text(encoding="utf-8"))
+    exit_path = repo / record["exit_file"]
+    state: dict[str, Any] = {"step": record["step"], "index": record["index"], "pid": record["pid"],
+                             "pid_file": pid_rel, "started_at": record["started_at"],
+                             "elapsed_seconds": round(time.time() - record["started_epoch"], 1)}
+    if not exit_path.is_file() and _alive(record["pid"], record.get("pid_start_ticks"), record.get("boot_id")):
+        return {**state, "state": "running"}
+    if exit_path.is_file():   # read again: the supervisor writes the record before it exits
+        return {**state, "state": "exited", "exit": json.loads(exit_path.read_text(encoding="utf-8"))}
+    child = repo / record["spec_file"].replace(".spec.json", ".child.json")
+    if child.is_file():
+        state["child_pid"] = json.loads(child.read_text(encoding="utf-8"))["child_pid"]
+        state["child_alive"] = _alive(state["child_pid"], None, record.get("boot_id"))
+    return {**state, "state": "lost"}
+
+
+def loss_ledger_line(card: dict[str, Any], receipt_rel: str, state: dict[str, Any]) -> str:
+    """The suggested ledger row for a lost step; printed, never run (the ledger tool is separate)."""
+    slug = re.sub(r"[^a-z0-9-]+", "-", f"{card['card_id']}-{state['step']}".lower()).strip("-")
+    what = (f"task card {card['card_id']} step {state['step']} lost: pid {state['pid']} gone "
+            f"without an exit record, started {state['started_at']}")
+    return ("python3 tools/loss_ledger.py add " + " ".join(shlex.quote(a) for a in (
+        "--slug", slug, "--route", "local", "--cause", "container_restart", "--what", what,
+        "--source", receipt_rel)))
+
+
+def _write_receipt(repo: Path, card: dict[str, Any], receipt: dict[str, Any]) -> None:
+    _atomic_json(repo / safe_relative(card["receipt"]), receipt)
+
+
+def _advance(repo: Path, card: dict[str, Any], receipt: dict[str, Any], start: int) -> dict[str, Any]:
+    """Run commands from `start` (1-based) until one detaches, one fails, or all are done."""
+    status = "completed"
+    for index in range(start, len(card["commands"]) + 1):
+        command = card["commands"][index - 1]
+        if _detaches(card, command):
+            entry = _launch_detached(repo, card, index, command)
+            receipt["commands"].append(entry)
+            receipt.update(status="detached", detached=entry["pid_file"])
+            _write_receipt(repo, card, receipt)
+            return receipt
+        entry = _run_inline(repo, index, command)
+        receipt["commands"].append(entry)
+        if not entry["succeeded"]:
+            status = f"stopped at command {index}"
+            break
+    receipt.pop("detached", None)
+    receipt.update(status=status, dirty_after=_dirty_paths(repo))
+    _write_receipt(repo, card, receipt)
+    return receipt
+
+
 def run_card(card_path: str, card_sha: str, card: dict[str, Any], repo: Path = REPO) -> dict[str, Any]:
     """Execute a linted frozen-command card and write its write-once receipt.
 
@@ -483,7 +773,9 @@ def run_card(card_path: str, card_sha: str, card: dict[str, Any], repo: Path = R
     is not HEAD, already has a receipt, or names a `must_not_exist` path that
     exists. A command succeeds only with a success exit code and every
     declared output written; `retry` reruns it, up to its `max_attempts`,
-    only on the exit codes it names.
+    only on the exit codes it names. A command longer than
+    `detach_above_seconds` is started detached and the receipt says
+    `status: detached` until `wait` finishes it (the only rewrite a receipt gets).
     """
     if card.get("kind") != "frozen_command":
         raise CardError("run executes frozen_command cards; a runbook card runs through tools/runbook.py")
@@ -499,42 +791,91 @@ def run_card(card_path: str, card_sha: str, card: dict[str, Any], repo: Path = R
     head = git(repo, "rev-parse", "HEAD")[1]
     if card.get("commit") and card["commit"] != head:
         raise CardError(f"card pins commit {card['commit']}, HEAD is {head}")
-    dirty_before = _dirty_paths(repo)
-
-    results, status = [], "completed"
-    for index, command in enumerate(card["commands"], 1):
-        env = dict(os.environ, **(command.get("env") or {}))
-        retry = command.get("retry") or {}
-        attempts = []
-        for _attempt in range(retry.get("max_attempts", 1)):
-            code, out, err, timed_out, elapsed = _execute(repo, command, env)
-            attempts.append({"exit_code": code, "timed_out": timed_out, "seconds": elapsed})
-            if timed_out or code not in (retry.get("exit_codes") or []):
-                break
-        for stream, data in (("stdout", out), ("stderr", err)):
-            if command.get(stream):
-                _write(repo, command[stream], data)
-        outputs = {path: (sha256_file(repo / path) if (repo / path).is_file() else None)
-                   for path in command.get("outputs") or []}
-        # A declared output the command did not write is a failure: the card
-        # said the command writes it.
-        ok = (not timed_out) and code in command["success_exit_codes"] and None not in outputs.values()
-        results.append({"index": index, "id": command.get("id"), "cwd": command.get("cwd") or ".",
-                        "argv": command["argv"], "exit_code": code, "attempts": len(attempts),
-                        "attempt_log": attempts,
-                        "timed_out": timed_out, "seconds": elapsed, "succeeded": ok,
-                        "stdout_sha256": sha256_bytes(out), "stderr_sha256": sha256_bytes(err),
-                        "stdout_tail": _tail(out), "stderr_tail": _tail(err), "outputs": outputs})
-        if not ok:
-            status = f"stopped at command {index}"
-            break
+    if any(_detaches(card, c) for c in card["commands"]) and (repo / run_dir(card)).exists():
+        raise CardError(f"{run_dir(card)} already exists; a card's detached steps start once")
     receipt = {"schema": RECEIPT_SCHEMA, "card_id": card["card_id"], "card_path": card_path,
-               "card_sha256": card_sha, "commit": head, "status": status,
-               "dirty_before": dirty_before, "dirty_after": _dirty_paths(repo),
-               "commands_total": len(card["commands"]), "commands": results}
-    receipt_path.parent.mkdir(parents=True, exist_ok=True)
-    receipt_path.write_text(json.dumps(receipt, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+               "card_sha256": card_sha, "commit": head, "status": "running",
+               "dirty_before": _dirty_paths(repo), "commands_total": len(card["commands"]), "commands": []}
+    return _advance(repo, card, receipt, 1)
+
+
+def _finish_detached(repo: Path, card: dict[str, Any], entry: dict[str, Any], exit_record: dict[str, Any]):
+    index = entry["index"]
+    command = card["commands"][index - 1]
+    out, err = ((repo / command[s]).read_bytes() if (repo / command[s]).is_file() else b""
+                for s in ("stdout", "stderr"))
+    done = _result_entry(repo, index, command, exit_record["exit_code"], out, err, exit_record["timed_out"],
+                         exit_record["seconds"], exit_record["attempt_log"])
+    done.update(detached=True, pid_file=entry["pid_file"])
+    return done
+
+
+def wait_card(card: dict[str, Any], repo: Path = REPO, interval: float = WAIT_INTERVAL_SECONDS,
+              max_seconds: float = WAIT_MAX_SECONDS, say=print) -> dict[str, Any]:
+    """Poll a detached receipt's pid file until the step exits (finish it and run the rest),
+    is lost (final receipt `lost at command N`), or the window closes (receipt unchanged).
+    `max_seconds` 0 waits without a window."""
+    receipt_path = repo / safe_relative(str(card.get("receipt") or ""))
+    if not receipt_path.is_file():
+        raise CardError(f"no receipt {card.get('receipt')}: run the card first")
+    receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+    if receipt.get("card_id") != card["card_id"]:
+        raise CardError("receipt belongs to another card")
+    began = time.monotonic()
+    say(f"WAIT polling every {interval:g} s"
+        + (f" for at most {max_seconds:g} s" if max_seconds else " without a window"))
+    while receipt["status"] == "detached":
+        entry = receipt["commands"][-1]
+        state = step_state(repo, entry["pid_file"])
+        if state["state"] == "running":
+            if max_seconds and time.monotonic() - began + interval > max_seconds:
+                say(f"WAIT window closed: step {state['step']} still running (pid {state['pid']}, "
+                    f"{state['elapsed_seconds']} s since start)")
+                return receipt
+            time.sleep(interval)
+            continue
+        if state["state"] == "lost":
+            entry.update(status="lost", lost_detected_at=_now(),
+                         child_pid=state.get("child_pid"), child_alive=state.get("child_alive"))
+            receipt.pop("detached", None)
+            receipt.update(status=f"lost at command {entry['index']}", dirty_after=_dirty_paths(repo),
+                           loss_ledger_suggestion=loss_ledger_line(card, card["receipt"], state))
+            _write_receipt(repo, card, receipt)
+            return receipt
+        receipt["commands"][-1] = _finish_detached(repo, card, entry, state["exit"])
+        if receipt["commands"][-1]["succeeded"]:
+            receipt = _advance(repo, card, receipt, entry["index"] + 1)
+        else:
+            receipt.pop("detached", None)
+            receipt.update(status=f"stopped at command {entry['index']}", dirty_after=_dirty_paths(repo))
+            _write_receipt(repo, card, receipt)
     return receipt
+
+
+def status_card(card: dict[str, Any], repo: Path = REPO) -> tuple[int, list[str]]:
+    """Every detached step of the card, running / exited / lost; never writes."""
+    directory = repo / run_dir(card)
+    pid_files = sorted(directory.glob("*.pid.json")) if directory.is_dir() else []
+    if not pid_files:
+        return 0, [f"status: no detached step under {run_dir(card)}"]
+    lines, code = [], 0
+    for path in pid_files:
+        state = step_state(repo, rel(repo, path))
+        head = f"step {state['step']}: {state['state']} (pid {state['pid']}, started {state['started_at']}"
+        if state["state"] == "running":
+            lines.append(head + f", {state['elapsed_seconds']} s ago)")
+            code = max(code, EXIT_RUNNING)
+        elif state["state"] == "exited":
+            ex = state["exit"]
+            lines.append(head + f"; {'timed out' if ex['timed_out'] else 'exit ' + str(ex['exit_code'])} "
+                         f"after {ex['seconds']} s at {ex['finished_at']})")
+        else:
+            child = (f"; child pid {state['child_pid']} {'still alive' if state['child_alive'] else 'gone'}"
+                     if "child_pid" in state else "")
+            lines.append(head + f"; pid gone, no exit record{child})")
+            lines.append("  record the loss: " + loss_ledger_line(card, card["receipt"], state))
+            code = EXIT_LOST
+    return code, lines
 
 
 def brief(receipt: dict[str, Any], receipt_rel: str, receipt_sha: str) -> str:
@@ -544,9 +885,17 @@ def brief(receipt: dict[str, Any], receipt_rel: str, receipt_sha: str) -> str:
              f"receipt: {receipt_rel} sha256 {receipt_sha}",
              f"status: {receipt['status']}"]
     for item in receipt["commands"]:
-        exit_text = "timed out" if item["timed_out"] else f"exit {item['exit_code']}"
         label = f"{item['index']}" + (f" ({item['id']})" if item.get("id") else "")
         where = f" in {item['cwd']}" if item.get("cwd", ".") != "." else ""
+        if item.get("status") in ("detached", "lost"):
+            lines.append(f"command {label}: {json.dumps(item['argv'])}{where} "
+                         f"{'DETACHED' if item['status'] == 'detached' else 'LOST'} "
+                         f"(pid {item['pid']}, started {item['started_at']}, pid file {item['pid_file']})")
+            lines.append(f"  logs: {item['stdout']} {item['stderr']}")
+            continue
+        exit_text = "timed out" if item["timed_out"] else f"exit {item['exit_code']}"
+        if item.get("detached"):
+            exit_text = "detached, " + exit_text
         if item.get("attempts", 1) > 1:
             exit_text += f" after {item['attempts']} attempts"
         lines.append(f"command {label}: {json.dumps(item['argv'])}{where} {exit_text} "
@@ -556,13 +905,16 @@ def brief(receipt: dict[str, Any], receipt_rel: str, receipt_sha: str) -> str:
         if item["stderr_tail"]:
             lines.append(f"  stderr last {len(item['stderr_tail'])} lines:")
             lines += [f"    {line}" for line in item["stderr_tail"]]
-        # Sorted, so the brief printed by `run` (outputs in card order) and the one
-        # check-relay rebuilds from the receipt (written with sort_keys) agree.
-        for path, digest in sorted(item["outputs"].items()):
+        for path, digest in item["outputs"].items():
             lines.append(f"  output {path}: {digest or 'MISSING'}")
     not_run = receipt["commands_total"] - len(receipt["commands"])
-    if not_run:
+    if receipt["status"] == "detached":
+        lines.append(f"pending: {not_run} command(s) after the detached one")
+        lines.append(f"next: python3 tools/task_card.py wait {receipt['card_path']}")
+    elif not_run:
         lines.append(f"not run: {not_run} command(s) after the stop")
+    if receipt.get("loss_ledger_suggestion"):
+        lines.append(f"record the loss: {receipt['loss_ledger_suggestion']}")
     return "\n".join(lines)
 
 
@@ -1089,11 +1441,31 @@ def _main_batch(args) -> int:
     return 1 if findings else 0
 
 
+def _print_final(card: dict[str, Any], receipt: dict[str, Any], repo: Path = REPO) -> int:
+    print(brief(receipt, card["receipt"], sha256_file(repo / card["receipt"])))
+    if receipt["status"] == "completed":
+        return 0
+    if receipt["status"] == "detached":
+        return EXIT_RUNNING
+    if receipt["status"].startswith("lost"):
+        return EXIT_LOST
+    return 3
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     sub = parser.add_subparsers(dest="command", required=True)
-    for name in ("lint", "prompt", "run"):
+    for name in ("lint", "prompt", "run", "status"):
         sub.add_parser(name).add_argument("card")
+    waiting = sub.add_parser("wait", help="poll a detached step, then finish the card and its receipt")
+    waiting.add_argument("card")
+    waiting.add_argument("--interval", type=float, default=WAIT_INTERVAL_SECONDS,
+                         help=f"seconds between polls (default {WAIT_INTERVAL_SECONDS})")
+    waiting.add_argument("--max-seconds", type=float, default=WAIT_MAX_SECONDS,
+                         help=f"stop waiting after this long, exit 4 (default {WAIT_MAX_SECONDS}; 0: no window)")
+    supervise = sub.add_parser("_supervise", help=argparse.SUPPRESS)
+    supervise.add_argument("--repo", required=True)
+    supervise.add_argument("spec")
     relay = sub.add_parser("check-relay")
     relay.add_argument("card")
     relay.add_argument("--report", required=True, help="the executor's returned text, saved to a file")
@@ -1123,6 +1495,8 @@ def main(argv: list[str] | None = None) -> int:
                           help="delphi free mode: only models that cost nothing (public: free remote tiers too, "
                                "for public or synthetic designs only)")
     args = parser.parse_args(argv)
+    if args.command == "_supervise":
+        return _supervise(Path(args.repo), args.spec)
     if args.command == "lane":
         return lane(args.design, args.bind or [], args.card, args.assessment, args.via,
                     {"task": args.task, "model": args.model, "route": args.route, "free": args.free})
@@ -1144,9 +1518,22 @@ def main(argv: list[str] | None = None) -> int:
         except CardError as exc:
             print(f"IMPEDIMENT {exc}")
             return 2
-        receipt_path = REPO / card["receipt"]
-        print(brief(receipt, card["receipt"], sha256_file(receipt_path)))
-        return 0 if receipt["status"] == "completed" else 3
+        return _print_final(card, receipt)
+    if args.command == "wait":
+        try:
+            receipt = wait_card(card, interval=args.interval, max_seconds=args.max_seconds)
+        except CardError as exc:
+            print(f"IMPEDIMENT {exc}")
+            return 2
+        return _print_final(card, receipt)
+    if args.command == "status":
+        try:
+            code, lines = status_card(card)
+        except (CardError, OSError, ValueError, KeyError) as exc:
+            print(f"IMPEDIMENT {exc}")
+            return 2
+        print("\n".join(lines))
+        return code
     findings = lint(card)
     if args.command == "lint" or findings:
         for item in findings:
