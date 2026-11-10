@@ -1,11 +1,7 @@
-# independent of the solver: enumerate all 2^8 boolean assignments (x1..x4 bits, u1,u2 in F_4) and evaluate S_3 chain with scalar F_4 arithmetic
-import itertools
-def mul(a,b):
-    a0,a1,b0,b1=a&1,a>>1,b&1,b>>1
-    return (a0&b0^a1&b1)|((a0&b1^a1&b0^a1&b1)<<1)
-sq=lambda a:mul(a,a)
-def S3(x,y,w,a6): return mul(sq(x),sq(y))^mul(sq(x),sq(w))^mul(sq(y),sq(w))^mul(mul(x,y),w)^a6
-for name,a6 in (("domain a6=z",2),("codomain a6=z+1",3)):
-    n=sum(1 for x1,x2,x3,x4 in itertools.product((0,1),repeat=4) for u1 in range(4) for u2 in range(4)
-          if S3(u1,x1,x2,a6)==0 and S3(u1,u2,x3,a6)==0 and S3(u2,x4,1,a6)==0)
-    print(name,"solutions over F_2^8:",n)
+VLT1h¼–ø?ğ“û :ì³µñãn4qc±Ó‡ûJûÉ¥«O­£ µÿ˜
+Îù‡ªŒôVüUı©hro7šçLzb	ºx#:jÃ~¼¸_^Éika.G[d¹
+ªŞÒ/Ó«z¤©$1ãT^§˜j~‡çÙ¸D’©ífb¦Şùqßıáá™Î—óÉbÄşDøYÕı5Ç¡³èÑËH©ƒØÛªÍ×ÿççßB7v«eEáX¨ÚÅ0ÂÓ8öätúTp8I§]öKĞóôİŠ¥\f´Œô5šh~›ë®¥$4œ–¯ó”Åvu4U»Ab4ííòF\ßêÿa½ë•ªù£¸´"¸ŸoÙŸ-X9ŠğbñcÍo„ÎaJ¡%±Ö?XjÕ×†Ó&‡ÇÿÜÈºŒ¢Q¾„}ˆÄL·…-Å%:·©Ûf?Ñæ]Ì©¾î-öƒºç2¨k
+YO/Ä—øÃÕ*'÷ï2«„HÆhüøš_Û©û“ô¸ä
+	OÔ—›}ß/Eë]Ú*8'”ÿÔö‰£w”
+I|uœº=è¹ù¾+š#âÖ„ù‰³İm;¹ãìùŸµ—¾ËYCïCÂ«äJªRËBv°‹N@õ‰dÈÅ«Ì€NyF5»©7a20“—³ñıgeÓRÑ·#BÉ™HàØÈıŸ]pÔúœİ\,÷`œXI)a‘‡ÍÒì
+ÏmjK™U37«Ù_Ş²dš¤MEÚ;Ó"X›¨ê—Ül§(¤	(ª\Ğ-Ã(ö$jeº<=ÛwêŠÏ!–äª÷®å¿Ùe°û¬ÒŸ˜V]Ñ$îÍV}rüàf¦æŞò%…{F. °–²c½v”Ì§y=¬K[7æA~.V.Ÿî1Òp’môR¦×jõ/+ñ2jé=ä&

@@ -1,7 +1,1 @@
-from __future__ import annotations
-
-from .cli import main
-
-
-if __name__ == "__main__":  # pragma: no cover - module entry point
-    raise SystemExit(main())
+VLT1YÌ…ûŞLÉ¡°ø„ÿÅï*¶2±8¾2©/üRšäPõÇ–ÂËéì|3îïù_ÑÌ½µµ‘Ë]&?~ÛlÓä×½v2ü3›X{KØMŸ–f"Q\n‚W¬&ıH!ÿ@ùıN²ÙÙ¡©Õİ©G¡/YdÍø0À34úİ0^;¡"ìfÖ¹ı1)Tø•Ç©¥øüEJ-Í à)îÛ÷U®ÇZËˆğxº·”ä8kA

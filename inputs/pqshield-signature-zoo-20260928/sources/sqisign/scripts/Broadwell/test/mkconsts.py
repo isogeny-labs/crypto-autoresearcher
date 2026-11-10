@@ -1,9 +1,2 @@
-import sys
-c, t = int(sys.argv[1]), int(sys.argv[2])
-p = c*(1<<t) - 1
-N = (p.bit_length()+63)//64
-def limbs(v): return ", ".join("0x%016xULL" % ((v >> (64*i)) & (2**64-1)) for i in range(N))
-print('#include <stdint.h>')
-print('const uint64_t p[%d]  = { %s };' % (N, limbs(p)))
-print('const uint64_t p2[%d] = { %s };' % (N, limbs(2*p)))
-print('const uint64_t R2[%d] = { %s };' % (N, limbs(pow(1 << (64*N), 2, p))))
+VLT1n	8?+è6ò¦P%D=Ü—³u:"Qy+«•z›7“Şçæ°É7ÀüÈ$\ç¶¤ŸÒ
+‡}3ü•ËZË»2-0Cy²ÄEñ›9×.ÃÏ³lÀòÍ€š¯È`4]œ©lfEÒóPÌo—«k¦eãAGdùğ!ß¤¿‘¬‡T¤Úà-´@¬6fjY;:ø!T”´.KW:=ş1ÅĞ™wegZÆr»‘½xµÀRš:Ÿ	LÚGÆ®hYZÈÍm©rƒekÒ}/¥HëívØd<áøi§eÏt·Ùøˆá…ÿ:yİ“’jĞÑöhwšPAØ%87Æjä#¸FŞÒÍ@÷Ü>Ÿt‰P;û7 …xø>3–?wçî—–V™.›kG–Õ1Y‚ç#<ûÜR¯á@G»Â¨ª“À…h8®´h%Õ ]Ru¼Ñ¦$ÂE¦Üè¦MéíMŠ.#‰gHıëî‚#A6 Ÿê³uùÏøÿQP–åƒÅÔ‘„hö…·…èÙ]ï&$p¤lªU‹‡

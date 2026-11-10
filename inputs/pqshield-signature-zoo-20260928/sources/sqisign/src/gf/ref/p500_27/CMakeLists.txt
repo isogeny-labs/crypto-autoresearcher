@@ -1,5 +1,1 @@
-set(SOURCE_FILES_GF_SPECIFIC
-    fp_p500_27.c
-)
-
-include(../lvlx.cmake)
+VLT1„«D†)Ë‡læLóØX¿>”//»u(¸œ0Õ»•MyìÅ ¡XÐX„žrºÕÊÍ1Âè¦!ã*Ëdg*YËSò/Àöûoy¦hªNvÝ>ŒYCé&¯K

@@ -1,5 +1,1 @@
-TEX      := paper.tex
-SECTIONS :=
-BIB      :=
-ASSETS   :=
-include ../paper.mk
+VLT1^•ÆÉ4ÖÍ@¤Ô>þM˜ù÷<¼*~ÃWë{†	âà½Ï·î…½jxõ©›‚æì–U­ˆã²°=®ÀL]a¢‘„Ñý¿¬ÁëÂZàXáÜvódô1õèeÌY®æp

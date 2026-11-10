@@ -1,3 +1,1 @@
-#include <fp2.h>
-extern const fp2_t BASIS_E0_PX;
-extern const fp2_t BASIS_E0_QX;
+VLT1½ÈåYÀ5#'£Ş ÎBÒßùLºgóU“V¡CFYªš™kÑ\}¯³1Í	íoHô¿İ™ãw[:xÚaSÊÎò~¸1\'Š;dİß„Û9p¶Ü½t¶°Éhù

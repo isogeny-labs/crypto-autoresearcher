@@ -1,6 +1,1 @@
-# TASK-20260731-012 â€” Coordinator rank and select one IDEA for /design-experiment
-
-**MIRROR ONLY.** Queue governs.
-
-- Role: coordinator
-- Depends: TASK-20260731-010, TASK-20260731-011
+VLT1i<ÍÏÄfØayßM¥$,¿'Ü÷ƒØY×ßûÔðÿõOV?@Gç:½'–PpÕç•ÐÎMGW¤ˆœ¼ŒÝ„N³U£ŸñÐ½g ð:ÖG‘|ñ¸6ÃŒM{­'ÂÇºn¼kèüù_VüÖ¦ˆ-åt#Å‚B«Æ†k&1*wºmgË “«ÝK*€¬aþÔ@ÍŽq+‡_²dD²ÈV;Qõ®À ‰j†ô’ÿµ€·‹ñqiçh€šž*RJÓ?c¾š•x

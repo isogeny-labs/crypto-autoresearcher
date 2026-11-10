@@ -1,7 +1,1 @@
-read("walk41.gp"); N=2199025563772;
-{foreach([[409,5031829425,410],[1721,14893930241,1722]], v,
-  my(lp=v[1], b=v[2], h=v[3]);
-  print("floor-",lp," seed b=",b,": cyc23=",cyc(23,b,3000)," cyc11=",cyc(11,b,2000));
-  my(w=walkl(29,b,h+5)); print("  29-cycle closed=",w[1]," length=",#w[2]," (class number ",h,")");
-  my(S=Set(w[2])); print("  distinct curves=",#S, "  all #E=N: ", #select(bb->ellcard(ellinit([1,0,0,0,fromint(bb)],g))!=N, w[2])==0);
-  write("floor"lp".txt", w[2]))}
+VLT1ì—I¹@ZÆ“Ô»Å¤ö°¥>ïM²ÂZåXzkLùÛ¶Å›‘Rçp¸|?UZÎi¤.)q²â]»{tç p“{~N'»'Ä‚åÝt³±ÄÞ&ð¿BQÏà‡O¦àùÅUìy±tÏAéB}åXýjŒ¿¯5jÚ2P²9¸—¼cðÿJ¼(ÞÙ•¨«à0F5ªâÍ6ö°´\Š³JÅÔdž@±æ(…K´µÈ‹ «¨H;†	¨àó	“¡¤žñg’ÜW¿éó	¬U¬ôKz),ôdKž#<Øôö¬ kN!zK$ÌÙHï®À_Û$ßod·R4rV‚½×œÑ©ëÅÆØt È>½l1h6ó¡å¯&$Ã3{•to(­NÖ®òæòÖ¹iwúµIuA£…Qî˜±'Ø¿ÖÎUãA"Ñð‹%ŠeâÍŠ$ŒÌFÑâùûÙ|¼üMNsÈ˜	!“Öæ]tÒ¿¢`àC,S˜WÚ,{ß®?zO€õÔGÂêägD¾¶®ºOØY>JzÅýÚpLLTó|ªÉ”žù)™È«w1sëÂ¹Š×T#Éf×Ücñ2[oG¨ìäee Z¯ám1ˆûfH>äÔ(ÇûË	•×D-™$)ôÍ:«áOAµYÐú

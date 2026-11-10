@@ -1,8 +1,1 @@
-# EXP-ECDLP-02bd1c Stage 1
-
-- supervisor status: `claim_expired`
-- producer O-* label: not emitted (killed before write)
-- contract mapping of timeout/claim expiry: `O-IMPEDIMENT` (not a mathematical negative)
-- census.json / ladder.json / cells.yaml: not written
-- amazon_bedrock: NOT SELECTED
-- No exponent-moving claim.
+VLT1 ÷Gİ<Î/’åp‘^ñÂö–LĞ|¨xp/)\ëÂ&º•‡g­•ò‡É1“â&MYr‘˜0lĞğIš”ÜĞ'©®ÔâúÃ;Ğ˜£(õê©ë³µóá6>YÀîv»]‡Öôš¢°dŠIÆ2jº'×ëBğıLËæKôøÊÀ0Auü¸¥cŠ%¼µ47¾Æe[d$”,ÒìL·çyŸ*ıçÒõPT)„2ÄOA…üéZ&,ARçâ£„:NRú¹´ºy5¡Ç¨0BûˆÎ¤z½=›çm¸ôµµœƒIZš»°=ãëv¢4-0LÖ	™MqÒ·\Øi¡Ã"E[“ã–7íá2¸¾V`"S)îY+ÀZ9šò~×õ•;tTÂ“'TÍ ;{’bi1äR.ÈÏtÒåÎh"TîÅ œ£nãâò

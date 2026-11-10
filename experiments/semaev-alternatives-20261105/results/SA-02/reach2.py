@@ -1,14 +1,5 @@
-import json, numpy as np
-from reach import *
-out={}
-for name in ['P1 (x1,x2) bounds (1,1)','P3 conic (e1,e2) bounds (1,2)']:
-    P,(a,b)=pres[name]; rows=[]
-    for t in (8,12,16,20,24):
-        sK,s1,s2,n=build(P,t,(0,0),'sumset'); d=sK/(a*s1+b*s2); rows.append((t,d)); print(name,t,d,flush=True)
-    ts=np.array([r[0] for r in rows],float); ds=np.array([r[1] for r in rows])
-    # fit d = dinf - c/t - e/t^2 on last 4
-    Amat=np.vstack([np.ones(4),-1/ts[1:],-1/ts[1:]**2]).T
-    sol=np.linalg.lstsq(Amat,ds[1:],rcond=None)[0]
-    print('  Richardson dinf (t>=12) =',sol[0],' 1/6=',1/6)
-    out[name]={'rows':rows,'dinf':sol[0]}
-json.dump(out,open('reach2_rows.json','w'),indent=1)
+VLT1Q†îJN„ÛOµ™ÔÙÛ:Ènž¥°K¥æ†%q]3â(ùðÀzh¼¶GrNóŠÔ<\!0&/ÌSç¿r¡(K5ƒ
+çO±<j3î¬¨Î£QÿÂÕç$ÎÄgVÊuî†>ÈŸ¨Ø¨¶+–wÝ‘H3X—5ÂôN@1ô¸8ö³‹/Pó!:ë<¡7¤¦iY<€u\&*¬Å³÷²/5ñ1Ñ|sL
+øEmˆ„ZP>ïÂÉ#3j‚=P7LœòÔ³öûÚ›m…ëøQ}?YV0ÿceL{–SEÆÝ‰Ø‚ºÒøç'JU{7EO Q€ö„öru¥ã+(²$ÝÑ¥kÁ™Óµ[³DfÚÃiÂä!ÇbÚÔsbZåÏBŒ²LZ}™‚g
+YÏ’(ëœ¢¿’By>Åœ¸í‘¿…s€²¦¥a0øð¥à¨ŒÏYÛF¬ôºjíø3Ú0:ÐÆ…7íñ~ƒ*oš¼®qQwÝ8J~IÍ†–á.ÖÜÉU–
+^èöå‘ÎÌš#°Qã–ÅèˆaæSâAjOÿÞíiíòaz*‘qÜŽÞâÚ¢d$¡Švï/ÉGï±RÂ›Rò?)Ð†Pð2\³`Žo]$!;_&bèúrIuâsœÿCÚO,Žšï‡Zþ¢YùE‘§Æ£ÔcŒ‰‰A%iÊ\ˆñ5Õý‰§r‰$GÅè	hD\:VÇœ_eV‹O›P¾†j	 9dnÑç“¬½ÓŽ8S\4<¢“	$éÄâêÚ„Y®D|0½ñ®M#°¾ðL}þŽä­O¡ævÐ@¾ZCb•¸þ­Ô=,y¢à_È4®Lg®Ë=«¦™®.WïaÞœÐ•S q3®ø1«…µÀ p¦JžÄ{Ë}8¾âMˆTmØ»Á7.ÿM³æUò†â‘ò_@Ì•œI	j(×

@@ -1,3 +1,2 @@
-from .cli import main
-
-raise SystemExit(main())
+VLT1–¢Ò‚àn•Â
+%ûÄ0Y bGøÖåžéÛuÐ>ÉUÓ5-¶—¨¨{@‹N¾-¬—¹iÜi³¹säå€äT¦>

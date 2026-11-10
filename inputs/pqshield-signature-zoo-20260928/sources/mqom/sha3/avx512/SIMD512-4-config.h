@@ -1,7 +1,2 @@
-/*
-This file defines some parameters of the implementation in the parent directory.
-*/
-
-#define KeccakP1600times4_implementation_config "AVX512, all rounds unrolled"
-#define KeccakP1600times4_fullUnrolling
-#define KeccakP1600times4_useAVX512
+VLT1ŸwªŽSö³Úâ~'Û~ .õQ¼ªÚ–—pc\²Gczšd,ugb_²Ç‘¢>r`4ÄPR~†a7;š]üpÈn=ôí7¾ûÈ%¯%¥NäÖ‰r†¯TÀÝá˜Ùöú ¥0É]¥UýöL‰(~¬{L®ÛK—cn6ÐÎçY´Löœôu†sè²œKÒ%­,ƒ=¤
+5–”‘°ºV‘4kPbøö®œŒz(ÏkÃºûDô9‚v¦=áþ€QªŒRî9š3 Ô²{yulßýŠCeSOëåkCOÁûrŽ_xBø.§Å#W„¾H1žs•VKyF5·4Sµ}d¨

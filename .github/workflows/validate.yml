@@ -69,6 +69,34 @@ jobs:
             .artifacts
             tools/artifacts
             coordination
+      - name: Unlock research vault (AES-256)
+        shell: bash
+        env:
+          KEY: ${{ secrets.KEY }}
+          PYTHONDONTWRITEBYTECODE: "1"
+        run: |
+          set -euo pipefail
+          set +x
+          umask 077
+          if [ -z "${KEY:-}" ]; then
+            echo "vault: KEY is unavailable; refusing to run on ciphertext" >&2
+            exit 1
+          fi
+          tool="$RUNNER_TEMP/cavault.py"
+          git show "HEAD:tools/vault/vaultctl.py" > "$tool"
+          py=python3
+          if ! "$py" -c 'import cryptography' >/dev/null 2>&1; then
+            venv="$RUNNER_TEMP/cavault-venv"
+            if "$py" -m venv "$venv" >/dev/null 2>&1; then
+              py="$venv/bin/python"
+              "$py" -m pip install --quiet --disable-pip-version-check 'cryptography>=42'
+            else
+              "$py" -m pip install --quiet --disable-pip-version-check --break-system-packages 'cryptography>=42'
+            fi
+          fi
+          "$py" "$tool" install-key --quiet
+          "$py" "$tool" setup --quiet --script "$tool"
+          "$py" "$tool" unlock --quiet
       - name: Pull store data this workflow reads (tools/artifacts)
         shell: bash
         working-directory: ${{ github.workspace }}
@@ -122,6 +150,34 @@ jobs:
           filter: blob:none
           sparse-checkout: ${{ needs.changes.outputs.full_checkout != 'true' && env.SPARSE_RULES || '' }}
           sparse-checkout-cone-mode: false
+      - name: Unlock research vault (AES-256)
+        shell: bash
+        env:
+          KEY: ${{ secrets.KEY }}
+          PYTHONDONTWRITEBYTECODE: "1"
+        run: |
+          set -euo pipefail
+          set +x
+          umask 077
+          if [ -z "${KEY:-}" ]; then
+            echo "vault: KEY is unavailable; refusing to run on ciphertext" >&2
+            exit 1
+          fi
+          tool="$RUNNER_TEMP/cavault.py"
+          git show "HEAD:tools/vault/vaultctl.py" > "$tool"
+          py=python3
+          if ! "$py" -c 'import cryptography' >/dev/null 2>&1; then
+            venv="$RUNNER_TEMP/cavault-venv"
+            if "$py" -m venv "$venv" >/dev/null 2>&1; then
+              py="$venv/bin/python"
+              "$py" -m pip install --quiet --disable-pip-version-check 'cryptography>=42'
+            else
+              "$py" -m pip install --quiet --disable-pip-version-check --break-system-packages 'cryptography>=42'
+            fi
+          fi
+          "$py" "$tool" install-key --quiet
+          "$py" "$tool" setup --quiet --script "$tool"
+          "$py" "$tool" unlock --quiet
       - name: Pull store data this workflow reads (tools/artifacts)
         shell: bash
         working-directory: ${{ github.workspace }}
@@ -184,6 +240,34 @@ jobs:
         with:
           sparse-checkout: ${{ env.SPARSE_RULES }}
           sparse-checkout-cone-mode: false
+      - name: Unlock research vault (AES-256)
+        shell: bash
+        env:
+          KEY: ${{ secrets.KEY }}
+          PYTHONDONTWRITEBYTECODE: "1"
+        run: |
+          set -euo pipefail
+          set +x
+          umask 077
+          if [ -z "${KEY:-}" ]; then
+            echo "vault: KEY is unavailable; refusing to run on ciphertext" >&2
+            exit 1
+          fi
+          tool="$RUNNER_TEMP/cavault.py"
+          git show "HEAD:tools/vault/vaultctl.py" > "$tool"
+          py=python3
+          if ! "$py" -c 'import cryptography' >/dev/null 2>&1; then
+            venv="$RUNNER_TEMP/cavault-venv"
+            if "$py" -m venv "$venv" >/dev/null 2>&1; then
+              py="$venv/bin/python"
+              "$py" -m pip install --quiet --disable-pip-version-check 'cryptography>=42'
+            else
+              "$py" -m pip install --quiet --disable-pip-version-check --break-system-packages 'cryptography>=42'
+            fi
+          fi
+          "$py" "$tool" install-key --quiet
+          "$py" "$tool" setup --quiet --script "$tool"
+          "$py" "$tool" unlock --quiet
       - name: Pull store data this workflow reads (tools/artifacts)
         if: env.RUN_RUNTIME == 'true'
         shell: bash
@@ -280,6 +364,34 @@ jobs:
         with:
           fetch-depth: 0        # full history: the base worktree and the immutability diff
           filter: blob:none
+      - name: Unlock research vault (AES-256)
+        shell: bash
+        env:
+          KEY: ${{ secrets.KEY }}
+          PYTHONDONTWRITEBYTECODE: "1"
+        run: |
+          set -euo pipefail
+          set +x
+          umask 077
+          if [ -z "${KEY:-}" ]; then
+            echo "vault: KEY is unavailable; refusing to run on ciphertext" >&2
+            exit 1
+          fi
+          tool="$RUNNER_TEMP/cavault.py"
+          git show "HEAD:tools/vault/vaultctl.py" > "$tool"
+          py=python3
+          if ! "$py" -c 'import cryptography' >/dev/null 2>&1; then
+            venv="$RUNNER_TEMP/cavault-venv"
+            if "$py" -m venv "$venv" >/dev/null 2>&1; then
+              py="$venv/bin/python"
+              "$py" -m pip install --quiet --disable-pip-version-check 'cryptography>=42'
+            else
+              "$py" -m pip install --quiet --disable-pip-version-check --break-system-packages 'cryptography>=42'
+            fi
+          fi
+          "$py" "$tool" install-key --quiet
+          "$py" "$tool" setup --quiet --script "$tool"
+          "$py" "$tool" unlock --quiet
       - name: Pull store data this workflow reads (tools/artifacts)
         shell: bash
         working-directory: ${{ github.workspace }}
@@ -393,6 +505,34 @@ jobs:
         with:
           fetch-depth: 0
           filter: blob:none
+      - name: Unlock research vault (AES-256)
+        shell: bash
+        env:
+          KEY: ${{ secrets.KEY }}
+          PYTHONDONTWRITEBYTECODE: "1"
+        run: |
+          set -euo pipefail
+          set +x
+          umask 077
+          if [ -z "${KEY:-}" ]; then
+            echo "vault: KEY is unavailable; refusing to run on ciphertext" >&2
+            exit 1
+          fi
+          tool="$RUNNER_TEMP/cavault.py"
+          git show "HEAD:tools/vault/vaultctl.py" > "$tool"
+          py=python3
+          if ! "$py" -c 'import cryptography' >/dev/null 2>&1; then
+            venv="$RUNNER_TEMP/cavault-venv"
+            if "$py" -m venv "$venv" >/dev/null 2>&1; then
+              py="$venv/bin/python"
+              "$py" -m pip install --quiet --disable-pip-version-check 'cryptography>=42'
+            else
+              "$py" -m pip install --quiet --disable-pip-version-check --break-system-packages 'cryptography>=42'
+            fi
+          fi
+          "$py" "$tool" install-key --quiet
+          "$py" "$tool" setup --quiet --script "$tool"
+          "$py" "$tool" unlock --quiet
       - name: Pull store data this workflow reads (tools/artifacts)
         shell: bash
         working-directory: ${{ github.workspace }}
@@ -607,6 +747,34 @@ jobs:
           filter: blob:none
           sparse-checkout: ${{ matrix.shard != 1 && env.SPARSE_RULES || '' }}
           sparse-checkout-cone-mode: false
+      - name: Unlock research vault (AES-256)
+        shell: bash
+        env:
+          KEY: ${{ secrets.KEY }}
+          PYTHONDONTWRITEBYTECODE: "1"
+        run: |
+          set -euo pipefail
+          set +x
+          umask 077
+          if [ -z "${KEY:-}" ]; then
+            echo "vault: KEY is unavailable; refusing to run on ciphertext" >&2
+            exit 1
+          fi
+          tool="$RUNNER_TEMP/cavault.py"
+          git show "HEAD:tools/vault/vaultctl.py" > "$tool"
+          py=python3
+          if ! "$py" -c 'import cryptography' >/dev/null 2>&1; then
+            venv="$RUNNER_TEMP/cavault-venv"
+            if "$py" -m venv "$venv" >/dev/null 2>&1; then
+              py="$venv/bin/python"
+              "$py" -m pip install --quiet --disable-pip-version-check 'cryptography>=42'
+            else
+              "$py" -m pip install --quiet --disable-pip-version-check --break-system-packages 'cryptography>=42'
+            fi
+          fi
+          "$py" "$tool" install-key --quiet
+          "$py" "$tool" setup --quiet --script "$tool"
+          "$py" "$tool" unlock --quiet
       - name: Pull store data this workflow reads (tools/artifacts)
         if: env.RUN_TESTS == 'true'
         shell: bash

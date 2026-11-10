@@ -1,9 +1,6 @@
-"""source_v3 -- STAGE 3A/3B/3C of the v2-to-v3 protocol amendment.
-
-Package marker.  The measurement itself lives in g3_predicate.py (the
-Section 3 predicate), run_stage3.py (the STAGE 3A/3B driver) and
-analyze_v3.py (the STAGE 3C analysis).
-
-Nothing under experiments/EXP-ECDLP-612fb1/source_v2/ is modified, copied or
-re-implemented by this package; instrument.py is imported unchanged.
-"""
+VLT1lmtŞGÖàá¿÷Ş'ÆvkMwùØ&?yŞû
+ÛL=H9Ç–Åİ
+ş«NŒXµ4Æ‰j’"»İb5Q±lÛ\ƒ±%Ctãøgîx¬p8=kÁnsÙJt²¿ıniQ}²Ü(lÒGQ¥Ğ¿P_ĞæUÓ	F¼+g«Á@gÿ€;¶ğR@íß4/Õ=l¢Û6.mf½È\9%ªÃ7âÚAr‚‰¤Ø[4KM9]ÌD24İë”LŸpÃ…_Ç¢»bX
+œÕGşŞÑ§ÁEÎ9,qÁ•Å°ƒºÜDZ³¤‘„dãê	£.5c:]P·UÿD©âìjœÏ6`‘	©öµÍKG32]N¿·ò,B×h½’QŠÇìµºù¯ò™¶ªOR¼£)LşQû”g£Í0¾Îo …[º[åMÔdÂ¥ƒem—Àk<úi™Cm
+‚¥€+—á4,qäEÚæ†Ú
+I?øÜÚ••yt-ÙÂ…Vƒo”ÚkïˆËÈ3fä$“*BºlÜu©Û9Ú0ûğv>ãÑ6p

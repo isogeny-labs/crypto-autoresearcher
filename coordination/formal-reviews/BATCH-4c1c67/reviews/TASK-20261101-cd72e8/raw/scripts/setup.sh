@@ -1,9 +1,1 @@
-set -x
-export ELAN_HOME=/dev/shm/j3/elan MATHLIB_CACHE_DIR=/dev/shm/j3/cache XDG_CACHE_HOME=/dev/shm/j3/xdg
-curl -sSf https://elan.lean-lang.org/elan-init.sh -o /dev/shm/j3/elan-init.sh
-sh /dev/shm/j3/elan-init.sh -y --default-toolchain none --no-modify-path
-export PATH=$ELAN_HOME/bin:$PATH
-cd /dev/shm/j3/ws
-elan show; lean --version; lake --version
-lake exe cache get
-echo SETUP_EXIT=$?
+VLT1mòæè5Þ8@ãÇl>^ÈwÛ.TMHÒÉV÷ùøWmÛèD¼MÆ®.o¢2<‚¨Ýi{OØ¢9<tsºõb;ƒï/»ëààÄS E{'ýWx‘§q‹¦3X¶ë>äi†b‚†lÂÛÎxÿåM«CgåZ¼ÚÞ;É/áàÚsMõèZµcÏe3)³˜´N,µzƒáž=Ä¼:¹€ŠÊd¬‚œñ»¿r…ÎDÇÊÒk“ê6*ÅøqôÁ‰5»*Îk­~JKä½ºŠ\¥N3zøi_ŒÎ:’ÄöÁ6€Cdèmúã±2™äÇ)H’sÐh6º_ëÜWíˆ?hvinû]©‹ÐGG#ï4ËªÑÈ„’;­GaWfÿ˜EHO¼™²ªÒž~¸äJ[òë^Ú€.kü‚:…Â©óš€‘å¾úlã`È<rk0nMm¤Ÿ»HA€Ñ12‡2±ôÁâƒ0¸£„ÀüÛî'¸ô/ªªÐRàô&i§$$½q%Á=è°#€HÚô2c2ÿ*ÁÚÉ’¡X¸ 

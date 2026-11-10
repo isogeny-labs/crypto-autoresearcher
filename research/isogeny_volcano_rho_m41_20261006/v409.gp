@@ -1,1 +1,2 @@
-read("vert_lib.gp"); t0=getabstime(); b=vert(409,204,1); print("VERT409 ",b," ",(getabstime()-t0)\1000," s");
+VLT1Сви{иЪ4­¤2…eйЅ^‰€gхЗ ї%ЫlRXГҐЌЦ?Хrд№°µјїRюgNуҐuLNOЄbћpЕ®РЈРѓKй3идЈ>YtZ^рL,і+‚ЉIё
+¦С‚ЗDу‰Z}¤µМlЎфЈСqшH]Ш`_е$М±П

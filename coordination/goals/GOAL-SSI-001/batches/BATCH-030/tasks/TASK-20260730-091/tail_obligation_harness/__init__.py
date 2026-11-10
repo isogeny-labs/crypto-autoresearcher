@@ -1,1 +1,1 @@
-"""Write-scope harness for symbolic history-uniform / summable-tail ledger."""
+VLT18ÎEÀ6µ5R(§OnÔ[À9'%ˆ¿îµ+ÜÓ-x@×h?ô16Ö‚‰î?ÉGd—‚e¨ðïí@@¢S`&¾!¦².)ÎCkñÂæœj<aC3›Ë‹ÈƒíiNu…f+

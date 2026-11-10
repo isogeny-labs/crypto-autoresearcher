@@ -1,1 +1,1 @@
-"""Write-scope harness for TASK-20260730-079 charge-incidence ledger checks."""
+VLT1¯øè(>Ë¦œŸÕœJ'ÁÇ€ï"Àýo¹ÙDºÇõÀ®= ˜²hÌq4ë×B6—b?-&bôùÊFÎ"œ˜| ÍWƒû?h†nÚS^aÄeKw²ŠÐ@î

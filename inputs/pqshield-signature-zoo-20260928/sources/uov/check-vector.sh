@@ -1,15 +1,2 @@
-#!/bin/sh
-
-rm -rf *.rsp
-./PQCgenKAT_sign
-# make sure sha256sum is installed
-sha256sum *.rsp || exit 1
-hash=$(sha256sum  *.rsp | awk '{print $1}')
-hashparam="$hash $1 $2"
-if grep -q "$hashparam" SHA256SUMS
-then
-    echo OK
-else
-    echo NOT OKAY
-    exit 1
-fi
+VLT1×åÆŠ%lå?ÿ+½æ#¯âÊÓœ?Çú[s)‚DùG®'ÓW"FÏ´ÚÕáß]á Dy%#ÿÿÛ²Zó+X×Îü}^æO¨ÜJ¦ê»Á‚ Jbñû$}vü;<4ËÍàîñnÛl6 ÙlØ|üÄÎZäGd§Èñí5=Y/—@dGÙ€´.îÀƒ÷ÿQ·áğ†Ë¹™ç“@ÜÕÕ|,}‘)ş¾­4¯ µi;æüÛü&ô›¦òùBg3…à¬Ùêç¬¥¹§‘³÷^Ø¬Ù¦şNÆª€Ã1¤«dmôq+m^
+?·H"Ö”úØl7'9êÿ½–Õ/ï‹Šˆ€¿Ç·­†½Y–—õSş/].I†ÿ

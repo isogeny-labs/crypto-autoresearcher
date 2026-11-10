@@ -1,14 +1,5 @@
-# RESULTS â€” EXP-BINSTD-ce4668
-
-Label: **O-EQUIVALENT**
-
-- hypothesis: H-BINSTD-533de4
-- approved_by: DEC-20261003-d10361
-- stage1_n: 17
-- pair_count: 20
-- median_abs_diff: 0.0
-- shuffle_median: 0.0
-- reason: median_abs_diff == 0; bases equivalent for this predicate at n=17
-- claims: break=false, exponent_move=false
-- amazon_bedrock: NOT SELECTED
-- note: Stage 2 (n=23,31) not authorized under this card.
+VLT1^ä61åÞb!¦ë¢ÚÜ|×y	À>zBô bLZ—ºRB,º2TÒGG—coÌ¬Œ4¸Ôî8ó°Ym²¢ðÕ&¡èq]¯xoá'ÀHy±âQç.‡Ù”LÜhOì\§Éiûg:P/Ü<¢·‘I®ao·"¥ÂFÂ	Þ&j8û|7›4…tLUØkÃ\h,ÞK&’Õ>ƒúÜ¼ü‡9r!<Éÿ€ëBï¢Ør¢	VàŽ9\>d]^]ÏGñ\šªÎúèÞw
+úôiØÏît°`Ó
+#G.õ×h|¤ZíA—.-p|kÁ@ÆL¯!u1Ži]Šjª(Ë­Ûìé M{´ÝäÊµW‡Mn#l±#Ja96KžãØ¥Äo¨‰ä¬n`sQ1
+í
+Z¼vìÓjÃ½ßíª{È¶<æ2³ªî=ò¤Ew‰@(€÷ý¦ù©é”_0î–÷_›»Ž¯8>¦<ñr=Œ¥˜>rc0U_’å{²Eìyf5ÐŽ`Vj…Ñ¥	¹ã9y“ý$›7uÉ¦P^m:s&°ÑTÅ?¿Ú.š
