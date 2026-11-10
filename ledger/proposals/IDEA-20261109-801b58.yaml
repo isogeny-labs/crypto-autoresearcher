@@ -1,0 +1,126 @@
+idea:
+  id: IDEA-20261109-801b58
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECC-9d5d44
+  title: The Hadamard map carries the X25519 ladder step to Edwards y-only differential addition; no coordinate
+    change makes it an addition law
+  class: mechanism
+  claim: 'Formula engineering, not an ECDLP claim. C1. $h(U:W) = (Z:Y) = (U+W : U-W)$ is $y = (u-1)/(u+1)$,
+    a bijection of $\mathbb{P}^1(\mathbb{F}_p)$ covering curve and twist. The ladder variables in src/ecc/x25519.rs
+    are $a = 2Z_2$, $b = 2Y_2$, $c = 2Z_3$, $d = 2Y_3$ in Edwards coordinates. C2. With difference $(Z_1:Y_1)$,
+    $m_1 = Y_3Z_2$, $m_2 = Z_3Y_2$, the RFC 7748 differential addition becomes $Z_5 = (Z_1 - Y_1)(m_1
+    + m_2)^2 + (Z_1 + Y_1)(m_1 - m_2)^2$, $Y_5 = (Z_1 - Y_1)(m_1 + m_2)^2 - (Z_1 + Y_1)(m_1 - m_2)^2$,
+    that is $y_5 = (2y_2y_3 - y_1(y_2^2 + y_3^2))/(y_2^2 + y_3^2 - 2y_1y_2y_3)$, with no curve constant.
+    Cost $4M + 2S + 6a$, or $3M + 2S$ with a normalised difference, equal to the Montgomery count. C3.
+    Doubling: $AA = Z^2$, $BB = Y^2$, $E = AA - BB$, $x'' = AA \cdot BB$, $z'' = E(AA + 121665E) = 121666(Z^2
+    - Y^2)(Z^2 + dY^2)$, then $(Z'':Y'') = (x'' + z'' : x'' - z'')$. C4. No-go: for any map $g$ of the
+    x-line and any function $F$, $g(x(P+Q)) = F(g(x(P)), g(x(Q)))$ fails on every pair with $2P \ne O$
+    and $2Q \ne O$; on Curve25519 that is every pair avoiding $O$ and $(0,0)$. C5. Consequences: the ladder
+    output yields Edwards $y = (X_2 - Z_2)/(X_2 + Z_2)$ at $1I + 1M + 2a$, the cost of $u$. Entering from
+    Edwards $y$ with a projective difference adds $1M$ per step, $255M$ in total, about one inversion;
+    no saving is claimed.'
+  mechanism: 'C2 is substitution: $(X_2 - Z_2)(X_3 + Z_3) = 4Y_2Z_3$ and $(X_2 + Z_2)(X_3 - Z_3) = 4Z_2Y_3$,
+    with $U_1 = (Z_1 + Y_1)/2$ and $W_1 = (Z_1 - Y_1)/2$. Hand checks: $y_3 = 1$ gives $y_5 = y_2$; $y_3
+    = -1$ with $y_1 = -y_2$ gives $y_5 = -y_2$, matching translation by $(0,-1)$. C4 uses the involution
+    $(P,Q) \mapsto (P,-Q)$: it fixes $(x(P), x(Q))$ and maps $x(P+Q)$ to $x(P-Q)$, and $x(P+Q) = x(P-Q)$
+    only if $P+Q = \pm(P-Q)$, that is $2Q = O$ or $2P = O$. Any $F$ of the two x-values is constant on
+    the orbit, so it cannot equal an injective relabelling of $x(P+Q)$. The Edwards law takes $(x,y)$,
+    which carries the sign the x-line forgets; the minimum extra datum is $x(P-Q)$ or one sign bit per
+    point. The step is branch-free and reads scalar bits uniformly once the swap is masked.'
+  novelty_status: unverified
+  citations:
+  - ref: BRIEF section 1, src/ecc/x25519.rs excerpt
+    provenance: internal
+    claim: The ladder computes a, b, c, d, da, cb as written and swaps with an if on the scalar bit.
+    verified_by: idea-generator session 2026-11-09 read the excerpt
+  - ref: RFC 7748 section 5
+    provenance: recalled
+    claim: Ladder step formulas with a24 = 121665.
+    verified_by: null
+  - ref: Castryck, Galbraith, Farashahi 2008, mixed Edwards-Montgomery representation
+    provenance: recalled
+    claim: Edwards y-only differential arithmetic exists; C1 to C3 are likely known in substance.
+    verified_by: null
+  assumptions:
+  - Hypotheses of the BRIEF; the difference point is not O.
+  - In C4, $g$ is injective on the x-line; a constant $g$ is excluded.
+  proof_search_map:
+    not_applicable_reason: null
+    bottleneck: Exact set of pairs with $x(P+Q) = x(P-Q)$.
+    baseline_embedding:
+      parameter_slice: p = 13, A = 7, all pairs of rational points
+      reproduction_check: Count pairs with equal x of sum and difference and compare with the pairs having
+        2P = O or 2Q = O.
+    observation_collision:
+      observable: the pair (x(P), x(Q))
+      distinct_preimage_search: For each observable value list the set of x(P ± Q) and confirm size 2
+        outside the 2-torsion locus.
+    constructive_transforms: []
+    quantifier_order: for all g and F there exist P and Q where the identity fails
+    method_ceiling:
+      strongest_certifiable_claim: No two-argument law on the x-line. It does not exclude laws with one
+        extra sign bit.
+      nearby_object_control: Doubling, where the involution acts trivially and a one-argument law exists;
+        the argument must not forbid it.
+    proof_obligations:
+    - equality of x of sum and difference forces 2-torsion
+  predictions:
+  - metric: mismatches between C2 and y of the full Edwards sum over the sample
+    direction: lower
+    minimum_effect: exactly 0
+  - metric: toy pairs with 2P and 2Q both non-zero and $x(P+Q) = x(P-Q)$
+    direction: lower
+    minimum_effect: exactly 0
+  - metric: field multiplies per ladder step after relabelling
+    direction: different
+    minimum_effect: unchanged at 5M + 4S + 1c
+  minimal_test:
+    design: Proposed scripts/sage/c25519_hadamard_dadd.sage. Exhaustive at p = 13, A = 7, d = 11 over
+      all triples (P, Q, P-Q) with P-Q not O; 10000 random triples on Edwards25519 comparing C2 with EdPoint
+      add; Rust test asserting x25519 output u and ed25519 y of [k]B satisfy y = (u-1)/(u+1) for the RFC
+      7748 vectors' scalars.
+    controls:
+    - 'Label control: replace y_1 by a random field element; agreement must drop to chance.'
+    - Doubling control from the proof map.
+    required_metrics:
+    - mismatch count for C2 and C3
+    - count of colliding pairs outside the 2-torsion locus
+    - fe_mul calls per step before and after
+  falsification_conditions:
+  - Any triple where C2 disagrees with the Edwards sum.
+  - A pair with $2P \ne O \ne 2Q$ and $x(P+Q) = x(P-Q)$.
+  - A measured saving in multiplies would contradict the no-gain claim and must be reported.
+  - A crash or timeout is infrastructure, not a falsification.
+  confounders:
+  - The factor 2 in a, b, c, d is projectively harmless only if applied to both coordinates.
+  interpretation_limits:
+  - This record claims no speedup; it identifies the frame and closes a question.
+  heuristic_assumptions:
+  - id: H1
+    statement: None; substitution identities and a symmetry argument.
+    rigorous_support: Hand derivation in the filing session.
+    validation_plan: Exhaustive toy check and random sample.
+  target_complexity:
+    time_exponent: not applicable, 5M + 4S + 1c per step unchanged
+    memory_exponent: not applicable
+    best_known: RFC 7748 ladder at the same count.
+    hidden_overhead: none
+    tradeoff_note: Projective difference trades 1I for 255M, a wash.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  dominated_by: RFC 7748 dominates on cost (equal count). The no-go statement is not in BRIEF section
+    2.
+  sota_delta: Operation delta 0. Adds a proof that a two-argument x-line addition cannot exist and a free
+    Edwards-y output from the existing ladder.
+  prior_art:
+    frontier_map: not_applicable
+    not_applicable_reason: Campaign "Curve25519 explicit formulas and coordinate systems" is formula engineering;
+      no ECDLP frontier row is touched.
+    none_found_after:
+    - BRIEF section 2, all 30 ledger entries (truncated abstracts), for differential addition, ladder,
+      Hadamard or y-only arithmetic
+    - BRIEF section 1 excerpt of x25519.rs
