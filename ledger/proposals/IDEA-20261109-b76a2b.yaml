@@ -1,0 +1,136 @@
+idea:
+  id: IDEA-20261109-b76a2b
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: Exact small-x relation statistics across a toy F_p-isogeny class, stratified by ell-volcano level,
+    with a random-set control
+  class: relation_collection
+  claim: 'Toy instance only, predictions fixed before any run. Let p be a prime in [2^18, 2^22] and E_0/F_p
+    ordinary with prime order N, chosen so the ell-isogeny graph has depth at least 2 for ell in {2, 3}
+    (seeded by v_ell(t^2 - 4p) >= 4, verified by enumeration). Enumerate the F_p-isogeny class by breadth-first
+    Velu steps and label curves by volcano level. For each curve compute, with the exact instrument of
+    the sibling spectrum record, the spectral constant C, the additive energy E(F) and p_exist(3), p_exist(4)
+    of the small-x base of size about p^{1/3}. Null predictions: every per-curve statistic lies within
+    3 sigma of the random negation-closed control of equal size, and the Spearman correlation between
+    level and E(F)/E(control) has absolute value below 0.5 on at least 20 curves per volcano. This tests
+    the unverified per-curve density claim of IDEA-20260731-016 and the floor-versus-crater claim of IDEA-20260731-017
+    with an exact instrument and a control they lacked. No exponent change is claimed.'
+  mechanism: 'KR-RHO-755e35 says isogenies preserve discrete logarithms, so hardness is constant across
+    the class. It does not say the small-x set is preserved: under an ell-isogeny x'' is a degree-ell
+    rational function of x (for y^2 = x^3 + b with the Galois-stable kernel at x = 0, x'' = x + 4b/x^2),
+    so smallness is destroyed and each curve carries an unrelated small-x set. Whether relation statistics
+    nonetheless depend on the endomorphism ring is an empirical question the ledger answered only with
+    sampled Groebner costs. Exact counts per curve decide it at toy size, and the same pass measures the
+    transport overlap of phi(F_E) with F_E'' (predicted |F|^2 / p), the quantity that decides whether
+    relations can be shared across the class.'
+  novelty_status: adaptation
+  citations:
+  - ref: KR-RHO-755e35
+    provenance: internal
+    claim: Isogenous curves are equally hard; the row is silent on factor-base statistics, which is what
+      is measured here.
+    verified_by: REPO BRIEF 2026-11-09 section 3 quotation only; filer must open knowledge/frontiers/ecdlp/generic-rho/KR-RHO-755e35.yaml
+  - ref: IDEA-20260731-016
+    provenance: internal
+    claim: Asserts a per-curve distribution of Semaev relation density across toy isogeny classes; status
+      unverified.
+    verified_by: REPO BRIEF 2026-11-09 section 2 index excerpt; filer must open ledger/proposals/IDEA-20260731-016.yaml
+      and -017.yaml
+  assumptions:
+  - Each enumerated curve is checked for order N and a distinct j-invariant; a duplicate or wrong order
+    is an invalid run.
+  - Level is assigned by breadth-first depth from floor curves (one rational ell-isogeny), cross-checked
+    with the labelling of ecdlp-hecke-volcano-position-20261011 after it is read.
+  predictions:
+  - metric: absolute Spearman correlation between level and energy ratio
+    direction: lower
+    minimum_effect: at most 0.5 on both volcanoes
+  - metric: number of curves with E(F) more than 3 sigma from control
+    direction: lower
+    minimum_effect: at most 1 in 20 per volcano
+  - metric: transport overlap divided by |F|^2 / p for each enumerated isogeny
+    direction: lower
+    minimum_effect: at most 3
+  minimal_test:
+    design: Two volcanoes (ell = 2, ell = 3) found by random search over prime-order curves with v_ell(t^2
+      - 4p) >= 4. Breadth-first Velu enumeration, level labels, per-curve log table and transform, small-x
+      base at beta = 1/3, five control seeds per curve. Report per-level means and the Spearman statistic.
+    controls:
+    - Random negation-closed subset per curve, five seeds.
+    - Log-interval positive control on one curve per level.
+    - Second generator on one curve to check invariance.
+    required_metrics:
+    - number of curves and levels per volcano
+    - per-curve C, E(F), p_exist(3), p_exist(4)
+    - control mean and sigma per curve
+    - Spearman statistic with 95 percent interval
+    - transport overlap count per enumerated isogeny
+  falsification_conditions:
+  - 'Abandonment rule: null on both volcanoes closes IDEA-20260731-016 and -017 at toy size with a scoped
+    negative.'
+  - 'Escalation rule: absolute Spearman above 0.5 replicated on both volcanoes falsifies the null and
+    sends the heavy-tail mechanism of IDEA-20260731-017 to a Groebner cost measurement on the same curves.'
+  - A curve with wrong order or duplicate j invalidates the run; a timeout is infrastructure.
+  confounders:
+  - Curves at one level differ in b and twist class; report b and the Legendre pattern of small x per
+    curve.
+  - Classes under 20 curves make Spearman unstable; choose the conductor so the class has at least 20.
+  interpretation_limits:
+  - Toy p <= 2^22; a toy null does not prove class-independence at 2^256.
+  - Measures small-x statistics, not Groebner cost; the cost claim of -017 is tested only indirectly.
+  heuristic_assumptions:
+  - id: H1
+    statement: Relation statistics of the small-x base do not depend on the endomorphism ring of the curve.
+    rigorous_support: None; DLP invariance under isogeny (KR-RHO-755e35) does not imply invariance of
+      factor-base statistics.
+    validation_plan: Per-curve exact counts on two volcanoes with a random control, as in minimal_test.
+  target_complexity:
+    time_exponent: No algorithm proposed. A level-dependent surplus p^sigma would let an attacker move
+      to the best curve for free (Velu is polynomial) and lower collection to N^{1 - sigma}; predicted
+      sigma = 0. Delta 0.
+    memory_exponent: O(N) instrumentation on toy groups; no attack memory claim.
+    best_known: Pollard rho, Theta(p^{1/2}) (KR-RHO-13bf67); equal across the class by KR-RHO-755e35.
+    hidden_overhead: Velu enumeration is polynomial in ell and class size; charged but negligible.
+    tradeoff_note: Exhaustive toy enumeration is instrumentation only.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  dominated_by: KR-RHO-755e35 dominates any hardness reading. No row states whether small-x relation statistics
+    vary across a class.
+  sota_delta: 'Exponent delta 0. Measured delta: exact per-curve C, energy and p_exist across two toy
+    volcanoes with a control, replacing the sampled and unverified claims of IDEA-20260731-016 and -017.'
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/generic-rho
+    rows_checked:
+    - KR-RHO-755e35
+    - KR-RHO-53c89f
+    - KR-IC-5ea2f8
+    - KR-IC-5931ee
+    - KR-RHO-13bf67
+    nearest:
+    - ref: KR-RHO-755e35
+      provenance: internal
+      relation: adjacent
+      delta: The row fixes hardness across the class; this record asks whether a representation-dependent
+        statistic varies, which the row leaves open.
+    - ref: KR-IC-5ea2f8
+      provenance: internal
+      relation: orthogonal
+      delta: GHS cover attacks move to a weak curve over extension fields; nothing here changes the field
+        or seeks weakness.
+    searched:
+      corpus_grep:
+      - brief section 2 for isogeny class, volcano, conductor, floor, crater
+      - brief section 3 for isogenous, weak curve, transfer
+      web: []
+      blocked: []
+    lead: LEAD-STR-isogeny-class-generic-invariance
+    lead_delta:
+      kind: answers_obstruction
+      statement: 'New test: Two volcanoes (ell = 2, ell = 3) found by random search over prime-order curves
+        with v_ell(t^2 - 4p) >= 4. Breadth-first Velu enumeration, level labels, per-curve log table and
+        transform, small-x base at beta = 1/3, five control seeds per curve. Report per-level means and
+        the Spearman statistic.'
