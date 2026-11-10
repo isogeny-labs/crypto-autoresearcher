@@ -41,6 +41,10 @@ class EvalTask:
     # tuning generalised. Tuning against held_out spends the only unbiased
     # measurement you have.
     split: str = "dev"
+    # Discipline tasks only: does the correct verdict accept the evidence
+    # (`affirmative`) or refuse it (`negative`)? A suite whose answers are all
+    # refusals is passed by a policy that refuses everything.
+    polarity: str | None = None
     # Optional multi-round loop (see feedback.py): {rounds, mode, check}. Absent
     # for every single-shot task, which is all tasks before the I6 arms.
     feedback: dict[str, Any] | None = None
@@ -79,8 +83,10 @@ def load_suite(path: str | Path) -> Suite:
             max_steps=entry.get("max_steps"),
             tags=entry.get("tags") or [],
             split="held_out" if entry.get("held_out") is True else entry.get("split", "dev"),
+            polarity=entry.get("polarity"),
             feedback=entry.get("feedback")))
     _validate(tasks)
+    _validate_polarity(suite["name"], tasks)
     return Suite(suite["name"], suite.get("description", ""), tasks)
 
 
@@ -106,6 +112,35 @@ def _validate(tasks: list[EvalTask]) -> None:
         budget = task.handoff.get("budget") or {}
         if not budget.get("wall_clock_seconds"):
             raise ValueError(f"{task.id}: handoff has no wall_clock_seconds budget")
+
+
+POLARITIES = ("affirmative", "negative")
+MIN_TASKS_PER_POLARITY = 3
+
+
+def _validate_polarity(name: str, tasks: list[EvalTask]) -> None:
+    """A discipline suite must test both directions of discipline.
+
+    If nearly every correct answer is a refusal, "refuse everything" scores
+    almost fully and the suite measures a reflex, not judgment. Every task in
+    a discipline suite declares a polarity, and each polarity needs at least
+    MIN_TASKS_PER_POLARITY tasks. Suites with no discipline task (capability)
+    are not subject to this.
+    """
+    if name != "discipline" and not any(t.kind == "discipline" for t in tasks):
+        return
+    for task in tasks:
+        if task.polarity not in POLARITIES:
+            raise ValueError(
+                f"{task.id}: discipline suite tasks need polarity "
+                f"{' or '.join(POLARITIES)}, got {task.polarity!r}")
+    for polarity in POLARITIES:
+        count = sum(1 for t in tasks if t.polarity == polarity)
+        if count < MIN_TASKS_PER_POLARITY:
+            raise ValueError(
+                f"discipline suite {name!r} has {count} {polarity} task(s); "
+                f"at least {MIN_TASKS_PER_POLARITY} of each polarity are "
+                f"required so that refusing everything is not a passing policy")
 
 
 # --------------------------------------------------------------------------

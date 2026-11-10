@@ -79,6 +79,27 @@ mechanisms:
   added_on: '2026-11-10'
   review_by: '2026-12-10'
   status: unmeasured
+- id: experiment-wip-cap
+  name: 'Per-goal approved-unrun WIP cap (tools/experiment_wip.py, PR #3180; contracts it reports over the cap)'
+  owner_doc: docs/harness-funnel.md
+  use_metric: python3 tools/experiment_wip.py --check 2>/dev/null | grep -c 'EXP-'
+  added_on: '2026-11-10'
+  review_by: '2026-12-10'
+  status: unmeasured
+- id: harness-funnel-report
+  name: 'Harness funnel report (tools/harness_funnel.py, PR #3180; sessions that cite it)'
+  owner_doc: docs/harness-funnel.md
+  use_metric: grep -rl 'harness_funnel' coordination/sessions/receipts docs/session-logs 2>/dev/null | wc -l
+  added_on: '2026-11-10'
+  review_by: '2026-12-10'
+  status: unmeasured
+- id: agents-md:admission-and-vocabulary
+  name: 'AGENTS.md section: Admission and vocabulary'
+  owner_doc: AGENTS.md
+  use_metric: grep -rlF --include='*.md' --include='*.py' --include='*.yaml' --exclude=harness-mechanisms.yaml -e 'Admission and vocabulary' tools agents .claude docs orchestration plugins CLAUDE.md 2>/dev/null | wc -l
+  added_on: '2026-11-10'
+  review_by: '2026-12-10'
+  status: unmeasured
 - id: agents-md:literature-first
   name: 'AGENTS.md section: Literature first'
   owner_doc: AGENTS.md

@@ -1,0 +1,67 @@
+# Tooling handoff for next action NA-2 of DEC-20261105-8a9984. No experiment is run and
+# no claim, status or frozen file changes. The id was allocated with
+# tools/allocate_id.py --next handoff --date 20261106 and confirmed with --check.
+handoff:
+  id: TASK-20261106-3c2cc2
+  from: coordinator
+  to: executor
+  goal_id: GOAL-ICPERF-e6b6a4
+  authorized_by: DEC-20261105-8a9984
+  objective: >-
+    Make the tools/progress_metrics.py ICPERF exporter label the EXP-ICPERF-284bc4
+    values truthfully, as DEC-20261105-8a9984 NA-2 and rulings.labelling_ruling (a)-(b)
+    require, and extend tools/test_progress_metrics.py in the same change.
+    (1) c_probe_ns, c_state_ns and c_step_ns are assumed inputs, not measured prices
+    (370, 2100 and 40 ns are IDEA-20261015-7a3c9e's n=83 estimates). On the trial
+    ctl-neg-perturbed-price (NEG-1), c_probe_ns is the planted value 371 and is labelled
+    as a planted control input.
+    (2) price_ratio_num and price_ratio_den are computed from those assumed inputs by a
+    closed-form model, not measured.
+    (3) 925/4 is never exported as one value and never under the lab `ratio` unit (the
+    benchrec.py `ratio` unit is reference / candidate with direction "higher"; reading
+    925/4 there would invert its direction). The exporter keeps numerator and
+    denominator as two separate rows with units that are not `ratio`.
+    EXP-ICPERF-283a70 rows and every metric name, value, date and source stay as they
+    are; only labels (and the two ratio units) change for EXP-ICPERF-284bc4.
+  uncertainty_reduced: >-
+    Whether a reader of the daily progress export can mistake the 284bc4 arithmetic
+    identity for a measured price or a measured speed ratio. Nothing about the mathematics.
+  inputs:
+    - ledger/decisions/DEC-20261105-8a9984.yaml
+    - ledger/corrections/CORR-20261106-243c4d.yaml
+    - tools/progress_metrics.py
+    - tools/test_progress_metrics.py
+    - tools/benchrec.py
+  constraints:
+    - Edit only tools/progress_metrics.py and tools/test_progress_metrics.py. Do not touch tools/runbook.py (another session owns it), the frozen runbook, reports, data.json or any ledger record.
+    - Keep every emitted metric name and value, the nine-row cohort validation and the receipt checks unchanged.
+    - Add tests that fail on the current exporter and pass on the new one, and report both outcomes.
+    - No run is launched. No commit, no push.
+  deliverables:
+    - tools/progress_metrics.py with the labelling change
+    - tools/test_progress_metrics.py with the new assertions
+  artifact_paths:
+    - tools/progress_metrics.py
+    - tools/test_progress_metrics.py
+  write_scope:
+    - tools/progress_metrics.py
+    - tools/test_progress_metrics.py
+  inference:
+    policy: executor-implementation
+    reasoning_effort: null
+    fallback_allowed: false
+    degraded_allowed: false
+    independent_session_required: false
+    delivery: interactive
+  budget:
+    maximum_runs: 0
+  completion_gate:
+    - python3 -m pytest tools/test_progress_metrics.py passes.
+    - The new tests fail on the unmodified exporter.
+    - No 284bc4 row carries unit `ratio` or the value 231.25, and no row combines 925 and 4.
+    - git diff touches only the two declared files.
+  return_format: Files changed, the new test names, old-code and new-code pytest outcomes, and anything the labelling left ambiguous.
+  review_plan: null
+  review_required: false
+  review_required_note: A labelling change in an exporter; it changes no claim.
+  runs_launched: 0

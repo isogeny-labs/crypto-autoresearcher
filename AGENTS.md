@@ -156,6 +156,10 @@ and budget stops.
 
 Every new quantitative speedup, performance advantage or ECDLP attack-cost claim MUST carry a `claims/*.json` record passing `python3 -m tools.progress_fidelity validate`, with matched baseline/candidate evidence and independent verification (`docs/progress-fidelity.md`). Local subroutine gains must not be presented as end-to-end gains; missing evidence is unqualified, never inferred. The Coordinator enforces this in prose and code; the `progress-fidelity` check must be required before merge. Descriptive observations need not assert an advantage or invent a baseline.
 
+## Admission and vocabulary
+
+Admission caps, enforced vocabulary and oracle class: [docs/harness-funnel.md](docs/harness-funnel.md).
+
 ## Intermediate-cost and asymmetric-access hypotheses
 
 For assessments of hidden mathematical advantage, follow [the full rule](docs/agent-contract-extended.md#intermediate-cost-and-asymmetric-access-hypotheses). Its scope, cost, secrecy, portfolio, and uncertainty obligations are binding.

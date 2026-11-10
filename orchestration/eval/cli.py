@@ -48,7 +48,11 @@ def cmd_list(args: argparse.Namespace) -> int:
 def cmd_validate(args: argparse.Namespace) -> int:
     """Offline: the suite parses, graders exist, fixtures build, policies resolve."""
     import tempfile
-    suite = _suite(args)
+    try:
+        suite = _suite(args)
+    except ValueError as exc:
+        print(f"1 problem(s):\n  - {exc}")
+        return 1
     cfg = config_module.load()
     problems: list[str] = []
     for task in suite.tasks:
@@ -73,8 +77,12 @@ def cmd_validate(args: argparse.Namespace) -> int:
         for problem in problems:
             print(f"  - {problem}")
         return 1
-    print(f"OK: {len(suite.tasks)} task(s) valid, fixtures build, policies resolve"
-          f"{' on ' + args.backend if args.backend else ''}")
+    polarities = {p: sum(1 for t in suite.tasks if t.polarity == p)
+                  for p in ("affirmative", "negative")}
+    shown = (" (" + ", ".join(f"{n} {p}" for p, n in polarities.items()) + ")"
+             if any(polarities.values()) else "")
+    print(f"OK: {len(suite.tasks)} task(s) valid{shown}, fixtures build, "
+          f"policies resolve{' on ' + args.backend if args.backend else ''}")
     return 0
 
 

@@ -64,3 +64,14 @@ approvals. The remedy would then be review I3/I9, not more approvals.
 - The cap does not make an unapproved packet's launcher dry-run.
 - It does not supersede the 17 queues that lack coverage. That remains a
   Coordinator act.
+
+## Relation to the per-goal WIP cap (PR #3180, same day)
+
+`tools/experiment_wip.py` (policy `coordination/experiment_wip_policy.json`,
+mode `advisory`, cutoff 2026-11-08) caps approved-unrun contracts at 3 **per
+goal** and requires a `first_measurement` block; this document's rule caps them
+at `approved_unrun_cap_per_area` **per area** (error from 2026-11-11). They
+measure the same backlog at two granularities and both are registered in
+`docs/harness-mechanisms.yaml` with a 2026-12-10 review date: the one whose
+metric moves the approved-unrun count survives, the other is retired, so the
+program does not keep two caps for one rule.
