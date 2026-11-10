@@ -198,6 +198,10 @@ This gate qualifies those claims; it does not require descriptive observations
 to assert an advantage or invent a baseline comparison. Report the actual
 controls and reference specified by the study, and defer broader interpretation.
 
+## Admission and vocabulary
+
+Admission caps, enforced vocabulary and oracle class: [docs/harness-funnel.md](docs/harness-funnel.md).
+
 ## Intermediate-cost and asymmetric-access hypotheses
 
 For assessments of hidden mathematical advantage, follow [the full rule](docs/agent-contract-extended.md#intermediate-cost-and-asymmetric-access-hypotheses). Its scope, cost, secrecy, portfolio, and uncertainty obligations are binding.

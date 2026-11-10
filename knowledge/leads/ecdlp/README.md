@@ -118,6 +118,8 @@ dominated_by: LEAD-...                       # closed_dominated only
 forecloses: [>= 3 phrases an idea would use when re-proposing this]
 areas: [FROB, QSP]
 last_reviewed: 2026-10-24
+oracle_class: algebraic       # required for ic-prime and ic-binary; see Oracle class
+oracle_class_note: one line of justification   # optional
 ```
 
 Dispositions:
@@ -131,6 +133,36 @@ Dispositions:
 | `open_next_step` | a concrete, runnable, discriminating next step exists |
 | `open_blocked` | the next step is known but blocked (`blocked_by`) |
 | `open_unexamined` | ideas exist; no experiment or evidence has touched it |
+
+## Oracle class
+
+Owner ruling R1 (crypto `research/prime_ic_program_20261029/DECISIONS.md`,
+AGENTS.md "Tracks of index calculus") splits index calculus into a generic
+track and an algebraic track. The optional field `oracle_class` records which
+oracle produces a lead's relations. It is required for families `ic-prime`
+and `ic-binary` and optional elsewhere; `--check` rejects a value outside the
+list and a missing value in those two families. `oracle_class_note` is one line
+of justification.
+
+| value | meaning |
+|:--|:--|
+| `generic` | decomposition by enumeration, subtraction, table lookup, meet-in-the-middle, k-sum, residual or coincidence collection; it runs identically on a random base |
+| `algebraic` | the solver is given the factor-base membership constraint inside the system (PKM tower, digit presentation, Weil descent, summation-polynomial Groebner, Coppersmith small roots, SAT with membership encoded) |
+| `structural` | exploits curve structure: isogeny, CM, automorphism, torsion, special j |
+| `transfer` | moves the problem: covers, extension fields, pairings, lifts |
+| `engineering` | constant-factor implementation of an otherwise classified method |
+| `not_applicable` | none of the above: audits, references, accounting |
+
+A lead that mixes classes is classified by the oracle that produces its
+relations. A generic oracle is bounded by sqrt(r) (Shoup; Corrigan-Gibbs and
+Kogan), so it can never beat rho.
+
+**Rule: a generic-oracle lead never carries a vs_rho exponent claim; its
+improvements are constants on the generic track.** Such a lead may stay open and
+report measured constants and its distance to the matched rho, but not an
+exponent below rho. `python3 tools/lead_atlas.py --genericity` lists every
+generic-oracle lead (open ones first) with its best measured result and next
+action, and `--brief` reports the count.
 
 ## Rules
 
