@@ -1,0 +1,117 @@
+idea:
+  id: IDEA-20261109-c3a0fd
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECC-9d5d44
+  title: Completeness certificate for the extended a = -1 laws on Edwards25519 and the exact exceptional
+    set of the d-free dual law
+  class: control
+  claim: 'Let $E: -x^2+y^2=1+dx^2y^2$ over $\mathbb F_p$ with $-1=\alpha^2$ a square and $d$ a non-square
+    (Edwards25519: $p=2^{255}-19\equiv 5 \bmod 8$, $d=-121665/121666$). (C1) For all $P_1,P_2\in E(\mathbb
+    F_p)$, $\varepsilon=dx_1x_2y_1y_2\notin\{1,-1\}$. Hence in the unified law $A=(Y_1-X_1)(Y_2-X_2)$,
+    $B=(Y_1+X_1)(Y_2+X_2)$, $C=2dT_1T_2$, $D=2Z_1Z_2$, $E=B-A$, $F=D-C$, $G=D+C$, $H=B+A$, $(X_3:Y_3:Z_3:T_3)=(EF:GH:FG:EH)$
+    one has $F=2Z_1Z_2(1-\varepsilon)\ne0$ and $G=2Z_1Z_2(1+\varepsilon)\ne0$, so $Z_3\ne0$ for every
+    pair including the identity, $(0,-1)$, $(\pm\alpha,0)$, $P_1=P_2$ and $P_1=-P_2$. In the doubling
+    $A=X^2$, $B=Y^2$, $C=2Z^2$, $H=A+B$, $E=(X+Y)^2-H$, $G=B-A$, $F=C-G$, output $(EF:GH:FG:EH)$, one
+    has $G=Z^2(1+dx^2y^2)\ne0$ and $F=Z^2(1-dx^2y^2)\ne0$. (C2) The d-free dual law $A''=(Y_1-X_1)(Y_2+X_2)$,
+    $B''=(Y_1+X_1)(Y_2-X_2)$, $C''=2Z_1T_2$, $D''=2T_1Z_2$, $E''=D''+C''$, $F''=B''-A''$, $G''=B''+A''$,
+    $H''=D''-C''$, output $(E''F'':G''H'':F''G'':E''H'')$, 8M and 0c, returns $P_1+P_2$ when $P_1-P_2\notin
+    E[4](\mathbb F_p)=\{(0,\pm1),(\pm\alpha,0)\}$ and returns $(0:0:0:0)$ otherwise. It is therefore never
+    complete. (C3) Consequently $P_1\equiv P_2 \pmod{E[4](\mathbb F_p)}$ iff $F''G''=0$, a test costing
+    2M + 6a with no inversion and no $Z$.'
+  mechanism: 'C1: suppose $\varepsilon=\pm1$. Then $x_1y_1x_2y_2\ne0$ and $dx_1^2y_1^2(-x_2^2+y_2^2)=dx_1^2y_1^2+\varepsilon^2=-x_1^2+y_1^2$.
+    Therefore $(\alpha x_1+\varepsilon y_1)^2=dx_1^2y_1^2(\alpha x_2+y_2)^2$ and $(\alpha x_1-\varepsilon
+    y_1)^2=dx_1^2y_1^2(\alpha x_2-y_2)^2$. Since $x_2,y_2\ne0$, one of $\alpha x_2\pm y_2$ is nonzero,
+    which makes $d$ a square, a contradiction. Both hypotheses are used: $\alpha$ must lie in $\mathbb
+    F_p$ and $d$ must be a non-square. C2: $F''=2(X_1Y_2-Y_1X_2)$ and $G''=2(Y_1Y_2-X_1X_2)$ are the numerators
+    of $x(P_1-P_2)$ and $y(P_1-P_2)$ in the complete law (substitute $x_2\mapsto -x_2$), whose denominators
+    are nonzero by C1. So $F''G''=0$ iff $x(P_1-P_2)\,y(P_1-P_2)=0$ iff $P_1-P_2\in\{xy=0\}= E[4](\mathbb
+    F_p)$. If $F''=0$ then $(X_2:Y_2:Z_2:T_2)=\lambda(\pm X_1:\pm Y_1:Z_1:T_1)$ and $H''=0$; if $G''=0$
+    then $(X_2:Y_2:Z_2:T_2)=\lambda(\pm\alpha Y_1:\pm\alpha X_1:Z_1:-T_1)$ and $E''=0$; in both cases
+    all four outputs vanish. Off the exceptional set $E''/G''$ and $H''/F''$ are the dual affine law $(x_1y_1+x_2y_2)/(y_1y_2-x_1x_2)$,
+    $(x_1y_1-x_2y_2)/(x_1y_2-y_1x_2)$. Symmetry: the dual law''s denominators are the standard law''s
+    numerators for the difference, so its defect is translation-invariant under $E[4]$.'
+  novelty_status: unverified
+  citations:
+  - ref: Bernstein, Birkner, Joye, Lange, Peters 2008, Twisted Edwards Curves
+    provenance: recalled
+    claim: The twisted Edwards addition law is complete when a is a square and d is not.
+    verified_by: none; recalled pointer. The proof in this record is self-contained.
+  - ref: BRIEF section 0
+    provenance: internal
+    claim: -1 is a square mod p and d is a non-square for Edwards25519.
+    verified_by: idea-generator session 2026-11-09, read from the BRIEF; not recomputed
+  - ref: IDEA-20260905-05648a
+    provenance: internal
+    claim: Adjacent record on rational torsion of Montgomery and Edwards models.
+    verified_by: only the truncated index line in BRIEF section 2 was read
+  assumptions:
+  - Inputs are F_p-rational points on the curve with Z nonzero and XY = ZT.
+  - Non-squareness of d is taken from the BRIEF; the test recomputes $d^{(p-1)/2}=-1$.
+  predictions:
+  - metric: pairs with FG = 0 in the unified law, toy curves with non-square d
+    direction: different
+    minimum_effect: exactly 0
+  - metric: pairs with FG = 0 in the unified law, toy curves with square d
+    direction: higher
+    minimum_effect: at least 1 on every such curve
+  - metric: ordered pairs on which the dual law fails, non-square d
+    direction: different
+    minimum_effect: exactly 4N for a curve with N points, every failure being (0,0,0,0)
+  minimal_test:
+    design: scripts/ed25519_formulas_check.sage. For p in {17, 29, 37, 41}, a = -1 and every d not in
+      {0, -1}, enumerate affine points and run the three laws on all ordered pairs. Reference is the affine
+      law with explicit inversions, plus closure, XY = ZT, identity, inverse and associativity over all
+      triples. On Edwards25519 itself assert Euler's criterion for -1 and d and run all 64 pairs of the
+      eight torsion points and 1000 random pairs.
+    controls:
+    - 'Proves-too-much control: curves with square d must show exceptional pairs, for example $P_2=(1/(\delta
+      y_1),1/(\delta x_1))$ with $\delta^2=d$.'
+    - 'Nearby-object control: the same check over F_{p^2} for a non-square-d toy must also find exceptional
+      pairs.'
+    - Symbolic identity check of all three laws in Q(d)[X1..T2] modulo XY = ZT.
+    required_metrics:
+    - number of points N per toy curve
+    - count of pairs with FG = 0, by squareness of d
+    - count and output of dual-law failures
+    - count of reference mismatches
+  falsification_conditions:
+  - A pair of F_p-points with FG = 0 on any curve with non-square d.
+  - No exceptional pair on a square-d toy curve (the control lacks power).
+  - Dual-law failures not equal to 4N, or a failure with a nonzero output coordinate.
+  - A crash or timeout is infrastructure, not a result.
+  confounders:
+  - Square-d toy curves lose rational points to infinity; N counts affine points only there.
+  - Toy curves need not share Edwards25519's cofactor; the proof does not use it.
+  interpretation_limits:
+  - Completeness is for F_p-points on the curve only, not for unvalidated or twist inputs.
+  - A finite toy check illustrates the lemma; the lemma is what transfers to p = 2^255 - 19.
+  heuristic_assumptions:
+  - id: H1
+    statement: None beyond the stated hypotheses; the claims are algebraic.
+    rigorous_support: Proof given in the mechanism field.
+    validation_plan: Exhaustive toy enumeration and the symbolic identity check.
+  target_complexity:
+    time_exponent: not applicable; correctness property of fixed formulas
+    memory_exponent: not applicable
+    best_known: Completeness for a square and d non-square (BBJLP 2008, recalled)
+    hidden_overhead: none
+    tradeoff_note: The dual law saves 1c per un-cached addition but needs a guarantee that the operands
+      differ modulo E[4].
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  dominated_by: C1 is the BBJLP completeness theorem (recalled). The exact E[4] description of the dual
+    law's failures and the 2M coset test are not in BRIEF section 2; equivalent statements may exist in
+    the literature.
+  sota_delta: 0 operations. Adds a proved exception table, a null control with square d, and a coset-equality
+    test at 2M + 6a.
+  prior_art:
+    frontier_map: not_applicable
+    not_applicable_reason: Curve25519 explicit-formula campaign; a correctness control for addition formulas,
+      not an ECDLP mechanism.
+    none_found_after:
+    - BRIEF section 2 index, all 30 lines, read for complete addition, exceptional points, dual law, E[4]
+    - BRIEF section 0 and section 1 for an existing completeness test
