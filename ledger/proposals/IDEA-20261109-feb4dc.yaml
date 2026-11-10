@@ -1,0 +1,156 @@
+idea:
+  id: IDEA-20261109-feb4dc
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: 'Internal Semaev relation supply of structured factor bases over F_p: coordinate structure gives
+    the random count, group structure gives tautologies'
+  class: barrier
+  claim: 'Let G = E(F_p) have prime order N and F a symmetric subset with |F| = B. Let C_3(F) be the number
+    of pairs (P_1, P_2) in F^2 with P_1 + P_2 in F; random prediction B^3/N. Claim A (heuristic, sum-product):
+    for coordinate factor bases of points with x in A, where A is an x-interval, a multiplicative coset
+    cH with H <= F_p^* of order near B (so p = 1 mod |H|), or the image of an interval under a fixed cubic,
+    C_3 equals B^3/N within Poisson noise, three sigma = 3 sqrt(B^3/N), at B = (50 N)^(1/3) and p in [2^20,
+    2^26]; additive and multiplicative structure of A in F_p are both invisible to the group law. Claim
+    B (theorem): on a j = 0 curve with endomorphism phi acting as lambda on G, the orbit-union factor
+    base built from seeds Q as the six points plus or minus Q, lambda Q, lambda^2 Q has C_3 >= 2B from
+    Q + lambda Q = -lambda^2 Q, and the excess relations read d_Q + d_(lambda Q) + d_(lambda^2 Q) = 0,
+    identities once d_(lambda Q) = lambda d_Q is used; their Z/N-rank modulo the endomorphism identities
+    is 0. The control of multiples kP with 0 < |k| <= B/2 has C_3 near (3/4) B^2 and every relation is
+    an identity given the labels. Claim C (theorem): |C_3 - B^3/N| <= M B <= C B^(3/2) with M the spectral
+    norm of 1_F and C its ratio to sqrt(B), so a supply excess above C B^(3/2) forces a Fourier bias of
+    the discrete logs of F toward a Bohr set of Z/N, i.e. log structure; an excess at the scale B that
+    index calculus needs is below this threshold and must be measured, which is why Claim A is heuristic.
+    Consequence: factor-base design over F_p (the prime-field analogue of KR-IC-73db3f) can at most lower
+    decomposition cost, never raise relation supply.'
+  mechanism: S_3 = 0 is the x-image of the group law, hence an Elekes-Szabo special surface, so the Elekes-Szabo
+    bound gives nothing for group-structured A and the sets with many solutions in A^3 are x-images of
+    group-structured sets; Bourgain-Katz-Tao says no A of size p^beta, 0 < beta < 1, is approximately
+    closed under both + and x, while the addition law uses both, which is the heuristic behind Claim A.
+    Claim B is 1 + lambda + lambda^2 = 0 mod N. Claim C is the m = 2 case of the Fourier inequality plus
+    Parseval. The run reuses the point lists and relation counters of experiments/factor-base-yield-v2
+    (next agent reads its README for the yield definition and keeps it) and adds a rank computation of
+    the found relations over Z/N against the toy discrete logs.
+  novelty_status: adaptation
+  citations:
+  - ref: IDEA-20260727-001
+    provenance: internal
+    claim: The phi-invariant relation matrix on j = 0 GLV instances gives no linear-algebra advantage
+      beyond two known effects; Claim B is the rank-0 form of one of them.
+    verified_by: brief section 2 excerpt only.
+  - ref: IDEA-20260726-002
+    provenance: internal
+    claim: Proposes a factor base as a union of phi-orbits; Claim B identifies its excess relations as
+      identities.
+    verified_by: brief section 2 excerpt only.
+  - ref: KR-IC-73db3f
+    provenance: internal
+    claim: Choosing the factor-base space V lowers degree and variable count over binary fields; this
+      record tests whether any prime-field choice of A changes supply.
+    verified_by: brief section 3 row text.
+  - ref: KR-IC-5931ee
+    provenance: internal
+    claim: Algebraic factor bases over F_p work only at small parameters; this record isolates the supply
+      half of that negative.
+    verified_by: brief section 3 row text.
+  assumptions:
+  - Toy discrete logs come from full enumeration and are used only to compute ranks.
+  - For the coset family, primes with p = 1 mod d for d near B and a prime-order curve are added to docs/ECDLP_CALIBRATION_PRIMES.md.
+  predictions:
+  - metric: C_3 minus B^3/N in units of sqrt(B^3/N), each coordinate family
+    direction: different
+    minimum_effect: within 3 at every prime with no family-wise trend
+  - metric: C_3 for the orbit union minus 2B minus B^3/N
+    direction: different
+    minimum_effect: within 3 sqrt(B^3/N)
+  - metric: Z/N-rank of excess orbit relations modulo endomorphism identities
+    direction: lower
+    minimum_effect: exactly 0
+  - metric: M against (C_3 - B^3/N)/B for every family
+    direction: higher
+    minimum_effect: M at least that quotient (identity check)
+  minimal_test:
+    design: For 6 primes per family, build F, enumerate the B^2 pairs, count C_3 and store the relations,
+      compute the Z/N-rank of the relation matrix and of the matrix augmented by the structural identities,
+      and compute M by the length-N FFT of the spectral-norm record. B near (50 N)^(1/3) keeps the random
+      count near 50.
+    controls:
+    - Uniform random symmetric subset of G of size B.
+    - Multiples kP with 0 < |k| <= B/2, labels known.
+    - Doubling constants |A+A|/|A| and |A.A|/|A| recorded per family.
+    required_metrics:
+    - p, N, B, family
+    - C_3 and its random prediction
+    - relation ranks before and after adding identities
+    - M and the quotient (C_3 - B^3/N)/B
+    - doubling constants of A
+  falsification_conditions:
+  - A coordinate family with C_3 above B^3/N by more than three sigma at a majority of primes kills Claim
+    A and makes that family a live supply lead.
+  - Excess orbit relations with positive rank after adding the identities mean Claim B is misstated.
+  - M below (C_3 - B^3/N)/B for any family is an arithmetic error.
+  confounders:
+  - The cubic-image family can have |A| below the interval length through collisions; B is measured, not
+    assumed.
+  - Orbit seeds must give disjoint orbits; overlap is checked and excluded.
+  interpretation_limits:
+  - Supply is one half of index-calculus cost; decomposition cost is untouched and is where KR-IC-73db3f-type
+    choices act.
+  - Claim A is heuristic and tested at m = 2 only.
+  heuristic_assumptions:
+  - id: H1
+    statement: Neither additive nor multiplicative structure of A in F_p changes the number of solutions
+      of S_3 = 0 in A^3 beyond random.
+    rigorous_support: Sum-product (Bourgain-Katz-Tao) and Elekes-Szabo specialness motivate it; no theorem
+      gives the Poisson count.
+    validation_plan: The three coordinate families against the random control.
+  target_complexity:
+    time_exponent: N^(1/2) unchanged; delta 0
+    memory_exponent: unchanged
+    best_known: Pollard rho, Theta(N^(1/2)) (KR-RHO-13bf67)
+    hidden_overhead: none claimed
+    tradeoff_note: A supply boost without discrete-log structure would lower the required B; Claim C says
+      the boost and the structure are the same quantity.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  dominated_by: KR-RHO-13bf67 for exponents. IDEA-20260727-001 covers the linear-algebra side of Claim
+    B; no record states Claim A's three-family null or Claim C's inequality.
+  sota_delta: 'Exponent delta 0. Counted delta: a 2 x 2 separation of coordinate structure from group
+    structure in relation supply, with the group side proven tautological.'
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/index-calculus
+    rows_checked:
+    - KR-IC-73db3f
+    - KR-IC-5931ee
+    - KR-IC-b0fcda
+    - KR-IC-955fd6
+    - KR-RHO-0528e7
+    - KR-IC-49c882
+    nearest:
+    - ref: KR-IC-73db3f
+      provenance: internal
+      relation: adjacent
+      delta: Binary-field factor-base choice acts on degree after Weil descent; here the question is relation
+        supply over F_p and the answer is predicted null.
+    - ref: KR-IC-b0fcda
+      provenance: internal
+      relation: adjacent
+      delta: Frobenius-invariant bases cut the number of systems by n; the phi-orbit analogue here produces
+        relations shown to be identities, matching that row's constant-factor nature.
+    searched:
+      corpus_grep:
+      - brief section 2 for factor base, phi-orbit, GLV, energy, structured
+      - brief section 3 for factor base choice, symmetric, Frobenius invariant
+      web: []
+      blocked:
+      - no tool access; factor-base-yield-v2 README unread
+    lead: LEAD-EXO-quadratic-phase-small-x-leakage
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: For 6 primes per family, build F, enumerate the B^2 pairs, count C_3 and store
+        the relations, compute the Z/N-rank of the relation matrix and of the matrix augmented by the
+        structural identities, and compute M by the length-N FFT of the spectral-norm record. B near (50
+        N)^(1/3) keeps the random count near 50.'

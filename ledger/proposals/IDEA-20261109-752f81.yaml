@@ -1,0 +1,148 @@
+idea:
+  id: IDEA-20261109-752f81
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: 'Exhaustive hybrid-sum matrix of the discrete-log graph (k, x(kP)) at p <= 2^14: Weil constant
+    check and the statistical-attack barrier it fixes'
+  class: representation
+  claim: 'Let E/F_p have prime order N with generator P and define F(a,b) = sum over 0 < k < N of e_p(a
+    x(kP)) e(bk/N) for a in F_p, b in Z/N. Theorem (Weil-Deligne, Bombieri form): F(0,b) = -1 for b !=
+    0 and |F(a,b)| <= 3 sqrt(p) for every a != 0 and every b. So the graph of k -> x(kP) is a subset of
+    Z/N x F_p of size N - 1 whose nontrivial Fourier coefficients are all at most 3 sqrt(p), while a random
+    subset of equal density has sup-norm about sqrt(N ln(N p)). Pre-registered predictions for 20 primes
+    in [2^11, 2^14] with N prime: (i) the maximum over a != 0 and all b of |F(a,b)|/sqrt(p) exceeds 2.0
+    for at least one prime, so the constant 2 quoted in some sources is not a universal bound; (ii) that
+    maximum is at most 0.85 times the random-control maximum at every prime and at most 0.75 for p >=
+    2^13; (iii) for every a != 0 the mean over b of |F(a,b)|^2 equals N - 1 exactly. Barrier consequence
+    (theorem): a statistic that is an F_p-additive character of x averaged over an arithmetic progression
+    S of scalars has normalised bias at most 3 sqrt(p)(1 + ln N)/|S|, which excludes bit-bias, Legendre-sequence
+    and Fourier-localisation attacks on k over scalar sets longer than p^(1/2 + o(1)) and says nothing
+    below sqrt(p).'
+  mechanism: 'For a != 0 and a character chi_b of E(F_p), F(a,b) is the sum over E minus O of psi_a(x)
+    chi_b, i.e. minus the Frobenius trace on H^1_c(E - O, L_psi(a x) tensor L_chi_b). Grothendieck-Ogg-
+    Shafarevich with one puncture and Swan conductor 2 at O (x has a double pole, p odd) gives dimension
+    3; Deligne gives 3 sqrt(p). Equivalently, for fixed b the map a -> F(a,b) is the F_p-Fourier transform
+    of the rank-2 trace function K_b(x) = sum of chi_b(Q) over the at most two points Q above x, and that
+    transform has rank 3. The run computes the complete matrix: enumerate x(kP) for 0 < k < N (N - 1 group
+    operations), then one length-N Bluestein FFT of k -> e_p(a x(kP)) per a, about p N log N = 2^32 flops
+    at p = 2^14. The next agent should read the Kohel-Shparlinski paper on sums over subgroups of elliptic
+    curves to settle whether their constant 2 refers to this sum; no exponent depends on it.'
+  novelty_status: adaptation
+  citations:
+  - ref: IDEA-20260805-c4f675
+    provenance: internal
+    claim: H-PSEUDO measures max_k |sum_{Q in F} e(k DL(Q)/N)|/sqrt(B) and reports four incompatible growth
+      exponents; that quantity is a weighted column average of this matrix.
+    verified_by: brief section 2 excerpt only; next agent opens ledger/proposals/IDEA-20260805-c4f675.yaml.
+  - ref: KR-RHO-13bf67
+    provenance: internal
+    claim: Generic algorithms need Omega(sqrt p) group operations; this record changes no exponent.
+    verified_by: brief section 3 row text.
+  - ref: KR-IC-f5c584
+    provenance: internal
+    claim: In characteristic 2 the trace E -> F_2 is a group morphism and forces a linear equation; for
+      odd p and N != p no nonzero morphism E(F_p) -> F_p exists, the qualitative reason the matrix is
+      flat.
+    verified_by: brief section 3 row text.
+  assumptions:
+  - N is prime and N != p; both are recomputed in the run.
+  - The floating-point FFT is cross-checked against 50-digit sums at 16 random (a,b) per prime; a mismatch
+    above 1e-6 invalidates.
+  predictions:
+  - metric: maximum over a != 0 and all b of |F(a,b)|/sqrt(p), per prime
+    direction: higher
+    minimum_effect: exceeds 2.0 for at least one prime and never exceeds 3.0
+  - metric: ratio of that maximum to the random-control maximum
+    direction: lower
+    minimum_effect: at most 0.85 at every prime, at most 0.75 for p >= 2^13
+  - metric: maximum over a of the relative Parseval residual of mean_b |F(a,b)|^2 against N - 1
+    direction: lower
+    minimum_effect: below 1e-6 (identity check)
+  minimal_test:
+    design: For 20 primes in [2^11, 2^14], select a prime-order curve with the crypto ic executable's
+      custom-curve inspection, enumerate x(kP), build the (p-1) x N matrix of |F(a,b)|/sqrt(p) with one
+      FFT per a, and record the maximum with its (a,b), the per-a Parseval residual and a 20-bin pooled
+      histogram of |F(a,b)|^2/p.
+    controls:
+    - Random control with k -> x(kP) replaced by k -> a uniform random element of F_p, fresh seed per
+      prime, same metrics.
+    - High-precision spot check of 16 random (a,b) per prime.
+    required_metrics:
+    - p, N, curve coefficients, generator
+    - normalised maximum and its argmax (a,b)
+    - random-control maximum
+    - maximum per-a Parseval residual
+    - pooled histogram of |F(a,b)|^2/p
+  falsification_conditions:
+  - Any |F(a,b)| > 3 sqrt(p) + 1e-6 with a != 0 confirmed by the spot check falsifies the stated bound,
+    not just the run.
+  - The normalised maximum never exceeds 2.0 across all 20 primes.
+  - The ratio to the random control exceeds 0.9 at any prime.
+  - A failed spot check or composite N is an invalid run.
+  confounders:
+  - Bluestein round-off grows with N; the spot check bounds it and the histogram tail is reported with
+    and without the spot-checked cells.
+  interpretation_limits:
+  - Only additive characters of x are controlled; multiplicative characters and nonlinear statistics are
+    other trace functions with other constants and are not measured here.
+  - Nothing is asserted for scalar sets smaller than sqrt(p); that silence is the content of the barrier,
+    not a loophole it closes.
+  heuristic_assumptions:
+  - id: H1
+    statement: The random control's sup-norm is about sqrt(N ln(N p)), so the algebraic matrix is flatter
+      than random by about 3/sqrt(ln(N p)).
+    rigorous_support: Extreme-value heuristic for N p nearly independent complex Gaussians; no theorem
+      invoked.
+    validation_plan: Measured by the random control in the same run.
+  target_complexity:
+    time_exponent: p^(1/2) unchanged; the record moves no exponent
+    memory_exponent: N field elements in the experiment only
+    best_known: Pollard rho, Theta(p^(1/2)) group operations (KR-RHO-13bf67)
+    hidden_overhead: none claimed
+    tradeoff_note: The theorem bounds the advantage of statistical attacks at scale above sqrt(p) and
+      defines no tradeoff.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  dominated_by: KR-RHO-13bf67 dominates any exponent reading, delta 0. No row states the flatness constant
+    or the gap to random.
+  sota_delta: 'Exponent delta 0. Counted delta: the complete character table of a toy discrete-log graph,
+    its constant against the random control, and a theorem-level list of excluded statistical attack families
+    above sqrt(p).'
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/generic-rho
+    rows_checked:
+    - KR-RHO-13bf67
+    - KR-IC-5931ee
+    - KR-IC-f5c584
+    - KR-RHO-53c89f
+    - KR-IC-cd159a
+    - KR-RHO-0528e7
+    nearest:
+    - ref: KR-IC-f5c584
+      provenance: internal
+      relation: adjacent
+      delta: That row records a morphism E -> F_2 producing a linear equation in characteristic 2; over
+        F_p with N != p no such morphism exists and this record quantifies the resulting flatness instead.
+    - ref: KR-RHO-53c89f
+      provenance: internal
+      relation: adjacent
+      delta: Anomalous curves (N = p) are exactly where a morphism E(F_p) -> F_p exists and the matrix
+        is not flat; this record covers the complementary N != p case.
+    searched:
+      corpus_grep:
+      - brief section 2 for character sum, exponential sum, hybrid, H-PSEUDO, pseudorandom
+      - brief section 3 for trace, Weil, Fourier, equidistribution
+      web: []
+      blocked:
+      - no tool access in this session; literature constant unverified
+    lead: LEAD-EXO-quadratic-phase-small-x-leakage
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: For 20 primes in [2^11, 2^14], select a prime-order curve with the crypto
+        ic executable''s custom-curve inspection, enumerate x(kP), build the (p-1) x N matrix of |F(a,b)|/sqrt(p)
+        with one FFT per a, and record the maximum with its (a,b), the per-a Parseval residual and a 20-bin
+        pooled histogram of |F(a,b)|^2/p.'
