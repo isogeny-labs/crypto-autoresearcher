@@ -14,16 +14,21 @@ idea:
     sends $(X_3,Y_3,Z_3,T_3)$ to its negative; the unified law fixes every product and the vector. (C2)
     Any law whose output vector is swap-odd is zero at $P_1=P_2$, so it cannot double. (C3) $Z_3=0$ iff
     $P_1-P_2\in\{(0,1),(0,-1),(\pm\sqrt{-1},0)\}=E(\mathbb F_p)[4]$; otherwise the output equals the unified
-    sum. (C4) In MSB-first double-and-add with $\mathrm{ord}(P)=\ell$ the add step is never exceptional
-    for $0\le k<\ell$, and is exceptional for clamped scalars with $\lfloor k/8\rfloor=(\ell+1)/2$.
+    sum. (C4) In MSB-first double-and-add with $\mathrm{ord}(P)=\ell$ the add step at bit $j$ is exceptional
+    iff bit $j$ of $k$ is set and $2\lfloor k/2^{j+1}\rfloor\equiv1\pmod\ell$. It is never exceptional
+    for $0\le k<\ell$, and never exceptional for a 255-bit clamped scalar. The prefix $\lfloor k/8\rfloor=(\ell+1)/2$
+    fails only for an unclamped $k$ with bit 2 set, for example $k=4\ell+8$.
   mechanism: $F=2(X_1Y_2-Y_1X_2)$ and $G=2(Y_1Y_2-X_1X_2)$. With $t=x_1x_2y_1y_2$, $x(P_1-P_2)=(x_1y_2-y_1x_2)/(1-dt)$
     and $y(P_1-P_2)=(y_1y_2-x_1x_2)/(1+dt)$, and $1\pm dt\ne0$ on rational points because $d$ is a non-square.
     So $F=0$ iff $x(P_1-P_2)=0$ and $G=0$ iff $y(P_1-P_2)=0$, which are the four points of order dividing
     4. For (C2), a polynomial vector with $\Phi(P_2,P_1)=-\Phi(P_1,P_2)$ gives $2\Phi(P,P)=0$. For (C4),
     before the add the accumulator is $mP$ with $m=2\lfloor k/2^{j+1}\rfloor$, so $P_1-P_2=(m-1)P$ and
-    the step fails iff $\ell\mid m-1$; $m-1\le k-1<\ell$ and $m-1$ is odd when $k<\ell$, while $m=\ell+1$
-    is reachable from a clamped scalar.
-  novelty_status: unverified
+    the step fails iff $\ell\mid m-1$; $m-1\le k-1<\ell$ and $m-1$ is odd when $k<\ell$. For $k<2^{255}$
+    failure needs $\lfloor k/2^{j+1}\rfloor=(c\ell+1)/2$ with $c\in\{1,3,5,7\}$. These prefixes have 252,
+    253, 254 and 254 bits, and a 255-bit clamped $k$ has a $(254-j)$-bit prefix, so $j=2,1,0,0$. Clamping
+    clears bits 0 to 2, so no add occurs at those steps. The clamped scalar $k=4(\ell+1)$ reaches accumulator
+    $(\ell+1)P$ at $j=2$, but bit 2 is 0 and the law is not called.
+  novelty_status: adaptation
   citations:
   - ref: BRIEF section 1, src/ecc/ed25519.rs excerpt (EdPoint::add, scalar_mul)
     provenance: internal
@@ -60,10 +65,13 @@ idea:
     direction: different
     minimum_effect: 0 on all four cosets, nonzero on random pairs
   minimal_test:
-    design: Assertions A5 and A8 of scripts/ed25519_law_ansatz.py, then a Rust test comparing the law
-      with EdPoint::add on RFC 8032 scalars reduced mod l.
+    design: Assertions A5 and A8 of the proposed scripts/ed25519_law_ansatz.py (not in the pack), then
+      a Rust test comparing the law with EdPoint::add on RFC 8032 scalars reduced mod l.
     controls:
-    - Scalar with floor(k/8) = (l+1)/2 must hit Z3 = 0.
+    - Unclamped scalar with floor(k/8) = (l+1)/2 and bit 2 set, for example k = 4l + 8, must hit Z3 =
+      0 at the add for bit 2.
+    - Clamped scalar k = 4(l+1), which has the same prefix and bit 2 clear, must complete with no Z3 =
+      0.
     - Unified law on the same pairs must stay valid.
     required_metrics:
     - count of sampled pairs and mismatches
@@ -72,6 +80,7 @@ idea:
   falsification_conditions:
   - A pair with P1 - P2 outside E[4] gives Z3 = 0 or a wrong sum.
   - A scalar below l triggers the exception for a point of order l.
+  - A 255-bit clamped scalar triggers the exception for a point of order l.
   confounders:
   - Points with a torsion component change the order and the lemma in C4.
   interpretation_limits:
@@ -86,7 +95,8 @@ idea:
     time_exponent: not applicable, constant-factor formula cost
     memory_exponent: not applicable
     best_known: HWCD 2008, 8M + 1c unified
-    hidden_overhead: Scalar reduction mod l before the loop.
+    hidden_overhead: Scalar reduction mod l before the loop for scalars that are neither below l nor 255-bit
+      clamped.
     tradeoff_note: Trades completeness for a constant-free law.
   estimated_cost:
     implementation: low
