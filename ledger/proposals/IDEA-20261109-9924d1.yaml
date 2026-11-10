@@ -1,0 +1,141 @@
+idea:
+  id: IDEA-20261109-9924d1
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: Additive energy of x-interval factor bases in E(F_p) against random symmetric and progression
+    controls at calibration primes
+  class: measurement
+  claim: 'Let E/F_p have prime order N and let D_L be the set of points with 0 <= x(P) < L, L = N^beta.
+    Through the discrete-log map D_L is a symmetric set A in Z/N with |A| about L. Its additive energy
+    E(A) = #{(a,b,c,d) in A^4 with a+b=c+d} counts the signed 4-term relations available to arity-4 decomposition
+    over the base. Fixed prediction: at beta in {0.3, 0.4, 0.5} on three prime-order curves with N in
+    [2^20, 2^28], the nontrivial energy of A lies within 3 empirical standard deviations of the same statistic
+    on uniformly random symmetric subsets of Z/N of equal size, and an arithmetic progression of equal
+    size exceeds it by a factor of at least 10. The character-sum bound E(A) - |A|^4/N = O(p |A| log^2
+    p) is slack by more than a factor 100 at beta = 0.5, so it cannot certify the heuristic below beta
+    = 2/3 and measurement is the only route. No exponent change is claimed.'
+  mechanism: Enumerate the cyclic group once (N additions) to tabulate log(P) for every point; the logs
+    are instrumentation, not part of any proposed algorithm. Build A from the points with x in [c, c+L)
+    for 10 offsets c. Compute E(A) exactly from the multiplicity vector of the multiset A+A (|A|^2 additions
+    mod N, at most 2^28 at beta = 0.5). Repeat on 50 random symmetric subsets and on a progression {j
+    s} of equal size. E(A) is the L^4 moment of the Fourier coefficients of 1_A on Z/N, so it adds a dispersion
+    measurement to the L^infinity statistic C(p) of IDEA-20260805-c4f675 and to the exact mean of IDEA-20260805-a25f11.
+  novelty_status: adaptation
+  citations:
+  - ref: KR-IC-5931ee
+    provenance: internal
+    claim: Prime-field Semaev index calculus is proven no better than generic methods under stated statistical
+      assumptions; this record measures one such assumption's dispersion at toy sizes.
+    verified_by: REPO BRIEF section 3 row text, Mythos run 2026-11-09; KR file not opened.
+  - ref: IDEA-20260805-a25f11
+    provenance: internal
+    claim: Gives the exact mean number of size-m decompositions, C(2B+m-1,m)/N. This record measures fourth-moment
+      dispersion around that mean for m = 4.
+    verified_by: REPO BRIEF section 2 index excerpt; full record not opened and must be read before filing.
+  - ref: IDEA-20260805-c4f675
+    provenance: internal
+    claim: Measures the maximal character sum C(p) over the small-x base; energy is the L^4 analogue,
+      bounded by but not determined by C(p).
+    verified_by: REPO BRIEF section 2 index excerpt; full record not opened.
+  assumptions:
+  - Calibration curves have prime order N; the enumeration returns to O after exactly N steps.
+  - '|A| is matched between the interval set and every control, cell by cell.'
+  predictions:
+  - metric: absolute z-score of the interval nontrivial energy against the random symmetric-subset distribution
+    direction: lower
+    minimum_effect: at most 3 in each of the nine (prime, beta) cells
+  - metric: ratio of progression nontrivial energy to interval nontrivial energy
+    direction: higher
+    minimum_effect: at least 10 in every cell
+  - metric: ratio of the observed deviation from |A|^4/N to the bound p |A| log^2 p
+    direction: lower
+    minimum_effect: at most 0.01 at beta = 0.5
+  minimal_test:
+    design: Three prime-order curves chosen from crypto/docs/ECDLP_CALIBRATION_PRIMES.md with N in [2^20,
+      2^28]; if none are listed in range, generate y^2 = x^3 + 7 curves with prime order by trial and
+      record them. For each curve and beta, 10 interval offsets, 50 random symmetric subsets, one progression.
+      Nontrivial energy is E(A) minus the quadruples with {a,b} = {c,d} and those with a+b = c+d = 0.
+    controls:
+    - Random symmetric subsets of equal size (null model).
+    - Arithmetic progression of equal size (positive control).
+    - Enumeration check that [N]P = O and that log is a bijection.
+    required_metrics:
+    - N, p, beta, L, realised |A| per cell
+    - E_int nontrivial, E_rand mean and sd, E_prog
+    - z-score per cell
+    - deviation-to-bound ratio per cell
+  falsification_conditions:
+  - '|z| > 3 in two or more cells with the same sign, reproduced with fresh control seeds: interval bases
+    are not random-like and the prediction fails.'
+  - Progression control does not exceed the interval energy by 10x in some cell; the pipeline cannot detect
+    structure and the run is invalid.
+  - Enumeration fails to return to O after N steps; invalid run.
+  - A timeout is infrastructure, not evidence either way.
+  confounders:
+  - Only about half of the x in an interval are x-coordinates, so |A| fluctuates; controls are matched
+    to the realised |A|.
+  - Symmetric sets carry forced quadruples a+(-a) = c+(-c); the null model is symmetric for this reason.
+  - Small N inflates relative fluctuation; report sd from controls, not from a Poisson formula.
+  interpretation_limits:
+  - A confirmed prediction certifies the random model for 4-term relations at N <= 2^28 only.
+  - Energy counts relations inside the base; it says nothing about descent cost or linear algebra.
+  - Nothing about N near 2^256 follows without a proof, and the character-sum route is shown not to supply
+    one below beta = 2/3.
+  heuristic_assumptions:
+  - id: H1
+    statement: The random symmetric-subset model is the correct null for x-interval sets in E(F_p) at
+      every beta tested.
+    rigorous_support: Character sums over E(F_p) twisted by additive characters of x are O(p^{1/2}), which
+      certifies the null only when |A|^4/N dominates p |A| log^2 p, i.e. beta > 2/3.
+    validation_plan: The measurement itself across 10 offsets and three primes; a failure at two cells
+      triggers a repeat with fresh seeds.
+  target_complexity:
+    time_exponent: N^{1/2} unchanged, delta 0
+    memory_exponent: O(N) log table at toy sizes only; not part of any algorithm
+    best_known: Pollard rho at Theta(N^{1/2}), KR-RHO-13bf67
+    hidden_overhead: none claimed; no algorithm is proposed
+    tradeoff_note: no time-memory tradeoff is defined by a measurement
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  dominated_by: KR-RHO-13bf67 for any exponent reading; KR-IC-5931ee for the conclusion that prime-field
+    IC does not beat rho. Neither states the energy dispersion of interval bases.
+  sota_delta: 'Exponent delta 0. Counted delta: a z-score per cell and the realised slack of the character-sum
+    bound, neither recorded in the ledger.'
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/index-calculus
+    rows_checked:
+    - KR-IC-5931ee
+    - KR-IC-5a43e5
+    - KR-IC-73db3f
+    - KR-IC-b0fcda
+    - KR-RHO-13bf67
+    - KR-RHO-46c2c6
+    nearest:
+    - ref: KR-IC-5931ee
+      provenance: internal
+      relation: adjacent
+      delta: The row is a cost theorem under statistical assumptions; this record measures the fourth-moment
+        behaviour of one assumption.
+    - ref: KR-IC-73db3f
+      provenance: internal
+      relation: orthogonal
+      delta: Subspace factor bases live in binary fields; intervals in F_p have no linear structure, which
+        is what the energy probes.
+    searched:
+      corpus_grep:
+      - REPO BRIEF section 2 for energy, Fourier, exponential sum, symmetric subset, mean decompositions
+      - REPO BRIEF section 3 index-calculus rows for prime field, factor base, interval
+      web: []
+      blocked: []
+    lead: LEAD-ICP-coppersmith-smallroot-semaev
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: Three prime-order curves chosen from crypto/docs/ECDLP_CALIBRATION_PRIMES.md
+        with N in [2^20, 2^28]; if none are listed in range, generate y^2 = x^3 + 7 curves with prime
+        order by trial and record them. For each curve and beta, 10 interval offsets, 50 random symmetric
+        subsets, one progression. Nontrivial energy is E(A) minus the quadruples with {a,b} = {c,d} and
+        those with a+b = c+d = 0.'

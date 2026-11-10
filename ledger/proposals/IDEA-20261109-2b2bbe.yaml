@@ -1,0 +1,142 @@
+idea:
+  id: IDEA-20261109-2b2bbe
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: 'Aut-quotient summation polynomials U_m in u = x^3 on j = 0 curves: degree 6^{m-2} and decomposition-rate
+    parity with the x-coordinate'
+  class: representation
+  claim: 'Let E be y^2 = x^3 + b over F_p with p = 1 mod 3 and omega in F_p a primitive cube root of unity,
+    so Aut(E) has order 6 and u = x^3 is the quotient coordinate E -> E/Aut(E). Define U_m(u_1..u_m) =
+    prod over (a_2..a_m) in (Z/3)^{m-1} of S_m(x_1, omega^{a_2} x_2, ..., omega^{a_m} x_m). Fixed claims:
+    (C1) U_m is a polynomial in u_i = x_i^3; (C2) its degree in each u_i is exactly 6^{m-2}; (C3) U_m(u(P_1),..,u(P_m))
+    = 0 iff there are automorphisms alpha_i with sum alpha_i P_i = O; (C4) with root finding of a degree-d
+    univariate charged c d^{1+eps} log p, an enumeration decomposition over a u-interval base covering
+    the same points as an x-interval base has per-relation cost ratio 3^{(m-1) eps} >= 1, so the Z/6 symmetry
+    yields only the known linear-algebra constant (base size divided by 3) and nothing in the decomposition
+    stage. Prediction: relations per second of the u-pipeline divided by the x-pipeline at arity 3 (U_4
+    versus S_4), p about 2^20, is at most 1.05.'
+  mechanism: S_m for a = 0 curves is weighted-homogeneous with x of weight 1 and b of weight 3, so S_m(omega
+    x_1, ..., omega x_m) = omega^{w} S_m and the 3^{m-1}-fold product over independent rotations of x_2..x_m
+    is invariant under rotating any single variable; hence it is a polynomial in the cubes, of degree
+    2^{m-2} 3^{m-1} / 3 = 6^{m-2} per variable. Signs of y are already absorbed by S_m, so U_m is the
+    push-forward of the Semaev hypersurface under the full automorphism quotient. Rate parity follows
+    because a u-base of equal coverage has B/3 entries, (B/3)^{m-1} tuples, and univariates 3^{m-1} times
+    larger.
+  novelty_status: adaptation
+  citations:
+  - ref: KR-IC-955fd6
+    provenance: internal
+    claim: Symmetrised summation polynomials use S_m symmetry and small torsion to shrink systems by a
+      constant; this record uses the j = 0 automorphism quotient and predicts the same constant-only outcome.
+    verified_by: REPO BRIEF section 3 row text; KR file not opened.
+  - ref: KR-IC-b0fcda
+    provenance: internal
+    claim: Frobenius-invariant bases give the n^2 linear-algebra factor; the Aut-orbit base is the j =
+      0 analogue with factor 9.
+    verified_by: REPO BRIEF section 3 row text; KR file not opened.
+  - ref: IDEA-20260727-001
+    provenance: internal
+    claim: phi-invariant relation matrices on j = 0 curves gave no linear-algebra advantage beyond two
+      known effects; this record closes the decomposition stage of the same symmetry.
+    verified_by: REPO BRIEF section 2 index excerpt; full record not opened.
+  assumptions:
+  - p = 1 mod 3 so that omega is in F_p and Aut(E) is F_p-rational.
+  - S_m is computed by the resultant recursion of KR-IC-5a43e5 with a = 0.
+  predictions:
+  - metric: degree of U_3 in each u_i
+    direction: different
+    minimum_effect: exactly 6
+  - metric: degree of U_4 in each u_i
+    direction: different
+    minimum_effect: exactly 36
+  - metric: fraction of point triples at p = 31 and p = 43 where C3 agrees with brute force
+    direction: higher
+    minimum_effect: equal to 1
+  - metric: relations-per-second ratio u-pipeline over x-pipeline at arity 3 and p about 2^20
+    direction: lower
+    minimum_effect: at most 1.05
+  minimal_test:
+    design: Sage, build S_3 and S_4 for y^2 = x^3 + 7, form U_3 (9 factors) and U_4 (27 factors), substitute
+      u_i = x_i^3 and assert the remainder is zero; read off degrees. Brute-force C3 over all point triples
+      on y^2 = x^3 + 7 over F_31 and F_43. Then on a prime-order curve with p about 2^20 run two enumeration
+      pipelines for 1000 random targets, x-base |I| = 2^7 with S_4 and a u-base of equal point coverage
+      with U_4; charge root finding, interval tests and the 6^{m-1}-way automorphism recovery; report
+      relations per second. Register both pipelines as ecbench methods so that ecbench verify --replay-all
+      replays them.
+    controls:
+    - Same root-finding library and same charged op counter for both pipelines.
+    - Degree sweep of root-finding time at degrees 4, 12, 36 to estimate eps.
+    - Every reported relation re-verified by point addition.
+    required_metrics:
+    - deg_u U_3 and deg_u U_4
+    - C3 agreement fraction
+    - relations per second, both pipelines, with 95 percent intervals
+    - fitted eps
+  falsification_conditions:
+  - U_3 or U_4 fails to be a polynomial in the cubes, or its degree is not 6 or 36.
+  - Any point triple violates C3.
+  - The u-pipeline is at least 1.5x faster per relation after charging automorphism recovery; this would
+    be an unexplained decomposition-stage gain and reopens the lead.
+  - A timeout is infrastructure, not evidence.
+  confounders:
+  - Root-finding constants vary non-uniformly with degree; eps is measured, not assumed.
+  - Coverage matching must count points, not x- or u-values.
+  interpretation_limits:
+  - A confirmed parity is a constant-factor statement at arity 3 and p about 2^20.
+  - The linear-algebra constant 9 is the known orbit effect and is not re-measured here.
+  heuristic_assumptions:
+  - id: H1
+    statement: Root finding over F_p costs c d^{1+eps} log p with eps >= 0 for the degrees used.
+    rigorous_support: Equal-degree splitting costs softly linear field operations in d; eps >= 0 is a
+      lower bound on any implementation.
+    validation_plan: Degree sweep in the control list.
+  target_complexity:
+    time_exponent: N^{1/2} unchanged, delta 0; the constant is at most 9 in linear algebra and 1 in decomposition
+    memory_exponent: unchanged
+    best_known: Pollard rho with the order-6 automorphism, sqrt(6) constant, KR-RHO-0528e7
+    hidden_overhead: automorphism recovery of 6^{m-1} m point operations per u-relation, charged
+    tradeoff_note: none
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: low
+  dominated_by: KR-IC-955fd6 and KR-IC-b0fcda dominate the constant-factor reading; KR-RHO-0528e7 dominates
+    any rho reading. None states the closed form of U_m or its degree.
+  sota_delta: 'Exponent delta 0. New objects: the product formula for U_m, its degree 6^{m-2}, and a measured
+    decomposition-rate parity on a secp256k1-shaped toy curve.'
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/index-calculus
+    rows_checked:
+    - KR-IC-5a43e5
+    - KR-IC-955fd6
+    - KR-IC-8b9daa
+    - KR-IC-b0fcda
+    - KR-IC-5931ee
+    - KR-RHO-0528e7
+    nearest:
+    - ref: KR-IC-955fd6
+      provenance: internal
+      relation: adjacent
+      delta: Torsion and S_m symmetry versus the j = 0 automorphism quotient; same constant-only verdict
+        predicted.
+    - ref: KR-IC-b0fcda
+      provenance: internal
+      relation: adjacent
+      delta: Frobenius orbits on subfield curves versus Aut orbits on a prime-field CM curve.
+    searched:
+      corpus_grep:
+      - REPO BRIEF section 2 for automorphism, orbit, GLV, j = 0, symmetrized
+      - REPO BRIEF section 1 for RESEARCH_SYMMETRIZED_SEMAEV.md and RESEARCH_SECP256K1_CM.md, both to
+        be read for an existing x^3 quotient
+      web: []
+      blocked: []
+    lead: LEAD-EXO-quadratic-phase-small-x-leakage
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: Sage, build S_3 and S_4 for y^2 = x^3 + 7, form U_3 (9 factors) and U_4 (27
+        factors), substitute u_i = x_i^3 and assert the remainder is zero; read off degrees. Brute-force
+        C3 over all point triples on y^2 = x^3 + 7 over F_31 and F_43. Then on a prime-order curve with
+        p about 2^20 run two enumeration pipelines for 1000 random targets, x-base |I| = 2^7 with S_4
+        and a u-base of equal point coverage '

@@ -1,0 +1,152 @@
+idea:
+  id: IDEA-20261109-a59470
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: Direct CDCL on the bit-blasted short-interval ECDLP over F_p has scaling exponent c_w at least
+    0.85, matched by a null circuit
+  class: solver
+  claim: 'For prime-order toy curves with p in [2^16, 2^24] and interval widths w in [10, 22], encode
+    Q = kP with k < 2^w through a fixed left-to-right double-and-add circuit over Tseitin-encoded F_p
+    arithmetic and solve with CaDiCaL. Prediction: median wall time fits T(w) = A 2^{c w} with c >= 0.85
+    on every curve, and the same fit on a null circuit, where each field multiplier is replaced by a same-width
+    random invertible bit mixing with a planted k, gives c_null within 0.1 of c. No exponent below the
+    interval-method value 1/2 is claimed; this is a pre-registered kill test for representation-level
+    SAT attacks.'
+  mechanism: The solver sees the bit representation of k and of every intermediate field element, which
+    a generic-group algorithm cannot. CDCL could in principle learn clauses that prune k-prefixes across
+    ladder steps. The expected obstruction is that multiplier circuits are hard for resolution and learnt
+    clauses do not compose across steps, which predicts near-exhaustive scaling. The null circuit separates
+    solver-generic pruning from anything specific to elliptic-curve arithmetic.
+  novelty_status: adaptation
+  citations:
+  - ref: KR-IC-5765d2
+    provenance: internal
+    claim: SAT and XOR reasoning speed binary-curve point decomposition by constants without changing
+      the exponent. This record moves the solver from PDP to the whole interval problem over F_p.
+    verified_by: ideation session 2026-11-09 read the row as quoted in the repo brief frontier map
+  - ref: KR-RHO-898783
+    provenance: internal
+    claim: Interval DLP of width 2^w costs about 2 sqrt(2^w) group operations, exponent 1/2 in w; the
+      comparator exponent for c.
+    verified_by: ideation session 2026-11-09 read the row as quoted in the repo brief frontier map
+  - ref: KR-RHO-13bf67
+    provenance: internal
+    claim: The generic bound does not formally apply to a bit-level solver; this record measures whether
+      that gap is empty in practice.
+    verified_by: ideation session 2026-11-09 read the row as quoted in the repo brief frontier map
+  assumptions:
+  - The CNF encoder is deterministic and the same for all curves and seeds; only p, the curve constants
+    and k change.
+  - Solver runs are single-threaded with a fixed random seed per instance.
+  proof_search_map:
+    not_applicable_reason: Empirical scaling measurement at toy sizes with a planted null; no exponent
+      theorem is proposed.
+    bottleneck: not_applicable
+    baseline_embedding:
+      parameter_slice: not_applicable
+      reproduction_check: not_applicable
+    observation_collision:
+      observable: not_applicable
+      distinct_preimage_search: not_applicable
+    constructive_transforms: []
+    quantifier_order: not_applicable
+    method_ceiling:
+      strongest_certifiable_claim: not_applicable
+      nearby_object_control: not_applicable
+    proof_obligations: []
+  predictions:
+  - metric: fitted exponent c on the elliptic-curve arm
+    direction: higher
+    minimum_effect: at least 0.85 with the 95 percent interval above 0.75
+  - metric: absolute difference between c and c_null
+    direction: lower
+    minimum_effect: at most 0.1
+  - metric: ratio of conflicts to 2^w at w = 22
+    direction: higher
+    minimum_effect: at least 0.1
+  minimal_test:
+    design: Curves from crypto/docs/ECDLP_CALIBRATION_PRIMES.md at p near 2^16, 2^20, 2^24. For each p
+      and each w in 10,12,...,22 draw 20 random k, build the CNF with the Stage-26 encoder path documented
+      in RESEARCH_SAT_SEMAEV.md, using projective coordinates so no inversion is encoded, and solve with
+      CaDiCaL under a 6 hour cap. Fit log2 of median time against w by least squares. Repeat for the null
+      circuit. Record an exhaustive-scan time at the same w in the same harness as the exponent-1 reference.
+    controls:
+    - Null circuit with random invertible bit mixing in place of each multiplier and a planted solution.
+    - Exhaustive enumeration of k in the same harness as the exponent-1 reference.
+    - A second solver, CryptoMiniSat, on the w = 16 slice to check solver dependence.
+  required_metrics:
+  - p, w, median and quartile wall time per arm
+  - conflicts, decisions, propagations per instance
+  - fitted c and c_null with confidence intervals
+  - number of timeouts per cell
+  falsification_conditions:
+  - c <= 0.75 with interval excluding 0.85 on two primes while c_null >= 0.9 falsifies the claim and triggers
+    an audit, not a break claim.
+  - c_null differing from c by more than 0.3 falsifies the null-match prediction in either direction.
+  - More than half the instances at some w timing out makes that w uninformative; the fit must exclude
+    it rather than treat it as evidence.
+  confounders:
+  - Preprocessing time of the encoder must be excluded or charged separately.
+  - Solver heuristics tuned on arithmetic benchmarks could flatten the curve at small w; report fits restricted
+    to w >= 14.
+  interpretation_limits:
+  - Results at w <= 22 over p <= 2^24 bound nothing at 256 bits; they decide only whether this lane deserves
+    more compute.
+  - A high c closes direct SAT on intervals for the tested encoder, not for every encoding.
+  heuristic_assumptions:
+  - id: H1
+    statement: Median solve time grows geometrically in w over the tested range so that a single exponent
+      summarises it.
+    rigorous_support: None; resolution lower bounds for multipliers suggest it but do not prove it for
+      CDCL with restarts.
+    validation_plan: Residuals of the log-linear fit reported per w; a curvature test comparing linear
+      and quadratic fits in w.
+  target_complexity:
+    time_exponent: 2^{c w} with predicted c >= 0.85, against 2^{w/2} for interval methods
+    memory_exponent: linear in the circuit size, about w times the multiplier size
+    best_known: interval methods at (2+o(1)) sqrt(2^w) group operations, KR-RHO-898783
+    hidden_overhead: CNF generation and solver preprocessing, reported separately
+    tradeoff_note: No time-memory tradeoff is defined; the measurement exists to kill or escalate the
+      lane with one number.
+  estimated_cost:
+    implementation: low
+    compute: medium
+  recommended_priority: medium
+  dominated_by: KR-RHO-898783 dominates any exponent reading. KR-IC-5765d2 covers SAT on decomposition
+    only; no row covers the whole interval problem.
+  sota_delta: Exponent delta 0 claimed. Measured delta is c against 1/2 and c against c_null.
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/generic-rho
+    rows_checked:
+    - KR-RHO-898783
+    - KR-RHO-13bf67
+    - KR-IC-5765d2
+    - KR-IC-e847d1
+    - KR-IC-5931ee
+    - KR-RHO-ea34b8
+    nearest:
+    - ref: KR-IC-5765d2
+      provenance: internal
+      relation: adjacent
+      delta: Binary-curve PDP in SAT; this record is the whole interval ECDLP over F_p with a planted
+        null circuit.
+    - ref: KR-RHO-898783
+      provenance: internal
+      relation: orthogonal
+      delta: Supplies the comparator exponent 1/2; no SAT content.
+    searched:
+      corpus_grep:
+      - wave-1 index for bit-blasted SAT, QF_BV SMT, incremental CDCL
+      - repo brief for Stage 26 CaDiCaL, direct MITM, g2-n31 SAT experiments
+      web: []
+      blocked: []
+    lead: LEAD-ICE-charged-toy-ic-exponent-vs-rho
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: Curves from crypto/docs/ECDLP_CALIBRATION_PRIMES.md at p near 2^16, 2^20,
+        2^24. For each p and each w in 10,12,...,22 draw 20 random k, build the CNF with the Stage-26
+        encoder path documented in RESEARCH_SAT_SEMAEV.md, using projective coordinates so no inversion
+        is encoded, and solve with CaDiCaL under a 6 hour cap. Fit log2 of median time against w by least
+        squares. Repeat for the null circuit. '

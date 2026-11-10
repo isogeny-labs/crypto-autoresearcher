@@ -1,0 +1,144 @@
+idea:
+  id: IDEA-20261109-707fad
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: 'Bit-blasted SAT for prime-field point decomposition: a matched kill test against univariate
+    enumeration at p up to 2^20'
+  class: solver
+  claim: 'On prime-order curves y^2 = x^3 + 7 over primes p near 2^12, 2^16 and 2^20 with p = 1 mod 3,
+    encode the decomposition instances S_3(x_1, x_2, x_R) = 0 with x_1, x_2 in [0, 2^b), b = ceil(log2(p)/2),
+    and S_4(x_1, x_2, x_3, x_R) = 0 with b = ceil(log2(p)/3), as CNF by bit-blasting F_p arithmetic; the
+    interval predicate is forced zero high bits. Fixed prediction: median CaDiCaL wall time is at least
+    10 times the matched enumeration time (for every (m-1)-tuple of interval values, find the F_p roots
+    of the univariate S in the last variable and test them against the interval) at p >= 2^16 for both
+    arities, and the least-squares slope of log T_SAT against log |I| is at least 1.0 at arity 2 and at
+    least 2.0 at arity 3, so SAT never scales below enumeration. No exponent change is claimed; a confirmed
+    prediction closes the SAT lane for prime-field decomposition at toy sizes with numbers rather than
+    by analogy.'
+  mechanism: Over F_{2^n} the XOR structure makes Gaussian-elimination-aware SAT competitive (KR-IC-5765d2).
+    Over F_p one field multiplication is an integer multiplier plus modular reduction, about (log2 p)^2
+    gates with no XOR structure; evaluating S_3 needs about 10 multiplications and S_4 about 60. The only
+    thing SAT gains is a free interval predicate; the test measures whether clause learning on arithmetic
+    compensates for losing the algebraic root-finding shortcut that enumeration keeps.
+  novelty_status: adaptation
+  citations:
+  - ref: KR-IC-5765d2
+    provenance: internal
+    claim: SAT and XOR-aware solvers beat F4 on binary-curve PDP by up to 300x without changing the exponent;
+      this record moves the setting to F_p where the XOR structure is absent.
+    verified_by: REPO BRIEF section 3 row text; KR file not opened.
+  - ref: KR-IC-5931ee
+    provenance: internal
+    claim: Prime-field index calculus with interval bases does not beat generic methods; a SAT solver
+      can only change constants.
+    verified_by: REPO BRIEF section 3 row text; KR file not opened.
+  - ref: KR-IC-1fcdbc
+    provenance: internal
+    claim: Characteristic-2 summation algorithms with Groebner and SAT stay far slower than rho; the prime-field
+      analogue is expected worse.
+    verified_by: REPO BRIEF section 3 row text; KR file not opened.
+  assumptions:
+  - The archived binary instance under cryptanalysis/experiments/g2-n31-four-add-sat-gate-20261010 contains
+    a CNF and a recorded solve time; if not, the control uses a regenerated n = 31 instance and says so.
+  - Targets are pre-classified SAT or UNSAT by enumeration before any solver run.
+  predictions:
+  - metric: median T_SAT over median T_enum at p near 2^16, arity 2
+    direction: higher
+    minimum_effect: at least 10
+  - metric: median T_SAT over median T_enum at p near 2^20, arity 3
+    direction: higher
+    minimum_effect: at least 10
+  - metric: slope of log T_SAT against log |I| at arity 3 over the three primes
+    direction: higher
+    minimum_effect: at least 2.0
+  - metric: fraction of SAT models that verify when re-evaluated in F_p
+    direction: higher
+    minimum_effect: equal to 1
+  minimal_test:
+    design: For each (p, arity) cell, 40 planted targets (choose interval points, set R to minus their
+      sum) and 40 enumeration-certified UNSAT targets. CNF from a Tseitin schoolbook multiplier with conditional-subtraction
+      reduction; CaDiCaL with a 3600 s limit, Kissat as second solver on the p near 2^16 cells. Enumeration
+      in the same codebase as the tooling behind RESEARCH_SAT_SEMAEV.md if it exists, else a standalone
+      Rust loop, on identical targets. Fit slopes by least squares over the three primes.
+    controls:
+    - Re-solve one archived binary n = 31 instance with the same solver build; time must be within 2x
+      of the archived value.
+    - A CNF with the interval predicate removed (free high bits) to bound how much the free predicate
+      helps.
+    - Equal numbers of SAT and UNSAT targets; SAT models re-verified in F_p.
+    required_metrics:
+    - 'per cell: median and quartiles of T_SAT and T_enum, timeout count'
+    - slopes at arity 2 and 3 with standard errors
+    - CNF size (variables, clauses) per cell
+    - binary control time ratio
+  falsification_conditions:
+  - Median ratio at most 2 at p near 2^20, arity 3, with slope below 2.0, reproduced on a second seed
+    set; the lane reopens.
+  - Binary control outside 2x of its archived time; the solver pipeline is invalid and no cell counts.
+  - SAT timeouts are censored lower bounds for the ratio; enumeration timeouts invalidate the cell.
+  confounders:
+  - 'Encoding quality: a poor multiplier encoding inflates T_SAT; H1 bounds this and the second encoding
+    checks it.'
+  - Planted instances may be easier than random SAT instances; both kinds are reported separately.
+  - Solver randomness; report quartiles, not single runs.
+  interpretation_limits:
+  - A confirmed kill is a toy-size constant-factor statement for one encoding family and two solvers.
+  - It says nothing about binary-field SAT lanes, which KR-IC-5765d2 already covers.
+  heuristic_assumptions:
+  - id: H1
+    statement: The schoolbook-plus-conditional-subtraction CNF is within 4x of the best available bit-blasting
+      of F_p multiplication at these sizes.
+    rigorous_support: none; encoding comparisons are empirical.
+    validation_plan: Encode the p near 2^16, arity 2 cell with a second scheme (Karatsuba or Barrett)
+      and compare medians.
+  target_complexity:
+    time_exponent: N^{1/2} unchanged, delta 0; the measured quantity is a constant at toy sizes
+    memory_exponent: unchanged
+    best_known: Pollard rho at Theta(N^{1/2}), KR-RHO-13bf67
+    hidden_overhead: CNF generation time is reported but excluded from T_SAT
+    tradeoff_note: none
+  estimated_cost:
+    implementation: medium
+    compute: low
+  recommended_priority: medium
+  dominated_by: KR-IC-5931ee dominates the exponent reading; KR-IC-5765d2 dominates the binary-field SAT
+    reading. Neither reports a prime-field SAT versus enumeration ratio.
+  sota_delta: 'Exponent delta 0. Counted delta: a measured T_SAT / T_enum ratio and slope over F_p, which
+    the ledger excerpts do not contain.'
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/index-calculus
+    rows_checked:
+    - KR-IC-5765d2
+    - KR-IC-5931ee
+    - KR-IC-1fcdbc
+    - KR-IC-e847d1
+    - KR-IC-f3da82
+    - KR-RHO-13bf67
+    nearest:
+    - ref: KR-IC-5765d2
+      provenance: internal
+      relation: adjacent
+      delta: Same solver family, different field; the row's gain rests on XOR reasoning that F_p encodings
+        cannot use.
+    - ref: KR-IC-e847d1
+      provenance: internal
+      relation: orthogonal
+      delta: Crossbred targets sparse Boolean quadratic systems; a bit-blasted F_p circuit is neither
+        sparse nor quadratic.
+    searched:
+      corpus_grep:
+      - REPO BRIEF section 2 for SAT, CNF, CaDiCaL, bit, prime field
+      - REPO BRIEF section 1 for RESEARCH_SAT_SEMAEV.md, research/sat_factor_base_review_20260908 and
+        _20260912, g2-n31 SAT experiments; all must be read for an existing F_p encoding
+      web: []
+      blocked: []
+    lead: LEAD-ICB-frobenius-search-symmetry
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: For each (p, arity) cell, 40 planted targets (choose interval points, set
+        R to minus their sum) and 40 enumeration-certified UNSAT targets. CNF from a Tseitin schoolbook
+        multiplier with conditional-subtraction reduction; CaDiCaL with a 3600 s limit, Kissat as second
+        solver on the p near 2^16 cells. Enumeration in the same codebase as the tooling behind RESEARCH_SAT_SEMAEV.md
+        if it exists, else a s'

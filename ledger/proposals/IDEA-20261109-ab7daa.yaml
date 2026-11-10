@@ -1,0 +1,150 @@
+idea:
+  id: IDEA-20261109-ab7daa
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: Scheme-degree barrier for algebraic factor bases over F_p, with an F4 cost sweep on generic versus
+    cyclotomic complete-splitter predicates
+  class: barrier
+  claim: 'Part A, proof. Let E be embedded in P^n by functions of pole order at most e, so deg E = e,
+    and let a factor base F in E(F_p) be cut out set-theoretically as E meet Z for a closed subscheme
+    Z not containing E. Then |F| <= deg(E meet Z) <= e deg Z: replace Z by a hypersurface of degree at
+    most deg Z containing Z and not E, then apply Bezout to the curve E. For a Weierstrass-model predicate
+    g(x) = 0 with deg g = B the quotient algebra Fbar_p[x_1..x_m]/(g(x_1),..,g(x_m)) has dimension exactly
+    B^m, while the arity-m system {g(x_i) = 0} plus S_{m+1}(x_1..x_m, x_R) = 0 has about 2^m B^m / N solutions
+    over F_p. Under H1 (every Macaulay or F4 method pays at least the quotient dimension) the expected
+    cost per relation is at least N / 2^m for every beta: exponent 1 against rho''s 1/2. This lifts the
+    planar bound |F| <= 3 d_p of IDEA-20260801-021 to arbitrary embeddings and to the system. Part B,
+    sweep. Fixed prediction: F4 wall time and maximal Macaulay row count scale as B^{e m} with fitted
+    e >= 1.0 for generic g (product of B distinct linear factors) and for cyclotomic g = x^B - c with
+    B dividing p - 1, at m in {2, 3}, B in {4, 8, 16, 32}, two primes in [2^12, 2^14], and the two fitted
+    e differ by at most 0.2. No exponent improvement is claimed.'
+  mechanism: 'The barrier is a dimension count: the predicate block forces at least B solutions per variable
+    over Fbar_p, and a Groebner method can run below the quotient dimension only through structure of
+    the quotient algebra. The cyclotomic family is the complete splitter of special form over F_p, the
+    prime-field analogue of the quasi-subfield polynomials of KR-IC-49c882; its quotient is the group
+    algebra of (Z/B)^m with FFT-like multiplication, so it is the natural probe of H1 and the generic
+    predicate is the control. Prime fields have no restriction of scalars, so the Weil-descent escape
+    of KR-IC-73db3f (many variables, low degree, field equations of degree q) is unavailable, which is
+    why the bound bites over F_p and not over F_{q^n}.'
+  novelty_status: adaptation
+  citations:
+  - ref: KR-IC-5931ee
+    provenance: internal
+    claim: Algebraic factor bases over F_p work only at small parameters; Part A gives the dimension reason
+      and Part B measures it.
+    verified_by: REPO BRIEF section 3 row text; KR file not opened.
+  - ref: KR-IC-49c882
+    provenance: internal
+    claim: Quasi-subfield polynomials are special-form complete splitters over extension fields with existence
+      open; x^B - c is the prime-field complete splitter the sweep probes.
+    verified_by: REPO BRIEF section 3 row text; KR file not opened.
+  - ref: IDEA-20260801-021
+    provenance: internal
+    claim: Proves |F_p| <= 3 d_p for a planar algebraic predicate of degree d_p; this record generalises
+      the embedding and adds the system level and the sweep.
+    verified_by: REPO BRIEF section 2 index excerpt; full record not opened and must be read before filing.
+  assumptions:
+  - g has all B roots in F_p and each root is an x-coordinate of E(F_p); otherwise the realised base size
+    is reported and replaces B.
+  - Targets x_R are x-coordinates of random points of the prime-order subgroup.
+  predictions:
+  - metric: fitted e for the generic predicate family
+    direction: higher
+    minimum_effect: at least 1.0
+  - metric: fitted e for the cyclotomic predicate family
+    direction: higher
+    minimum_effect: at least 1.0
+  - metric: absolute difference of the two fitted e
+    direction: lower
+    minimum_effect: at most 0.2
+  - metric: maximal Macaulay row count divided by B^m at m = 3
+    direction: higher
+    minimum_effect: at least 1
+  minimal_test:
+    design: Write Part A as a two-page note with the Bezout step stated for reducible Z. For Part B use
+      the F4 described in RESEARCH_GROEBNER_F4.md if it exposes matrix sizes, else Sage or Singular; grevlex;
+      20 random targets per cell; record wall time, maximal matrix rows and solving degree; fit e by least
+      squares on log T against m log B over B in {8, 16, 32}; report per prime. Use cryptanalysis/experiments/f5-algebra-control
+      as the template for control reporting.
+    controls:
+    - A random-coefficient g of the same degree with at most one F_p root, to separate rational-root count
+      from degree.
+    - The ideal (g(x_1),..,g(x_m)) without S_{m+1}, whose quotient dimension B^m is measured directly.
+    - Two primes, to detect prime-specific effects of the cyclotomic family.
+    required_metrics:
+    - wall time, maximal matrix rows, solving degree per cell
+    - fitted e with standard error per family and prime
+    - realised base size per cell
+  falsification_conditions:
+  - Fitted e at most 0.75 for any family at m = 3 across B in {8, 16, 32} at both primes; H1 is false
+    and that family gets its own lane.
+  - A gap in the Part A Bezout step that cannot be repaired; the record is withdrawn.
+  - A timeout is infrastructure; cells with timeouts are reported as censored.
+  confounders:
+  - F4 timings at B = 4 are dominated by overhead; the fit excludes B = 4.
+  - The solving degree may saturate at small B, flattening the slope; the row-count metric is reported
+    alongside time.
+  interpretation_limits:
+  - Part A bounds predicates polynomial on a projective embedding; predicates using field equations x^p
+    = x are excluded by their degree p.
+  - Part B measures constants of one F4 at p < 2^14; it supports or undermines H1 only in that range.
+  heuristic_assumptions:
+  - id: H1
+    statement: Any Macaulay-matrix or F4 solve of the decomposition system costs at least the dimension
+      of the quotient algebra of the predicate block.
+    rigorous_support: The quotient dimension is exact; the cost inequality is the standard heuristic for
+      generic systems and is what the sweep tests, with the cyclotomic family as the structured challenger.
+    validation_plan: Part B sweep; failure at m = 3 across three B values at both primes overturns it.
+  target_complexity:
+    time_exponent: at least 1 for relation collection with algebraic bases under H1; best known 1/2; delta
+      plus 1/2 (worse)
+    memory_exponent: unchanged
+    best_known: Pollard rho at Theta(N^{1/2}), KR-RHO-13bf67
+    hidden_overhead: none; the record is a bound and a measurement
+    tradeoff_note: none
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: high
+  dominated_by: KR-IC-5931ee dominates the conclusion; IDEA-20260801-021 dominates the planar case. Neither
+    states the embedding-free bound, the quotient-dimension form, or the cyclotomic probe.
+  sota_delta: 'Exponent delta 0 against rho; the record tightens a barrier and tests its one heuristic
+    step. Counted delta: fitted e per family.'
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/index-calculus
+    rows_checked:
+    - KR-IC-5931ee
+    - KR-IC-49c882
+    - KR-IC-73db3f
+    - KR-IC-fbdb61
+    - KR-IC-0d2021
+    - KR-IC-5a43e5
+    - KR-RHO-13bf67
+    nearest:
+    - ref: KR-IC-5931ee
+      provenance: internal
+      relation: adjacent
+      delta: The row records that algebraic bases work only at small parameters; this record gives the
+        dimension bound behind it.
+    - ref: KR-IC-49c882
+      provenance: internal
+      relation: adjacent
+      delta: Extension-field complete splitters versus the prime-field cyclotomic splitter; the sweep
+        is the F_p side of that question.
+    searched:
+      corpus_grep:
+      - REPO BRIEF section 2 for algebraic factor base, Bezout, locus, PKM, KN-OPEN-020, quotient
+      - REPO BRIEF section 1 for RESEARCH_PKM_CRITERION.md and RESEARCH_GROEBNER_F4.md, to be read for
+        existing F4 sizing
+      web: []
+      blocked: []
+    lead: LEAD-ICP-pkm-tower-algebraic-oracle
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: Write Part A as a two-page note with the Bezout step stated for reducible
+        Z. For Part B use the F4 described in RESEARCH_GROEBNER_F4.md if it exposes matrix sizes, else
+        Sage or Singular; grevlex; 20 random targets per cell; record wall time, maximal matrix rows and
+        solving degree; fit e by least squares on log T against m log B over B in {8, 16, 32}; report
+        per prime. Use cryptanalysis/experiments'
