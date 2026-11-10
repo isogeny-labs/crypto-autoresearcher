@@ -33,7 +33,24 @@ REPO = Path(__file__).resolve().parents[1]
 BUDGET_FILE = "tools/check_instruction_budget.py"
 MAX_AGE_DAYS = 30
 BASELINE_DIR = "evals/baselines"
-BUDGET_LINE = re.compile(r"^[+-]\s*[A-Z][A-Z0-9_]*BUDGET[A-Z0-9_]*\s*[:=]")
+BUDGET_LINE = re.compile(r"^(?P<sign>[+-])\s*(?P<name>[A-Z][A-Z0-9_]*BUDGET[A-Z0-9_]*)\s*[:=]\s*(?P<value>[0-9_]+)")
+
+
+def budget_raised(budget_patch: str) -> list[str]:
+    """Budget constants whose new value exceeds the old one in a -U0 patch.
+
+    Cutting a budget is tightening and never needs a baseline; only a raise
+    loosens the harness. A constant that appears only as added (no removed
+    line) counts as a raise, since its previous ceiling is unknown.
+    """
+    old, new = {}, {}
+    for line in budget_patch.splitlines():
+        m = BUDGET_LINE.match(line)
+        if not m:
+            continue
+        value = int(m.group("value").replace("_", ""))
+        (new if m.group("sign") == "+" else old)[m.group("name")] = value
+    return sorted(n for n, v in new.items() if n not in old or v > old[n])
 NEW_LOOP_DOC = "docs/*loop*.md"
 BASELINE_COMMAND = ("python3 -m orchestration.eval run --suite "
                     "evals/suites/discipline.yaml --backend anthropic --trials 10 "
@@ -43,9 +60,11 @@ BASELINE_COMMAND = ("python3 -m orchestration.eval run --suite "
 def triggers(changes: list[tuple[str, str]], budget_patch: str = "") -> list[str]:
     """Why this diff needs a baseline. `changes` is (status, path), status A/M/D/R."""
     reasons = []
-    if any(path == BUDGET_FILE for _, path in changes) and any(
-            BUDGET_LINE.match(line) for line in budget_patch.splitlines()):
-        reasons.append(f"changes a budget constant in {BUDGET_FILE}")
+    if any(path == BUDGET_FILE for _, path in changes):
+        raised = budget_raised(budget_patch)
+        if raised:
+            reasons.append(f"raises a budget constant in {BUDGET_FILE} "
+                           f"({', '.join(raised)})")
     if any(path.startswith("coordination/skill-tuning/") for _, path in changes):
         reasons.append("touches coordination/skill-tuning/**")
     added = [p for s, p in changes if s.startswith("A")

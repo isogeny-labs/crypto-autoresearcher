@@ -174,12 +174,8 @@ factor, or condition them on a certified subgroup and its preservation along
 the path.
 
 Do not sample multiple representatives as independent support for these
-facts. Properties worth checking per representative include rational group
-decomposition, exact endomorphism order and conductor, rational torsion,
-`j`-invariant, efficiently computable automorphisms or endomorphisms, model
-and formula behavior, descent-friendly representation, and explicit path
-cost. A small coefficient, special model, short isogeny, small discriminant,
-or unusual `j`-invariant is only a lead until tied to an attack.
+facts; per-representative properties and leads are listed in
+[the audit reference](../../../docs/audit-curve-reference.md#per-representative-properties).
 
 The conductor `f_E` of the actual endomorphism ring is
 representative-dependent. For a separable `ell`-isogeny with
@@ -303,15 +299,8 @@ A single verified representative, usable path, and below-threshold attack
 establish existence without a p-value. Statistics are for prevalence,
 search-hit rate, or randomized runtime—not algebraic truth.
 
-Before sampling, freeze the population and distribution: uniform
-`F_q`-isomorphism classes, the deployed curve generator, and a neighbor walk
-are different populations. Deduplicate isomorphism classes rather than
-equations or `j`-invariants alone. Record allowed edge degrees, component,
-radius, conductor or volcano strata, stopping rule, revisits, and coverage.
-Correct degree bias and autocorrelation with a justified mixing or
-finite-population argument; an effective sample size is a diagnostic, not a
-mixing proof. Confirm adaptive discoveries on fresh samples and account for
-multiple testing.
+Before sampling, freeze the population and distribution and apply
+[the sampling-frame rules](../../../docs/audit-curve-reference.md#sampling-frame).
 
 For randomized contrasts intended to isolate conductor or volcano-level
 association, use one common native action in every level-effect arm. Before
@@ -354,12 +343,8 @@ i.i.d. setting, zero hits gives the one-sided `1-alpha` prevalence bound
 `n` only samples on which the frozen predicate is determinate, and report
 excluded and `INDETERMINATE` samples separately. Without a quantified
 false-negative and missingness model, the interval bounds validated detector
-hits rather than the prevalence of truly weak curves. Stratified,
-unequal-probability, or dependent samples require stratum- or design-aware
-inference; use a hypergeometric bound for sampling without replacement from a
-known finite population. None of these bounds proves absence, and a low
-estimated prevalence does not protect against a parameter generator
-deliberately selecting a rare representative.
+hits rather than the prevalence of truly weak curves. Other designs and
+the limits of every bound: [the audit reference](../../../docs/audit-curve-reference.md#prevalence-bounds-beyond-iid).
 
 ## 6. Emit a scoped verdict
 
