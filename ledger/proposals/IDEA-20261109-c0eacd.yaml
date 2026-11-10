@@ -1,0 +1,149 @@
+idea:
+  id: IDEA-20261109-c0eacd
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: Every realization of the 1-motive of a point on a prime-order curve over F_p is split except
+    at ell = N, where it is the Tate pairing; a lift-count table separates the three p-adic regimes
+  class: representation
+  claim: 'Let M_P = [Z -> E, 1 -> P], E/F_p of prime order N. For ell != p the ell-adic realization is
+    an extension of Z_ell by T_ell E with class in H^1(F_p, T_ell E) = T_ell E/(F-1), a group of order
+    ell^{v_ell(N)} because det(F-1) = N; the crystalline (Dieudonne) realization has class in D/(F-1)D
+    of order p^{v_p(N)}; the de Rham realization is split by the unique order-N section of E^nat(F_p).
+    Hence for p != N every additive cohomological invariant of P vanishes except the ell = N Kummer class,
+    whose computation in any basis is the Tate pairing in F_{p^k}, k = ord_N(p). Measurable form: L(P),
+    the number of lifts of P in Etilde(Z/p^2) of order dividing N, equals 1 for all P when p != N; on
+    anomalous toy curves it equals 0 for P != O on a non-canonical lift (Smart''s map is the nonzero class)
+    and p for all P on the canonical lift (class zero). Non-additive invariants are not excluded; they
+    are the fibre coordinates of the sibling records.'
+  mechanism: Z/N has no nonzero homomorphism into a Z_p-module, a W-module or a pro-ell group with ell
+    != N, and every realization functor is additive on 1-motives, so it kills P. The exception ell = N
+    exists because F - 1 has determinant N on T_N E. The slope-0 part of H^1_cris is T_p E with unit-root
+    eigenvalue u and v_p(u - 1) = v_p(N), so the Newton polygon places the crystalline class in a group
+    of order p^{v_p(N)}. Buium delta-characters of any order, Coleman logarithms, Bloch-Kato classes and
+    Hodge-Tate periods are additive into Z_p-modules and are covered. The lift count L(P) is the integral
+    shadow of these statements and distinguishes the three regimes with one computation.
+  novelty_status: adaptation
+  citations:
+  - ref: KR-RHO-53c89f
+    provenance: internal
+    claim: MOV and anomalous attacks are the ell = N and p = N arms; this record states that no other
+      arm exists.
+    verified_by: brief section 3 row; next agent opens knowledge/frontiers/ecdlp/generic-rho/KR-RHO-53c89f.yaml
+  - ref: KR-RHO-755e35
+    provenance: internal
+    claim: Isogeny invariance of N, trace and these Ext orders.
+    verified_by: brief section 3 row; not opened this session
+  - ref: KR-RHO-13bf67
+    provenance: internal
+    claim: Generic bound; delta 0.
+    verified_by: brief section 3 row; not opened this session
+  assumptions:
+  - Etilde is any Weierstrass lift mod p^2; the Z/p^2 group law is implemented projectively so lifts of
+    O are handled.
+  - Anomalous toy curves and their canonical lifts come from the wave-1 trace-one record; its certificate
+    path must be read there.
+  proof_search_map:
+    not_applicable_reason: a classification with a cheap integer-valued check, no exponent claim
+    bottleneck: not_applicable
+    baseline_embedding:
+      parameter_slice: not_applicable
+      reproduction_check: not_applicable
+    observation_collision:
+      observable: not_applicable
+      distinct_preimage_search: not_applicable
+    constructive_transforms: []
+    quantifier_order: not_applicable
+    method_ceiling:
+      strongest_certifiable_claim: not_applicable
+      nearby_object_control: not_applicable
+    proof_obligations: []
+  predictions:
+  - metric: L(P) histogram on p != N curves
+    direction: different
+    minimum_effect: all mass at 1
+  - metric: L(P) histogram on anomalous non-canonical lifts, P != O
+    direction: different
+    minimum_effect: all mass at 0
+  - metric: L(P) histogram on anomalous canonical lifts
+    direction: different
+    minimum_effect: all mass at p
+  - metric: order of the subgroup of order m lifting uniquely when the group order is p m with m prime
+    direction: different
+    minimum_effect: unique lift for the m-part, confirming gcd not anomaly drives it
+  minimal_test:
+    design: For 20 prime-order curves from crypto/docs/ECDLP_CALIBRATION_PRIMES.md and the wave-1 anomalous
+      j = 0 toy curves, enumerate the p lifts Ptilde + R, R in Etilde_1(Z/p^2), of each P and count those
+      with [N](Ptilde + R) = O in Etilde(Z/p^2). Tabulate alongside the orders ell^{v_ell(N)} for ell
+      in 2,3,5,p,N computed from the trace. The ell = N positive arm is the already filed transfer-wave
+      embedding-degree-1 record and is cited, not rerun.
+    controls:
+    - A toy curve of order p m, m prime, as the gcd control.
+    - Two lifts per curve, naive and perturbed, to show L(P) is lift-independent when p != N.
+    required_metrics:
+    - L(P) histogram per curve and lift
+    - v_p(N), ord_N(p) where feasible
+    - ell-part orders table
+  falsification_conditions:
+  - Any p != N curve with L(P) != 1 at any point.
+  - An explicit additive map from E(F_p) to a Z_p-module or to F_p that is nonzero on a p != N curve;
+    a proposal of such a map is to be checked for additivity first.
+  - Timeouts are infrastructure, not evidence.
+  confounders:
+  - Order computations in Etilde(Z/p^2) must use the full group law including the kernel of reduction.
+  interpretation_limits:
+  - This is a barrier statement about functorial invariants; it says nothing about non-additive statistics.
+  - Toy sizes only; the theorem itself needs no size.
+  heuristic_assumptions:
+  - id: H1
+    statement: The Z/p^2 implementation of the group law is correct at the kernel of reduction.
+    rigorous_support: standard formal-group facts
+    validation_plan: cross-check L(P) totals against the group order p N via the structure Z/N x Z/p computed
+      independently.
+  target_complexity:
+    time_exponent: N^{1/2} unchanged, delta 0
+    memory_exponent: O(p) per point in the toy lift enumeration
+    best_known: Pollard rho for general curves; MOV for small k; Smart for N = p (KR-RHO-53c89f)
+    hidden_overhead: none; no algorithm proposed
+    tradeoff_note: the ell = N arm costs L_{p^k}(1/3) with k astronomically large on secp256k1.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  dominated_by: KR-RHO-53c89f on both surviving arms; no row states the vanishing of the other realizations.
+  sota_delta: Exponent delta 0. Counted delta is a one-line classification of all functorial cohomological
+    extractions and a three-regime integer table.
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/generic-rho
+    rows_checked:
+    - KR-RHO-53c89f
+    - KR-RHO-755e35
+    - KR-RHO-13bf67
+    - KR-IC-cd159a
+    - KR-IC-f5c584
+    nearest:
+    - ref: KR-RHO-53c89f
+      provenance: internal
+      relation: adjacent
+      delta: that row lists the two transfer attacks; this record proves they are the only functorial
+        arms and prices the rest at zero.
+    - ref: KR-RHO-755e35
+      provenance: internal
+      relation: adjacent
+      delta: isogeny invariance is used, not extended.
+    searched:
+      corpus_grep:
+      - brief section 2 for crystalline, Dieudonne, Kummer class, 1-motive, realization
+      - wave-1 p-adic, port and transfer titles for trace-one, exit-dimension, affine-target vanishing,
+        local pairings
+      web: []
+      blocked: []
+    lead: LEAD-ICB-cofactor-projected-ladder-base
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: For 20 prime-order curves from crypto/docs/ECDLP_CALIBRATION_PRIMES.md and
+        the wave-1 anomalous j = 0 toy curves, enumerate the p lifts Ptilde + R, R in Etilde_1(Z/p^2),
+        of each P and count those with [N](Ptilde + R) = O in Etilde(Z/p^2). Tabulate alongside the orders
+        ell^{v_ell(N)} for ell in 2,3,5,p,N computed from the trace. The ell = N positive arm is the already
+        filed transfer-wave embedding-'

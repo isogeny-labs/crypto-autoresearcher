@@ -250,10 +250,12 @@ def _probe_pinned_lean_version(workspace: Path, *, runner=subprocess.run,
 
 def cmd_verify(args: argparse.Namespace) -> int:
     """Verify an existing proof without requiring a proof-generation service."""
+    from .receipts import declared_source_path
     from .targets import load_spec, task_from_spec
     from .workspace import rebuild_root
     repo = Path(args.repo_root).resolve()
-    task = task_from_spec(load_spec(args.task_file))
+    spec_data = load_spec(args.task_file)
+    task = task_from_spec(spec_data)
     workspace = (repo / task.workspace).resolve()
     if repo not in workspace.parents and workspace != repo:
         raise ValueError("formal workspace escapes repository root")
@@ -261,10 +263,12 @@ def cmd_verify(args: argparse.Namespace) -> int:
     if output.exists():
         raise ValueError("artifact already exists; choose a new immutable output path")
     _check_verification_pins(workspace)
+    declared_source = declared_source_path(repo, str(spec_data["source"]))
     def digest(path):
         return hashlib.sha256(path.read_bytes()).hexdigest() if path.is_file() else None
     inputs = {
         "task_spec_sha256": Path(args.task_file),
+        "declared_source_sha256": declared_source,
         "theorem_sha256": workspace / task.theorem_file,
         "lean_toolchain_sha256": workspace / "lean-toolchain",
         "lake_manifest_sha256": workspace / "lake-manifest.json",
@@ -301,6 +305,7 @@ def cmd_verify(args: argparse.Namespace) -> int:
             "lean_version": lean_version,
             "workspace_inputs": local_inputs,
             "verifier_inputs": software_inputs,
+            "verifier_closure": "formal-yaml-v2",
             **hashes,
         },
     }

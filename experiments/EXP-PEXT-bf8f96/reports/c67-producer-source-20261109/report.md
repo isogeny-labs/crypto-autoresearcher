@@ -1,0 +1,11 @@
+# Prospective C6/C7 control producer wiring
+
+**Scope:** Source-only future launcher component for H-PEXT-c3a11d / EXP-PEXT-bf8f96. No C6 coordinate control, C7 random control, scientific cohort, benchmark or cloud job ran. The contract remains `review_required` and unfrozen.
+
+`c67_control_producer.py` is an opt-in entrypoint for one of the three existing census supervisor stages (`n3core`, `n3ext`, `n5`). Its preflight requires the ordinary approved frozen trial plan, current supervisor authority, exact published schedule and join-plan hashes, the producer's own source hash, the 34-module independent replay source set, and the independent check artifact in the frozen trial. It then reserves custody once before any result is produced. No seventh run or retry path is created.
+
+Within the admitted stage it follows the schedule's exact batch order. Each C6 record calls `check_all_slots` on the bound published class/T and ordinal zero; each C7 record calls `sample_stratum` with the published field, pattern, scalar class and fixed count 16. Every payload goes through the custody module's exclusive, path-allowlisted writer. After all declared batches, it seals exact byte readback and calls the separate independent checker, which regenerates C6 slots and replays C7 SHA draws and geometry. A failed write or replay stops the stage and preserves the attempted custody and partial outputs. Draw-cap incompleteness remains recorded as incomplete coverage.
+
+Three fixed software tests pass under Python 3.11 with PyYAML. They replace both control engines with explicit placeholders and check exact order, one C6 and two C7 batch calls on a fixed stratum, independent-check invocation, changed-admission refusal, a second-write failure that prevents sealing, and future-plan source/artifact binding. These tests verify wiring and failure preservation; they do not measure or validate full-cohort runtime.
+
+The approved six-stage launcher still has to call this entrypoint in the census trials and bind all required source, input, output and checker artifacts in its frozen trial plan. The full cohort CPU, RSS, storage and deadline fit remains unqualified under the original six-run, 4 GB, 24 CPU-hour, 24-hour, zero-cloud-dollar and no-retry ceilings. External Reviewer acceptance and exceptional descent/C5 certification remain separate requirements.

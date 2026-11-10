@@ -1,0 +1,17 @@
+# Reviewer verdicts on (a)-(c) recorded BEFORE opening design/c5a0f4/FINDINGS.md or design/c5a0f4/evidence/ (inputs_note).
+recorded_at: 2026-11-07T04:06:10Z
+design/c5a0f4 atime/mtime of FINDINGS.md before reading: 2026-11-07 03:42:34.632837043 +0000 | 2026-11-07 03:42:34.632837043 +0000
+(a) conditional | fix before S2
+    rule (b): no foreign, stale, other-job or other-attempt prefix bound (A05 A06a-d A07a-d A12a-d).
+    break: rule (a) binds any results_uri result.json names; A01 sibling prefix -> v3b rc0 job_completed, CHECK_JOB_OK, S03 validity true.
+    break: content under the right prefix is not bound to the launcher objects.json snapshot (A09a/b, A10); zero-AWS-call control detects it.
+    notes: A06e A06f A07e A08 A09c A09d.
+(b) conditional | fix before S2
+    rule (b): no break (B01-B11, B13, B16).
+    break: rule (a) gives job_completed/rc0 on another pod's job-exit.json (A01) and on a string exit code (B12a/b, caught by check_job).
+    gap: partial download -> job_completed with download_exit 1 and S03 validity true (B14a/b); check_job misses B14b.
+    notes: crash paths rc2/rc5 without raw-result.json (B03 B04 B15, pre-existing in v3a); odd pairing B13 0:SUCCEEDED:0.
+(c) conditional | note
+    bytes: no submit or S3-write path (C05; every fake-aws call a read).
+    environment: BASH_ENV, exported function, PATH shim, CDPATH with the runbook's relative argv each reach aws with a write and a start-build (C01, C02).
+    C03 ISOLAB_BUCKET override fails closed with 0 calls; C04 --out symlink into runs/ is not refused.

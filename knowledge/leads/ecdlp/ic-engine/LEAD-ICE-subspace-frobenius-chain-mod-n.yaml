@@ -1,0 +1,36 @@
+id: LEAD-ICE-subspace-frobenius-chain-mod-n
+family: ic-engine
+title: >-
+  "All roots in V" as a Frobenius chain modulo N(X) = prod (X - x_i): a degree-2 big-field
+  encoding of factor-base membership at any m
+mechanism: >-
+  N divides the subspace polynomial L_V exactly when all roots of N lie in V. Tracking
+  R_k = X^(2^k) mod N as unknowns with R_k = R_(k-1)^2 mod N gives bilinear constraints and one
+  linear condition sum alpha_k R_k = 0, so membership becomes degree 2 for every m at a cost of
+  l m n auxiliary bits; coupled with the norm-form parametrisation of N it replaces S_(m+1).
+disposition: open_blocked
+next_action:
+  step: >-
+    Read Huang-Kosters-Yeo, "Last fall degree, HFE, and Weil descent attacks on ECDLP"
+    (CRYPTO 2015) and decide whether this encoding is one of the big-field systems whose last
+    fall degree they relate to the Weil-descended one; only if it is not, count its Macaulay
+    size against chained S_3 with the derive crate.
+  discriminates: >-
+    Equivalence closes it as closed_known; a genuinely different system gets a size count and,
+    if smaller at equal degree, a refutation-degree cell beside LEAD-ICE-quadratised-chain-representation.
+  blocked_by: literature check (paper not retrieved in the 2026-11-09 session)
+best_measured: null
+evidence:
+- repo: crypto
+  path: research/representation_leads_20261109/REPORT.pdf
+  note: the encoding and why it is likely subsumed
+ledger_refs: []
+known_results:
+- KR-IC-fbdb61
+forecloses:
+- Frobenius chain modulo the decomposition polynomial
+- subspace polynomial divisibility encoding
+- degree-2 factor-base membership via squaring chain
+areas:
+- KIC
+last_reviewed: '2026-11-09'

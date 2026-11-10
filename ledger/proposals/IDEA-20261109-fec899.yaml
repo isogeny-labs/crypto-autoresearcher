@@ -1,0 +1,128 @@
+idea:
+  id: IDEA-20261109-fec899
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: Scaling slope of CDCL on the direct prime-field ECDLP CNF with the scalar restricted to b bits,
+    SAT and UNSAT arms against enumeration and a structure-free iterated-map control
+  class: measurement
+  claim: 'On a prime-order toy curve with p about 2^20, encode "exists k in [0, 2^b) with [k]P = Q" as
+    a Tseitin CNF of a projective double-and-add circuit over bit-blasted F_p arithmetic, final equality
+    by cross-multiplication. Let T_sat(b) be the median CaDiCaL time with k uniform in [0, 2^b) and T_unsat(b)
+    with k uniform in [2^b, N). Define s = slope of log2 T against b over the six largest b. Prediction
+    fixed before any run: s_unsat >= 0.9 and s_sat >= 0.8, and a structure-free control circuit of equal
+    size has |s_unsat - s_ctrl| <= 0.1. A slope below 1/2 would be the bar for interest (generic interval
+    cost 2^{b/2}); the expected slope is about 1. Exponent delta claimed: 0.'
+  mechanism: The UNSAT arm is a refutation of a range statement for an iterated algebraic map, the kind
+    of formula ABRW-type results make hard for resolution; the SAT arm is search. CDCL on bit-level arithmetic
+    sees no group structure, so both arms are predicted to track enumeration. The control replaces the
+    curve step by x <- x^2 + c mod p with a bit-conditioned branch, keeping gate count within 20 percent.
+  novelty_status: adaptation
+  citations:
+  - ref: KR-IC-5765d2
+    provenance: internal
+    claim: SAT and XOR reasoning speed binary-curve point decomposition by constants without changing
+      the exponent; this record measures the direct discrete log, not decomposition, over a prime field.
+    verified_by: REPO BRIEF section 3 frontier map; file not opened.
+  - ref: KR-RHO-898783
+    provenance: internal
+    claim: Interval DLP of width 2^b costs about 2^{b/2} generically; the comparator slope is 1/2.
+    verified_by: REPO BRIEF section 3 frontier map; file not opened.
+  assumptions:
+  - The projective double-and-add circuit is derived from the gate decomposition the next agent reads
+    in crypto/quantum_circuit_secp256k1, re-sized to p about 2^20; the CNF is checked by solving 20 planted
+    instances.
+  - CaDiCaL and Kissat are run with default settings; timeouts count as infrastructure.
+  predictions:
+  - metric: s_unsat (slope of log2 median time against b, b in [14, 20])
+    direction: higher
+    minimum_effect: at least 0.9
+  - metric: s_sat
+    direction: higher
+    minimum_effect: at least 0.8
+  - metric: absolute difference between s_unsat and s_ctrl
+    direction: different
+    minimum_effect: at most 0.1
+  minimal_test:
+    design: 'One curve from crypto/docs/ECDLP_CALIBRATION_PRIMES.md with p about 2^20. For b from 8 to
+      20, 20 instances per arm per b, two solvers. Record time, conflicts, mean learnt-clause width, CNF
+      size. Fit log2 T = s b + c log2 b + e. Enumeration baseline: 2^b scalar multiplications timed in
+      the same harness.'
+    controls:
+    - Structure-free control circuit x <- x^2 + c mod p with bit-conditioned branch, same b, same solver
+      settings.
+    - Second curve of the same bit length to check curve independence of s.
+    - Planted-k sanity check on 20 SAT instances per b.
+    required_metrics:
+    - CNF variables and clauses per b
+    - median and interquartile time per arm, b, solver
+    - conflicts and mean learnt-clause width per arm, b
+    - fitted s and c with standard errors per arm and control
+  falsification_conditions:
+  - s_unsat <= 0.6 on both solvers over b in [14, 20] while s_ctrl >= 0.9 (interesting; triggers a follow-up,
+    not a break claim).
+  - s_sat <= 0.6 persisting after the planted check passes.
+  - Timeouts above 25 percent at any b are infrastructure and void that b.
+  confounders:
+  - CNF size grows with b, adding a polynomial factor; the fit includes c log2 b.
+  - Solver preprocessing may exploit word-level structure of the fixed curve constants; the second curve
+    arm detects this.
+  - SAT-arm variance from early lucky assignments; medians over 20 instances.
+  interpretation_limits:
+  - A slope near 1 at p about 2^20 does not prove hardness at 2^256; it kills the cheap version of the
+    direct-SAT route only.
+  - A slope below 1/2 at toy size would be a measurement, not an exponent claim, until charged against
+    KR-RHO-898783 constants.
+  heuristic_assumptions:
+  - id: H1
+    statement: CDCL time on the direct ECDLP CNF scales like enumeration in b.
+    rigorous_support: ABRW-type resolution hardness for range statements of iterated maps (recalled);
+      no theorem for this circuit.
+    validation_plan: Predictions 1 to 3 on two solvers and two curves.
+  target_complexity:
+    time_exponent: Measured 2^{s b} per interval of width 2^b; expected s about 1, needs s < 1/2 to matter.
+    memory_exponent: solver-dependent, polynomial in CNF size
+    best_known: Generic interval cost 2^{b/2} (KR-RHO-898783), rho sqrt N overall.
+    hidden_overhead: CNF size polynomial in b and log p; recorded, not asymptotically significant
+    tradeoff_note: no time-memory tradeoff is defined by this measurement.
+  estimated_cost:
+    implementation: medium
+    compute: low
+  recommended_priority: medium
+  dominated_by: KR-IC-5765d2 dominates the solver mechanism; KR-RHO-898783 the comparator. No row states
+    the direct prime-field ECDLP CNF slope.
+  sota_delta: Exponent delta 0 expected. Adds the missing direct-DL arm to the SAT lane, which so far
+    measured only decomposition instances.
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/index-calculus
+    rows_checked:
+    - KR-IC-5765d2
+    - KR-IC-e847d1
+    - KR-IC-889857
+    - KR-RHO-898783
+    - KR-RHO-13bf67
+    nearest:
+    - ref: KR-IC-5765d2
+      provenance: internal
+      relation: adjacent
+      delta: Published SAT work targets binary-curve decomposition systems; this record encodes the scalar
+        multiplication itself over F_p.
+    - ref: KR-RHO-898783
+      provenance: internal
+      relation: orthogonal
+      delta: Interval kangaroo constants serve only as the comparator slope 1/2.
+    searched:
+      corpus_grep:
+      - REPO BRIEF section 2 for SAT, CNF, CaDiCaL, direct MITM
+      - Wave 1 sweep and wildcards for bit-blasted SAT and QF_BV
+      web: []
+      blocked:
+      - no tool access; experiment directories not opened
+    lead: LEAD-EXO-lossy-object-propagation
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: One curve from crypto/docs/ECDLP_CALIBRATION_PRIMES.md with p about 2^20.
+        For b from 8 to 20, 20 instances per arm per b, two solvers. Record time, conflicts, mean learnt-clause
+        width, CNF size. Fit log2 T = s b + c log2 b + e. Enumeration baseline: 2^b scalar multiplications
+        timed in the same harness.'

@@ -72,6 +72,8 @@ mod implementation {
     impl CocycleIndex {
         pub fn len(&self)->usize {self.entries.len()}
         pub fn power(&self)->u32 {self.power}
+        /// Change candidate enumeration without changing canonical ordinals.
+        pub fn reverse_representatives(&mut self) {self.nonrational_reps.reverse();}
     }
     pub struct RationalImageIndex {
         prime:u32,
@@ -83,6 +85,10 @@ mod implementation {
     impl RationalImageIndex {
         pub fn entries(&self)->u64 {self.entries}
         pub fn roots(&self)->usize {self.by_root.len()}
+        /// Reverse each fixed-root candidate stream in place.
+        pub fn reverse_buckets(&mut self) {
+            for bucket in &mut self.by_root {bucket.reverse();}
+        }
     }
 
     impl Context {
@@ -328,6 +334,39 @@ mod implementation {
                 primitive_polynomial_index:self.field.idx_of[2],power:k,
                 nonrational_reps,entries,matrices})
         }
+        /// Rebuild the same ordinal map in reverse transversal order, reusing
+        /// its allocation. Check every canonical matrix and cocycle afterward.
+        pub fn rebuild_cocycle_index_reverse(&self,index:&mut CocycleIndex,
+            maximum_entries:u64)->Result<(),&'static str> {
+            if (index.prime,index.degree,index.primitive_polynomial_index)
+                !=(self.field.q,self.field.n,self.field.idx_of[2]) {
+                return Err("cocycle index field mismatch");
+            }
+            let expected=self.structure_count()?;
+            if expected>maximum_entries || index.matrices.len() as u64!=expected
+                || index.entries.len() as u64!=expected {
+                return Err("reverse cocycle index entry limit or coverage mismatch");
+            }
+            index.entries.clear();
+            self.visit_structures_range_ordered(0,expected,expected,true,|ordinal,matrix| {
+                if index.matrices[ordinal as usize]!=matrix {
+                    return Err("reverse cocycle index matrix order differs");
+                }
+                let key=self.structure_cocycle_power(matrix,index.power)?;
+                if index.entries.insert(key,ordinal).is_some() {
+                    return Err("reverse cocycle index duplicate");
+                }
+                Ok(())
+            })?;
+            if index.entries.len() as u64!=expected {return Err("reverse cocycle index incomplete");}
+            for (ordinal,&matrix) in index.matrices.iter().enumerate() {
+                let key=self.structure_cocycle_power(matrix,index.power)?;
+                if index.entries.get(&key)!=Some(&(ordinal as u64)) {
+                    return Err("reverse cocycle index ordinal differs");
+                }
+            }
+            Ok(())
+        }
         pub fn cocycle_ordinal(&self,index:&CocycleIndex,cocycle:[u32;4])
             ->Result<Option<u64>,&'static str> {
             if (index.prime,index.degree,index.primitive_polynomial_index)
@@ -499,6 +538,11 @@ mod implementation {
         /// unranking skips the prefix without constructing or visiting it.
         pub fn visit_structures_range<F>(&self,start:u64,end:u64,maximum_emitted:u64,mut body:F)->Result<u64,&'static str>
         where F:FnMut([u32;4])->Result<(),&'static str> {
+            self.visit_structures_range_ordered(start,end,maximum_emitted,false,|_,matrix|body(matrix))
+        }
+        fn visit_structures_range_ordered<F>(&self,start:u64,end:u64,maximum_emitted:u64,
+            reverse:bool,mut body:F)->Result<u64,&'static str>
+        where F:FnMut(u64,[u32;4])->Result<(),&'static str> {
             let expected=self.structure_count()?;
             if start>end || end>expected { return Err("invalid structure range"); }
             if end-start>maximum_emitted { return Err("structure traversal limit exceeded"); }
@@ -513,7 +557,8 @@ mod implementation {
             let omit_one=|rank:u64,excluded:u32|->u32 {
                 let x=rank as u32;if x>=excluded {x+1} else {x}
             };
-            for index in start..end {
+            for offset in 0..end-start {
+                let index=if reverse {end-1-offset} else {start+offset};
                 let (a,b,c)=if index<first {
                     (t.inf,0,t.rep_a1[index as usize])
                 } else if index<first+second {
@@ -525,7 +570,7 @@ mod implementation {
                     let low=a.min(b);let high=a.max(b);let mut c=(tail%(q-1)) as u32;
                     if c>=low {c+=1;} if c>=high {c+=1;} (a,b,c)
                 };
-                body(self.normalize_matrix(from_triple(f,a,b,c,t.inf))?)?;
+                body(index,self.normalize_matrix(from_triple(f,a,b,c,t.inf))?)?;
             }
             Ok(end-start)
         }
@@ -922,6 +967,19 @@ mod implementation {
             let index=q3.cocycle_index(1,819).unwrap();
             assert!(q5.cocycle_ordinal(&index,[1,0,0,1]).is_err());
             assert!(q3.cocycle_ordinal(&index,[1,0,0,0]).is_err());
+        }
+        #[test]
+        fn reverse_cocycle_construction_keeps_every_f27_ordinal() {
+            let ctx=Context::new(3,3,27).unwrap();
+            let count=ctx.structure_count().unwrap();
+            let mut index=ctx.cocycle_index(1,count).unwrap();
+            assert!(ctx.rebuild_cocycle_index_reverse(&mut index,count-1).is_err());
+            ctx.rebuild_cocycle_index_reverse(&mut index,count).unwrap();
+            for ordinal in 0..count {
+                let matrix=ctx.structure_matrix(&index,ordinal).unwrap();
+                let cocycle=ctx.structure_cocycle_power(matrix,1).unwrap();
+                assert_eq!(ctx.cocycle_ordinal(&index,cocycle).unwrap(),Some(ordinal));
+            }
         }
         #[test]
         fn rational_image_index_matches_direct_full_f27_scan() {

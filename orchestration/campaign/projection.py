@@ -16,6 +16,7 @@ import re
 import stat
 import subprocess
 from dataclasses import dataclass
+from datetime import date, datetime
 from pathlib import Path
 from typing import Any
 
@@ -37,9 +38,14 @@ SCHEMA_SUPERSESSION_ROOT = "ledger/corrections/schema-supersessions/"
 
 def canonical_json(value: Any) -> bytes:
     """Return the stable representation used for derived projection hashes."""
-
+    def scalar(item):
+        # YAML decodes unquoted dates/timestamps into these native types.
+        # Preserve their value without rewriting the authoritative YAML.
+        if isinstance(item, (date, datetime)):
+            return item.isoformat()
+        raise TypeError(f"unsupported projection value: {type(item).__name__}")
     return json.dumps(
-        value, sort_keys=True, separators=(",", ":"), ensure_ascii=True
+        value, sort_keys=True, separators=(",", ":"), ensure_ascii=True, default=scalar
     ).encode("ascii")
 
 

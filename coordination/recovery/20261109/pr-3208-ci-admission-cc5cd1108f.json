@@ -1,0 +1,77 @@
+{
+  "schema": "crypto.autoresearch.ci_admission_observation/v1",
+  "observed_at": "2026-11-09T18:32:51.766093+00:00",
+  "pr": 3208,
+  "head": "cc5cd1108f9972e4ef3e03fcaa64a06aa772538b",
+  "required_checks": [
+    "progress-fidelity",
+    "artifacts",
+    "formal workspace (lake build + axiom audit)"
+  ],
+  "runs": [
+    {
+      "id": 42674089576,
+      "name": "progress-fidelity",
+      "head_sha": "cc5cd1108f9972e4ef3e03fcaa64a06aa772538b",
+      "status": "completed",
+      "conclusion": "failure",
+      "run_attempt": 1,
+      "html_url": "https://github.com/isogeny-labs/crypto-autoresearcher/actions/runs/42674089576",
+      "jobs": []
+    },
+    {
+      "id": 42674089637,
+      "name": "artifacts",
+      "head_sha": "cc5cd1108f9972e4ef3e03fcaa64a06aa772538b",
+      "status": "completed",
+      "conclusion": "failure",
+      "run_attempt": 1,
+      "html_url": "https://github.com/isogeny-labs/crypto-autoresearcher/actions/runs/42674089637",
+      "jobs": [
+        {
+          "id": 129351637766,
+          "name": "size",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "id": 42674090015,
+      "name": "lean-verification",
+      "head_sha": "cc5cd1108f9972e4ef3e03fcaa64a06aa772538b",
+      "status": "completed",
+      "conclusion": "failure",
+      "run_attempt": 1,
+      "html_url": "https://github.com/isogeny-labs/crypto-autoresearcher/actions/runs/42674090015",
+      "jobs": []
+    },
+    {
+      "id": 42674102099,
+      "name": "pcc-gate",
+      "head_sha": "cc5cd1108f9972e4ef3e03fcaa64a06aa772538b",
+      "status": "completed",
+      "conclusion": "success",
+      "run_attempt": 1,
+      "html_url": "https://github.com/isogeny-labs/crypto-autoresearcher/actions/runs/42674102099",
+      "jobs": [
+        {
+          "id": 129351713696,
+          "name": "gate",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ]
+    }
+  ],
+  "retry_request": {
+    "run_id": 42674089576,
+    "operation": "rerun failed workflow jobs",
+    "http_status": 403,
+    "message": "This workflow run cannot be retried",
+    "requests": 1,
+    "new_attempt_created": false
+  },
+  "cause": "undetermined; no failing job log exposed for progress-fidelity",
+  "interpretation": "pcc-gate and size pass, but these do not satisfy the three required checks. Do not claim merged or bypass required checks."
+}

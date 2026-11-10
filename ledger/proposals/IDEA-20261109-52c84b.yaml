@@ -1,0 +1,143 @@
+idea:
+  id: IDEA-20261109-52c84b
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: Charged cost of rank and Selmer computation on lifts of a 256-bit instance, with the lift-discriminant
+    exponent gamma measured at toy size
+  class: barrier
+  claim: 'Let (E, P) be a prime-order instance over F_p, p about 2^256, and let a lift be an integral
+    model y^2 = x^3 + Ax + B with A = 0 and B = b_E mod p and an integer point (u, w) reducing to P, |u|
+    < p. H1: the minimal |Delta| over such lifts is p^gamma with 4 <= gamma <= 5; the balance A about
+    p^{1.5}, B about p^2 (w chosen in the length-p window around u^{3/2}, then A = p a'' used to reduce
+    the remainder modulo p u) gives gamma = 4.5. Full 2-descent needs the class group and units of Q(theta),
+    theta^3 + A theta + B = 0, so costs at least L_{p^gamma}[1/2, sqrt 2] under GRH, about 2^{139} at
+    gamma = 4 and 2^{149} at gamma = 4.5, plus GNFS factoring of Delta near 2^{90}. On CM lifts A = 0,
+    B about p^{2.5}, the 3-isogeny with kernel (0, +-sqrt B) allows a phi-descent through a quadratic
+    field of discriminant about 3B, costing about 2^{106}, below rho. The canonical global model y^2 =
+    x^3 + 7 has rank 0 and trivial torsion (one ellrank call to re-verify), so no point of secp256k1 lifts
+    to it. In every case the descent returns Selmer classes whose shadow in <P> is zero, so the number
+    is a price with no purchase.'
+  mechanism: The congruences force A, B to be multiples of p or the constants 0 and b_E; the constant
+    choice is the canonical model, which has no points. Any other lift has discriminant at least p^4 up
+    to the slack of H1, and descent cost is subexponential in that discriminant, not in p. CM lifts are
+    the one family where an isogeny descent avoids the cubic field; they show that cost is not the operative
+    barrier, the shadow theorem is.
+  novelty_status: unverified
+  citations:
+  - ref: KR-IC-cd159a
+    provenance: internal
+    claim: Lifting fails; this record prices the descent step any revival would need.
+    verified_by: Mythos ideation 2026-11-09, frontier-map excerpt in the repo brief.
+  - ref: KR-RHO-13bf67
+    provenance: internal
+    claim: 2^{128} is the generic comparator at 256 bits.
+    verified_by: Mythos ideation 2026-11-09, frontier-map excerpt in the repo brief.
+  - ref: Buchmann 1990 and Hafner-McCurley 1989, class groups in L[1/2]
+    provenance: recalled
+    claim: Class group and units of a number field of discriminant D in L_D[1/2, sqrt 2] under GRH.
+    verified_by: recalled; check the constant for cubic fields.
+  - ref: Cohen-Pazuki, elementary 3-descent with a 3-isogeny
+    provenance: recalled
+    claim: phi-descent on y^2 = x^3 + B reduces to S-units and the 3-class group of a quadratic field.
+    verified_by: recalled; confirm which quadratic field before implementing.
+  assumptions:
+  - Integral models with |u| < p; rational points with denominator v > 1 form a separate arm of the sweep.
+  - GRH for the class-group costs; all numbers are conditional and asymptotic.
+  predictions:
+  - metric: gamma(p), log_p of the minimal |Delta| found by the toy sweep
+    direction: higher
+    minimum_effect: at least 3.8 on every calibration prime
+  - metric: fitted c in log2 time(ellrank) = c sqrt(ln Delta ln ln Delta) + const
+    direction: higher
+    minimum_effect: at least 1.0
+  - metric: rank plus torsion order minus 1 of y^2 = x^3 + 7 over Q
+    direction: lower
+    minimum_effect: exactly 0
+  minimal_test:
+    design: '(a) Eight calibration primes p in [2^16, 2^24] from crypto/docs/ECDLP_CALIBRATION_PRIMES.md,
+      100 random points each: search A = p a'' with |a''| <= p^{0.5} and w in the length-p window around
+      u^{3/2}, plus the v <= p^{1/3} rational arm; record the minimal |Delta| and gamma(p). (b) On 30
+      lifts per prime run PARI ellrank with full 2-descent, record wall time and log Delta, fit c. (c)
+      Run ellrank on [0, 0, 0, 0, 7] and read secp256k1_cm_audit and RESEARCH_SECP256K1_CM.md for any
+      prior statement. (d) On the A = 0 arm run the 3-isogeny descent and record time against 2-descent
+      on the same curve.'
+    controls:
+    - Random integral curves with the same log Delta and no congruence constraint, timed with the same
+      call, to separate lift structure from size.
+    - Every Delta factored completely before descent; failures counted as infrastructure.
+    required_metrics:
+    - gamma(p) per prime, min and median
+    - ellrank wall time and log2 Delta per curve
+    - fitted c and residuals
+    - rank and torsion of the canonical model
+    - 3-isogeny versus 2-descent time ratio on A = 0 lifts
+  falsification_conditions:
+  - gamma(p) below 3.5 on three or more primes falsifies H1; the cost figures must then be recomputed
+    (the shadow barrier is unaffected).
+  - Nonzero rank or torsion of y^2 = x^3 + 7 over Q falsifies the canonical-model statement.
+  - Fitted c below 0.7 means the toy regime is not in the L[1/2] regime and the extrapolation is unsupported
+    by the sweep.
+  confounders:
+  - At toy sizes ellrank is overhead-dominated, so c is noisy; the 256-bit number rests on the literature
+    exponent, the fit is a sanity check.
+  - The sweep is bounded, so gamma(p) is an upper bound on the true minimum; a lattice search for smaller
+    Delta is the obvious follow-up.
+  interpretation_limits:
+  - A price with no purchase; even free descent returns classes with zero shadow in <P> (companion shadow
+    record).
+  - Constants at 1000-bit discriminants are not pinned by this run.
+  heuristic_assumptions:
+  - id: H1
+    statement: Minimal lift discriminant is p^gamma with 4 <= gamma <= 5 for integral one-point lifts.
+    rigorous_support: Counting argument on the window of w and the multiples of p available for A; no
+      theorem.
+    validation_plan: The toy sweep in minimal_test (a); regress gamma(p) on log p.
+  - id: H2
+    statement: Class-group cost L_D[1/2, sqrt 2] applies to the cubic and quadratic fields that arise,
+      with D up to p^gamma.
+    rigorous_support: Buchmann under GRH, recalled.
+    validation_plan: Timing fit in minimal_test (b); literature check by the filing coordinator.
+  target_complexity:
+    time_exponent: unchanged, N^{1/2}; descent alone costs 2^{139} to 2^{149} (generic lift) or 2^{106}
+      (CM lift) and yields no bit of k
+    memory_exponent: unchanged
+    best_known: Pollard rho, 2^{128} group operations at 256 bits
+    hidden_overhead: factoring Delta (GNFS, about 2^{90}) and GRH
+    tradeoff_note: Cost record; no tradeoff proposed.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: low
+  dominated_by: KR-IC-cd159a dominates the lifting route; no row prices the descent step or states gamma.
+  sota_delta: Exponent delta 0. New numbers are gamma, 2^{139} to 2^{149}, 2^{106}, and the rank-0 fact
+    for the canonical model.
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/index-calculus
+    rows_checked:
+    - KR-IC-cd159a
+    - KR-RHO-13bf67
+    - KR-RHO-53c89f
+    - KR-RHO-755e35
+    - KR-IC-9e610d
+    nearest:
+    - ref: KR-IC-cd159a
+      provenance: internal
+      relation: adjacent
+      delta: The row records that lifts have the wrong rank statistics; this record charges the rank computation
+        itself.
+    searched:
+      corpus_grep:
+      - repo brief section 2 for descent, class group, conductor, lift, canonical lift
+      - p-adic lane wave-1 leads on global lifts and heights
+      web: []
+      blocked: []
+    lead: LEAD-ICE-charged-toy-ic-exponent-vs-rho
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: (a) Eight calibration primes p in [2^16, 2^24] from crypto/docs/ECDLP_CALIBRATION_PRIMES.md,
+        100 random points each: search A = p a'' with |a''| <= p^{0.5} and w in the length-p window around
+        u^{3/2}, plus the v <= p^{1/3} rational arm; record the minimal |Delta| and gamma(p). (b) On 30
+        lifts per prime run PARI ellrank with full 2-descent, record wall time and log Delta, fit c. (c)
+        Run ellrank on [0'

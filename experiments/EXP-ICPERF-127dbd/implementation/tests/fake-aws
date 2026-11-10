@@ -1,0 +1,85 @@
+#!/usr/bin/env bash
+# Offline stand-in for the aws CLI, used only by the C1 tests (test_locator.sh, rt_regression.sh, mutation_check.sh).
+# It serves s3://BUCKET/KEY from $FAKE_S3_ROOT/KEY, logs every call to $FAKE_AWS_LOG, and refuses (exit 99) any copy whose
+# destination is an S3 URI.
+# v3c: its settings come from a conf file, not from the environment, because K-7 of launch_eks.sh and reconcile_run.sh
+# re-executes the scripts under `env -i`. The conf file is $FAKE_AWS_CONF if set, else fake-aws.conf in the directory the
+# fake was invoked from (the directory of the `aws` symlink, not of this file). It is shell syntax that assigns
+# FAKE_AWS_LOG and FAKE_S3_ROOT (and, optionally, FAKE_ETAG_DIR and the test-only knobs of fixtures/isobin-wrap/aws).
+# Supported: --version, s3 cp SRC DST [--recursive] [--only-show-errors], s3 ls URI, s3api list-objects-v2 --bucket B
+# --prefix P [--output json], codebuild list-builds-for-project (prints nothing). Anything else exits 97.
+# LastModified and the `s3 ls` time come from each file's mtime; ETag is the md5 of the bytes unless $FAKE_ETAG_DIR/KEY holds one.
+set -u
+conf=${FAKE_AWS_CONF:-$(dirname -- "$0")/fake-aws.conf}
+[[ -f $conf ]] && . "$conf"
+[[ -n ${FAKE_AWS_LOG:-} ]] && echo "aws $*" >> "$FAKE_AWS_LOG"
+[[ -n ${FAKE_LOG_ENVNAMES:-} ]] && echo "ENVNAMES $(env | grep -o '^AWS_[A-Z0-9_]*' | LC_ALL=C sort | tr '\n' ' ')PATHDIRS=$(printf %s "$PATH" | tr ':' ' ' | wc -w)" >> "${FAKE_AWS_LOG:-/dev/null}"
+# v3d: the names (never the values) of the transport, shell-startup and python variables the aws process sees, on a line of its own
+[[ -n ${FAKE_LOG_ENVNAMES:-} ]] && echo "ENVOTHER $(env | cut -d= -f1 | grep -E '^(https?_proxy|HTTPS?_PROXY|ALL_PROXY|all_proxy|NO_PROXY|no_proxy|REQUESTS_CA_BUNDLE|SSL_CERT_FILE|SSL_CERT_DIR|CURL_CA_BUNDLE|PYTHONNOUSERSITE|PYTHONPATH|BASH_ENV|ENV|SHELLOPTS)$' | LC_ALL=C sort | tr '\n' ' ')" >> "${FAKE_AWS_LOG:-/dev/null}"
+if [[ ${1:-} == --version ]]; then echo "aws-cli/1.46.2 Python/3.12.3 Linux/6 fake-aws"; exit 0; fi
+: "${FAKE_AWS_LOG:?fake-aws: no conf file with FAKE_AWS_LOG}"
+root=${FAKE_S3_ROOT:?fake-aws: no FAKE_S3_ROOT}
+iso() { date -u -d "@$(stat -c %Y "$1")" +%Y-%m-%dT%H:%M:%S+00:00; }
+etag_of() { # etag_of KEY FILE
+  if [[ -n ${FAKE_ETAG_DIR:-} && -f $FAKE_ETAG_DIR/$1 ]]; then cat "$FAKE_ETAG_DIR/$1"; else printf '"%s"' "$(md5sum < "$2" | cut -d ' ' -f1)"; fi
+}
+case "${1:-} ${2:-}" in
+"s3 cp")
+  src=${3:-}; dst=${4:-}; recursive=0
+  for a in "$@"; do [[ $a == --recursive ]] && recursive=1; done
+  if [[ $dst == s3://* ]]; then echo "FAKE-AWS: S3 WRITE REFUSED ($src -> $dst)" >&2; exit 99; fi
+  [[ $src == s3://* ]] || { echo "FAKE-AWS: local source unsupported" >&2; exit 98; }
+  key=${src#s3://}; key=${key#*/}
+  path="$root/$key"
+  if [[ $recursive == 1 ]]; then
+    [[ -d $path ]] || exit 1
+    mkdir -p "$dst"; cp -r "$path"/. "$dst"
+  else
+    [[ -f $path ]] || { echo "fatal error: An error occurred (404) when calling the HeadObject operation: Key \"$key\" does not exist" >&2; exit 1; }
+    cp "$path" "$dst"
+  fi
+  exit 0 ;;
+"s3 ls")
+  uri=${3:-}; key=${uri#s3://}; key=${key#*/}
+  path="$root/$key"
+  if [[ $key == */ || -z $key ]]; then
+    [[ -d $path ]] || exit 1
+    n=0
+    for entry in "$path"/*; do
+      [[ -e $entry ]] || continue
+      n=$((n + 1))
+      if [[ -d $entry ]]; then printf '                           PRE %s/\n' "$(basename "$entry")"
+      else printf '%s %10d %s\n' "$(date -u -d "@$(stat -c %Y "$entry")" '+%Y-%m-%d %H:%M:%S')" "$(stat -c %s "$entry")" "$(basename "$entry")"; fi
+    done
+    [[ $n -gt 0 ]] || exit 1
+    exit 0
+  fi
+  [[ -f $path ]] || exit 1
+  printf '%s %10d %s\n' "$(date -u -d "@$(stat -c %Y "$path")" '+%Y-%m-%d %H:%M:%S')" "$(stat -c %s "$path")" "$(basename "$path")"
+  exit 0 ;;
+"s3api list-objects-v2")
+  bucket=""; prefix=""; shift 2
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      --bucket) bucket=${2:-}; shift 2 ;;
+      --prefix) prefix=${2:-}; shift 2 ;;
+      --output) shift 2 ;;
+      *) echo "FAKE-AWS: unsupported list-objects-v2 argument $1" >&2; exit 97 ;;
+    esac
+  done
+  [[ -n $bucket && -n $prefix ]] || exit 252
+  [[ -n ${FAKE_LIST_FAIL:-} && $prefix == *"$FAKE_LIST_FAIL"* ]] && { echo "FAKE-AWS: list failed" >&2; exit 254; }
+  items=()
+  while IFS= read -r -d '' f; do
+    key=${f#"$root"/}
+    [[ $key == "$prefix"* ]] || continue
+    items+=("$(jq -n -c --arg k "$key" --arg lm "$(iso "$f")" --arg e "$(etag_of "$key" "$f")" --argjson s "$(stat -c %s "$f")" \
+      '{Key:$k, LastModified:$lm, ETag:$e, Size:$s, StorageClass:"STANDARD"}')")
+  done < <(find "$root" -type f -print0 | LC_ALL=C sort -z)
+  # like aws-cli v1, print nothing when the prefix holds no object
+  [[ ${#items[@]} -gt 0 ]] || exit 0
+  printf '%s\n' "${items[@]}" | jq -s '{Contents: .}'
+  exit 0 ;;
+"codebuild list-builds-for-project") exit 0 ;;
+*) echo "FAKE-AWS: unsupported call: $*" >&2; exit 97 ;;
+esac

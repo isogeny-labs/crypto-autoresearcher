@@ -1,0 +1,66 @@
+idea:
+  id: IDEA-20261109-3e4b88
+  question_id: RQ-ISO-844f9f
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  class: mechanism
+  record_kind: cryptanalytic_attack_cost
+  title: Enlarging the dimension-2 Kani regime with auxiliary endomorphisms iota^2 = -m for m beyond {1,
+    3}; representability density of 2^e - N
+  novelty_status: speculative
+  claim: Dimension-2 reductions require 2^e - N = a^2 + m b^2 for some available iota with iota^2 = -m
+    on the starting curve. H-ALISO-014 searched auxiliary discriminants from the standard maximal order
+    of B_{p,infinity} (the same order object censused in H-SSIQ-d724f2) and H-ALISO-017 ran the a^2 +
+    b^2 lattice search. We claim that admitting iota of larger norm m (so the kernel generator costs one
+    degree-m endomorphism evaluation) increases the fraction of representable odd N by only a logarithmic
+    factor, so the gain is a polynomial constant and not an exponent change; the record exists to measure
+    that constant and to close the "just use a bigger auxiliary order" shortcut if it is below 2x. No
+    Lean coverage; the degree formula deg(a + b iota) = a^2 + m b^2 is the statement to formalize.
+  mechanism: For e = 60 enumerate odd N < 2^e and test representability of 2^e - N by x^2 + m y^2 for
+    m in a candidate set up to 50 (Cornacchia per form). The attack-side cost of admitting m is one evaluation
+    of an endomorphism of degree m per kernel point, in level-2 theta after gluing, on top of the (2,2)
+    chain of length e. Report density gain over m = 1 alone and the marginal cost per step.
+  quantitative:
+    dimension: 2
+    coordinate_model: level-2 theta after gluing
+    isogeny_degree: (2,2) per step, 2^e total, plus one degree-m endomorphism per kernel generator
+    auxiliary_norms: m in {1, 2, 3, ..., 50}
+    test_scale: e = 60
+  cleared:
+    checked:
+    - H-ALISO-014
+    - H-ALISO-017
+    - H-SSIQ-d724f2
+    disproven: none in the brief
+    lean: no Lean coverage; would need "for iota in End(E0) with iota^2 = -m, the endomorphism a + b iota
+      has degree a^2 + m b^2"
+    exp: none; nearest surface is Autolab package p1243_auxiliary_discriminant_search (H-ALISO-014)
+  kill_test: If the representable fraction with all m <= 50 is less than 2x the fraction with m = 1 alone
+    at e = 60, close the record as negligible gain and record the measured ratio. If the gain exceeds
+    2x, re-run at e = 120 before any further claim; no exponent change is asserted in either case.
+  prior_art:
+    frontier_map: not_applicable
+    frontier_map_reason: elementary binary-quadratic-form density; the open part is only the measured
+      constant relative to the lane's existing auxiliary search
+    searched:
+      corpus_grep:
+      - H-ALISO-014
+      - H-ALISO-015
+      - H-ALISO-016
+      - H-ALISO-017
+      - H-SSIQ-d724f2
+      - H-SSIQ-dfee7e
+      none_found_after:
+      - non-maximal order auxiliary
+      - x^2 + m y^2
+      - representability density
+      - Cornacchia
+    nearest_record:
+      id: H-ALISO-014
+      relation: special_case
+      note: maximal-order discriminants only; this record extends the norm set
+    not_applicable_reason: This campaign is isogeny/formula engineering, not an ECDLP-mechanism claim;
+      the ECDLP frontier map does not cover the relevant literature.
+    none_found_after:
+    - repository search of crypto, cryptanalysis, crypto-autoresearcher and ecbench

@@ -387,3 +387,10 @@ may promote the result or change official research state. If the audit expands
 into a substantive search for new curves, isogenies, endomorphisms, or scalar
 rules, also follow `.claude/skills/research-visuals/SKILL.md` and produce its
 source-linked report, diagram, and PDF.
+
+## Default challenge research loop
+
+Follow [the default loop](../../../docs/challenge-research-loop.md). Preserve problem,
+candidate, evidence and review pointers. `autoresearch campaign frontier --goal
+<GOAL-ID>` shows the comparison domain, reviewed points, gap and next test.
+Distinguish measured, modeled and unresolved claims; worker completion is not acceptance.

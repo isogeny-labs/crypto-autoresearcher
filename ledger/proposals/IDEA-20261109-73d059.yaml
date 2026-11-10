@@ -1,0 +1,109 @@
+idea:
+  id: IDEA-20261109-73d059
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECC-9d5d44
+  title: Calibration control for the field-operation counter, using as-written counts of the X25519 ladder,
+    EdPoint::double and EdPoint::add
+  class: control
+  claim: 'Predictions fixed from the BRIEF excerpts before any run. Count top-level calls to fe_mul, fe_sq,
+    fe_inv, fe_add, fe_sub; calls made inside any other helper are excluded by a depth guard. (C1) Ladder
+    step as written: $A=x_2+z_2$, $AA=A\cdot A$, $B=x_2-z_2$, $BB=B\cdot B$, $E=AA-BB$, $C=x_3+z_3$, $D=x_3-z_3$,
+    $DA=D\cdot A$, $CB=C\cdot B$, $x_3''=(DA+CB)\cdot(DA+CB)$, $z_3''=x_1\cdot((DA-CB)\cdot(DA-CB))$,
+    $x_2''=AA\cdot BB$, $z_2''=E\cdot(AA+121665\cdot E)$. Every product is an fe_mul call, giving 10 fe_mul,
+    0 fe_sq and 8 fe_add/fe_sub per step (semantic class 5M + 4S + 1c + 8a). One x25519() call is 255
+    steps plus $x_2\cdot z_2^{-1}$, so exactly 2551 fe_mul, 0 fe_sq, 1 fe_inv and 2040 fe_add/fe_sub.
+    (C2) EdPoint::double as written: $A=X^2$, $B=Y^2$, $C=2\cdot Z^2$, $E=(X+Y)^2-(A+B)$, $G=B-A$, $H=0-(A+B)$,
+    $F=G-C$, $(X_3,Y_3,T_3,Z_3)=(EF,GH,EH,FG)$, giving 4 fe_sq, 5 fe_mul (one is the product by the integer
+    2), 7 fe_add/fe_sub, 0 fe_inv. (C3) EdPoint::add as written: $A=(Y_1-X_1)(Y_2-X_2)$, $B=(Y_1+X_1)(Y_2+X_2)$,
+    $C=(T_1\cdot 2)\cdot(d\cdot T_2)$, $D=(Z_1\cdot 2)\cdot Z_2$, $E=B-A$, $F=D-C$, $G=D+C$, $H=B+A$,
+    $(X_3,Y_3,T_3,Z_3)=(EF,GH,EH,FG)$, with $d=(0-121665)\cdot 121666^{-1}$ recomputed in every call.
+    This gives 12 fe_mul, 0 fe_sq, 1 fe_inv, 9 fe_add/fe_sub. The law the comment cites costs 8M + 1c
+    and no inversion. (C4) scalar_mul on a b-bit scalar of Hamming weight w costs 5b + 12w fe_mul, 4b
+    fe_sq, w fe_inv and 7b + 9w fe_add/fe_sub. (C5) The comment giving a24 as (486662 + 2)/4 = 121665
+    is false, since (486662 + 2)/4 = 121666 and 121665 = (486662 - 2)/4. The code is correct because $AA+121665E=BB+121666E$
+    when $AA=BB+E$.'
+  mechanism: 'A feature-gated thread-local counter in the field helpers increments only at call depth
+    0. An fe_mul whose operands are equal is tallied as S-as-M; one with an operand in the set 2, 121665,
+    d is tallied as a constant multiply; both are still fe_mul calls in the as-written vector. The ladder
+    is certified through the public x25519() entry point. EdPoint is private, so its tests live in the
+    module test block. The control exists so that a later count claim is checked by a counter that has
+    reproduced known integers and has caught planted errors. Planted mutants: (m1) a ladder copy computing
+    BB twice must read 2806 fe_mul per call; (m2) a ladder copy using fe_sq for AA must read 2296 fe_mul
+    and 255 fe_sq; (m3) an add copy with d passed in must read 11 fe_mul and 0 fe_inv.'
+  novelty_status: unverified
+  citations:
+  - ref: BRIEF section 1 excerpts of src/ecc/x25519.rs and src/ecc/ed25519.rs
+    provenance: internal
+    claim: Source of every call count in C1 to C5, counted line by line.
+    verified_by: this session, by reading the excerpts in the BRIEF
+  - ref: RFC 7748 section 5
+    provenance: recalled
+    claim: Ladder step with a24 = 121665 in the form E(AA + a24 E). Pointer only.
+    verified_by: none
+  assumptions:
+  - fe_from_bytes, fe_to_bytes and p() make no depth-0 counted calls; if they do, they are placed under
+    the depth guard and the fact reported.
+  - Whether fe_inv and fe_sq call fe_mul internally is not visible in the BRIEF; internals are reported
+    separately and not predicted.
+  - Inputs are random so that accidental operand equality does not occur.
+  predictions:
+  - metric: number of mismatches between measured and predicted integers in C1 to C4
+    direction: lower
+    minimum_effect: exactly 0
+  - metric: number of planted mutants m1 to m3 reported as mismatching the unmutated prediction
+    direction: higher
+    minimum_effect: exactly 3
+  minimal_test:
+    design: One command, tools/formula_cert/run.sh calibrate. It runs x25519() on one RFC 7748 vector
+      from the repo tests and on 16 seeded random inputs, runs double and add on 16 seeded random points,
+      runs scalar_mul on 4 scalars of recorded bit length and weight, then compares each counter vector
+      with C1 to C4 by exact equality and checks C5 as the polynomial identity AA + 121665 E - BB - 121666
+      E = 0 under AA = BB + E.
+    controls:
+    - Mutants m1, m2, m3 must each be flagged.
+    - Counter disabled, where outputs must be byte-identical to the uninstrumented build.
+    required_metrics:
+    - fe_mul, fe_sq, fe_inv, fe_add plus fe_sub per body
+    - S-as-M and constant-multiply tallies
+    - helper-internal call tallies, reported not predicted
+    - mutant verdicts
+  falsification_conditions:
+  - Any measured integer differs from C1 to C4 on the unmutated code.
+  - Any mutant passes.
+  - A build failure or missing feature flag is infrastructure, not a result.
+  confounders:
+  - A refactor of the excerpted code after this record changes the integers; the run records the commit.
+  interpretation_limits:
+  - Counts calls, not machine cost. BigUint multiplication cost depends on operand size, so a multiply
+    by 2 is not as expensive as a full multiply.
+  - Says nothing about constant-time behaviour beyond naming the secret-dependent swap.
+  heuristic_assumptions:
+  - id: H1
+    statement: Top-level call counts are input-independent for the three bodies.
+    rigorous_support: The bodies are straight-line; the only data-dependent branch is the swap, which
+      calls no field helper.
+    validation_plan: Compare counter vectors across all 16 inputs; any variation fails.
+  target_complexity:
+    time_exponent: not applicable, a per-call field-operation count
+    memory_exponent: not applicable
+    best_known: RFC 7748 step at 5M + 4S + 1c; HWCD addition at 8M + 1c (recalled)
+    hidden_overhead: Inversion internals and BigUint allocation are outside the count.
+    tradeoff_note: None; this is a measurement of existing code.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: high
+  dominated_by: Nothing in the BRIEF certifies these counts; the module comments state the textbook costs
+    instead.
+  sota_delta: Zero against the literature. Against the module comments, add is 12 fe_mul + 1 fe_inv rather
+    than 8M + 1c, and the ladder is 10 generic multiplies per step rather than 5M + 4S + 1c.
+  prior_art:
+    frontier_map: not_applicable
+    not_applicable_reason: Curve25519 explicit-formula campaign; a call-count control for field arithmetic,
+      not an ECDLP mechanism, so no frontier row applies.
+    none_found_after:
+    - BRIEF section 2, all 24 IDEA and 6 H entries as truncated there, searched for a filed operation
+      count or formula
+    - BRIEF section 1 excerpts and module comments

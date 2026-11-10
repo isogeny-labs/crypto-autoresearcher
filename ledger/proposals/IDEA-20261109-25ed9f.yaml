@@ -1,0 +1,62 @@
+idea:
+  id: IDEA-20261109-25ed9f
+  question_id: RQ-ISO-3325c3
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  class: mechanism
+  novelty_status: speculative
+  title: 'Fault on ideal-to-isogeny translation: skipped generator evaluation exposes the mod-2^f matrix
+    of a secret endomorphism, reducing to OneEnd'
+  assumption_attacked: Implementation (fault) attack leading to the one-endomorphism problem, then EndRing
+    via the Lead-1 reduction. Not a break of EndRing.
+  mechanism: 'Kernel computation E[J] = {P in E[2^f] : alpha(P) = 0 for all alpha in J} evaluates ideal
+    generators on a basis (P, Q) of E[2^f]. A skipped or corrupted evaluation yields K'' strictly containing
+    E[J]; if a faulty isogeny is emitted alongside a correct signature on the same challenge, the difference
+    reveals alpha(P), alpha(Q), i.e. the 2x2 matrix of alpha mod 2^f. With deg(alpha) < 2^{2f} this determines
+    alpha uniquely; Z[alpha] then saturates to End(E). Clears H-SSIQ-d724f2 (mod-N action of O on E[N]
+    is the leaked object), H-ALISO-015 (saturation step) and H-WESO-516558 (norm-2 response structure).'
+  object_computed: Matrix of alpha on E[2^f]; alpha in End(E) by CRT/lattice recovery; then End(E) via
+    saturation.
+  cost_model:
+    faults: 1-2 skip faults plus one correct signature
+    post_processing: 'poly(log p): 2x2 matrix recovery, then OneEnd => EndRing'
+  obstruction: Reference implementations check cyclicity and degree and re-randomize the basis before
+    output; requires an unchecked emission path.
+  kill_test: Simulate the skip-fault on a toy-p reference implementation; if every faulty run is rejected
+    before serialization and nothing observable is emitted, close.
+  lean:
+    theorem: null
+    coverage: none
+    needed_statement: For alpha in End(E) with deg(alpha) < 2^{2f}, the matrix of alpha on E[2^f] with
+      respect to a fixed basis determines alpha uniquely among endomorphisms of that degree bound.
+  experiment:
+    id: null
+    nearest_surface: aburan28/cryptanalysis pcc shared-code files
+  prior_art:
+    frontier_map: not_applicable
+    nearest_record:
+      id: H-SSIQ-d724f2
+      relation: object_shared
+    searched:
+      corpus_grep:
+      - H-SSIQ-d724f2
+      - H-ALISO-015
+      - H-WESO-516558
+    none_found_after:
+    - 'BRIEF query: "fault" / "implementation" in H-* titles -> none'
+    - 'BRIEF query: "kernel" / "non-cyclic" -> none'
+    - 'BRIEF query: EXP-* on signing implementations -> none quoted'
+    not_applicable_reason: This campaign is isogeny/formula engineering, not an ECDLP-mechanism claim;
+      the ECDLP frontier map does not cover the relevant literature.
+  disproven_avoided: none in the brief
+  evidence_type: implementation_attack_proposal
+  tag: speculative
+  claim: 'Fault on ideal-to-isogeny translation: skipped generator evaluation exposes the mod-2^f matrix
+    of a secret endomorphism, reducing to OneEnd. Kernel computation E[J] = {P in E[2^f] : alpha(P) =
+    0 for all alpha in J} evaluates ideal generators on a basis (P, Q) of E[2^f]. A skipped or corrupted
+    evaluation yields K'' strictly containing E[J]; if a faulty isogeny is emitted alongside a correct
+    signature on the same challenge, the difference reveals alpha(P), alpha(Q), i.e. the 2x2 matrix of
+    alpha mod 2^f. With deg(alpha) < 2^{2f} this determines alpha uniquely; Z[alpha] then saturates to
+    End(E). Clears H-SSIQ-d724f2 (mod-N action of O on E[N] is the leaked object), H-ALISO-015 (saturation
+    step) and H-WESO-516558 (norm-2 response structure).'

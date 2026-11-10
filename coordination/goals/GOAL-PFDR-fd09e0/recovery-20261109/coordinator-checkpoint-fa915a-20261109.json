@@ -1,0 +1,59 @@
+{
+  "schema": "crypto.autoresearch.coordinator_checkpoint/v1",
+  "recorded_at": "2026-11-09T20:01:02+00:00",
+  "goal_id": "GOAL-PFDR-fd09e0",
+  "lane_id": "BATCH-839760",
+  "queue": "coordination/goals/GOAL-PFDR-fd09e0/batches/BATCH-839760/dispatch_queue.json",
+  "branch": "codex/pfdr-prospective-pilot-20261109",
+  "pr": "https://github.com/isogeny-labs/crypto-autoresearcher/pull/3234",
+  "verified_source_commit": "ed338cc72c30bd912b23f59a087bff16fcb04c3d",
+  "approval_archive_commit": "00ce6b2f8a9e4c63a885f83303243bd72c349d55",
+  "remote_readback_commit": "00ce6b2f8a9e4c63a885f83303243bd72c349d55",
+  "approval_decision": "DEC-20261109-a743fd",
+  "approval_decision_sha256": "8961b96caeb3ece8303bc7f6e5f81faf0cc2eabf37d75d203c1854031fb176a7",
+  "approved_spec_sha256": "1d302c757d12c71a949e64f5add0ba5e886944463363f2e7f0bc1a23e1522533",
+  "approved_plan_sha256": "498e1c39572d1623d7af5d160723919333a64892603619eed344fa85b9298014",
+  "protocol_canonical_sha256": "02afbfe43451af8cb501711ff82cea8b51f51c74b776229874339bc9a38a4170",
+  "preapproval_report": "coordination/design/EXP-PFDR-fa915a-prospective-20261109/preapproval-report-v2.json",
+  "preapproval_report_sha256": "25eb1215fd0cd395dfa53b856670f5a706774f55ca4d6008586dfbc9ece8f1d5",
+  "completed_task_ids": [],
+  "owner": "coordinator-pfdr-prospective-20261109",
+  "execution_owner": null,
+  "run_ids": [
+    "RUN-PFDR-54a452",
+    "RUN-PFDR-6a7446",
+    "RUN-PFDR-a11b81",
+    "RUN-PFDR-969309",
+    "RUN-PFDR-60a419"
+  ],
+  "attempts_historical": 3,
+  "attempts_new_max": 5,
+  "attempts_total_max": 8,
+  "historical_cpu_usage": "unknown; no cumulative CPU hard-cap inference",
+  "new_scope_limits": {
+    "memory_max_bytes": 4294967296,
+    "cpu_quota_percent": 400,
+    "runtime_max_seconds": 107570,
+    "stop_grace_seconds": 30,
+    "total_wall_seconds_including_grace": 107600,
+    "max_concurrent_trials": 1,
+    "new_paid_cloud_usd": 0
+  },
+  "next_action": {
+    "role": "executor",
+    "action": "After named selector reports EXP-PFDR-fa915a execution_state ready, reconcile old/new lanes and live jobs, verify exact remote source/input hashes and old selftest receipt, take fresh TASK-20261109-5f9d41 claim, pass S3 checkpoint gate and host headroom, then invoke /run EXP-PFDR-fa915a only through committed launch-recovery.sh with fresh MemoryMax=4G/CPUQuota=400%/RuntimeMaxSec=107570/TimeoutStopSec=30 scope readback. Archive every attempt; zero further retries."
+  },
+  "impediments": [
+    {
+      "condition": "Named selector ready, fresh claim, checkpoint and actual scope readback have not yet been reported in this checkpoint.",
+      "what_is_blocked": "Scientific launch until the ordinary /run admission checks pass.",
+      "clears_when": "Executor verifies selector, ownership, checkpoint, published hashes and live resource limits.",
+      "recheck": "Read newest_experiments.py --experiment EXP-PFDR-fa915a --json and fresh claim/scope state before launch.",
+      "asserts_nothing_about": "Scientific hypothesis or result."
+    }
+  ],
+  "resource_guard_launcher_sha256": "3dd7a870d4475473ca93e9e0c578b2a0e75b08866385478faee7ff02d781afad",
+  "review_plan": "coordination/goals/GOAL-PFDR-fd09e0/batches/BATCH-839760/review-plan.yaml",
+  "review_plan_sha256": "f73f76a788a74036e891dfe049116461fb3343471e3cfd4c2b877d6b252538bc",
+  "runs_launched_this_session": 0
+}

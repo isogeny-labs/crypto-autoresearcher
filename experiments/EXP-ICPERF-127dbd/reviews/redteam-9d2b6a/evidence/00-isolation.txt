@@ -1,0 +1,13 @@
+# RT-2 isolation proof, 2026-11-07T03:50:34Z
+host checks (outside env -i):
+/usr/bin/aws absent
+/bin/aws absent
+ls /usr/bin | grep -E '^(aws|kubectl|isolab)' -> []
+isolated PATH=/tmp/claude-0/-home-user/fe537fb0-7f2e-504d-8df2-39e551cfffea/scratchpad/rt-9d2b6a/experiments/EXP-ICPERF-127dbd/reviews/redteam-9d2b6a/evidence/isobin:/usr/bin:/bin
+--- inside env -i:
+command -v aws: /tmp/claude-0/-home-user/fe537fb0-7f2e-504d-8df2-39e551cfffea/scratchpad/rt-9d2b6a/experiments/EXP-ICPERF-127dbd/reviews/redteam-9d2b6a/evidence/isobin/aws
+readlink -f aws: /tmp/claude-0/-home-user/fe537fb0-7f2e-504d-8df2-39e551cfffea/scratchpad/rt-9d2b6a/experiments/EXP-ICPERF-127dbd/implementation/tests/fake-aws
+env | grep -c AWS_: 0
+command -v kubectl: []
+command -v launch-remote: []
+env (names only): HOME PATH PWD SHLVL TMPDIR _ 

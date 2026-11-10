@@ -1,0 +1,61 @@
+idea:
+  id: IDEA-20261109-cdd6ae
+  question_id: RQ-ISO-68bbac
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  class: tooling
+  novelty_status: adaptation
+  title: Formalize the SQIsign special-soundness extractor and response-class independence to separate
+    proof gaps from key recovery
+  attack_type: proof_infrastructure
+  assumption_attacked: None directly; the record pins down which parts of the SQIsign2D ZK argument are
+    exact (S1, S2) and which are heuristic (sampler uniformity of the response and aux steps).
+  claim: 'Two lemmas are formalizable with modest quaternion/ideal infrastructure: S1 (equal commitment,
+    distinct challenges imply a non-scalar endomorphism of E_pk of degree q1 q2 2^{2 e_chl}) and S2 (for
+    uniform [I_com], the law of the class [I_sk^{-1} I_com I_chl] is independent of I_sk). Every fault
+    lead terminates in S1; every distribution lead lives outside S2 in the sampler heuristics. The standard
+    order of H-SSIQ-d724f2 is the concrete O_0; the p1486 probes H-ALISO-001..009 supply test data. CryptoLean
+    currently exposes only the SplitPrime.Obstruction namespace on the isogeny side (commit subject; no
+    theorem name quoted in the brief), so this is new coverage.'
+  mechanism: 'Model: an abstract type of curves with a degree-multiplicative composition and duals; left
+    ideals of a fixed maximal order with norm and class relation. S1: compose the four isogenies, prove
+    degree equals the product, prove non-scalarity from c1 != c2 via the distinct challenge kernels. S2:
+    group action of the class set on itself by multiplication is transitive and free, so uniform [I_com]
+    gives uniform [I_sk^{-1} I_com I_chl]. Register both as named theorems; downstream records cite them.'
+  quantitative: two lemmas; estimated 300-600 lines Lean; no new axioms beyond the abstract model.
+  cleared:
+    checked:
+    - 'H-SSIQ-d724f2: standard maximal order O, the concrete instance of the abstract order'
+    - 'H-ALISO-001..H-ALISO-009: p1486 Hecke / Frobenius-midpoint probes (supersingular measurement arms
+      as test cases)'
+    - 'H-WESO-516558: sampler-uniformity claim that S2 does not cover and that remains heuristic'
+    disproven: none in the brief
+    lean: no Lean coverage; would need S1 "transcripts (E_com,c1,rsp1),(E_com,c2,rsp2), c1 != c2 imply
+      exists non-scalar alpha in End(E_pk) with deg alpha = q1 q2 2^{2 e_chl}" and S2 "law of [I_sk^{-1}
+      I_com I_chl] under uniform [I_com] is independent of I_sk"; nearest existing module is SplitPrime.Obstruction
+      (commit subject only)
+    exp: none; nearest surface is aburan28/crypto-lean
+  kill_test: Acceptance is a compiling theorem for S1 and S2 in the abstract model; failure mode is that
+    the abstract model cannot express non-scalarity without concrete endomorphism rings, in which case
+    S1 is downgraded to a degree statement only.
+  cost: one to two engineer-weeks.
+  distinguish: Tooling. Produces the formal boundary between proof-gap records and key-recovery records;
+    makes no security claim.
+  prior_art:
+    frontier_map: not_applicable
+    searched:
+      corpus_grep:
+      - H-SSIQ-d724f2
+      - H-ALISO-001
+      - H-ALISO-009
+      - H-WESO-516558
+    none_found_after:
+    - 'brief grep: Lean theorem / lemma names (only commit subject SplitPrime.Obstruction)'
+    - 'brief grep: special soundness / extractor'
+    - 'brief grep: class independence'
+    not_applicable_reason: This campaign is isogeny/formula engineering, not an ECDLP-mechanism claim;
+      the ECDLP frontier map does not cover the relevant literature.
+  nearest_record:
+    id: H-SSIQ-d724f2
+    relation: builds_on

@@ -1,0 +1,538 @@
+schema: sheriff.reader/v1
+case: SHF-20261106-a114e7
+joint: >-
+  LNX: B3 statement fidelity of CryptoResearch.Quotient.translation_commutes_iff_two_torsion
+  (formal/CryptoResearch/Quotient/TranslationDescent.lean) against research/THM_QUOTIENT_DESCENT1.md
+  and formal/targets/quotient-translation-descent.yaml; L-N9 rename completeness (#2496, merge
+  cdd2150922) across the three repositories; the independent target review #2670 (merge 95ab1113e1);
+  re-verdict of prior findings L1..L7, L-N1, L-N2, L-N7, L-N8, L-N9 and LN9-R.
+reader:
+  role: validator
+  model: claude-opus-5-5
+  independence: >-
+    Fresh subagent context. It did not produce or review anything under audit. Judged from code,
+    records, git metadata and its own reruns. PR descriptions were not read. Commit subjects appear in
+    git output (independence.txt) only to identify commits; they are not used as evidence. Prior
+    sheriff findings were read only for WHAT they claimed. The Claude-Session URL in this context's
+    attribution is session_01TCbLH84PotMkHyFGFE4ifE. The composing session's case commits (db4592579a,
+    22ad076fcd) carry session_016SURwTvgaQmnMnhpa1SLXQ. That is the identifier of the producer of the
+    audited theorem and rename and of the #2670 review (finding LNX-3).
+target:
+  crypto-autoresearcher:
+    path: /home/user/crypto-autoresearcher
+    head: da442739db82a5f99d95e4ab9413cbe6fb326f0a
+    at_origin_main: true
+    dirty: "only pcc/ledger.jsonl (hook, ignored) and the untracked case directory"
+    audited_blobs:
+      formal/CryptoResearch/Quotient/TranslationDescent.lean: "git blob 432e558c10, sha256 359a5cedaedd1be8aa728f7ca5e71e185377dbc9f2a9fed78e073321d6bf401e (unchanged since c62fb626ab)"
+      formal/targets/quotient-translation-descent.yaml: "sha256 12fa5950f33f807c5968337053ab402edbd6392c6b088fe0c226f6bc44bdd24b"
+      research/THM_QUOTIENT_DESCENT1.md: "sha256 ac91debeb577ddcece45e13b190c048797662801a3a21e973df1325c9199b08e"
+      formal/lean-toolchain: "leanprover/lean4:v4.35.0 (sha256 ca5f1f601d34...). The #2670 review saw v4.35.0-rc1 (5699bbbd...)"
+    merges_checked: "cdd2150922 (#2496) and 95ab1113e1 (#2670) are ancestors of HEAD; c62fb626ab (rename) is in #2496"
+  crypto:
+    path: /home/user/crypto
+    head: 3a7a0f98af47f24cabfa7779c267695e00faf3dd
+    at_origin_main: true
+    dirty_paths: 0
+    access: "sparse cone (src crates docs papers benches scripts problems research_notes .github). Files under research/ and tools/ were read with `git show HEAD:<path>`. No sparse-checkout add and no build."
+  cryptanalysis:
+    path: /home/user/cryptanalysis
+    head: 5bdfb496df469caa14c492bac29c77ced7d44804
+    at_origin_main: true
+    dirty_paths: 0
+
+sources_read:
+  crypto-autoresearcher:
+    - CLAUDE.md (auto-loaded)
+    - research/sheriff/SHF-20261106-a114e7/scripts/READER_BRIEF.md
+    - .claude/skills/sheriff/SKILL.md
+    - docs/agent-runtime-core.md
+    - docs/sheriff.md (heading list; lines 159-238 B3; 364-461 B7-B9)
+    - research/sheriff/SHF-20261028-0f3f64/readers/stark.yaml (as a format model; lines 1-95, 172-200, 285-300, 343-420)
+    - formal/CryptoResearch/Quotient/TranslationDescent.lean (all)
+    - research/THM_QUOTIENT_DESCENT1.md (all)
+    - formal/targets/quotient-translation-descent.yaml (all)
+    - formal/targets/README.md (#2670 diff; lines 270-282)
+    - docs/reports/2026-10-29-quotient-translation-descent-review/{review.yaml, review.md, controls.py, controls.out} (all)
+    - problems/formal-workspace-build-exceeds-16gb.md (#2670 diff only)
+    - .github/workflows/lean-verification.yml (lines 1-60, 143-260)
+    - docs/formal-research-lane.md (lines 70-110, 130-145, 175-200, 235-250)
+    - .claude/skills/review-evidence/references/lean-review.md (lines 17-30, 155-175)
+    - formal/AxiomAudit.lean (lines 25-46); formal/CryptoResearch.lean (grep)
+    - "formal/.lake/packages/mathlib/Mathlib/AlgebraicGeometry/EllipticCurve/Affine/Point.lean (lines 795-812, the AddCommGroup instance)"
+    - "research/sheriff/SHF-20261106-a114e7/sweep.json (canary, repos, and findings filtered by path)"
+    - research/sheriff/SHF-20261106-a114e7/scripts/lean/axioms.out and ptm_control.out (the session's machine facts, cited and re-checked)
+    - research/sheriff/SHF-20261016-3caa6f/findings.yaml (lines 233-300, L1-L7, for what was claimed only)
+    - research/sheriff/SHF-20261017-e4d7f6/findings.yaml (lines 279-330, L-N1..L-N9, for what was claimed only)
+    - research/sheriff/SHF-20261028-0f3f64/findings.yaml (lines 1160-1172, LN9-R, for what was claimed only; two grep lines at 119 and 257)
+    - "formal receipts, keys semantic_review/verification/provenance only: docs/reports/2026-10-31-hosted-formal-receipts/receipts/quotient-translation-descent.json; docs/reports/2026-11-03-stark-affine-proof-review/reviews/TASK-20261103-bf45a0/hosted/quotient-translation-descent.json; docs/reports/2026-11-03-odd-torsion-review/reviews/TASK-20261103-a1d703/raw/run-41494797344/quotient-translation-descent.json; docs/reports/2026-10-23-translation-commutes-rename/evidence/receipts/quotient-translation-descent.full-workspace.json; research/lean_retrospective_20261018/receipts-v2/quotient-translation-descent.json"
+    - "ledger/decisions/DEC-20260920-11b44c.yaml (lines 57-67), ledger/decisions/DEC-20261017-edb475.yaml (grep), docs/reports/2026-10-25-formal-target-provenance/provenance.json (grep context), docs/reports/2026-10-31-formal-target-links/links.json and docs/reports/formal-target-inventory-20261102/matched-receipts-68591431.json (the target's entry keys)"
+    - "rg results for the old name, THM_QUOTIENT_DESCENT1, 0490f5 and 'descend' across the repository (file names and matching lines only)"
+    - tools/verify_formal_targets.py --help; tools/check_review_independence.py --help
+    - "git metadata: Claude-Session trailers (scripts/readers/lean/independence.txt)"
+  crypto_at_3a7a0f98a:
+    - papers/ecdlp-index-calculus-program/sections/companion_catalogue.tex (lines 1-30, 317)
+    - papers/ecdlp-index-calculus-program/sections/abstract.tex (lines 26-33)
+    - papers/ecdlp-index-calculus-program/data/README.md (head); tools/companion.py (grep)
+    - tools/lean/trusted-native.txt (all, git show)
+    - "research/ic_tree_split_structured_v_20261011/: lean/TreeSplit/Leak.lean (all), lean/AxiomAudit.lean (lines 1-63), lean/axiom-audit.log (head), RESULTS.md (grep), reports/run-20261011T2105Z/report.typ (grep), runs/registered/readout.txt (frob rows)"
+    - "research/conductor_gap_cm_pairs_20261010/: lean/GenericInvariance.lean (1-60), lean/TransferBound.lean (1-45), lean/README.md (grep), README.md (grep), lean/axiom-audit.log (head); git diff e5a8842272..HEAD and b615f00196..HEAD of lean/*.lean"
+    - "papers/rootfinding-decomposition/: lean/AxiomAudit.lean (all), lean/axiom-audit.txt (head), README.md (80-100), lean/S3Roots.lean (grep); .github/workflows/rootfinding-s3roots-lean.yml (grep)"
+  cryptanalysis_at_5bdfb496d:
+    - "rg over *.{md,tex,yaml,yml,lean,txt,typ,py}: no hit for the theorem names, THM_QUOTIENT_DESCENT1, quotient-translation-descent or TranslationDescent"
+blind_from:
+  - research/sheriff/SHF-20261106-a114e7/prior.md (not read)
+  - "research/sheriff/SHF-20261106-a114e7/readers/* other than this file (not read; the directory did not exist when this reader started)"
+  - "research/sheriff/SHF-20261106-a114e7/scripts/readers/* other than lean/ (not read). `git show --stat db4592579a` displayed the FILE NAMES under scripts/readers/{cryptanalysis,icperf-receipts,pfdr} and checks/ci. No contents were opened."
+  - research/sheriff/SHF-20261106-a114e7/sweep.md and checks/ (not read)
+  - "prior cases' readers/*.yaml, scripts/ and REPORT.md (not read; rg printed some of their file names as hits for the old theorem name)"
+  - PR descriptions (not read)
+blind_from_respected: true
+read_sibling_reports: false
+
+checks:
+  - id: K1-bind
+    command: "git rev-parse HEAD / status --short in all three repos; sweep.json canary and repos"
+    output: inline (target block)
+    result: "pass. All three heads equal the brief's and origin/main. The trees are clean apart from the declared hook file. The sweep canary passed (15 caught, 0 missed, 0 false positives)."
+  - id: K2-build
+    command: "cd formal && PATH=$HOME/.elan/bin:$PATH CHECKPOINT_SKIP=audit BENCHREC_SKIP=audit lake build CryptoResearch.Quotient.TranslationDescent; ... lake env lean CryptoResearch/Quotient/TranslationDescent.lean"
+    output: research/sheriff/SHF-20261106-a114e7/scripts/readers/lean/build.out, source_elab.out
+    result: "pass (module scope). lake replayed the module (631 jobs, exit 0) on leanprover/lean4:v4.35.0. The only warning is lake's module-system notice; no linter warning remains. Elaborating the source file directly from HEAD bytes (blob 432e558c10) also exits 0 with no output. The full `lake build` and tools/verify_formal_targets.py were NOT run (disk; the brief forbids a full build): not_covered."
+  - id: K3-axioms
+    command: "#print axioms translation_commutes_iff_two_torsion (fidelity.lean line 20)"
+    output: research/sheriff/SHF-20261106-a114e7/scripts/readers/lean/fidelity.out
+    result: "pass. [propext] only, which agrees with the session's scripts/lean/axioms.out. CryptoResearch.lean imports the module (line 79), and #audit_project (formal/AxiomAudit.lean:31-46) covers every theorem under CryptoResearch.*."
+  - id: K4-holes
+    command: "grep -nE 'sorry|admit|native_decide|axiom|implemented_by|extern|unsafe|#exit|set_option|macro|elab|syntax|ofReduceBool|trustCompiler|skipKernelTC|decide' formal/CryptoResearch/Quotient/TranslationDescent.lean"
+    output: "inline: no match"
+    result: "pass. The proof is two `abel` normalizations and `rw`. There is no metaprogramming and no `first` fallback. The research/THM_QUOTIENT_DESCENT1.lean axiom stub is not in the index (deleted in 418825c73d)."
+  - id: K5-B3.4a-statement
+    command: "clause-by-clause read of the elaborated type (#check, fidelity.out) against target claim (yaml:19-23), note Proof (md:44-51) and Formal target block (md:80-92)"
+    output: research/sheriff/SHF-20261106-a114e7/scripts/readers/lean/fidelity.out
+    result: >-
+      pass. Elaborated type: ∀ {E : Type u} [AddCommGroup E] (S T : E), (∀ P, -(P + S) + T = -(P + T + S)) ↔ 2 • T = 0.
+      -(P+S)+T is τ_T∘ι_S(P), and -(P+T+S) is ι_S∘τ_T(P), with ι_S(P) = -(P+S) as in the note (md:20).
+      S and T are universal and outside; P is universal inside the left side, so "commutes" means equal as maps.
+      It is a biconditional, and 2•T is ℕ-smul. The note's "Formal target" statement (md:84) is identical.
+      LNXBlind.blind_lemma restates the claim from the note's definitions as a function equality
+      (tau T ∘ iota S = iota S ∘ tau T) ↔ T + T = 0 and derives it from the producer's theorem. producer_of_blind gives
+      the converse, so the two propositions are equivalent. The left side is P-independent: for each P the two
+      sides differ by exactly 2T. An ∃P reading would therefore be equivalent too. This is not a defect.
+  - id: K6-B3.4b-hypotheses
+    command: "fidelity.lean K-b examples"
+    output: research/sheriff/SHF-20261106-a114e7/scripts/readers/lean/fidelity.out
+    result: >-
+      pass. The only hypothesis is [AddCommGroup E]; nothing is hidden. It is discharged on ZMod 4 (S = 1, T = 2), and by a
+      one-line term on Mathlib's WeierstrassCurve.Affine.Point W for any field F with DecidableEq, i.e. the elliptic-curve
+      point group. The #2670 review's "the identity instantiated for E(k-bar) ... is not done in Lean" therefore under-claims;
+      instantiation is immediate. The note's char k ≠ 2 assumption plays no part in the group identity.
+  - id: K7-B3.4c-definitions-differential
+    command: "fidelity.lean: kernel `decide` over ZMod 4 and ZMod 2 × ZMod 4 (both sides, every S and T); #eval counts on ZMod 1,2,3,4,6,12, ZMod 2×ZMod 2, ZMod 2×ZMod 4, ZMod 4×ZMod 6 and Additive (Perm (Fin 3))"
+    output: research/sheriff/SHF-20261106-a114e7/scripts/readers/lean/fidelity.out
+    result: >-
+      pass. No notion is self-defined: ι_S and τ_T are inlined, and 2•T = T+T by Mathlib's two_nsmul (used in blind_lemma).
+      Kernel decide proves the biconditional for all 16 (S,T) in ZMod 4 and all 64 in ZMod 2×ZMod 4.
+      #eval: the number of T that commute for every S equals #E[2] in every abelian group tested
+      (1,2,1,2,2,2,4,4,4), and they agree for every S. The non-abelian control Additive (Perm (Fin 3)) gives
+      commuting = 1 against two_torsion = 4 (agree = false), so the AddCommGroup hypothesis is load-bearing. There is no
+      Python/Rust counterpart to differential-test against; the note's own Sage block is retired unrun (md:121-129).
+  - id: K8-B3.4d-data
+    command: "read"
+    output: inline
+    result: "n/a. The theorem has no constants or committed data."
+  - id: K9-B3.4e-scope
+    command: "read the Lean header and docstring, the target `notes`/`claim`, note Status/Formal target/corrections and formal/targets/README.md:272-281; rg for live citations in all three repositories"
+    output: inline; findings LNX-1, LNX-2
+    result: >-
+      partial. In crypto-autoresearcher the Lean header (lines 7-23), the docstring (31-38), the target and the note's Status line
+      claim only commutation, and they say that descent and the Corollary are prose. The header's first line ("Translations that
+      descend through a degree-2 quotient ...") is a topic title qualified a few lines below; this is not a finding. Two
+      records claim more than the evidence: crypto's companion catalogue row
+      (papers/ecdlp-index-calculus-program/sections/companion_catalogue.tex:317) says "Proved (Lean-formalized) that only 2-torsion
+      translations descend ..., closing Galbraith's question" (LNX-1); formal/targets/README.md:276-278 labels the #2670 check
+      "independent" and repeats its validated_scoped outcome (LNX-2).
+  - id: K10-rename-grep
+    command: "rg -n --hidden 'translation_descends_iff_two_torsion' over crypto-autoresearcher (all files); rg over crypto's checked-out cone and cryptanalysis (text types) for both names, THM_QUOTIENT_DESCENT1, quotient-translation-descent and TranslationDescent"
+    output: inline
+    result: >-
+      crypto-autoresearcher: 46 files contain the old name. Every hit is either a dated or immutable record, or a
+      former-name note. Former-name notes: TranslationDescent.lean:37, quotient-translation-descent.yaml:7 and
+      THM_QUOTIENT_DESCENT1.md lines 8, 83, 113 (inside the dated 2026-10-17 correction) and 136. Immutable or dated records:
+      ledger/decisions/DEC-20260920-11b44c.yaml:67; receipts, logs, inventories and audit .lean files under
+      docs/reports/2026-10-2[0-5]-*; research/lean_retrospective_20261018/*; research/lean_review_evidence_20261018/*;
+      the 2026-10-23 rename report; and the sheriff case files. All of these predate the 2026-10-28 merge or are dated by
+      name. No tool or workflow references the dated audit .lean files that still use the old name
+      (docs/reports/2026-10-23-formal-target-inventory/*.lean), so nothing live breaks. cryptanalysis: no hit.
+      crypto: no hit for either name. It has one live paraphrase, companion_catalogue.tex:317, that attributes descent to
+      the Lean formalization (LNX-1). crypto's research/ and tools/ trees are outside the cone and were not grepped. That
+      bounded search proves no absence.
+  - id: K11-review-2670
+    command: "git diff 3fe6e1226d 95ab1113e1; read review.yaml/review.md/controls.*; sha256sum; git show 3fe6e1226d:<inputs> | sha256sum; blind_descent.py part C; tools/check_review_independence.py --reports review.yaml"
+    output: "research/sheriff/SHF-20261106-a114e7/scripts/readers/lean/blind_descent.out (last two JSON lines), review_independence.out, independence.txt"
+    result: >-
+      #2670 adds docs/reports/2026-10-29-quotient-translation-descent-review/ (review.yaml, review.md, controls.py/.out,
+      boundary.svg, report.pdf) and formal/targets/README.md:272-282, and edits problems/formal-workspace-build-exceeds-16gb.md.
+      Its five input sha256 values equal the files at its reviewed revision 3fe6e1226d. The Lean file, target and note are
+      unchanged at HEAD; the toolchain moved from v4.35.0-rc1 to v4.35.0 afterwards, and K2/K3 re-check on the new pin.
+      controls.py and controls.out match their recorded hashes. All five counts re-derive in closed form
+      ((Σa²)² = 422500, (Σ a·gcd(2,a))² = 14400, 14400 − 78² = 8316, 2·14400 − 2·30² = 27000, 408100) and by an independent
+      brute force. Its fidelity conclusion (faithful_scoped for the target claim; descent, the Corollary and the Galbraith
+      closure not supported) agrees with K5-K9. Its bridge-1 row under-claims (K6).
+      Independence: review.yaml records no session or model id ("reviewer: Claude Code session (independent of the producer;
+      did not write the code under review)"). Its commit fcee5a4487 carries Claude-Session session_016SURwTvgaQmnMnhpa1SLXQ,
+      the same identifier as both commits that wrote the theorem file (418825c73d, c62fb626ab) and the note corrections
+      (1f3c063cae, 1f96ad0ba1). check_review_independence.py exits 2 ("No review_plan found"). The review itself lists the
+      missing review_plan, the single reviewer and the absent blind re-derivation (review.yaml:61-63). lean-review.md:161-165
+      makes validated_scoped require independently supported fidelity and all required attestations (LNX-2).
+  - id: K12-receipts-semantic-review
+    command: "python3 read of verification/provenance/semantic_review in five receipts for the target"
+    output: inline
+    result: >-
+      pass. Every receipt still has semantic_review {required: true, status: pending}, including the 2026-11-03 hosted ones.
+      The 2026-11-03 receipts bind theorem_sha256 359a5ced..., task_spec 12fa5950..., toolchain ca5f1f60... and manifest b46170db...,
+      i.e. the current HEAD bytes. No ledger or knowledge record marks the semantic review passed. The overstatement is
+      confined to formal/targets/README.md and the review record (LNX-2).
+  - id: K13-proves-too-much
+    command: "lake env lean ptm_fail.lean (must fail); lake env lean ptm_refute.lean (must pass)"
+    output: research/sheriff/SHF-20261106-a114e7/scripts/readers/lean/ptm_fail.out, ptm_refute.out
+    result: >-
+      pass. All four control declarations fail (6 errors, exit 1). PTM-1, the producer's proof verbatim with [AddGroup] for
+      [AddCommGroup]: abel_nf makes no progress. PTM-2, 4•T for 2•T: unsolved 4•T = 2•T. PTM-3, using the theorem to make the
+      order-4 T = 1 of ZMod 4 commute: decide proves 2•1 = 0 false. PTM-4, "every T commutes": simp makes no progress.
+      ptm_refute.lean (exit 0) kernel-proves that the PTM-1 and PTM-2 statements are false (Perm (Fin 3) with T = swap 0 1;
+      ZMod 4 with T = 1). So these failures come from false statements, not from proof brittleness. This is independent of
+      the session's 3•T control, which this reader did not rerun.
+  - id: K14-blind-rederivation
+    command: "python3 -I blind_descent.py"
+    output: research/sheriff/SHF-20261106-a114e7/scripts/readers/lean/blind_descent.out
+    result: "pass. See blind_rederivation."
+  - id: K15-crypto-prior-text
+    command: "git show HEAD:<path> for the files listed under sources_read.crypto_at_3a7a0f98a; crypto_text_scan.txt (hole grep over the TreeSplit, conductor_gap and S3Roots Lean files)"
+    output: research/sheriff/SHF-20261106-a114e7/scripts/readers/lean/crypto_text_scan.txt
+    result: >-
+      Text only; no crypto Lean project was built (external code). native_decide appears only in Replay.lean:249 (replay_ok,
+      the one registered and allow-listed use) and in comments. Leak.lean:30-31 now use `decide +kernel`. The run_cmd
+      blocks in the three AxiomAudit.lean files only collect axioms and log or throw; they add or alter no declaration.
+      This dismisses the sweep lead lean.metaprogram for papers/rootfinding-decomposition/lean/AxiomAudit.lean:17.
+  - id: K16-ci-state
+    command: "gh api repos/isogeny-labs/crypto-autoresearcher/actions/workflows"
+    output: "inline: HTTP 403 (GitHub access not enabled for this session)"
+    result: "not_covered. Whether lean-verification is active, and runs 40760275078 and 40713787875, could not be observed. Machine status here rests on K2/K3."
+
+blind_rederivation:
+  quantity: "the set of translations T in E(F_p) through which τ_T descends along the degree-2 quotient φ = x∘τ_R (involution ι_S, S = 2R), compared with E[2](F_p) and with the set commuting with ι_S"
+  inputs: "only the note's Setting and Lemma: ι_S(P) = -(P+S), φ(P) = x(P+R) is the quotient by ι_{2R}, and the claim 'descends iff 2T = O'. No producer script, Lean proof or prior-case script was used."
+  method: >-
+    The reader's own short-Weierstrass-with-a2 arithmetic over F_p. Descent is tested as a set map on rational points:
+    φ(P) = φ(P') must imply φ(P+T) = φ(P'+T). Curves: y² = x³+2x²+5x and y² = x³−x over F_1009, y² = x³+x+3 over F_211,
+    and y² = x³+x²+x+1 over F_101. For each, R ∈ {O, a point of order 3, a point of order 4 where present, two other
+    points}, giving 19 (curve, R) cases, 11 of them with S not 2-torsion (orders 3, 12, 19, 20, 24, 38, 65, 120).
+    The script also asserts that ι_S is an involution and that φ has fibres of size ≤ 2.
+  result: >-
+    In all 19 cases, the T that descend = the T that commute with ι_S = E[2](F_p): 4 for each F_1009 curve and for the F_101
+    curve, 2 for the F_211 curve. RESULT PASS. This supports the prose bridge (descent ⟺ commutation) on rational points of
+    these curves. It is a bounded finite check, not a proof, and it does not address ψ being a morphism.
+  script: research/sheriff/SHF-20261106-a114e7/scripts/readers/lean/blind_descent.py
+  output: research/sheriff/SHF-20261106-a114e7/scripts/readers/lean/blind_descent.out
+  note: "Part C of the same script (closed forms for the #2670 control counts) was written after reading controls.py and is a re-derivation, not a blind one."
+
+proves_too_much_control:
+  lean: "K13: four mutated statements (drop commutativity; 2 → 4; an order-4 T in ZMod 4; drop the torsion condition) all fail to elaborate, and two of them are kernel-refuted as false (ptm_refute.lean)."
+  descent: "blind_descent.py part B: 'τ_T descends iff 4T = O' fails on all 19 cases (every case has 4-torsion beyond E[2]), and 'every T descends' fails on all 19."
+  result: pass
+
+prior_finding_verdicts:
+  - id: L1
+    source: research/sheriff/SHF-20261016-3caa6f/findings.yaml
+    verdict: fixed
+    why: "The axiom stub research/THM_QUOTIENT_DESCENT1.lean is gone from the index (deleted in 418825c73d). The statement is now a theorem inside formal/ under CryptoResearch.Quotient, which #audit_project covers. Fresh build and #print axioms here give [propext] (K2-K4)."
+  - id: L2
+    source: research/sheriff/SHF-20261016-3caa6f/findings.yaml
+    verdict: fixed
+    why: "The note's Setting now says any S in E(k) (md:19-24), with a dated correction (md:26-33). The blind script independently uses S = 2R with S of orders 3 to 120 and finds 2-element fibres and the Lemma holding (K14)."
+  - id: L3
+    source: research/sheriff/SHF-20261016-3caa6f/findings.yaml
+    verdict: fixed
+    why: "By text at crypto 3a7a0f98a, build not_covered. Leak.lean:30-31 use `decide +kernel`, and native_decide survives only in comments and in the registered Replay.replay_ok. A TreeSplit AxiomAudit.lean exists, and lean/axiom-audit.log (CI copy, PR head 22bd479dad, where Leak.lean last changed) lists both Leak theorems with [propext, Quot.sound]. RESULTS.md:85-91 states the trust split."
+  - id: L4
+    source: research/sheriff/SHF-20261016-3caa6f/findings.yaml
+    verdict: fixed
+    why: "RESULTS.md:23 and 31-38, and report.typ:25-31, carry dated corrections (15 × 0, 5 × −1). The reader recounted readout.txt independently: 20 frob n = 21 rows, 15 at gap 0 and 5 at −1. report.pdf changed in the same commits as report.typ; rendering not checked."
+  - id: L5
+    source: research/sheriff/SHF-20261016-3caa6f/findings.yaml
+    verdict: fixed
+    why: "By text. The GenericInvariance.lean header scope correction (lines 12-26) says rho and kangaroo are outside the model. README.md:147-152 withdraws 'noise by theorem' and keeps the ℓ = 8209 rho interval unexplained. lean/README.md:13-28 agrees. Proof bodies are unchanged; the diffs since the audit are comment-only."
+  - id: L6
+    source: research/sheriff/SHF-20261016-3caa6f/findings.yaml
+    verdict: fixed
+    why: "By text, build not_covered. Both projects have AxiomAudit.lean, a CI workflow (conductor-gap-lean.yml, rootfinding-s3roots-lean.yml) with leanchecker --fresh, and a committed audit log. Staleness of the S3Roots log is carried under L-N7 / LNX-4."
+  - id: L7
+    source: research/sheriff/SHF-20261016-3caa6f/findings.yaml
+    verdict: fixed
+    why: "abstract.tex:29-30 now reads 'its root identity, Proposition~\\ref{prop:s3}, is proved in Lean'. The same paper's companion catalogue repeats the pattern for a different note (LNX-1)."
+  - id: L-N1
+    source: research/sheriff/SHF-20261017-e4d7f6/findings.yaml
+    verdict: fixed
+    why: "crypto:tools/lean/trusted-native.txt at HEAD lists only TreeSplit.Replay.replay_ok; both Leak entries are gone."
+  - id: L-N2
+    source: research/sheriff/SHF-20261017-e4d7f6/findings.yaml
+    verdict: fixed
+    why: "By text. TransferBound.lean:18-31 qualifies 'BSGS-type' and adds a dated scope correction. README.md:162-170 replaces the bold 'No implemented method sees the conductor gap', and README.md:211 says E[S] = 1 for BSGS-type arms, not S = 1 on every finite sample."
+  - id: L-N7
+    source: research/sheriff/SHF-20261017-e4d7f6/findings.yaml
+    verdict: partially_fixed
+    why: "Audit logs are committed for TreeSplit (lean/axiom-audit.log), conductor_gap (lean/axiom-audit.log) and S3Roots (lean/axiom-audit.txt). For TreeSplit and conductor_gap the sources changed only in comments since the logged runs. S3Roots changed after its log: a419170dd7 (2026-10-29) added four bridge lemmas, and AxiomAudit.lean now audits 7 declarations, while the committed log (2026-10-17) covers 3. README.md:84-87 says the bridge lemmas are audited, and no committed output shows it (LNX-4). No crypto Lean build was reproduced here (not_covered)."
+  - id: L-N8
+    source: research/sheriff/SHF-20261017-e4d7f6/findings.yaml
+    verdict: fixed
+    why: "The dated 2026-10-17 correction (md:102-129) records the Status-line change and retires the Sage check unrun, per DEC-20261017-edb475 (living note, dated appended corrections). The 2026-10-23 in-place edits to the Status and Formal target blocks have their own dated correction (md:131-143)."
+  - id: L-N9
+    source: research/sheriff/SHF-20261017-e4d7f6/findings.yaml
+    verdict: fixed
+    why: "At HEAD the theorem is translation_commutes_iff_two_torsion. The docstring says commutation only and gives the former name as history, and the proof has no `first` fallbacks. The fresh build shows no linter warning. All live crypto-autoresearcher citations use the new name. The one live paraphrase still attributing descent to the Lean formalization is in crypto's paper (LNX-1); it never used the old name."
+  - id: LN9-R
+    source: research/sheriff/SHF-20261028-0f3f64/findings.yaml
+    verdict: fixed
+    why: "#2496 is merged (cdd2150922 is an ancestor of HEAD and contains c62fb626ab). The file and target carry the new name, and the header disclosure is kept."
+
+lead_dispositions:
+  - lead: "crypto papers/ecdlp-index-calculus-program/sections/companion_catalogue.tex:317 prose.strong_claim (`Proved`)"
+    disposition: confirmed
+    one_line: "The row says 'Proved (Lean-formalized) that only 2-torsion translations descend ... closing Galbraith's question'. Lean formalizes only the commutation identity (LNX-1)."
+  - lead: "crypto papers/rootfinding-decomposition/lean/AxiomAudit.lean:17 lean.metaprogram (run_cmd)"
+    disposition: dismissed
+    one_line: "The run_cmd collects axioms for seven fixed names and only logs or throws. It adds or alters no declaration."
+
+findings:
+  - id: LNX-1
+    beat: B8
+    severity: minor
+    claim_ids: [C-LNX-4]
+    what: >-
+      A live paper overclaims the formal tier. crypto's program paper, in the companion-repository catalogue row for
+      research/THM_QUOTIENT_DESCENT1.md, says "Proved (Lean-formalized) that only 2-torsion translations descend through a
+      degree-2 quotient of E, closing Galbraith's 'larger group actions?' question for x-type coordinates". The Lean theorem
+      formalizes only that τ_T commutes with ι_S iff 2T = 0. Descent (degree-2 maps as quotients by ι_S; descent ⟺
+      commutation) and the Corollary behind the Galbraith closure are prose. Its source note said so from 2026-10-17
+      (md:116-117) and the Lean header says so too. The row's Status cell cites only the 2026-10-16/17 corrections. Severity
+      follows the precedent of L7 and L-N9 for the same pattern.
+    evidence:
+      - crypto:papers/ecdlp-index-calculus-program/sections/companion_catalogue.tex:317
+      - formal/CryptoResearch/Quotient/TranslationDescent.lean:19-23
+      - research/THM_QUOTIENT_DESCENT1.md:3-9
+      - research/THM_QUOTIENT_DESCENT1.md:88-92
+    fix: >-
+      Narrow the row, e.g. "Proved (elementary, prose) that only 2-torsion translations descend ...; the group-law identity
+      (τ_T commutes with ι_S iff 2T = 0) is Lean-formalized as CryptoResearch.Quotient.translation_commutes_iff_two_torsion".
+      Drop the Galbraith closure or mark it as resting on the unformalized Corollary. Correct the companion data row
+      (now in the artifact store) and regenerate.
+  - id: LNX-2
+    beat: B7
+    severity: major
+    claim_ids: [C-LNX-5b, C-LNX-6]
+    what: >-
+      The #2670 semantic review's independence and its validated_scoped outcome are unsupported. review.yaml attests
+      "independent of the producer; did not write the code under review" but records no session or model id. Its commit
+      fcee5a4487 carries the same Claude-Session identifier (session_016SURwTvgaQmnMnhpa1SLXQ) as both commits that wrote the
+      theorem file (418825c73d, c62fb626ab) and as the note corrections. It has no review_plan, a single reviewer and no blind
+      re-derivation (its own deviations). tools/check_review_independence.py cannot run on it (exit 2, no review_plan).
+      lean-review.md:161-165 makes validated_scoped require independently supported faithful_scoped and all required
+      reviewer attestations, and says a missing reviewer prevents that outcome. formal/targets/README.md:276-278 still
+      presents it as the "independent semantic review" that finds the theorem faithful_scoped / validated_scoped. The
+      receipts correctly keep semantic_review pending. The review's mathematical conclusions are right (this reader
+      reproduced them, K5-K11), so what is overstated is the process tier, not the content.
+    evidence:
+      - docs/reports/2026-10-29-quotient-translation-descent-review/review.yaml:40
+      - docs/reports/2026-10-29-quotient-translation-descent-review/review.yaml:61-71
+      - formal/targets/README.md:276-278
+      - .claude/skills/review-evidence/references/lean-review.md:161-165
+      - research/sheriff/SHF-20261106-a114e7/scripts/readers/lean/independence.txt
+      - research/sheriff/SHF-20261106-a114e7/scripts/readers/lean/review_independence.out
+    fix: >-
+      Re-label the 2026-10-29 record as a same-session, single-reviewer fidelity check with outcome `inconclusive` (fidelity
+      not independently supported). Do this as a new superseding record, not an edit. Drop "independent" from
+      formal/targets/README.md. If a validated_scoped outcome is wanted, commission a review under a frozen review_plan with a
+      reviewer whose session and model ids differ from the producer's and are recorded, plus a blind re-derivation and
+      check_review_independence.py. Keep semantic_review pending until then.
+  - id: LNX-3
+    beat: B9
+    severity: major
+    claim_ids: [C-LNX-1, C-LNX-2, C-LNX-5a, C-LNX-5b, C-LNX-6, C-LNX-7]
+    what: >-
+      This case is composed by the producer's session for this joint. The case's own commits on
+      claude/sheriff-reaudit-20261106 (db4592579a, 22ad076fcd) carry Claude-Session session_016SURwTvgaQmnMnhpa1SLXQ. That is
+      the identifier on every commit that wrote formal/CryptoResearch/Quotient/TranslationDescent.lean (418825c73d theorem,
+      c62fb626ab rename, i.e. #2496 under audit), on the #2670 review under audit (fcee5a4487), on the note's corrections
+      (1f3c063cae, 1f96ad0ba1), and on sheriff cases SHF-20261016-3caa6f and SHF-20261028-0f3f64. SKILL.md step 0 says to
+      refuse when this session produced the result. This reader's context is fresh (attribution session
+      session_01TCbLH84PotMkHyFGFE4ifE) and produced nothing. The case's composition of verdicts on these claims, and of
+      prior-finding verdicts for fixes this session made (L1, L2, L-N8, L-N9, LN9-R), is not independent by the available
+      identifiers. A Claude-Session URL is the only identifier on record. Whether it maps to one model context is not
+      established, so this narrows and does not break.
+    evidence:
+      - research/sheriff/SHF-20261106-a114e7/scripts/readers/lean/independence.txt
+      - .claude/skills/sheriff/SKILL.md:46
+      - docs/sheriff.md:459-460
+    fix: >-
+      Declare it in REPORT.md and findings.yaml. Either have a session with a different identifier compose the verdicts for
+      the LNX claims and for the #2496/#2670 prior-finding re-verdicts, or record those verdicts as reader-only (this file)
+      and not session-composed.
+  - id: LNX-4
+    beat: B3
+    severity: minor
+    claim_ids: [C-LNX-8]
+    what: >-
+      The S3Roots audit log is stale against its sources (L-N7 regressed in part). papers/rootfinding-decomposition/lean/AxiomAudit.lean
+      has audited 7 declarations since a419170dd7 (2026-10-29). These are the three of the 2026-10-17 log plus addX_eq_mathlib_addX,
+      pointX_add_eq_xPlus, pointX_add_neg_eq_xMinus and S3_factor_mathlib, and the CI step expects 7 lines. The committed
+      axiom-audit.txt is from 2026-10-17 and lists only the first 3. README.md:84-87 says the four bridge lemmas are audited.
+      No committed output shows their axioms.
+    evidence:
+      - crypto:papers/rootfinding-decomposition/lean/AxiomAudit.lean:18-25
+      - crypto:papers/rootfinding-decomposition/lean/axiom-audit.txt:1-26
+      - crypto:papers/rootfinding-decomposition/README.md:84-99
+      - crypto:.github/workflows/rootfinding-s3roots-lean.yml:54
+    fix: "Commit the audit output of a green run at the current S3Roots sources (7 lines), or say in README.md that the bridge lemmas' audit is CI-only and cite the run."
+  - id: LNX-5
+    beat: B3
+    severity: minor
+    claim_ids: []
+    what: >-
+      The case sweep did not scan crypto's research/ or tools/ trees, because the crypto sparse cone excludes them. Its lean.*
+      rules saw only papers/ Lean in crypto. The TreeSplit and conductor_gap Lean files, which carry prior findings L3, L5,
+      L-N1, L-N2 and L-N7, were therefore not swept. This reader text-scanned them with `git show HEAD:` (crypto_text_scan.txt)
+      and found nothing new. Other crypto research/*/lean projects remain unswept.
+    evidence:
+      - research/sheriff/SHF-20261106-a114e7/sweep.json
+      - research/sheriff/SHF-20261106-a114e7/scripts/readers/lean/crypto_text_scan.txt
+    fix: "Run the sweep's lean.* rules over `git ls-files research tools` of crypto via git show (no checkout), or record crypto research/ Lean as not_covered in the case."
+
+claims:
+  - id: C-LNX-1
+    text: "In an additive commutative group E, for all S and T: (for every P, -(P + S) + T = -(P + T + S)) holds if and only if 2 T = 0. That is, translation by T commutes with the involution iota_S(P) = -(P + S) exactly when T is 2-torsion, whatever S is."
+    location: formal/targets/quotient-translation-descent.yaml:19-23; formal/CryptoResearch/Quotient/TranslationDescent.lean:39-48
+    suggested_verdict: upheld_scoped
+    scoped_to: "Holds as stated, for every AddCommGroup and every S, including Mathlib elliptic-curve point groups. Module build and source elaboration on v4.35.0 succeeded, the axioms are [propext], and the proves-too-much and differential controls pass. The full-workspace verify_formal_targets gate and hosted CI were not observed here, and the formal lane's semantic_review stays pending."
+    findings: [LNX-3]
+    beats: {B2: n/a, B3: pass, B4: n/a, B5: n/a, B6: n/a, B7: pass, B8: n/a}
+  - id: C-LNX-2
+    text: "Status: PROVED (elementary). The Lemma's group-law identity is formalized as CryptoResearch.Quotient.translation_commutes_iff_two_torsion ... The theorem proves commutation with ι_S; descent follows by the prose argument"
+    location: research/THM_QUOTIENT_DESCENT1.md:3-9
+    suggested_verdict: upheld_scoped
+    scoped_to: "The formal part is exactly the commutation identity. The step from commutation to descent and the degree-2-quotient classification are prose; they agree with the reader's finite rational-point check on 19 (curve, R) cases. ψ being a morphism is not argued in the note."
+    findings: [LNX-3]
+    beats: {B2: n/a, B3: pass, B4: n/a, B5: n/a, B6: n/a, B7: pass, B8: pass}
+  - id: C-LNX-3
+    text: "τ_T descends through φ = E/⟨ι_S⟩ — i.e. there is a map ψ: P^1 → P^1 with φ ∘ τ_T = ψ ∘ φ — if and only if 2T = O."
+    location: research/THM_QUOTIENT_DESCENT1.md:37-51
+    suggested_verdict: upheld_scoped
+    scoped_to: "The elementary prose proof is correct as read. The blind finite check gives descends = commutes = E[2](F_p) on four curves over F_1009, F_211 and F_101 with S of orders 1 to 120. It is not formalized. A bounded check is no proof."
+    findings: []
+    beats: {B2: n/a, B3: not_covered, B4: n/a, B5: n/a, B6: n/a, B7: n/a, B8: pass}
+  - id: C-LNX-4
+    text: "Proved (Lean-formalized) that only 2-torsion translations descend through a degree-2 quotient of E, closing Galbraith's 'larger group actions?' question for x-type coordinates."
+    location: crypto:papers/ecdlp-index-calculus-program/sections/companion_catalogue.tex:317
+    suggested_verdict: overclaimed
+    scoped_to: "Proved in prose (elementary) that only 2-torsion translations descend. The group-law identity (τ_T commutes with ι_S iff 2T = 0) is Lean-formalized. The Galbraith closure rests on the unformalized Corollary, and novelty is unchecked (note md:13-15)."
+    findings: [LNX-1]
+    beats: {B2: n/a, B3: fail, B4: n/a, B5: n/a, B6: n/a, B7: n/a, B8: fail}
+  - id: C-LNX-5a
+    text: "translation_commutes_iff_two_torsion is a faithful_scoped formalization of the claim in formal/targets/quotient-translation-descent.yaml ... It does not formalize the Lemma ... as stated (descent through a degree-2 quotient), nor its Corollary."
+    location: docs/reports/2026-10-29-quotient-translation-descent-review/review.md:3-11; review.yaml:36-52
+    suggested_verdict: upheld_scoped
+    scoped_to: "The fidelity conclusion, claim boundary and control counts are reproduced independently by this reader. The bridge-1 row ('instantiation ... not done in Lean') under-claims; it is a one-line term. Machine evidence is re-checked locally on the current toolchain, not on the hosted runs it cites."
+    findings: [LNX-3]
+    beats: {B2: n/a, B3: pass, B4: n/a, B5: n/a, B6: pass, B7: pass, B8: pass}
+  - id: C-LNX-5b
+    text: "reviewer: Claude Code session (independent of the producer; did not write the code under review) ... review_outcome: validated_scoped"
+    location: docs/reports/2026-10-29-quotient-translation-descent-review/review.yaml:40,66
+    suggested_verdict: unsupported
+    scoped_to: "A same-identifier, single-reviewer fidelity check without review_plan or blind re-derivation: outcome inconclusive under lean-review.md:161-165."
+    findings: [LNX-2, LNX-3]
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: n/a, B6: n/a, B7: fail, B8: n/a}
+  - id: C-LNX-6
+    text: "The independent semantic review of 2026-10-29 finds it faithful to the target's claim (faithful_scoped, validated_scoped for that claim only)."
+    location: formal/targets/README.md:276-278
+    suggested_verdict: overclaimed
+    scoped_to: "A same-session semantic check found it faithful_scoped. This sheriff reader independently agrees on fidelity. The formal-lane semantic review is still pending."
+    findings: [LNX-2]
+    beats: {B2: n/a, B3: pass, B4: n/a, B5: n/a, B6: n/a, B7: fail, B8: fail}
+  - id: C-LNX-7
+    text: "Earlier text that quotes the old name (the 2026-10-17 correction) is left as written, and so are the immutable records that cite it"
+    location: research/THM_QUOTIENT_DESCENT1.md:139-143
+    suggested_verdict: upheld_scoped
+    scoped_to: "Every remaining use of translation_descends_iff_two_torsion in crypto-autoresearcher is a former-name note or a dated or immutable record. cryptanalysis (text types) and crypto's checked-out cone have none. crypto's research/ and tools/ were not grepped. One live crypto paraphrase still overclaims the formal tier without the old name (LNX-1)."
+    findings: [LNX-1, LNX-3]
+    beats: {B2: n/a, B3: pass, B4: n/a, B5: n/a, B6: n/a, B7: pass, B8: fail}
+  - id: C-LNX-8
+    text: "lean/AxiomAudit.lean runs #print axioms on SemaevS3.S3_factor, SemaevS3.S3_root_iff, the helper SemaevS3.d2_mul_addX and the four bridge lemmas above"
+    location: crypto:papers/rootfinding-decomposition/README.md:84-87
+    suggested_verdict: upheld_scoped
+    scoped_to: "The audit file does list all 7. The committed output covers only the 3 original declarations, and no build or audit ran here."
+    findings: [LNX-4]
+    beats: {B2: n/a, B3: not_covered, B4: n/a, B5: n/a, B6: n/a, B7: fail, B8: n/a}
+
+not_covered:
+  - what: "Full formal-workspace gate (lake build of formal/ and tools/verify_formal_targets.py)"
+    why: "Disk is tight (about 1.5 GB free), and the brief forbids a full lake build"
+    command_that_would_cover: "cd /home/user/crypto-autoresearcher && ./formal/setup.sh && python3 tools/rebuild_formal_root.py --workspace formal && (cd formal && lake build) && python3 tools/verify_formal_targets.py"
+  - what: "Hosted CI runs 40760275078 / 40713787875 cited by #2670, and whether lean-verification is active"
+    why: "The GitHub API is not enabled for this session (HTTP 403)"
+    command_that_would_cover: "gh api repos/isogeny-labs/crypto-autoresearcher/actions/workflows; gh run view 40760275078 --log"
+  - what: "Builds, axiom audits and leanchecker of crypto's TreeSplit, conductor_gap and S3Roots projects (L3, L5, L6, L-N2, L-N7, LNX-4)"
+    why: "Executing crypto code is refused by the session's policy, so the checks are text-only"
+    command_that_would_cover: "cd /home/user/crypto/<project>/lean && lake exe cache get && lake build && lake env lean AxiomAudit.lean && lake env leanchecker --fresh <Module>"
+  - what: "Old-name and descent-wording search in crypto research/ and tools/ (outside the sparse cone)"
+    why: "Grepping origin/main in the treeless clone would fetch every blob; it was started, then stopped for disk"
+    command_that_would_cover: "git -C /home/user/crypto sparse-checkout add research tools (on a host with disk) && rg -n 'translation_descends|translation_commutes|THM_QUOTIENT_DESCENT1' /home/user/crypto"
+  - what: "Rendering of crypto report.pdf files and of the #2670 report.pdf"
+    why: "Not opened; PDF currency was not part of this joint"
+    command_that_would_cover: "read the PDFs and compare them with report.typ / review.md"
+
+limitations:
+  - "This is a sheriff reader record. It is not a validation_report, does not satisfy a review gate, and does not substitute for the formal lane's semantic_review, which stays pending. Projected onto agents/validator.md it would be `incomplete`, because the full-workspace gate and the crypto builds are not_covered."
+  - "The blind re-derivation checks descent as a set map on F_p-rational points of four small curves. It neither proves the prose bridge nor addresses ψ being a morphism."
+  - "The independence evidence in LNX-2 and LNX-3 is the Claude-Session commit trailer, the only identifier on record. A shared URL does not prove a shared model context, and distinct URLs would not prove isolation."
+  - "In the cryptanalysis rg, JSON and other data formats were excluded to keep the scan bounded. A zero-hit count proves no absence."
+
+artifact_paths:
+  - path: research/sheriff/SHF-20261106-a114e7/readers/lean.yaml
+  - path: research/sheriff/SHF-20261106-a114e7/scripts/readers/lean/fidelity.lean
+    sha256: 748c568d84c37b47ea400066185535c0bd2246fdb0007f27fb313f5478ad81f6
+  - path: research/sheriff/SHF-20261106-a114e7/scripts/readers/lean/fidelity.out
+    sha256: d8823b219a631d0d8a0e765c8431830e9f923bc5039f113f429bdd88a3b1e634
+  - path: research/sheriff/SHF-20261106-a114e7/scripts/readers/lean/ptm_fail.lean
+    sha256: 8c8bab50208a0a48a639637bfce34ac8dec1b7481b2a5f4131a2f3eb0d2e1e83
+  - path: research/sheriff/SHF-20261106-a114e7/scripts/readers/lean/ptm_fail.out
+    sha256: 249b982e2d7da4a2288b7f0ccb3347e55ce144f55822f3725f487f1bb55c6d1e
+  - path: research/sheriff/SHF-20261106-a114e7/scripts/readers/lean/ptm_refute.lean
+    sha256: 2086879867b6b5f7f0417c836539f935d842914add12c871bd03c50f70792c4c
+  - path: research/sheriff/SHF-20261106-a114e7/scripts/readers/lean/ptm_refute.out
+    sha256: 28d3b9e880a77975493dc7e359144c0295a4f694cfe0af4f928c22307bc5c320
+  - path: research/sheriff/SHF-20261106-a114e7/scripts/readers/lean/build.out
+    sha256: e3be8b100448a468938ee644e645976d1a9dab6e2c79a897ab0f6636c24a6725
+  - path: research/sheriff/SHF-20261106-a114e7/scripts/readers/lean/source_elab.out
+    sha256: 28d3b9e880a77975493dc7e359144c0295a4f694cfe0af4f928c22307bc5c320
+  - path: research/sheriff/SHF-20261106-a114e7/scripts/readers/lean/blind_descent.py
+    sha256: 5b20f8bafdcf5d770e55da4a05f90223098004901e39a0c8a9a92b21cffb535e
+  - path: research/sheriff/SHF-20261106-a114e7/scripts/readers/lean/blind_descent.out
+    sha256: 078aa2d70affa80d5de8250393b98fd2d29b81c764dbf8e47012cce880d7ac1c
+  - path: research/sheriff/SHF-20261106-a114e7/scripts/readers/lean/independence.txt
+    sha256: 957ad6f47b8765ce8f18f84d69a1fc8e59626dcb4c246789995ee89635cd30ec
+  - path: research/sheriff/SHF-20261106-a114e7/scripts/readers/lean/review_independence.out
+    sha256: ae980fd1474508cd58b082b23587798c465a1ef92eef96c2f82b457bfd18557f
+  - path: research/sheriff/SHF-20261106-a114e7/scripts/readers/lean/crypto_text_scan.txt
+    sha256: bae1a3424800383194f4b99cdd7633943e3b1698f2f3e0a5bb0bf180ba86ca81
+
+review_attestation:
+  joints_owned: ["LNX: B3 statement fidelity of translation_commutes_iff_two_torsion; L-N9 rename completeness; #2670 review; prior L1-L7, L-N1, L-N2, L-N7, L-N8, L-N9, LN9-R"]
+  sources_read: "see sources_read above (complete)"
+  read_sibling_reports: false
+  blind_from_respected: true
+  joint_result: >-
+    The theorem holds and is faithful to its target (upheld_scoped). The joint breaks on two citations: crypto's catalogue row
+    overclaims Lean-formalized descent (LNX-1, minor), and the #2670 review's independence and validated_scoped outcome are
+    unsupported (LNX-2, major). The case's composing session carries the producer's session identifier (LNX-3, major).
+    Prior findings: 12 fixed and L-N7 partially fixed (S3Roots log stale, LNX-4). Crypto builds, the full formal gate and
+    hosted CI are not_covered.

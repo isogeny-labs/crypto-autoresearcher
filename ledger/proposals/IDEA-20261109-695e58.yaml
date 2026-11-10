@@ -1,0 +1,65 @@
+idea:
+  id: IDEA-20261109-695e58
+  question_id: RQ-ISO-844f9f
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  class: algorithm
+  novelty_status: adaptation
+  lane: isogeny
+  angle: invariants and auxiliary structures on supersingular curves
+  title: Modular-polynomial F_p-neighbor count as a spine-distance oracle for memory-light path finding
+  attack_type: cryptanalytic_attack
+  claim: The number of F_p-rational roots of Phi_l(X, j) and the F_p-rationality of their own neighbors
+    are computable in O(l^2 log p) and act as a distance-to-spine oracle. Used inside a van Oorschot-Wiener
+    distinguished-point walk that terminates on spine vertices, this gives the Delfs-Galbraith O(p^{1/2})
+    + O(p^{1/4}) path finder with memory W instead of O(p^{1/2}). Cleared against H-ALISO-003/-004/-005
+    (Frobenius midpoint sweep and verifies) and H-ECDLP-3550b8 (walk basins at density 1/W). No Lean lemma
+    constrains it; the missing statement is spine_vertex_iff_j_in_Fp.
+  mechanism: Walk on 2-isogenies from both E_0 and E_A with a deterministic step function of j; at each
+    vertex evaluate the l = 3 oracle; distinguish vertices with j in F_p or with an F_p neighbor; store
+    only distinguished points; detect collision on the spine and finish with the O(p^{1/4}) spine algorithm.
+  objects:
+    invariant: F_p-root count of Phi_l(X, j), l in {2,3}
+    graph: supersingular 2-isogeny graph with the F_p spine of size about h(-4p)
+    target: generic E_0 to E_A path finding baseline
+  cost_model:
+    time: O(p^{1/2} / sqrt m) per machine with m machines plus O(p^{1/4})
+    memory: W distinguished points
+    exponent_change: none
+  falsification: At toy p ~ 2^40 measure expected steps to reach a distinguished spine vertex with and
+    without the oracle; if the oracle does not cut expected cost below the plain random walk by more than
+    its own evaluation cost, close the record.
+  cleared:
+    checked:
+    - H-ALISO-003
+    - H-ALISO-004
+    - H-ALISO-005
+    - H-ECDLP-3550b8
+    disproven: none in the brief
+  lean:
+    coverage: none
+    needed_statement: 'spine_vertex_iff_j_in_Fp : (j E in F_p) <-> exists E'' over F_p with j E'' = j
+      E'
+  experiment:
+    exp_id: none
+    nearest_surface: autolab package p1486_frobenius_midpoint_sweep (H-ALISO-003)
+  prior_art:
+    frontier_map: not_applicable
+    frontier_map_reason: BRIEF quotes no frontier map
+    searched:
+      corpus_grep:
+      - H-ALISO-003
+      - H-ALISO-004
+      - H-ALISO-005
+      - H-ECDLP-3550b8
+      - H-WESO-516558
+    none_found_after:
+    - 'BRIEF grep: "spine"'
+    - 'BRIEF grep: "Delfs"'
+    - 'BRIEF grep: "distinguished point"'
+    - 'BRIEF grep: "modular polynomial"'
+    not_applicable_reason: This campaign is isogeny/formula engineering, not an ECDLP-mechanism claim;
+      the ECDLP frontier map does not cover the relevant literature.
+  risks: Memory improvement only; no change to the p^{1/2} exponent. Frobenius-fixed vertices are rare
+    along random walks, which is what the midpoint sweeps already indicate.

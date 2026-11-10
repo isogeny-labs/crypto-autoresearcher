@@ -1,0 +1,160 @@
+idea:
+  id: IDEA-20261109-8a3bc8
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: Unit-sibling curves of a j = 0 prime-order curve over six primes q_u = Nm(1 + (pi - 1)u) have
+    group order exactly N, and every compatible transfer between them is a torsor under (O_K/n)^*
+  class: transfer
+  claim: 'Let E, y^2 = x^3 + b over F_p with p = 1 mod 3, have prime order N, so End(E) = Z[omega] = O_K,
+    Frobenius pi in O_K, Nm(pi) = p, n = (pi - 1) of norm N. For u in mu_6 put pi_u = 1 + (pi - 1)u and
+    q_u = Nm(pi_u). (A, exact) If q_u is prime, exactly one sextic twist E_u of y^2 = x^3 + b over F_{q_u}
+    has Frobenius pi_u, and #E_u(F_{q_u}) = Nm((pi - 1)u) = N; E(F_p) and E_u(F_{q_u}) are both O_K/n
+    as O_K-modules. u = 1 gives q_1 = p, u = -1 gives q_{-1} = p - 2t + 4. (B, theorem) The O_K-module
+    isomorphisms E(F_p) -> E_u(F_{q_u}) form a torsor under (O_K/n)^* = (Z/N)^*. The geometric ones, reduction
+    of the global n-torsion of y^2 = x^3 + b over the ray class field K_n at primes above p and above
+    q_u, form a sub-torsor under Gal(K_n/K) = (O_K/n)^*/mu_6 indexed by the prime choice. No rule computable
+    without the discrete log selects a compatible map, otherwise the ECDLP on E would reduce to the ECDLP
+    on E_u with a known scalar correction and, for the anomalous sibling of the companion control record,
+    to a polynomial-time problem, against KR-RHO-13bf67. (C, pre-registered) For secp256k1 no sibling
+    with u != 1 is anomalous or has ord_N(q_u) <= 12, so even a free map would be exponent-neutral. This
+    record files the order certificate and the torsor theorem and claims no exponent change.'
+  mechanism: Lenstra's isomorphism E(F_p) = O_K/(pi - 1) (recalled) depends on the ideal (pi - 1), not
+    on pi. Multiplying pi - 1 by a unit keeps the ideal and the group but moves the Frobenius element,
+    hence the prime q_u = Nm(1 + (pi - 1)u) and the field. Any isomorphism between the two reductions
+    factors through the n-torsion in the ray class field, whose Galois group is the full scalar group
+    modulo mu_6; picking a prime above p and one above q_u is picking a scalar. Cross-characteristic analogue
+    of KR-RHO-755e35, the realisation exists, the order is automatic, the map carries the log.
+  novelty_status: adaptation
+  citations:
+  - ref: KR-RHO-755e35
+    provenance: internal
+    claim: Isogenous curves share N and difficulty; this record is the non-isogenous, different-characteristic
+      version of the same closure.
+    verified_by: brief section 3, generic-rho table, read 2026-11-09
+  - ref: KR-RHO-13bf67
+    provenance: internal
+    claim: Generic lower bound used in claim B.
+    verified_by: brief section 3, read 2026-11-09
+  - ref: IDEA-20260805-4243e6
+    provenance: internal
+    claim: Designer freedom over F_p is the isogeny class; siblings lie outside it and outside F_p.
+    verified_by: brief section 2 index line, read 2026-11-09
+  assumptions:
+  - N prime, p = 1 mod 3, b not a cube or square class making E have 3-torsion; the test rechecks N prime
+    and recomputes t = p + 1 - N.
+  - The six twists over F_{q_u} are enumerated as b_u = b * c^i for c a sextic non-residue mod q_u.
+  proof_search_map:
+    not_applicable_reason: Order certificate plus a torsor theorem, no exponent claim.
+    bottleneck: not_applicable
+    baseline_embedding:
+      parameter_slice: not_applicable
+      reproduction_check: not_applicable
+    observation_collision:
+      observable: not_applicable
+      distinct_preimage_search: not_applicable
+    constructive_transforms: []
+    quantifier_order: not_applicable
+    method_ceiling:
+      strongest_certifiable_claim: not_applicable
+      nearby_object_control: not_applicable
+    proof_obligations: []
+  predictions:
+  - metric: max over toy curves and prime q_u of abs(#E_u(F_{q_u}) - N) for the selected twist
+    direction: lower
+    minimum_effect: exactly 0 on every instance
+  - metric: min over u != 1 with q_u prime of ord_N(q_u), secp256k1
+    direction: higher
+    minimum_effect: greater than 12, certified from the factored part of N - 1
+  - metric: number of u != 1 with q_u = N, secp256k1
+    direction: lower
+    minimum_effect: exactly 0
+  minimal_test:
+    design: Sage. Toy arm, for each j = 0 prime-order curve with p = 1 mod 3 and p <= 2^24 in crypto/docs/ECDLP_CALIBRATION_PRIMES.md
+      (construct 30 if fewer exist), solve 4p = (2a - b)^2 + 3b^2 for pi = a + b omega consistent with
+      t, form the six q_u, test primality, enumerate the six twists over each prime q_u and count points
+      exhaustively, record which twist has order N. secp256k1 arm, compute pi from p and t, the six q_u,
+      Miller-Rabin, select the twist with [N]P = O on 20 random points, factor N - 1 with PARI (trial
+      division to 2^30 plus ECM, 30 min cap), report the factored part and the implied lower bound on
+      ord_N(q_u).
+    controls:
+    - Non-CM toy prime-order curve with random (a, b), report that no unit sibling exists (End not Z[omega]),
+      construction is CM-specific.
+    - Sextic twists over F_p of the same E, orders Nm(pi u' - 1), listed beside the siblings to show same
+      field different order versus different field same order.
+    required_metrics:
+    - pi as a + b omega
+    - q_u for all u, primality flags
+    - selected twist index and
+    - factored part of N - 1 and ord_N(q_u) lower bound
+    - q_u == N flag
+  falsification_conditions:
+  - A prime q_u with no twist of order N on any toy instance, claim A false.
+  - A secp256k1 sibling with q_u = N or ord_N(q_u) <= 12, claim C false, priority of the anomalous-sibling
+    control rises.
+  - A poly(log p) rule producing a compatible map on toy curves whose recovered scalar equals k on more
+    than 6/(N - 1) plus 3 sigma of 300 instances, claim B false, treated as an implementation error first.
+  - Timeouts in factoring N - 1 are infrastructure, report the partial bound.
+  confounders:
+  - Composite q_u are skipped; the fraction prime is reported, not predicted.
+  - Twist selection by [N]P = O on random points fails only if two twists share order N, which point counting
+    at toy size excludes.
+  interpretation_limits:
+  - A verified sibling table is an arithmetic fact about CM curves, not an attack surface.
+  - Claim B is proved for O_K-module maps; set maps that are not homomorphisms are outside the theorem
+    and outside transfer.
+  heuristic_assumptions:
+  - id: H1
+    statement: For secp256k1 at least one q_u with u != 1 is prime.
+    rigorous_support: Heuristic density 1/ln q about 1/177 per candidate; may fail, in which case claim
+      C is vacuous and reported so.
+    validation_plan: Miller-Rabin on the five candidates in the secp256k1 arm.
+  target_complexity:
+    time_exponent: N^{1/2} unchanged
+    memory_exponent: O(1)
+    best_known: Pollard rho, Theta(N^{1/2}) group operations, KR-RHO-13bf67
+    hidden_overhead: None, the record proposes no algorithm.
+    tradeoff_note: Even a free compatible map lands on a 256-bit prime-order curve of generic embedding
+      degree.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  dominated_by: KR-RHO-755e35 and KR-RHO-13bf67 dominate any exponent reading. Neither row states the
+    sibling construction or the torsor theorem.
+  sota_delta: Exponent delta 0. New certificate, the one non-isogenous realisation of the instance group
+    with order exactly N, and the theorem that its transfer map is the scalar torsor.
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/generic-rho
+    rows_checked:
+    - KR-RHO-755e35
+    - KR-RHO-53c89f
+    - KR-RHO-13bf67
+    - KR-IC-cd159a
+    - KR-IC-a4dd54
+    nearest:
+    - ref: KR-RHO-755e35
+      provenance: internal
+      relation: adjacent
+      delta: Row covers F_p-isogenous curves; siblings live over other primes and are not isogenous, yet
+        share the O_K-module.
+    - ref: KR-RHO-53c89f
+      provenance: internal
+      relation: orthogonal
+      delta: Transfer rows assume a homomorphism into a weaker group; here the target is equally hard
+        and the map is undefined.
+    searched:
+      corpus_grep:
+      - brief section 2 for sibling, ray class, Lenstra module, cross-field
+      - Wave-2 torsion leads for cross-field CM transfer (lead only, no record)
+      web: []
+      blocked: []
+    lead: LEAD-TRF-cover-catalog-jacobian-transfer
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: Sage. Toy arm, for each j = 0 prime-order curve with p = 1 mod 3 and p <=
+        2^24 in crypto/docs/ECDLP_CALIBRATION_PRIMES.md (construct 30 if fewer exist), solve 4p = (2a
+        - b)^2 + 3b^2 for pi = a + b omega consistent with t, form the six q_u, test primality, enumerate
+        the six twists over each prime q_u and count points exhaustively, record which twist has order
+        N. secp256k1 arm, compute pi from p and'

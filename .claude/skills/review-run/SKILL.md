@@ -100,3 +100,11 @@ the PR review (crypto) decide what follows and cite it.
 - Change a hypothesis, goal, leaderboard or benchmark row; it is one input
   the owning repository's gate cites.
 - Report a number it did not recompute or observe.
+
+## Default challenge research loop
+
+Research goals use [the default challenge research loop](../../../docs/challenge-research-loop.md). Preserve the frozen problem, candidate, evidence and review pointers relevant to this skill. Work within its existing role; findings guide the next attempt, and a worker completion alone is not scientific acceptance.
+
+For goal-level boundary work, `autoresearch campaign frontier --goal <GOAL-ID>`
+shows the fixed comparison domain, reviewed points, remaining gap and next test.
+Carry those references; keep measured, modeled and unresolved claims distinct.

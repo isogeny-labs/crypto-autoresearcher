@@ -1,0 +1,565 @@
+schema: sheriff.reader/v1
+case: SHF-20261106-a114e7
+joint: "ICR - B5/B8 ICPERF v2 interpretation and cost model: hypothesis support (H-ICPERF-2f52d1, H-ICPERF-5adc9b), latency / n=83 / speed wording, section 5a applicability"
+reader:
+  role: red-team
+  model: claude-opus-5-5
+  independence: >-
+    Did not produce anything under audit. Judged from committed records, code and my own
+    reruns at crypto-autoresearcher da442739db (the working branch later advanced to 52b5005d17
+    with sheriff WIP commits only; `git diff da442739db HEAD -- . ':!research/sheriff'` adds one
+    problems/ file and touches no audited record). PR descriptions could not be read (gh 403) and
+    were not used; commit messages were displayed by git log/show and are not used as evidence.
+target:
+  crypto-autoresearcher: {path: /home/user/crypto-autoresearcher, head: da442739db, branch: claude/sheriff-reaudit-20261106}
+  crypto: {path: /home/user/crypto, head: 3a7a0f98a, read: AGENTS.md lines 983-1150 only}
+  cryptanalysis: {path: /home/user/cryptanalysis, head: 5bdfb496d, read: AGENTS.md grep for 5a/GAE/band and lines 370-410}
+  merges_audited:
+    - "#2692 be79317981 (v2 design: EXP-ICPERF-284bc4, EXP-ICPERF-283a70 specs, runners, runbooks)"
+    - "#3044 38b8aac01e (EV-ICPERF-08f6f9, EV-ICPERF-84ff45, DEC-20261105-8a9984, DEC-20261105-6e2616, hypothesis status edits, review reports, analyses, audits)"
+    - "#3058 edfc50a373 (CORR-20261106-243c4d, SR-20261106-e32b11)"
+    - "#3056 cfbf4940af (CORR-20261105-1d848a, checkpoint TASK-20261106-ed3fa9; found while tracing NA-1)"
+
+sources_read:
+  crypto-autoresearcher:
+    - research/sheriff/SHF-20261106-a114e7/scripts/READER_BRIEF.md
+    - .claude/skills/sheriff/SKILL.md
+    - docs/sheriff.md (heading list; lines 278-462, B5-B9)
+    - docs/agent-runtime-core.md; agents/red-team.md
+    - AGENTS.md (lines 158-200 progress-fidelity gate and core rules; 528-541 curve identity and measured bounds)
+    - ledger/hypotheses/H-ICPERF-2f52d1.yaml, H-ICPERF-5adc9b.yaml (full)
+    - ledger/evidence/EV-ICPERF-08f6f9.yaml, EV-ICPERF-84ff45.yaml (full)
+    - ledger/decisions/DEC-20261105-8a9984.yaml, DEC-20261105-6e2616.yaml (full)
+    - ledger/corrections/CORR-20261106-243c4d.yaml, CORR-20261105-1d848a.yaml (full)
+    - ledger/goals/GOAL-ICPERF-e6b6a4/checkpoints/TASK-20261105-8924a8.yaml, TASK-20261106-ed3fa9.yaml; goal.yaml lines 270-300
+    - ledger/decisions/DEC-20261029-9bc3ff.yaml (grep splice), DEC-20261029-5554ee.yaml (grep citability/flagged)
+    - ledger/proposals/IDEA-20261015-7a3c9e.yaml (lines 1-80)
+    - experiments/EXP-ICPERF-284bc4/specification.yaml (full); experiments/EXP-ICPERF-283a70/specification.yaml (full)
+    - experiments/EXP-ICPERF-28{4bc4,3a70}/analysis.md; review/review-plan.yaml (claim_under_review); reports/review-DEC-*/report.typ, plot.py, data.json, .artifacts.json
+    - "review PDFs recovered from 714ebc4565 (sha256 equal to .artifacts.json: 9d5f822c..., f64442cc...), text via pdftotext"
+    - experiments/EXP-ICPERF-284bc4/review/TASK-20261105-c44b03/red-team-report.yaml (lines 320-360 and grep); EXP-ICPERF-283a70/review/TASK-20261105-b3b41a/red-team-report.yaml (lines 40-62 and grep)
+    - experiments/EXP-ICPERF-28{4bc4,3a70}/reports/run-20261030T15{20,25}Z/report.typ (grep), runbook.yaml label lines
+    - experiments/EXP-ICPERF-284bc4/runs/RUN-ICPERF-8e3acd/raw-result.json and EXP-ICPERF-283a70/runs/RUN-ICPERF-f21eb1/raw-result.json (primary keys only, read AFTER my blind re-derivations)
+    - runbook-session journals RBS-ICPERF-b7e41c, c4a91e, 8cdc92, 67df7d (event types only)
+    - tools/progress_metrics.py (lines 1-30, 198-285); .github/workflows/progress-fidelity.yml (grep)
+    - knowledge/leads/ecdlp/ic-prime/LEAD-ICP-retained-setup-online.yaml (full); generic/LEAD-RHO-dp-multitarget-precomputation.yaml and coverage.tsv (grep)
+    - claims/ (listing and grep icperf)
+    - research/sheriff/SHF-20261028-0f3f64/findings.yaml (LGN-8, LGN-9 text only, to learn what was claimed)
+  crypto:
+    - AGENTS.md lines 983-1150 (The rule: boundary, table, ratio; section 5a; section 6)
+  cryptanalysis:
+    - AGENTS.md (grep; lines 370-410)
+blind_from:
+  - research/sheriff/SHF-20261106-a114e7/prior.md (not read)
+  - research/sheriff/SHF-20261106-a114e7/readers/* other than this file (not read)
+  - "research/sheriff/SHF-20261106-a114e7/scripts/readers/* other than icperf-interpretation/ (not read; `ls` and `git status --short` displayed sibling directory and file NAMES, e.g. icperf-receipts/chronology.txt, no content opened)"
+  - research/sheriff/SHF-20261106-a114e7/sweep.md, sweep.json, checks/ (not read)
+  - the validator reader's joint (receipts, controls, re-derivation of digests); prior cases' readers/ and REPORT.md
+  - PR bodies (#2776, #3044, #3056, #3058) - attempted, refused by gh (403), so not read
+blind_from_respected: true
+read_sibling_reports: false
+
+checks:
+  - id: ICR-K1-chronology
+    command: "git log --follow -- experiments/EXP-ICPERF-{284bc4,283a70}/specification.yaml; git merge-base --is-ancestor cb48b111d7 af94114e9c / cd912cacbb; git diff 714ebc4565^ 714ebc4565 -- ledger/hypotheses/"
+    output: inline
+    result: >-
+      pass. Specs created 66ccdc9153 (2026-10-29 05:34Z), only status/frozen/approved_by flipped at
+      cb48b111d7 (15:14Z), both ancestors of the run commits af94114e9c / cd912cacbb (2026-10-30). The
+      hypothesis edits at 714ebc4565 change only status and status_note (statement, predictions and
+      falsification text unchanged). Predicted integers were fixed 2026-10-17 in the v1 specs.
+  - id: ICR-K2-forks
+    command: "ls experiments/EXP-ICPERF-*/runbook-sessions; git ls-files experiments/EXP-ICPERF-*/runs; journal event types for RBS-ICPERF-b7e41c, c4a91e, 8cdc92, 67df7d; grep -rl H-ICPERF-2f52d1|5adc9b"
+    output: inline
+    result: >-
+      pass (disclosed). Same-question units: v1 RUN-ICPERF-943efa (RBS-ICPERF-b7e41c, 2026-10-21; a
+      2026-10-19 execution A of the same session id recorded an impediment and no unit, disclosed in
+      DEC-20261029-9bc3ff, not named in EV-ICPERF-08f6f9) and v1 RUN-ICPERF-b09be8 (RBS-ICPERF-c4a91e);
+      both named in EV not_evidence and in the v2 spec prediction_provenance.data_seen. Design-time
+      executions of the v1 runners (the source of the preregistered integers) and the 21207-triple
+      design scan that picked CTL-1 are disclosed in the specs. No other experiment tests either
+      hypothesis. All outcomes are deterministic, so no best-of-k selection is possible.
+  - id: ICR-K3-decision-rule
+    command: "read spec success_criterion / decisive_test / decision_impact; compare with EV O1 and raw-result primary keys"
+    output: inline
+    result: >-
+      pass, scoped. Both frozen rules are exact-equality rules with no margin; the outcomes meet them
+      (925/4, ratios_agree, all_match_bsgs, 50/200/25; 2943/289567/28 with no split, controls fail exact
+      match). No post-hoc margin. Two caveats: (i) each hypothesis's only negative outcome is "instrument
+      invalid", never "refuted", so `supported` records instrument validation of an a-priori statement;
+      (ii) the v2 decisive tests were written 2026-10-29 after the v1 outputs had been seen (disclosed in
+      data_seen); they are stricter than v1 and the programs are deterministic, so no freedom was gained.
+  - id: ICR-K4-wording-sweep
+    command: "grep -n -i -E 'faster|speed ?up|speedup|latency|wall[- ]?time|end-to-end|attack cost|improve' $(cat scripts/readers/icperf-interpretation/wording_scope_files.txt)"
+    output: research/sheriff/SHF-20261106-a114e7/scripts/readers/icperf-interpretation/wording_hits.txt
+    result: >-
+      103 hits in 36 files (every non-replay file of #3044 plus #3056/#3058 records). Every ledger,
+      analysis, report.typ and PDF hit is a negation or scope fence. Asserting hits: one (red-team
+      report 284bc4:343 "IC is about 2.1x faster online", illustrative). Quoted producer phrase: "no
+      latency effect, no n=83 speedup, no attack" (review-plan 284bc4:28, corrected by CORR (c)) and "no
+      latency effect, no attack" (review-plan 283a70:26, not corrected). No n=83 result, end-to-end or
+      attack-cost claim is asserted anywhere in the records.
+  - id: ICR-K5-pdf
+    command: "git show 714ebc4565:<report dir>/report.pdf | sha256sum; pdftotext -layout; grep"
+    output: research/sheriff/SHF-20261106-a114e7/scripts/readers/icperf-interpretation/review-DEC-20261105-{8a9984,6e2616}.report.txt
+    result: pass. Hashes equal .artifacts.json; PDF text matches report.typ; latency/n=83 words are negations only; no later change to report.typ/data.json after the PDF build (git log of both report dirs).
+  - id: ICR-K6-derived-view-export
+    command: "CHECKPOINT_SKIP=audit BENCHREC_SKIP=audit python3 tools/progress_metrics.py --ref da442739db --since 2026-10-01 | grep '\"problem\": \"icperf\"'"
+    output: research/sheriff/SHF-20261106-a114e7/scripts/readers/icperf-interpretation/progress_metrics_icperf.jsonl
+    result: >-
+      fail. 46 rows. c_probe_ns 370 and NEG-1's planted 371 are emitted with unit "nanoseconds per
+      probe" (c_state/c_step likewise); 283a70 xorshift draws, including both wrong-sampler controls,
+      are emitted as "probe-count sum" and "probes per target". DEC-20261105-8a9984 NA-2 ordered the
+      284bc4 relabel; tools/progress_metrics.py is unchanged for ICPERF since 029903cba3 (2026-10-30). See ICR-1.
+  - id: ICR-K7-claims-gate
+    command: "ls claims/; grep -ril icperf claims/"
+    output: inline
+    result: >-
+      pass. The progress-fidelity gate (AGENTS.md:160) covers new quantitative speedup, performance
+      advantage or attack-cost claims. None of the audited records makes one (925/4 is explicitly an
+      unranked formula value), so no claims/*.json is required, and none exists for ICPERF.
+  - id: ICR-K8-s5a
+    command: "read crypto:AGENTS.md:1094-1135; python3 -I scripts/readers/icperf-interpretation/rederive_price_ratio.py (s5a_band block)"
+    output: research/sheriff/SHF-20261106-a114e7/scripts/readers/icperf-interpretation/rederive_price_ratio.out.json
+    result: >-
+      ruling outcome holds, rationale mis-scoped (ICR-2). 283a70: not applicable, correct (no cross-method
+      arm). 284bc4: section 5a covers "every cross-method comparison and every ranking", and 925/4 is
+      IC-online / BL-online. Neither arm emits a counter, so it is unrankable; my band confirms the order
+      flips inside 0/0.1/1 GAE (see blind_rederivation.s5a_band).
+  - id: ICR-K9-corrections
+    command: "sed -n <lines> runbook.yaml / data.json; sha256sum of the three corrected files; git log of both CORR files; grep CORR ids repo-wide"
+    output: inline
+    result: >-
+      Content of both corrections is accurate (label lines 515/524/533/541/549, data.json lines
+      32/52/62/73/84 read "measured"; digests e5850bc6/db07265c/41910e15 match). But two records close
+      the same NA-1 (ICR-4).
+  - id: ICR-K10-figure
+    command: "read reports/review-DEC-20261105-8a9984/plot.py:13 and data.json graph_spec; python3 compare recorded vs blind_rederived over ratio_points"
+    output: inline
+    result: minor defect (ICR-5). Blind series plots `value` for every point (`if True`); 15/15 points agree as strings, so the rendered figure is not wrong but cannot show a disagreement.
+  - id: ICR-K11-ledger-summary
+    command: "CHECKPOINT_SKIP=audit BENCHREC_SKIP=audit python3 tools/ledger_summary.py --recent 40"
+    output: "traceback: KeyError slice(None, 3, None) in recent_decisions (tools/ledger_summary.py:159)"
+    result: not_covered. The tool crashes on the current ledger; ledger-summary wording was not checked through it (the underlying records were read directly).
+
+blind_rederivation:
+  H-ICPERF-2f52d1:
+    script: research/sheriff/SHF-20261106-a114e7/scripts/readers/icperf-interpretation/rederive_price_ratio.py
+    output: research/sheriff/SHF-20261106-a114e7/scripts/readers/icperf-interpretation/rederive_price_ratio.out.json
+    from: "hypothesis statement and test_boundary parameters only (370, 2100, 40 ns; 21/10; 10 states; three cells); no producer code or raw output read before the result"
+    quantity: "price ratio c_probe*c_state/((21/10)*c_step^2); per-cell IC online / BL online at equal precomputation time; probes (r/A)/states; BSGS max and mean by enumeration"
+    derived: "925/4; P = 525 steps; cells (1000,2) 50 probes, bl_steps 2, 18500/80; (4000,2) 200, 8, 74000/320; (1000,4) 25, 1, 9250/40; each ratio 925/4; BSGS max 50/200/25, mean 51/2, 201/2, 13"
+    support_threshold: "exact equality to 925/4 at the price formula and every cell, and probes == (r/A)/states. The statement is an identity, so no tolerance can be derived; any margin would be post hoc."
+    compared_with_decisions: "DEC-20261105-8a9984 used the same exact rule (spec success_criterion) and the recorded raw values equal mine (read afterwards). Equal."
+  H-ICPERF-5adc9b:
+    script: research/sheriff/SHF-20261106-a114e7/scripts/readers/icperf-interpretation/rederive_xorshift.py
+    output: research/sheriff/SHF-20261106-a114e7/scripts/readers/icperf-interpretation/rederive_xorshift.out.json
+    from: "hypothesis statement (xorshift32, seed 20261017, p = 1/50, 64 draws) plus, as one reading among several, the spec v2 sampler prose"
+    derived: >-
+      Spec convention (13,17,5; step then test; x mod 50 = 0; support from 1; chained) gives 2943 /
+      289567 / 28, no split, CV 1.0676, median/mean 0.6089 (both bands true). The statement alone
+      underdetermines the sampler: testing the seed gives 2944/289582/28; the u < p threshold convention
+      x < 2^32/50 gives 3832/526854/36 with a median split and CV 1.139 (out of band); support from 0
+      gives 2879/283745/27; triple (13,17,15) gives 4065/468049/42 with a split.
+    support_threshold: "exact (sum, sum of squares, median) and no split; band clauses are implied by those integers"
+    compared_with_decisions: "DEC-20261105-6e2616 used exactly this rule and scoped support to 'the specified xorshift32 sampler', which is the narrowing my readings require. Equal."
+  s5a_band:
+    model_RT: "each probe/state/step = 1 group addition + 1 native op, independent weights: R = (1+w_p)(1+w_s)/(2.1(1+w_b)^2) = 10/21 at every uniform w; 27 corners [0.1190, 1.9048], 4 of 27 BL ahead (reproduces the EV's illustrative band)"
+    model_MULT: "uniform w applied to every arm (the section 5a wording) but native-op multiplicities k in {1,2} per probe/state/step unknown: R in [0.2116, 1.0714] over 24 cases, BL ahead only at k=(2,2,1), w=1"
+    mean_probes: "the parent idea defines probes/target as a mean; BSGS mean / formula = 0.510, 0.5025, 0.520, so R at uniform w is about 0.24, not 0.476"
+    record_prices: "231.25 at 370/2100/40 ns = 37/4 GAE per probe and 105/2 GAE per state at 40 ns = 1 GAE, 216x to 1100x outside the band"
+    memory_axis: "listed, not charged: IC table 10 states; BL table about sqrt(525/1.2) = 20.9 entries under the parent's model; BL formula out of regime (P >= m at two cells)"
+    conclusion: "order is not stable across the band and no arm emits counters, so section 5a yields 'unresolved, unrankable', which coincides with the decisions' 'no ranking in either direction'"
+
+proves_too_much_control:
+  H-ICPERF-2f52d1:
+    objects:
+      - "null price vector (1,1,1): rule output supported=false (10/21), ratios_agree=true"
+      - "5000 random price vectors (seed 20261106): supported 0/5000, ratios_agree 5000/5000"
+      - "c_probe 371: false (1855/8); precomputation 10 steps: false (cells 185/42)"
+      - "unrounded BL constants 2.124 and 2.3353: false, cells non-integral (instrument failure by the frozen rule)"
+      - "counterfactual n=83 measured deficits 2x, 235x, 2000x: rule output identical (true) in all three"
+    result: >-
+      The exact rule passes the control: it never yields `supported` on a null input. The identity
+      sub-rules (ratios_agree, CON-1, CON-2) do NOT: they pass on every price vector, so they carry no
+      information (records say so). And the rule's output is invariant to every empirical fact about
+      n=83, so any reading of `supported` as evidence about the n=83 deficit, latency or the BL law proves
+      too much; the records fence exactly this.
+  H-ICPERF-5adc9b:
+    objects:
+      - "correct sampler at 1000 other seeds: exact rule 0/1000, band rule 464/1000"
+      - "true Geometric(1/50) iid, 2000 x 64: exact 0, band 951 (rejects the true law 52%)"
+      - "wrong-p geometrics p=1/30 and 1/80: exact 0, band 949 and 950 (identical to the true law)"
+      - "lognormal CV=1 mean 50: exact 0, band 628; uniform 1..99: exact 0, band 0"
+      - "band test vs n (band_asymptotics.out.json): pass rate -> 1.0 at n=8192 for p=1/30, 1/80 and lognormal CV=1"
+    result: >-
+      The exact rule used by DEC-20261105-6e2616 passes the control. The band clauses in the hypothesis
+      statement and the parent's claim (1) fail it: they accept wrong-p geometrics at the true-law rate and,
+      as n grows, accept every small-p geometric and the CV=1 lognormal with probability 1. The parameter
+      that should sharpen a shape test (n) makes the wrong objects pass more, which is an artifact tell.
+
+prior_finding_verdicts:
+  - id: SHF-20261028-0f3f64/LGN-9
+    verdict: partially_fixed
+    why: "ICPERF half only: RBS-ICPERF-b7e41c and c4a91e now have audits AUD-20261029T011541Z-d57860 (flagged) and -f9db07 (clean). The PFDR sessions are outside this joint and were not checked."
+  - id: SHF-20261028-0f3f64/LGN-8
+    verdict: not_covered
+    why: "B7 schema/merge-gate finding; belongs to the validator joint. Command: python3 tools/validate_ledger.py and tools/check_merge_hygiene.py --absolute at da442739db."
+
+findings:
+  - id: ICR-1
+    beat: B8
+    severity: major
+    claim_ids: [C11]
+    what: >-
+      The progress export presents assumed and planted inputs and synthetic draw counts in latency and
+      probe units at another scope. At da442739db tools/progress_metrics.py emits
+      icperf.EXP-ICPERF-284bc4.<trial>.c_probe_ns = 370 (and 371 for the planted NEG-1) with unit
+      "nanoseconds per probe", plus c_state_ns and c_step_ns in "nanoseconds per state/step", with no
+      assumed or planted qualifier. It emits 283a70's xorshift sample (sum 2943/2938/2879, median
+      28/29/27, both wrong-sampler controls included) as "probe-count sum" and "probes per target", the
+      wording of the n=83 table-probe hypothesis H-ICPERF-b3d1a4. DEC-20261105-8a9984 NA-2 ordered the
+      284bc4 relabel and it is not done. No ruling covers the 283a70 units. The rows are better=neutral,
+      so nothing is ranked, but a dashboard reader sees a measured ns/probe and a measured probes/target
+      that do not exist.
+    evidence:
+      - tools/progress_metrics.py:198-212
+      - tools/progress_metrics.py:273-285
+      - research/sheriff/SHF-20261106-a114e7/scripts/readers/icperf-interpretation/progress_metrics_icperf.jsonl
+      - ledger/decisions/DEC-20261105-8a9984.yaml:212-219
+      - ledger/corrections/CORR-20261105-1d848a.yaml:84-90
+    fix: >-
+      Executor tooling handoff (NA-2, extended): label c_*_ns rows "assumed input" ("planted input" for
+      NEG-1) or drop them. Rename the 283a70 units to "synthetic xorshift draw-count sum" and "draws
+      (synthetic, not table probes)", or export only exact_match. Add a test asserting no ICPERF stage-0
+      row carries a probe/latency unit.
+  - id: ICR-2
+    beat: B5
+    severity: minor
+    claim_ids: [C4]
+    what: >-
+      The section-5a "not applicable" ruling for EXP-ICPERF-284bc4 uses the wrong trigger. EV-ICPERF-08f6f9
+      s5a_band and DEC-20261105-8a9984 rulings.section_5a reason "no comparison against rho is made, so no
+      band is owed". crypto:AGENTS.md section 5a binds "every cross-method comparison and every ranking"
+      in ledger rows and papers, not only comparisons against rho. 925/4 is IC-online over BL-online (the
+      review graph's y-axis), priced with assumed ns on both arms. Applied correctly, section 5a gives:
+      no arm emits a counter, so the arms are unrankable; the band (this reader: 10/21 at uniform w,
+      [0.119, 1.905] at the corners, [0.212, 1.071] under unknown native-op multiplicities, about 0.24 with
+      mean probes) flips the order, so the result is unresolved. The operative conclusion "no ranking in
+      either direction" is unchanged. The stated rationale would, as precedent, exempt every non-rho
+      cross-method ratio (IC vs BL, IC vs BSGS) from the band.
+    evidence:
+      - ledger/evidence/EV-ICPERF-08f6f9.yaml:237-255
+      - ledger/decisions/DEC-20261105-8a9984.yaml:94-99
+      - experiments/EXP-ICPERF-284bc4/analysis.md:58
+      - experiments/EXP-ICPERF-284bc4/reports/review-DEC-20261105-8a9984/plot.py:18
+      - crypto:AGENTS.md:1106-1135
+      - research/sheriff/SHF-20261106-a114e7/scripts/readers/icperf-interpretation/rederive_price_ratio.out.json
+    fix: >-
+      In the next record that cites this ruling, restate it as "section 5a applies to the IC/BL ratio; no
+      counters emitted, band order-unstable, unresolved; no ranking". Do not cite "no rho arm, so no band"
+      as precedent. NA-4's successor (RC-5) already requires the band.
+  - id: ICR-3
+    beat: B8
+    severity: minor
+    claim_ids: [C9]
+    what: >-
+      The latency-closure phrasing and the "measured" labels are corrected for 284bc4 only. The producer
+      scope phrase for EXP-ICPERF-283a70, "Stage-0 observation only: no latency effect, no attack" (PR
+      #2776 as quoted in its review plan and its red-team report), asserts the absence of a latency effect
+      that was never measured. Neither DEC-20261105-6e2616 nor any correction rules on it, although the
+      identical 284bc4 phrase was ruled to read "makes no latency or n=83 statement". 283a70's run report
+      and runbook label the computed integers and band flags "measured", which the 284bc4 ruling calls
+      computed. EV-ICPERF-84ff45 lists the labels as a confound but orders no correction.
+    evidence:
+      - experiments/EXP-ICPERF-283a70/review/review-plan.yaml:26
+      - experiments/EXP-ICPERF-283a70/review/TASK-20261105-b3b41a/red-team-report.yaml:44
+      - experiments/EXP-ICPERF-283a70/reports/run-20261030T1525Z/report.typ:38-44
+      - experiments/EXP-ICPERF-283a70/runbook.yaml:315-366
+      - ledger/evidence/EV-ICPERF-84ff45.yaml:161-165
+      - ledger/decisions/DEC-20261105-8a9984.yaml:80-93
+    fix: An additive correction for EXP-ICPERF-283a70 mirroring CORR-20261106-243c4d (a) and (c).
+  - id: ICR-4
+    beat: B7
+    severity: minor
+    claim_ids: [C7]
+    what: >-
+      Two correction records close the same next action. DEC-20261105-8a9984 NA-1 asks for "one additive
+      correction record". CORR-20261105-1d848a (f0653d0ce9, merged #3056 at cfbf4940af) and
+      CORR-20261106-243c4d (c9cdb19c25, merged #3058 at edfc50a373) were filed six minutes apart from two
+      branches. Each says it closes or executes NA-1, neither supersedes or cites the other, the goal
+      checkpoint TASK-20261106-ed3fa9 names only 1d848a, and SR-20261106-e32b11 names only 243c4d. Their
+      content is consistent (checked), so no reading changes, but the correction chain has two heads.
+    evidence:
+      - ledger/corrections/CORR-20261105-1d848a.yaml:137
+      - ledger/corrections/CORR-20261106-243c4d.yaml:16-18
+      - ledger/goals/GOAL-ICPERF-e6b6a4/checkpoints/TASK-20261106-ed3fa9.yaml:14-15
+      - coordination/sessions/receipts/20261106/SR-20261106-e32b11.yaml:16-18
+    fix: One superseding note naming a canonical record and marking the other a duplicate. Both stay immutable.
+  - id: ICR-5
+    beat: B8
+    severity: minor
+    claim_ids: [C1]
+    what: >-
+      The review graph for DEC-20261105-8a9984 draws its "blind re-derived (TASK-20261105-b543c3), equal
+      at every point" series from the recorded `value` field unconditionally (`[p["value"] for p in pts
+      if True]`). The data's own graph_spec says "value when blind_rederived equals recorded". The panel
+      can never show a disagreement. The data agree (15/15 string-equal), so the rendered figure is not
+      wrong, but it is not the independent display it is labelled as. The 283a70 plot reads
+      blind_rederived correctly.
+    evidence:
+      - experiments/EXP-ICPERF-284bc4/reports/review-DEC-20261105-8a9984/plot.py:13
+      - experiments/EXP-ICPERF-284bc4/reports/review-DEC-20261105-8a9984/data.json (graph_spec.panel_a.series[1])
+      - experiments/EXP-ICPERF-283a70/reports/review-DEC-20261105-6e2616/plot.py:15
+    fix: Plot p["blind_rederived"] (as a Fraction) in a later report. The frozen report stays as is.
+  - id: ICR-6
+    beat: B6
+    severity: minor
+    claim_ids: [C1, C2, C13]
+    what: >-
+      "Out of sample" is applied to a design-time computation. PRED-PRIMARY is labelled out_of_sample, and
+      the strength_justification of both EV records cites "out-of-sample preregistered integers met
+      exactly". The integers were produced by executing the v1 runner in a design-time directory
+      (spec source fields). The v2 decisive tests were written after the v1 outputs were seen. For a
+      deterministic program, a later match reproduces a design-time computation; it is not an
+      out-of-sample prediction. Each hypothesis's only negative outcome is "instrument invalid", so
+      `supported` can only mean the instrument was validated. The only independent evidence is the blind
+      re-derivation. Strength is already preliminary, so no verdict changes.
+    evidence:
+      - experiments/EXP-ICPERF-284bc4/specification.yaml:208-227
+      - experiments/EXP-ICPERF-283a70/specification.yaml:195-214
+      - ledger/evidence/EV-ICPERF-08f6f9.yaml:43-53
+      - ledger/evidence/EV-ICPERF-84ff45.yaml:52-62
+      - ledger/hypotheses/H-ICPERF-2f52d1.yaml:133-142
+    fix: Future records describe these as "design-time computed values reproduced (instrument validation)". The specification template could reserve out_of_sample for predictions not produced by running the instrument.
+  - id: ICR-7
+    beat: B8
+    severity: minor
+    claim_ids: [C6b]
+    what: >-
+      A reviewer asserts a speed ordering: "IC is about 2.1x faster online"
+      (red-team-report 284bc4:343). It is labelled pencil arithmetic, but as written it is a speed
+      ordering. It holds only under one counter model that uses the worst-case probe count (with the
+      mean probe count the parent defines, R is about 0.24). It drops to an unordered [0.21, 1.07] once
+      native-op multiplicities differ between arms. It ignores the memory axis, where the parent places
+      IC's disadvantage, and it is evaluated where the BL closed form is out of regime. EV-ICPERF-08f6f9
+      transcribes the number without the word "faster", correctly.
+    evidence:
+      - experiments/EXP-ICPERF-284bc4/review/TASK-20261105-c44b03/red-team-report.yaml:335-350
+      - ledger/evidence/EV-ICPERF-08f6f9.yaml:248-255
+      - research/sheriff/SHF-20261106-a114e7/scripts/readers/icperf-interpretation/rederive_price_ratio.out.json
+    fix: None to the frozen report. Any citation reads "R = 10/21 under one illustrative counter model; no ordering licensed".
+  - id: ICR-8
+    beat: B6
+    severity: minor
+    claim_ids: [C10, C15]
+    what: >-
+      The band test cannot identify a geometric law at any n, a fact the records do not state.
+      DEC-20261105-6e2616 parent_band_test and EV-ICPERF-84ff45 describe it as a power problem at n = 64
+      (rejects a true geometric about 53%, accepts a CV=1 lognormal about 30%; reproduced here: 52.4% and
+      31-32%). More data does not fix it. The test is scale-free and accepts Geometric(1/30) and
+      Geometric(1/80) at exactly the true-law rate. As n grows, its pass rate tends to 1 for every
+      small-p geometric and for the CV=1 lognormal (analytic: CV^2 = 1 and median/mean = 2^-0.5 = 0.707 are
+      inside both bands; simulated 1.0 at n = 8192). This matters for NA-2. A stage-1 test must carry a
+      p/mean check and a distributional check; a larger panel with the same bands remains a null-accepting test.
+    evidence:
+      - ledger/decisions/DEC-20261105-6e2616.yaml:88-93
+      - ledger/decisions/DEC-20261105-6e2616.yaml:214-222
+      - research/sheriff/SHF-20261106-a114e7/scripts/readers/icperf-interpretation/band_asymptotics.out.json
+      - research/sheriff/SHF-20261106-a114e7/scripts/readers/icperf-interpretation/rederive_xorshift.out.json
+    fix: When NA-2 is ranked, state that the bands are non-identifying in the limit, not only underpowered at n=64.
+  - id: ICR-9
+    beat: B8
+    severity: minor
+    claim_ids: [C17]
+    what: >-
+      Knowledge lead LEAD-ICP-retained-setup-online lists H-ICPERF-2f52d1 and H-ICPERF-5adc9b in ledger_refs.
+      Its obstruction has `kind: measured` and includes the parent idea's untested clause "orbit-folded
+      m = 2 Koblitz IC is BSGS on the quotient and sits on the BL r/P law". Since 2026-11-05 both
+      hypotheses read `supported`, and nothing in the lead says the support covers a toy arithmetic
+      identity and a seeded sample only. DEC-20261105-8a9984 explicitly declines the "IC equals BSGS on
+      the quotient" reading of CON-3. The lead predates the support (last_reviewed 2026-11-02) and does not
+      cite it, so this is a conflation risk, not an asserted claim.
+    evidence:
+      - knowledge/leads/ecdlp/ic-prime/LEAD-ICP-retained-setup-online.yaml:11-18
+      - knowledge/leads/ecdlp/ic-prime/LEAD-ICP-retained-setup-online.yaml:46-52
+      - ledger/decisions/DEC-20261105-8a9984.yaml:122-127
+    fix: At the next lead review, annotate the two ledger_refs as "stage-0 instrument checks; no support for the BL-law clause" or drop them.
+
+claims:
+  - id: C1
+    text: "Supported as stated and only as stated: the integer identity 925/4 at (1000,2), (4000,2), (1000,4) with 10 states under the assumed prices 370/2100/40 ns and constant 21/10, with probe counts 50/200/25."
+    location: ledger/hypotheses/H-ICPERF-2f52d1.yaml:15-27; ledger/decisions/DEC-20261105-8a9984.yaml:42-48,112-121
+    suggested_verdict: upheld_scoped
+    scoped_to: "Instrument validation. run.py evaluates the stated closed-form model in exact rationals and returns the a-priori identity 925/4 and the BSGS worst-case counts 50/200/25 at the frozen inputs; r and A cancel for every price vector; CON-3 is worst case, not mean; nothing about prices, latency, n=83 or BL."
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: pass, B6: pass, B7: not_covered, B8: pass}
+  - id: C2
+    text: "Supported for the integer statement only: the specified xorshift32 sampler at seed 20261017, p = 1/50, 64 draws yields 2943 / 289567 / 28 with no median split, reproduced blind from the specification prose; the band clauses hold only as arithmetic consequences of those integers."
+    location: ledger/hypotheses/H-ICPERF-5adc9b.yaml:15-30; ledger/decisions/DEC-20261105-6e2616.yaml:40-47,114-126
+    suggested_verdict: upheld_scoped
+    scoped_to: "The spec-defined sampler only (13,17,5; step then test; x mod 50 = 0; support from 1; chained). The hypothesis statement alone underdetermines it: the seed-tested reading gives 2944, and the u<p threshold reading gives 3832/526854/36 with a split. Instrument validation, not a geometric-shape result."
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: n/a, B6: pass, B7: not_covered, B8: pass}
+  - id: C3
+    text: "Accounting class (sheriff B5.1). It measures no price, latency, step count or cost, makes no comparison with Pollard rho, ranks IC against Bernstein-Lange in neither direction, and makes no latency or n=83 statement."
+    location: ledger/evidence/EV-ICPERF-08f6f9.yaml:131-142; DEC-20261105-8a9984.yaml:58-69
+    suggested_verdict: upheld
+    scoped_to: null
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: pass, B6: n/a, B7: n/a, B8: pass}
+  - id: C4
+    text: "No comparison against rho is made, so no band is owed (EV-ICPERF-08f6f9 s5a_band). ... No ranking in either direction is licensed."
+    location: ledger/decisions/DEC-20261105-8a9984.yaml:94-99; ledger/evidence/EV-ICPERF-08f6f9.yaml:237-247; experiments/EXP-ICPERF-284bc4/analysis.md:58; checkpoints/TASK-20261105-8924a8.yaml:30
+    suggested_verdict: overclaimed
+    scoped_to: "Section 5a applies to the IC/BL online ratio, as it applies to every cross-method comparison. Neither arm emits counters and the 0/0.1/1 GAE band flips the order, so the result is unresolved and no ranking is licensed. The operative conclusion stands; the 'no rho arm, so not applicable' rationale does not."
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: fail, B6: n/a, B7: n/a, B8: pass}
+  - id: C5
+    text: "No comparison against rho is made, so no band is owed (EV-ICPERF-84ff45 s5a_band): no rho or IC arm, no group, no GAE counter; the priced-arm set is empty."
+    location: ledger/decisions/DEC-20261105-6e2616.yaml:101-104; ledger/evidence/EV-ICPERF-84ff45.yaml:246-257
+    suggested_verdict: upheld
+    scoped_to: null
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: pass, B6: n/a, B7: n/a, B8: n/a}
+  - id: C6
+    text: "R = IC_online/BL_online = 10/21 = 0.476 at uniform weight w in {0, 0.1, 1}; [0.119, 1.905] across the 27 independent-weight corners, 4 of 27 putting BL ahead; the record's ns prices give 231.25. ... Illustrative only, not evidence."
+    location: ledger/evidence/EV-ICPERF-08f6f9.yaml:248-255
+    suggested_verdict: upheld_scoped
+    scoped_to: "The arithmetic is reproduced exactly under the stated counter model (one native op per probe, state and step; worst-case probes; memory uncharged; BL out of regime)."
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: pass, B6: n/a, B7: n/a, B8: pass}
+  - id: C6b
+    text: "With one weight w in {0, 0.1, 1} across all native counters, R = 10/21 = 0.476 at every w: IC is about 2.1x faster online."
+    location: experiments/EXP-ICPERF-284bc4/review/TASK-20261105-c44b03/red-team-report.yaml:341-343
+    suggested_verdict: overclaimed
+    scoped_to: "R = 10/21 under one illustrative counter model with worst-case probes. It is about 0.24 with mean probes and unordered [0.21, 1.07] under unequal native-op multiplicities. Memory is uncharged. No speed ordering is licensed."
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: fail, B6: n/a, B7: n/a, B8: fail}
+  - id: C7
+    text: "CORR-20261106-243c4d (a) computed, not measured; (b) 370, 2100 and 40 ns are the n=83 back-of-envelope prices ... 925/4 = 231.25 is numerically that idea's ... figure; (c) 'makes no latency or n=83 statement'."
+    location: ledger/corrections/CORR-20261106-243c4d.yaml:27-83 (duplicate of CORR-20261105-1d848a.yaml:56-102)
+    suggested_verdict: upheld
+    scoped_to: null
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: n/a, B6: n/a, B7: fail, B8: pass}
+  - id: C8
+    text: "The producer phrasing 'no latency effect, no n=83 speedup' (PR #2776, as quoted in the review plan) reads 'makes no latency or n=83 statement'; the record closes nothing there."
+    location: ledger/decisions/DEC-20261105-8a9984.yaml:90-93
+    suggested_verdict: upheld
+    scoped_to: null
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: n/a, B6: n/a, B7: n/a, B8: pass}
+  - id: C9
+    text: "Stage-0 observation only: no latency effect, no attack. (producer, PR #2776, as quoted for EXP-ICPERF-283a70)"
+    location: experiments/EXP-ICPERF-283a70/review/review-plan.yaml:26 (PR body itself not readable here)
+    suggested_verdict: overclaimed
+    scoped_to: "makes no latency statement; no latency was measured, so no latency effect is excluded"
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: n/a, B6: n/a, B7: n/a, B8: fail}
+  - id: C10
+    text: "The bands discriminate nothing here: both wrong samplers pass them, and at n = 64 they reject a truly geometric sample about 53 percent of the time and accept a CV = 1 lognormal about 30 percent."
+    location: ledger/evidence/EV-ICPERF-84ff45.yaml:131-134; DEC-20261105-6e2616.yaml:88-93
+    suggested_verdict: upheld
+    scoped_to: "Reproduced (52.4% reject, 31-32% accept). The non-discrimination is also asymptotic (ICR-8)."
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: n/a, B6: pass, B7: n/a, B8: pass}
+  - id: C11
+    text: "progress export rows: icperf.EXP-ICPERF-284bc4.<trial>.c_probe_ns = 370/371 'nanoseconds per probe'; icperf.EXP-ICPERF-283a70.<trial>.median = 28/29/27 'probes per target', sample_sum 'probe-count sum'"
+    location: tools/progress_metrics.py:273-285 (emitted at da442739db)
+    suggested_verdict: unsupported
+    scoped_to: "assumed (370) and planted (371) inputs; synthetic xorshift draw counts; neither a latency nor a table-probe measurement"
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: n/a, B6: n/a, B7: n/a, B8: fail}
+  - id: C12
+    text: "They are not a host measurement and not the n=83 figure in IDEA-20261015-7a3c9e."
+    location: experiments/EXP-ICPERF-284bc4/specification.yaml:211-212
+    suggested_verdict: overclaimed
+    scoped_to: "Not a host measurement. Numerically equal (231.25) to the idea's n=83 back-of-envelope '231', as CORR-20261106-243c4d (b) records."
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: n/a, B6: n/a, B7: n/a, B8: pass}
+  - id: C13
+    text: "out-of-sample preregistered integers met exactly"
+    location: ledger/evidence/EV-ICPERF-08f6f9.yaml:44-46; ledger/evidence/EV-ICPERF-84ff45.yaml:53-56; spec prediction_provenance sample_status
+    suggested_verdict: overclaimed
+    scoped_to: "integers fixed 2026-10-17 by a design-time execution of the v1 runner, reproduced by the v2 runner and independently by blind re-derivation"
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: n/a, B6: fail, B7: n/a, B8: pass}
+  - id: C14
+    text: "CON-3 is not read as 'IC equals BSGS on the quotient' at expected cost (worst case 50/200/25 against BSGS mean 25.5/100.5/13.0)."
+    location: ledger/decisions/DEC-20261105-8a9984.yaml:122-127
+    suggested_verdict: upheld
+    scoped_to: "Reproduced by enumeration: max 50/200/25, mean 51/2, 201/2, 13."
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: pass, B6: n/a, B7: n/a, B8: pass}
+  - id: C15
+    text: "A memoryless search has a geometric count ... Stage 0 checks that shape on one frozen sample at p = 1/50. / The CV band is the shape control and the median-ratio band is the second control."
+    location: ledger/hypotheses/H-ICPERF-5adc9b.yaml:40-48,81-83 (not adopted by DEC-20261105-6e2616:81-87)
+    suggested_verdict: unsupported
+    scoped_to: "Correctly not adopted. The bands cannot identify the law at any n (ICR-8)."
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: n/a, B6: fail, B7: n/a, B8: pass}
+  - id: C16
+    text: "The deterministic audit is flagged as recorded (matched 0 of 6, a pointer-coverage defect) ... The session is citable with the audit-flag and parity disclosures."
+    location: ledger/evidence/EV-ICPERF-08f6f9.yaml:47-53,127-129; DEC-20261105-8a9984.yaml:71-79
+    suggested_verdict: not_covered
+    scoped_to: "A/A and receipts belong to the validator joint. Command: python3 tools/runbook.py audit --experiment EXP-ICPERF-284bc4 (nonce-sampled) plus a row-level compare of replay/ against runs/."
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: n/a, B6: not_covered, B7: not_covered, B8: n/a}
+  - id: C17
+    text: "obstruction (kind: measured): ... orbit-folded m = 2 Koblitz IC is BSGS on the quotient and sits on the BL r/P law. ledger_refs: H-ICPERF-2f52d1, H-ICPERF-5adc9b"
+    location: knowledge/leads/ecdlp/ic-prime/LEAD-ICP-retained-setup-online.yaml:11-18,46-52
+    suggested_verdict: not_covered
+    scoped_to: "The ICPERF stage-0 records give this clause no support. Its crypto benchmark evidence was not opened. Command: read crypto:benchmarks/20261014-ic-next10-09-equal-advice and 20261016-n83-precomputed-rho-control."
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: not_covered, B6: n/a, B7: n/a, B8: fail}
+
+answers:
+  q1_predictions_and_rules: >-
+    H-ICPERF-2f52d1 predicts three exact integer facts: price ratio 925/4, three equal online ratios,
+    and probes 50/200/25 equal to BSGS. H-ICPERF-5adc9b predicts an exact (2943, 289567, 28) for the
+    spec sampler, with the bands implied. Both frozen rules were committed before the runs, are exact
+    and have no margin, and are met. They license `supported` only in the scoped sense of instrument
+    validation. A failing outcome would be "instrument invalid", never "refuted" (ICR-6). The v1
+    sessions RBS-ICPERF-b7e41c and c4a91e and their invalid units are disclosed. The only undisclosed
+    item is the 2026-10-19 unit-less execution A in EV-08f6f9, and it is immaterial because everything
+    is deterministic.
+  q2_wording: >-
+    No record, report, PDF, knowledge entry or ledger line asserts latency, wall-time speed, an n=83
+    result, or an end-to-end or attack-cost improvement. Live defects: the progress export's ns/probe
+    and probes/target units (ICR-1, major); the uncorrected 283a70 "no latency effect" phrase and
+    "measured" labels (ICR-3); and a reviewer's "IC is about 2.1x faster online" (ICR-7, quoted
+    illustratively). No claims/*.json is required, and none exists.
+  q3_s5a: >-
+    For 283a70, "not applicable" is correct. For 284bc4, the outcome (no ranking) is correct, but
+    section 5a does apply to the IC/BL cross-method ratio. Banded, it is unresolved and unrankable
+    (ICR-2).
+  q4_rederivation: >-
+    Equal to the decisions: exact 925/4 and exact 2943/289567/28. The exact rules pass the
+    proves-too-much control. The identity sub-checks and the band clauses do not, and both are fenced
+    by the decisions.
+  q5_cheapest_unrun_control: >-
+    For the records' own claims: one extra deterministic unit, "NEG-2b" (precomputation 10 steps with
+    price_ratio also emitted). The price formula must stay 925/4 while the online ratio moves to 185/42.
+    This kills mutant M7 (price taken from the online ratio), which today is caught only by code
+    reading. It can be paired with RC-4 (BL 2124/1000 must stop as an instrument failure), which kills
+    M8. Both cost under 0.1 s. For the interpretation these records risk being read as: the
+    zero-compute receipt read of NA-4 (c_probe from the K1798 probe count and time, c_state from
+    555 s / 2^28, c_step from BL-arm receipts, compared with 235x [61, 645]). It is the cheapest test
+    that could falsify anything empirical, and it has not been run.
+
+not_covered:
+  - "PR bodies #2776, #3044, #3056, #3058: gh REST refused (403, repository not enabled). Command: gh api repos/isogeny-labs/crypto-autoresearcher/pulls/<n> --jq .body"
+  - "Ledger-summary wording: tools/ledger_summary.py crashes (KeyError slice at line 159). Command after repair: python3 tools/ledger_summary.py --recent 40"
+  - "Figure regeneration: plot.py writes graph.svg in the producer tree, so it was not run. Command: copy reports/review-DEC-20261105-{8a9984,6e2616}/ to a scratch dir and run python3 plot.py there, then diff the SVG paths"
+  - "Receipts, audits, check_review_independence and replay rows (validator joint)"
+  - "Parent comparator 235x [61, 645] on cryptanalysis:claude/n83-bl-arm and the crypto benchmarks cited by LEAD-ICP-retained-setup-online (outside the records under audit)"
+
+red_team_report:
+  id: RT-20261106-ICR
+  task_id: SHF-20261106-a114e7/icperf-interpretation
+  claim_under_review: "H-ICPERF-2f52d1 and H-ICPERF-5adc9b `supported` (DEC-20261105-8a9984, DEC-20261105-6e2616) and their wording and section-5a rulings"
+  objections: [ICR-1, ICR-2, ICR-3, ICR-4, ICR-5, ICR-6, ICR-7, ICR-8, ICR-9]
+  required_controls: ["NEG-2b price-field unit (kills M7)", "RC-4 inexact-division positive control (kills M8)", "NA-4 zero-compute receipt read before any formula-vs-measurement ratio", "stage-1 shape test with p/mean check (bands non-identifying)"]
+  counterexample_or_mutation: "Counterfactual n=83 deficits 2x/235x/2000x leave the 284bc4 rule output unchanged; Geometric(1/30), Geometric(1/80) and lognormal CV=1 pass the 283a70 bands at the true-law rate or better as n grows."
+  baseline_comparison: "No rho arm; BL only as a closed form out of regime. Banded IC/BL online ratio is order-unstable ([0.119, 1.905]); memory uncharged."
+  heuristic_challenges: ["Parent H1 (uniform classes, geometric probe count) untouched; band tests cannot test it at any n (ICR-8)"]
+  cost_model_challenges: ["Worst-case vs mean probes halves R", "Native-op multiplicity unknown", "Memory axis (IC #states vs BL table) omitted", "Section 5a trigger mis-scoped (ICR-2)"]
+  reduction_and_scope_challenges: ["None; no reduction cited. Scope is fenced in every ledger record."]
+  proof_architecture_challenges: ["Observation fiber: ratios_agree is constant over all price vectors (5000/5000), so it carries no information"]
+  narrowest_supported_statement: "Two stage-0 instruments reproduce, exactly and blind, the integers their frozen specifications define. Nothing follows about prices, latency, probe-count laws, n=83, BL or rho."
+  next_concrete_action: "Extend DEC-20261105-8a9984 NA-2 to relabel all ICPERF stage-0 export rows (ICR-1), and file one additive correction covering 283a70's 'no latency effect' and 'measured' labels and the duplicate-correction pairing (ICR-3, ICR-4)."
+  artifact_paths:
+    - research/sheriff/SHF-20261106-a114e7/scripts/readers/icperf-interpretation/rederive_price_ratio.py
+    - research/sheriff/SHF-20261106-a114e7/scripts/readers/icperf-interpretation/rederive_price_ratio.out.json
+    - research/sheriff/SHF-20261106-a114e7/scripts/readers/icperf-interpretation/rederive_xorshift.py
+    - research/sheriff/SHF-20261106-a114e7/scripts/readers/icperf-interpretation/rederive_xorshift.out.json
+    - research/sheriff/SHF-20261106-a114e7/scripts/readers/icperf-interpretation/band_asymptotics.py
+    - research/sheriff/SHF-20261106-a114e7/scripts/readers/icperf-interpretation/band_asymptotics.out.json
+    - research/sheriff/SHF-20261106-a114e7/scripts/readers/icperf-interpretation/progress_metrics_icperf.jsonl
+    - research/sheriff/SHF-20261106-a114e7/scripts/readers/icperf-interpretation/wording_hits.txt
+    - research/sheriff/SHF-20261106-a114e7/scripts/readers/icperf-interpretation/wording_scope_files.txt
+    - research/sheriff/SHF-20261106-a114e7/scripts/readers/icperf-interpretation/review-DEC-20261105-8a9984.report.txt
+    - research/sheriff/SHF-20261106-a114e7/scripts/readers/icperf-interpretation/review-DEC-20261105-6e2616.report.txt

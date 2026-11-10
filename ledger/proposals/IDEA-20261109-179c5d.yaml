@@ -1,0 +1,146 @@
+idea:
+  id: IDEA-20261109-179c5d
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: Torsion-level dichotomy for prime-order E/F_p - levels prime to N are discrete-log blind, and
+    at level N the division polynomial psi_N factors over F_p exactly as the two Frobenius eigenlines
+    force
+  class: representation
+  claim: 'Let E/F_p have odd prime order N = #E(F_p), N not in {p, p+1}, and k_N = ord_N(p) > 1. (A) For
+    every prime ell not dividing N the Galois module E[ell] with its Frobenius action depends on E alone,
+    and k mod ell is not a function of (E, P, Q) because k and k + N give the same Q; no computation on
+    E[ell], rho_ell, X_0(ell)(F_p) or an ell-descent yields information about k except through an isogeny,
+    which preserves k. (B) The only Frobenius-stable cyclic subgroups of E[N] are L_1 = E(F_p) = ker(pi
+    - 1) and L_p = ker(pihat - 1), and [N] = (pi - 1)(pihat - 1) in End(E); completing P to a basis of
+    E[N] needs a point of L_p, defined over F_{p^{k_N}} and no smaller field. (C) Hence psi_N(x), of degree
+    (N^2 - 1)/2, factors over F_p as h_1 h_p g where h_1 = gcd(psi_N, x^p - x) = gcd(x^p - x, f^{(p-1)/2}
+    - 1) with f = x^3 + a x + b has degree (N - 1)/2 and splits, h_p has degree (N - 1)/2 and splits into
+    irreducibles of degree k'' = order of p in (Z/N)^*/{+-1}, and g has degree (N - 1)^2/2 and splits
+    into exactly (N - 1)^2/(2 k_N) irreducibles of degree k_N. No exponent changes. The record fixes what
+    the torsion angle cannot do and gives a toy-verifiable fingerprint.'
+  mechanism: pi^2 - t pi + p = 0 with t = p + 1 - N, so on E[N] the characteristic polynomial is (x -
+    1)(x - p) mod N with distinct eigenvalues since p is not 1 mod N; eigenlines are the only stable cyclic
+    subgroups. deg(pi - 1) = deg(pihat - 1) = N, ker(pi - 1) is E(F_p), and pihat = p pi^{-1} acts as
+    1 on L_p, so ker(pihat - 1) = L_p. For R in L_p, x(p^j R) = x(R) iff p^j = +-1 mod N, giving x-orbits
+    of length k'. For P in L_1 and R in L_p both nonzero, P + p^j R = -(P + R) would force 2P = 0, so
+    mixed x-orbits have length exactly k_N. Part (A) is the Chinese remainder theorem on Z/(N ell) applied
+    to the scalar class that Q determines.
+  novelty_status: adaptation
+  citations:
+  - ref: KR-RHO-53c89f
+    provenance: internal
+    claim: MOV and anomalous transfers need small embedding degree or N = p; part (B) is the torsion-basis
+      form of that condition.
+    verified_by: REPO BRIEF section 3 row text, Mythos run 2026-11-09; the frontier YAML was not opened.
+  - ref: KR-RHO-755e35
+    provenance: internal
+    claim: Isogenies preserve the discrete log; the only route from level ell data back to k.
+    verified_by: REPO BRIEF section 3 row text, Mythos run 2026-11-09.
+  - ref: IDEA-20260731-008
+    provenance: internal
+    claim: Earlier proposal to use a public isogeny into a special family; part (A) says level-ell data
+      cannot select k.
+    verified_by: REPO BRIEF section 2 ledger index excerpt, 2026-11-09.
+  assumptions:
+  - N is an odd prime equal to
+  - p is not congruent to 1 modulo N, so the eigenvalues 1 and p are distinct in Z/N.
+  predictions:
+  - metric: number of Frobenius-stable cyclic N-subgroups in excess of 2, summed over tested curves
+    direction: lower
+    minimum_effect: exactly zero excess on every curve
+  - metric: mismatches between observed and predicted psi_N irreducible-degree multiset
+    direction: lower
+    minimum_effect: zero mismatches on every curve
+  - metric: number of curves where the two gcd formulas for h_1 differ
+    direction: lower
+    minimum_effect: zero
+  minimal_test:
+    design: In Sage or PARI, for every ordinary curve over F_p with p <= 60 whose order N is an odd prime
+      with p not 1 mod N (at least 20 curves, including j = 0 cases with p = 1 mod 3 and generic j), compute
+      psi_N by the division-polynomial recurrence, factor it over F_p, record the degree multiset, k_N,
+      k', and both gcds. Enumerate E[N] over F_{p^{k_N}} and count Frobenius-stable cyclic subgroups.
+      Separately factor N - 1 for secp256k1 (ECM) and report k_N = ord_N(p) and d = (N - 1)/k_N.
+    controls:
+    - A toy curve with N dividing p - 1 must show a different degree multiset, as the same formula with
+      repeated eigenvalue predicts.
+    - Curves of composite order are excluded and reported, since psi_N then has extra small factors.
+    required_metrics:
+    - p, a, b, N, t, k_N, k_prime
+    - psi_N factor degree multiset
+    - count of stable cyclic N-subgroups
+    - gcd identity pass or fail per curve
+    - secp256k1 k_N and d
+  falsification_conditions:
+  - Some tested prime-order curve with p not 1 mod N has a third stable cyclic N-subgroup or a psi_N factor
+    degree outside {1, k', k_N}.
+  - The two gcd polynomials differ on some tested curve.
+  - secp256k1 has k_N below 2^64, which would make part (B) a live transfer rather than a barrier.
+  - A computable function of E[ell] data, ell prime to N, is shown to correlate with k mod N.
+  confounders:
+  - Division-polynomial conventions differ by a factor 2y for even index; only odd N is used.
+  - Extra automorphisms at j in {0, 1728} commute with Frobenius and preserve eigenlines; they do not
+    change counts.
+  interpretation_limits:
+  - Structural certificate with exponent delta 0; a confirmed fingerprint bounds no algorithm that works
+    inside L_1 alone.
+  - Part (A) forbids reading k mod ell from torsion data; isogeny-transported index calculus is governed
+    by KR-RHO-755e35, not here.
+  heuristic_assumptions:
+  - id: H1
+    statement: Frobenius x-orbit lengths on L_p and on mixed points are exactly k' and k_N, so the factor
+      multiset is exact.
+    rigorous_support: Short argument in the mechanism field; not yet refereed inside the repository.
+    validation_plan: Exhaustive factorisation of psi_N at p <= 60 against the predicted multiset; any
+      deviation is checked by hand.
+  target_complexity:
+    time_exponent: p^{1/2} unchanged
+    memory_exponent: O(1) beyond the toy division polynomial
+    best_known: Pollard rho in Theta(p^{1/2}) group operations, KR-RHO-13bf67; torsion-basis coordinates
+      reduce to DLP in F_{p^{k_N}}, worse.
+    hidden_overhead: None claimed; no algorithm is proposed.
+    tradeoff_note: Writing E[N] coordinates costs a field of degree k_N, expected of order N for secp256k1.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  dominated_by: KR-RHO-53c89f and KR-RHO-13bf67 dominate any exponent reading; neither states the psi_N
+    factor multiset or level-ell independence as a proposition.
+  sota_delta: Exponent delta 0. New content is a checkable fingerprint of the eigenline structure in psi_N
+    and a closed statement of which torsion levels can carry discrete-log information.
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/generic-rho
+    rows_checked:
+    - KR-RHO-53c89f
+    - KR-RHO-755e35
+    - KR-RHO-13bf67
+    - KR-RHO-0528e7
+    - KR-IC-cd159a
+    - KR-IC-5a43e5
+    nearest:
+    - ref: KR-RHO-53c89f
+      provenance: internal
+      relation: adjacent
+      delta: The row states MOV needs small embedding degree; this record derives the obstruction from
+        the eigenline structure of E[N] and adds the psi_N factorisation fingerprint.
+    - ref: KR-RHO-755e35
+      provenance: internal
+      relation: adjacent
+      delta: The row says isogeny walks preserve hardness; part (A) says level-ell torsion data is k-independent
+        before any isogeny.
+    searched:
+      corpus_grep:
+      - REPO BRIEF section 2 for torsion, division polynomial, Galois, embedding degree
+      - REPO BRIEF section 3 generic-rho rows for MOV, anomalous, isogeny class
+      - Wave 1 transfer and port record titles for exit dimension and transfer admissibility
+      web: []
+      blocked: []
+    lead: LEAD-STR-torsion-module-leak
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: In Sage or PARI, for every ordinary curve over F_p with p <= 60 whose order
+        N is an odd prime with p not 1 mod N (at least 20 curves, including j = 0 cases with p = 1 mod
+        3 and generic j), compute psi_N by the division-polynomial recurrence, factor it over F_p, record
+        the degree multiset, k_N, k'', and both gcds. Enumerate E[N] over F_{p^{k_N}} and count Frobenius-stable
+        cyclic subgroups. Separatel'

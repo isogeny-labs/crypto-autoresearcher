@@ -10,6 +10,7 @@ import json
 import sys
 from pathlib import Path
 from urllib.parse import urlsplit
+from yaml import YAMLError
 
 from .checkpoint import checkpoint_by_batch, checkpoints
 from .mcp_server import current_source_commit, workspace_fingerprint
@@ -39,6 +40,33 @@ def cmd_checkpoint(args: argparse.Namespace) -> int:
         )
         return 1
     _emit(view.as_dict())
+    return 0
+
+
+def cmd_next(args: argparse.Namespace) -> int:
+    from .research_loop import action_for, plan
+    view = plan(args.repo, args.goal)
+    action = action_for(view)
+    _emit({"loop": view, "action": action.as_dict() if action else None, "model_calls": 0})
+    return 0
+
+
+def cmd_problem_template(args: argparse.Namespace) -> int:
+    from .research_loop import problem_template
+    _emit(problem_template(args.repo, args.goal))
+    return 0
+
+
+def cmd_candidate_template(args: argparse.Namespace) -> int:
+    from .research_loop import candidate_template
+    _emit(candidate_template(args.repo, args.goal))
+    return 0
+
+
+def cmd_frontier(args: argparse.Namespace) -> int:
+    from .research_loop import plan
+    view = plan(args.repo, args.goal, inspect_terminal=True)
+    _emit({key: view[key] for key in ('goal_id', 'frontier', 'boundary_history', 'source_files', 'authority')})
     return 0
 
 
@@ -233,6 +261,15 @@ def build_parser() -> argparse.ArgumentParser:
     status = sub.add_parser("status", parents=[common], help="materialize one goal read-only")
     status.set_defaults(func=cmd_status)
 
+    next_phase = sub.add_parser('next', parents=[common], help='plan the default challenge loop for one goal')
+    next_phase.set_defaults(func=cmd_next)
+    template = sub.add_parser('problem-template', parents=[common], help='draft a goal challenge without writing it')
+    template.set_defaults(func=cmd_problem_template)
+    candidate = sub.add_parser('candidate-template', parents=[common], help='draft the next candidate from review feedback')
+    candidate.set_defaults(func=cmd_candidate_template)
+    frontier = sub.add_parser('frontier', parents=[common], help='show reviewed boundary observations and the remaining gap')
+    frontier.set_defaults(func=cmd_frontier)
+
     checkpoint = sub.add_parser(
         "checkpoint", parents=[common], help="read one existing legacy batch checkpoint"
     )
@@ -329,7 +366,7 @@ def main(argv: list[str] | None = None) -> int:
                 return 2
     try:
         return int(args.func(args))
-    except ProjectionError as exc:
+    except (ProjectionError, ValueError, OSError, YAMLError) as exc:
         print(f"campaign projection error: {exc}", file=sys.stderr)
         return 2
     except KeyboardInterrupt:

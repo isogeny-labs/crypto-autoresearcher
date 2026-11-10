@@ -1,0 +1,8 @@
+preapproval-output-real-clone.json: experiment_preapproval.py --packet, run in the real clone (source_ref origin/main). approvable false; every blocker is about state, not content:
+  - the canonical specification at experiments/EXP-ICPERF-127dbd/specification.yaml is the approved-form preview in this working tree (TASK-20261107-c5a0f4 artifact_paths put the preview at the
+    canonical path), while the tool requires the canonical draft to be review_required with no approved_by AND committed with the same bytes at source_ref;
+  - the changed inputs/protocol.json, launch_eks.sh, locate_results.sh, the lint receipt and the spec's input_bindings.protocol are not committed at origin/main (nothing is pushed).
+preapproval-output-simulated-pushed.json: the same packet in a scratch git layout (c5a0f4-stage2, never pushed, never a record) in which the canonical specification is the review_required draft of
+  the same preview and every file is committed under refs/remotes/origin/main. approvable true, 0 blockers. This shows that, once the Coordinator commits a draft-state canonical specification and the
+  bound files, the packet's content checks (specification bindings, trial plan, queue structure and archive coverage, executor handoff binding, lane, goal, lint receipt) have no further finding.
+  It is a simulation, not an approvability claim.

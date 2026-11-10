@@ -1,0 +1,120 @@
+{
+  "schema": "semaev-receipt-controls/v1",
+  "scope": "Fresh Python receipt-consistency controls only; no Lean invocation or theorem proof",
+  "baseline_errors": [],
+  "controls": [
+    {
+      "name": "wrong_result_theorem",
+      "expected_error": "result identity",
+      "errors": [
+        "result identity"
+      ],
+      "rejected": true
+    },
+    {
+      "name": "wrong_named_audit",
+      "expected_error": "named audit log",
+      "errors": [
+        "named audit log"
+      ],
+      "rejected": true
+    },
+    {
+      "name": "stale_declared_source_hash",
+      "expected_error": "declared source hash",
+      "errors": [
+        "declared source hash"
+      ],
+      "rejected": true
+    },
+    {
+      "name": "stale_theorem_hash",
+      "expected_error": "theorem hash",
+      "errors": [
+        "theorem hash"
+      ],
+      "rejected": true
+    },
+    {
+      "name": "unapproved_axiom_diagnostic",
+      "expected_error": "negative audit diagnostics",
+      "errors": [
+        "negative audit diagnostics"
+      ],
+      "rejected": true
+    },
+    {
+      "name": "forbidden_construct_recorded",
+      "expected_error": "forbidden constructs",
+      "errors": [
+        "forbidden constructs"
+      ],
+      "rejected": true
+    },
+    {
+      "name": "empty_build_log",
+      "expected_error": "build log",
+      "errors": [
+        "build log"
+      ],
+      "rejected": true
+    },
+    {
+      "name": "empty_audit_log",
+      "expected_error": "named audit log",
+      "errors": [
+        "named audit log",
+        "nonempty project audit"
+      ],
+      "rejected": true
+    },
+    {
+      "name": "zero_project_theorems",
+      "expected_error": "nonempty project audit",
+      "errors": [
+        "nonempty project audit"
+      ],
+      "rejected": true
+    },
+    {
+      "name": "missing_workspace_inputs",
+      "expected_error": "local source inputs",
+      "errors": [
+        "local source inputs"
+      ],
+      "rejected": true
+    },
+    {
+      "name": "missing_verifier_inputs",
+      "expected_error": "verifier inputs",
+      "errors": [
+        "verifier inputs"
+      ],
+      "rejected": true
+    },
+    {
+      "name": "wrong_lean_version",
+      "expected_error": "Lean version",
+      "errors": [
+        "Lean version"
+      ],
+      "rejected": true
+    },
+    {
+      "name": "wrong_archived_revision",
+      "expected_error": "archived verifier revision",
+      "errors": [
+        "archived verifier revision"
+      ],
+      "rejected": true
+    }
+  ],
+  "rejection_controls_all_pass": true,
+  "fabricated_consistent_log_control": {
+    "errors": [],
+    "accepted": true,
+    "expected": "accepted: consistency parser does not authenticate execution"
+  },
+  "audit_generator_source": "import CryptoResearch.Semaev.Certificate\nimport Lean\nopen Lean Elab Command\nrun_cmd do\n  let target := `CryptoResearch.Semaev.decidable_validDecomposition\n  match (\u2190 getEnv).find? target with\n  | some (.thmInfo _) => pure ()\n  | _ => throwError \"requested declaration is not a theorem: {target}\"\n  let axioms \u2190 liftCoreM <| Lean.collectAxioms target\n  let allowed := [``propext, ``Classical.choice, ``Quot.sound]\n  let bad := axioms.filter (fun a => !allowed.contains a)\n  unless bad.isEmpty do\n    throwError \"target axiom audit failed: {bad.toList}\"\n  logInfo m!\"target axiom audit passed: {target}\"\n#check CryptoResearch.Semaev.decidable_validDecomposition\n#print axioms CryptoResearch.Semaev.decidable_validDecomposition\n",
+  "static_target_forbidden_scan": []
+}

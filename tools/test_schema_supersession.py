@@ -88,6 +88,33 @@ class SchemaSupersessionFixture(unittest.TestCase):
         self.assertTrue(ctx.errors)
         self.assertEqual(ctx.legacy_warnings, [])
 
+    def test_archived_correction_replacement_must_parse_and_keep_id(self) -> None:
+        original = self.tmp / "ledger/corrections/CORR-20260727-004.yaml"
+        original.parent.mkdir(parents=True, exist_ok=True)
+        original.write_text("correction: [broken\n", encoding="utf-8")
+        replacement = (self.tmp / "ledger/corrections/schema-supersessions/"
+                       "CORR-20260727-004.v2.yaml")
+        replacement.parent.mkdir(parents=True, exist_ok=True)
+        replacement.write_text(
+            "correction:\n  id: CORR-20260727-004\n", encoding="utf-8")
+        entry = {
+            "kind": "legacy_correction",
+            "superseded_path": str(original),
+            "superseded_sha256": digest(original),
+            "superseding_path": str(replacement),
+            "superseding_sha256": digest(replacement),
+        }
+        ctx = vl.Ctx(set())
+        vl.check_schema_supersessions(ctx, {str(original): entry})
+        self.assertEqual(ctx.errors, [])
+        replacement.write_text("correction:\n  id: CORR-WRONG\n",
+                               encoding="utf-8")
+        entry["superseding_sha256"] = digest(replacement)
+        ctx = vl.Ctx(set())
+        vl.check_schema_supersessions(ctx, {str(original): entry})
+        self.assertTrue(any("retain the archived correction id" in error
+                            for error in ctx.errors))
+
 
 def registry_document(**over) -> dict:
     record = {
@@ -120,6 +147,34 @@ class SchemaRegistryLoaderTests(unittest.TestCase):
         expected = os.path.abspath(os.path.join(
             vl.REPO, "ledger/evidence/EV-TST-abcdef.yaml"))
         self.assertEqual(list(entries), [expected])
+
+    def test_frozen_root_ledger_paths_accept_hash_bound_corrections(self) -> None:
+        for prefix in ("RQ", "H", "EV", "DEC"):
+            path = f"ledger/{prefix}-TST-001.yaml"
+            self.assertEqual(vl._schema_supersession_kind_for_path(path),
+                             "ledger")
+        self.assertIsNone(vl._schema_supersession_kind_for_path(
+            "ledger/OTHER-TST-001.yaml"))
+
+    def test_archived_correction_has_its_own_kind(self) -> None:
+        path = "ledger/corrections/CORR-20260727-004.yaml"
+        self.assertEqual(vl._schema_supersession_kind_for_path(path),
+                         "legacy_correction")
+        self.assertIsNone(vl._schema_supersession_kind_for_path(
+            "ledger/corrections/schema-supersessions/x.yaml"))
+
+    def test_registry_accepts_both_frozen_legacy_shapes(self) -> None:
+        for kind, source, replacement in (
+            ("ledger", "ledger/H-BKKMV-001.yaml",
+             "ledger/corrections/schema-supersessions/H-BKKMV-001.v2.yaml"),
+            ("legacy_correction", "ledger/corrections/CORR-20260727-004.yaml",
+             "ledger/corrections/schema-supersessions/"
+             "CORR-20260727-004.v2.yaml"),
+        ):
+            entries = self.load(registry_document(
+                kind=kind, superseded_path=source,
+                superseding_path=replacement))
+            self.assertEqual(len(entries), 1)
 
     def test_wrong_kind_is_refused(self) -> None:
         with self.assertRaises(ValueError):

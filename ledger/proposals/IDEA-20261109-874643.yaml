@@ -1,0 +1,119 @@
+idea:
+  id: IDEA-20261109-874643
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECC-3fae8b
+  title: Operation-count instrumentation for Edwards25519 laws, the S-versus-M doubling trade threshold,
+    and a square-d null object for the completeness checker
+  class: measurement
+  claim: 'Three measurements on the repository field layer. (1) Counting shims around fe_mul, fe_sq, fe_add,
+    fe_sub, fe_inv certify the verified counts: unified addition 8M + 1c + 9a; Niels-cached addition 8M
+    + 6a; affine mixed addition 7M + 7a; doubling 4M + 4S + 7a; x25519 ladder step 5M + 4S + 1c + 8a once
+    the four fe_mul(a, a) calls become fe_sq (currently 9M + 1c). (2) The doubling trade: E = (X + Y)^2
+    - A - B (1S + 2a) versus E = 2 X Y (1M + 1a), i.e. 4M + 4S + 7a versus 5M + 3S + 6a; the squaring
+    form wins iff cost(S) + cost(a) < cost(M). Measured ratio r = cost(fe_sq)/cost(fe_mul) on BigUint
+    decides; the prediction is r >= 0.95 if fe_sq is fe_mul(x, x), making the 5M + 3S form faster by one
+    addition in this repository, while any limb implementation with r <= 0.85 reverses it. (3) Completeness
+    checker with a null object: the checker that enumerates E[8](F_p) x (E[8] union {B..8B}) for the unified
+    law (A = (Y_1 - X_1)(Y_2 - X_2), B = (Y_1 + X_1)(Y_2 + X_2), C = k T_1 T_2, D = 2 Z_1 Z_2, E = B -
+    A, F = D - C, G = D + C, H = B + A, Z_3 = F G) must report zero pairs with Z_3 = 0 on Edwards25519
+    and must report at least one exceptional pair on -x^2 + y^2 = 1 + d'' x^2 y^2 over a small prime p''
+    = 1 mod 4 with d'' a square, enumerating all points. A checker that passes the square-d'' curve is
+    broken.'
+  mechanism: 'Counting is by call site so that fe_sq implemented as fe_mul is still attributed to S. The
+    S-versus-M threshold follows from the two expressions for E being algebraically equal (2 X Y = (X
+    + Y)^2 - X^2 - Y^2) with identical downstream dataflow, so the only difference is one S plus one a
+    against one M. The null object works because for square d'' the points at infinity (0 : sqrt d'' :
+    0 : 1) and (sqrt(-d'') : 0 : 0 : 1) of the P^3 model are rational, so pairs with P_1 - P_2 at infinity
+    exist over F_p'' and make F G = 0 for affine inputs; over a prime of a few hundred elements full enumeration
+    finds them. Symmetry used: the exceptional divisor is translation-invariant, so the null object only
+    needs the field and d'' to change, not the checker. The RFC 7748 ladder recount uses the same shims
+    on src/ecc/x25519.rs ladder without changing its formulas.'
+  novelty_status: unverified
+  citations:
+  - ref: BRIEF section 1, src/ecc/x25519.rs ladder and src/ecc/ed25519.rs
+    provenance: internal
+    claim: Ladder squarings are fe_mul(a, a); double multiplies by 2 with fe_mul.
+    verified_by: this session read the quoted excerpts
+  - ref: Bernstein, Lange 2007, Faster addition and doubling on elliptic curves, Thm 3.3
+    provenance: recalled
+    claim: Completeness fails in general when d is a square.
+    verified_by: null
+  - ref: Hisil, Wong, Carter, Dawson 2008, Twisted Edwards curves revisited
+    provenance: recalled
+    claim: Counts 8M + 1D addition and 4M + 4S doubling.
+    verified_by: null
+  assumptions:
+  - fe_sq exists in src/ecc/curve25519.rs (imported by ed25519.rs); whether it specialises squaring is
+    what the measurement decides.
+  - The small-prime null object uses a = -1 and p' = 1 mod 4 so -1 stays a square, isolating d' as the
+    only changed hypothesis.
+  predictions:
+  - metric: counted M and S per formula
+    direction: equal
+    minimum_effect: exactly the stated counts
+  - metric: r = cost(fe_sq)/cost(fe_mul)
+    direction: higher
+    minimum_effect: r >= 0.95 on BigUint (prediction), reported with 95 percent interval over 10000 timed
+      calls
+  - metric: exceptional pairs on square-d' null curve
+    direction: higher
+    minimum_effect: at least 1
+  - metric: exceptional pairs on Edwards25519 torsion grid
+    direction: equal
+    minimum_effect: 0
+  minimal_test:
+    design: 'Rust: a FieldCounter wrapper used in a test build; one test per formula asserting counts.
+      Timing: 10000 calls each of fe_sq and fe_mul on random residues, median and bootstrap interval for
+      r. Sage: completeness_null.sage enumerates E(F_p'') for p'' in {13, 29, 53} with one square and
+      one non-square d'' each and reports the count of pairs with F G = 0; then runs the same function
+      on the Edwards25519 torsion grid.'
+    controls:
+    - Non-square d' at the same small prime must report zero exceptional pairs, matching Edwards25519.
+    - Counts for the old repository add (11M + 1I) and double (5M + 4S) are recorded as baselines by the
+      same shims.
+    required_metrics:
+    - M, S, c, a, I per formula
+    - r with interval
+    - exceptional pair counts per (p', d')
+    - exceptional pair count on Edwards25519 grid
+  falsification_conditions:
+  - Any formula count differs from the stated count.
+  - Null object with square d' reports zero exceptional pairs (checker broken), or non-square d' reports
+    any.
+  - r measured below 0.85 on BigUint reverses the doubling recommendation; that is a recorded outcome,
+    not a failure of the method.
+  confounders:
+  - BigUint allocation noise dominates timing; use medians and report interval width.
+  - Small primes where d' happens to make the curve singular (d' in {0, 1} for a = -1... d' = a) must
+    be excluded; the script checks d'(d' - a) != 0.
+  interpretation_limits:
+  - Counts and ratios for one implementation; the null object validates the checker, not the curve. No
+    ECDLP statement.
+  heuristic_assumptions:
+  - id: H1
+    statement: fe_sq is not specialised on BigUint, so r is near 1.
+    rigorous_support: None; the brief shows fe_mul(a, a) used where fe_sq exists, which is suggestive
+      only.
+    validation_plan: Direct timing as designed.
+  target_complexity:
+    time_exponent: not an exponent claim
+    memory_exponent: none
+    best_known: counts as stated in HCD 2008 and RFC 7748
+    hidden_overhead: none; shims are test-only
+    tradeoff_note: the S-form doubling is preferred iff r + cost(a)/cost(M) < 1
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  dominated_by: EFD op-count tables (recalled) dominate the literal counts; the repository-attributed
+    recount, the measured r and the square-d' null object are the delta.
+  sota_delta: Count delta 0 against HCD and RFC 7748; repository delta 11M + 1I to 8M per add, 5M + 4S
+    to 4M + 4S per double, 9M to 5M + 4S per ladder step, each certified by counters rather than claimed.
+  prior_art:
+    frontier_map: not_applicable
+    not_applicable_reason: Curve25519 explicit-formula campaign; no ECDLP mechanism is claimed.
+    none_found_after:
+    - BRIEF ledger excerpt scanned for operation count, squaring, completeness control
+    - BRIEF repository excerpts read in full

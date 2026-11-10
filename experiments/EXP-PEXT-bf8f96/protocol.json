@@ -161,7 +161,7 @@
     {
       "id": "coordinate-control",
       "role": "control_positive",
-      "description": "C-coordinate: identity vs seeded PGL2(K) transport with full binary-form scalar; preserve actual curve via inverse map, recompute branch ranks/connectedness. The expected exact invariant equality is checked, not assumed.",
+      "description": "C-coordinate: identity vs seeded PGL2(K) common transport of the whole original conjugate family with full binary-form scalar; preserve the actual curve via inverse maps, verify the twisted action sigma(g_i)=T_C(g_(i+1)) for C=sigma(M)M^-1, and recompute branch ranks/connectedness. The expected exact invariant equality is checked, not assumed; the ordinary coefficient orbit of only the transported first form is a different cover when M is not rational.",
       "instrument": {
         "repo": "crypto-autoresearcher",
         "commit": null,
@@ -180,7 +180,7 @@
     {
       "id": "matched-random-branch",
       "role": "control_negative",
-      "description": "C-random-branch: seeded K-stable squarefree quartics matched on field, degree, branch factor type and scalar class, sampled independently of source outputs. Compare weighted-factor and direct incidence implementations; report random-destination identity separately. This is an instrument control, not an ECDLP benefit comparison.",
+      "description": "C-random-branch: seeded K-stable squarefree quartics matched on field, degree, branch factor type and scalar class, sampled independently of source outputs. Compare weighted-factor, direct incidence and independent character-sum/Riemann-Hurwitz implementations; report random-destination identity separately. This is an instrument control, not an ECDLP benefit comparison.",
       "instrument": {
         "repo": "crypto-autoresearcher",
         "commit": null,
@@ -301,14 +301,14 @@
       {
         "name": "projective_coordinate",
         "treatment": "crossed",
-        "value": "identity plus 16 deterministic seeded invertible projective changes per available stratum",
-        "how": "Transport the actual binary quartic including its scalar and exceptional infinity chart; invertible model maps certify unchanged curve."
+        "value": "identity plus 16 deterministic seeded invertible projective changes for the first canonical class/T source unit and structure ordinal zero per available published-source field/branch-pattern stratum",
+        "how": "Transport every original conjugate quartic by one common seeded PGL2(K) matrix, retaining each scalar and exceptional infinity chart; verify the twisted Frobenius action and both source-map inverses before exact invariant comparison. Bind every batch to the approved existing census run by write-once schedule admission and exact readback."
       },
       {
         "name": "matched_random_branch",
         "treatment": "randomized",
-        "value": "16 fresh K-stable squarefree quartics per available field and branch-factor-type stratum, two scalar classes each",
-        "how": "Seed20261102 SHA256 counter stream generates coefficient tuples before output; reject only nonsquarefree/wrong factor pattern, cap4096 draws per stratum. Exhausted control is inconclusive. Match field, degree, branch factor type, scalar class, instrument and resource cap; no curve identity matching or cost claim."
+        "value": "16 fresh K-stable squarefree quartics per available published-source field and branch-factor-type stratum, two scalar classes each",
+        "how": "Seed20261102 SHA256 counter stream generates coefficient tuples before output; multiply by the least encoded nonsquare when needed to match the predeclared scalar class, then reject only nonsquarefree, wrong factor pattern or duplicate forms, cap4096 draws per stratum and 4096 SHA blocks per coefficient. Exhausted control is inconclusive. Match field, degree, branch factor type, scalar class, instrument and resource cap; no curve identity matching or cost claim. Bind every batch to the approved existing census run by write-once schedule admission and exact readback; require independent seed and arithmetic replay before a checked control label."
       }
     ],
     "comparisons": [
@@ -582,7 +582,8 @@
   "analysis_plan": {
     "script": null,
     "inputs": [
-      "all canonical curve/T/structure rows and independent certificates"
+      "all canonical curve/T/structure rows and independent certificates",
+      "sealed C6/C7 custody and independent replay records from the existing n3core/n3ext/n5 trials"
     ],
     "outputs": [
       "analysis.json",

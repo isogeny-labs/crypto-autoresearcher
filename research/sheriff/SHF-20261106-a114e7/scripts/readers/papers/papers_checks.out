@@ -1,0 +1,118 @@
+=== A. P4 blind re-derivation: primes p = 1 (mod 6), p <= 5000 ===
+  [PASS] tex:444 'all 330 primes p=1 mod 6 with 7<=p<=5000': claimed=330 derived=330
+  [PASS] tex:444 'of the 669 primes p<=5000': claimed=669 derived=669
+  [PASS] count.txt 'primes visited by forprime 666': claimed=666 derived=666
+  [PASS] count.txt 'first 7, last 4999': claimed=[7, 4999] derived=[7, 4999]
+=== B. Second blind number: structural_completeness.tex:411-414, 447-448 ===
+  [PASS] tex:414 '80 primes in that range' (p=1 mod 6, p<=1000): claimed=80 derived=80
+  [PASS] tex:447-448 '11 primes ... 4p = 73+3k^2, k in {1,5,9,11,21,25,31,35,41,55,65}': claimed=[1, 5, 9, 11, 21, 25, 31, 35, 41, 55, 65] derived=[1, 5, 9, 11, 21, 25, 31, 35, 41, 55, 65]
+  [PASS] tex:440 CM-73 set contains the k<=11 norm-form primes: claimed=[19, 37, 79, 109] derived=[19, 37, 79, 109]
+  [PASS] tex:461 'norm-form prime p = 349': claimed=True derived=True
+=== C. LLL note numbers (abstract, sec. 3 and the PPN-2 footnote) ===
+  [PASS] all six orders prime: claimed=True derived=True
+  [PASS] abstract: n^4 > f64::MAX for secp256k1: claimed=True derived=True
+  [PASS] sec.3: P-256 n^4 below f64::MAX: claimed=False derived=False
+  [PASS] sec.3: brainpoolP256r1 n^4 below f64::MAX: claimed=False derived=False
+  [PASS] abstract: every 384-bit curve overflows (P-384): claimed=True derived=True
+  [PASS] abstract: every 384-bit curve overflows (brainpoolP384r1): claimed=True derived=True
+  [PASS] analysis 10 corr.3: f64::MAX ~ 2^1024 (rounded log2): claimed=1024 derived=1024
+  [PASS] analysis 10 corr.3: n(secp256k1)-n(P-256) ~ 2^224.0 (1 dp): claimed=224.0 derived=224.0
+  [PASS] analysis 10 corr.3: P-256 n^4 below by factor ~1-2^-30 (rounded): claimed=-30 derived=-30
+  [PASS] note footnote: scaled conversion truncates 22 low bits: claimed=22 derived=22
+  [PASS] note correction: P-521 diagonal rounds to exactly 2^500: claimed=True derived=True
+  [PASS] note footnote: truncating conversion gives 2^500(1-2^-53): claimed=True derived=True
+  [PASS] note footnote: truncation residual 2^447: claimed=447.0 derived=447.0
+=== D. Proves-too-much: the same check on values known to be wrong must FAIL ===
+  [FAIL] CONTROL tex(old) '621 primes': claimed=621 derived=330
+  [FAIL] CONTROL '331 primes': claimed=331 derived=330
+  [FAIL] CONTROL '81 primes <= 1000': claimed=81 derived=80
+  [FAIL] CONTROL k list missing 65: claimed=[1, 5, 9, 11, 21, 25, 31, 35, 41, 55] derived=[1, 5, 9, 11, 21, 25, 31, 35, 41, 55, 65]
+  [FAIL] CONTROL 'P-256 n^4 > f64::MAX' (the withdrawn curve-specificity inverse): claimed=True derived=False
+  [FAIL] CONTROL 'truncating conversion also gives exactly 2^500': claimed=True derived=False
+  [FAIL] CONTROL analysis(old) f64::MAX ~ 2^1023: claimed=1023 derived=1024
+  [FAIL] CONTROL analysis(old) difference ~2^192: claimed=192.0 derived=224.0
+  controls: 8/8 failed as required
+=== E. PPN-3: Reproducibility LOC table (tex:977-994) ===
+  [PASS] 57fa35852 audit.gp LOC: claimed=235 derived=235
+  [PASS] 57fa35852 audit.gp expected output: claimed=True derived=True
+  [PASS] 57fa35852 cl_o_horizontal.gp LOC: claimed=203 derived=203
+  [PASS] 57fa35852 cl_o_horizontal.gp expected output: claimed=True derived=True
+  [PASS] 57fa35852 structural_invariants.gp LOC: claimed=292 derived=292
+  [PASS] 57fa35852 structural_invariants.gp expected output: claimed=True derived=True
+  [PASS] 57fa35852 vfcg_experiment.gp LOC: claimed=254 derived=254
+  [PASS] 57fa35852 vfcg_experiment.gp expected output: claimed=True derived=True
+  [PASS] 57fa35852 vfcg_variants.gp LOC: claimed=284 derived=284
+  [PASS] 57fa35852 vfcg_variants.gp expected output: claimed=True derived=True
+  [PASS] 57fa35852 howe_gluing_test.gp LOC: claimed=260 derived=260
+  [PASS] 57fa35852 howe_gluing_test.gp expected output: claimed=True derived=True
+  [PASS] 57fa35852 howe_explicit_cover.gp LOC: claimed=201 derived=201
+  [PASS] 57fa35852 howe_explicit_cover.gp expected output: claimed=True derived=True
+  [PASS] 57fa35852 cover_complexity.gp LOC: claimed=165 derived=165
+  [PASS] 57fa35852 cover_complexity.gp expected output: claimed=True derived=True
+  [PASS] 57fa35852 supersingular_reductions.gp LOC: claimed=171 derived=171
+  [PASS] 57fa35852 supersingular_reductions.gp expected output: claimed=True derived=True
+  [PASS] 57fa35852 p256_comparison.gp LOC: claimed=283 derived=283
+  [PASS] 57fa35852 p256_comparison.gp expected output: claimed=True derived=True
+  [PASS] 57fa35852 multi_curve_audit.gp LOC: claimed=239 derived=239
+  [PASS] 57fa35852 multi_curve_audit.gp expected output: claimed=True derived=True
+  [PASS] 57fa35852 curve_audit_template.gp LOC: claimed=204 derived=204
+  [PASS] 57fa35852 curve_audit_template.gp expected output: claimed=False derived=False
+  [PASS] 57fa35852 generate_cm_curve.gp LOC: claimed=80 derived=80
+  [PASS] 57fa35852 generate_cm_curve.gp expected output: claimed=False derived=False
+  [PASS] 57fa35852 glv_hnp_phase1.gp LOC: claimed=176 derived=176
+  [PASS] 57fa35852 glv_hnp_phase1.gp expected output: claimed=True derived=True
+  [PASS] 57fa35852 fp3_obstruction_secp256k1.gp LOC: claimed=200 derived=200
+  [PASS] 57fa35852 fp3_obstruction_secp256k1.gp expected output: claimed=False derived=False
+  [PASS] 57fa35852 igusa_f43_howe.gp LOC: claimed=58 derived=58
+  [PASS] 57fa35852 igusa_f43_howe.gp expected output: claimed=False derived=False
+  [PASS] tex:994 Total 3305 (sum of files at 57fa35852): claimed=3305 derived=3305
+  [PASS] tex:994 Total 3305 == sum of the tex rows: claimed=3305 derived=3305
+  [PASS] HEAD total equals 57fa35852 total: claimed=3305 derived=3305
+  [PASS] tex:1008 tests/curve_audit.rs 568 lines at 57fa35852: claimed=568 derived=568
+  [PASS] md twin 10.1 Total 2386 == sum of its rows: claimed=2386 derived=2386
+=== F. P3/P-N4: twist l-rank lemma instance counts, own j=0 point counting ===
+  [PASS] tex:376 24,476 instances (l in {3,5,7}): claimed=24476 derived=24476
+  [PASS] tex:377 8,734 ordinary: claimed=8734 derived=8734
+  [PASS] tex:377 15,742 supersingular: claimed=15742 derived=15742
+  [PASS] tex:378 8,156 in hypothesis classes, all ordinary: claimed=(8156, 8156) derived=(8156, 8156)
+  [PASS] tex:379 none has l | #E^t (hyp): claimed=0 derived=0
+  [PASS] tex:383-384 16,320 excluded (578 ordinary), all l | #E^t: claimed=(16320, 578, 16320) derived=(16320, 578, 16320)
+  [PASS] tex:381-382 hypothesis classes with instances: claimed={3: [1], 5: [1], 7: [1, 2, 3, 4, 5], 11: [1], 13: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]} derived={3: [1], 13: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], 7: [1, 2, 3, 4, 5], 5: [1], 11: [1]}
+  [PASS] tex:372-373 skipped r=0 instance (7,7,5) with #E=7: claimed=[(7, 7, 5, 7)] derived=[(7, 7, 5, 7)]
+  [PASS] tex:387 1,802 instances l in {11,13}: claimed=1802 derived=1802
+  [PASS] tex:388 l=11 r=1 198: claimed=198 derived=198
+  [PASS] tex:390 l=13 1,510 hyp, 94 at r=12 all l|#E^t: claimed=(1510, 94, 94) derived=(1510, 94, 94)
+  [PASS] tex:391 total 26,278: claimed=26278 derived=26278
+  [PASS] tex:392 10,536 ordinary: claimed=10536 derived=10536
+  [PASS] tex:392-393 9,864 ordinary hyp, 0 violations: claimed=(9864, 0) derived=(9864, 0)
+  [PASS] tex:394 336 distinct (l,p,#E): claimed=336 derived=336
+  [PASS] tex:394 249 distinct in hyp (ordinary): claimed=249 derived=249
+  [PASS] tex:395 292 distinct (l in {3,5,7}): claimed=292 derived=292
+  [PASS] tex:395-396 209 distinct hyp (l in {3,5,7}): claimed=209 derived=209
+=== G. secp256k1 residues (tex:359-360, 400-402) ===
+  [PASS] tex:359-360 p mod {3,5,7,11,13}: claimed={3: 1, 5: 3, 7: 1, 11: 7, 13: 5} derived={3: 1, 5: 3, 7: 1, 11: 7, 13: 5}
+  [PASS] tex:400-401 p != l-1 mod l for odd primes l <= 29: claimed=True derived=True
+  [PASS] tex:727 p = 1 mod 6: claimed=1 derived=1
+  [PASS] abstract: x^3+7 irreducible over F_p (-7 not a cube): claimed=True derived=True
+=== H. LLL re-run table (tex:197-205) recounted from the committed logs ===
+  [PASS] rerun ('secp192k1', 'f64', 144) (rec/distinct, rec/runs): claimed=(2, 2, 3, 3) derived=(2, 2, 3, 3)
+  [PASS] rerun ('secp224k1', 'f64', 168) (rec/distinct, rec/runs): claimed=(2, 2, 3, 3) derived=(2, 2, 3, 3)
+  [PASS] rerun ('secp256k1', 'f64', 192) (rec/distinct, rec/runs): claimed=(3, 3, 6, 6) derived=(3, 3, 6, 6)
+  [PASS] rerun ('P-256', 'f64', 192) (rec/distinct, rec/runs): claimed=(3, 3, 6, 6) derived=(3, 3, 6, 6)
+  [PASS] rerun ('brainpoolP256r1', 'f64', 192) (rec/distinct, rec/runs): claimed=(1, 1, 1, 1) derived=(1, 1, 1, 1)
+  [PASS] rerun ('P-384', 'f64', 288) (rec/distinct, rec/runs): claimed=(3, 3, 4, 4) derived=(3, 3, 4, 4)
+  [PASS] rerun ('brainpoolP384r1', 'f64', 288) (rec/distinct, rec/runs): claimed=(3, 3, 4, 4) derived=(3, 3, 4, 4)
+  [PASS] rerun ('P-521', 'f64', 384) (rec/distinct, rec/runs): claimed=(0, 3, 0, 4) derived=(0, 3, 0, 4)
+  [PASS] rerun ('P-521', 'fixed', 384) (rec/distinct, rec/runs): claimed=(3, 3, 3, 3) derived=(3, 3, 3, 3)
+  [PASS] no log row outside the table: claimed={('brainpoolP256r1', 'f64', 192), ('brainpoolP384r1', 'f64', 288), ('secp224k1', 'f64', 168), ('P-521', 'fixed', 384), ('P-256', 'f64', 192), ('P-384', 'f64', 288), ('secp256k1', 'f64', 192), ('P-521', 'f64', 384), ('secp192k1', 'f64', 144)} derived={('brainpoolP384r1', 'f64', 288), ('brainpoolP256r1', 'f64', 192), ('secp224k1', 'f64', 168), ('P-521', 'fixed', 384), ('P-256', 'f64', 192), ('P-384', 'f64', 288), ('secp256k1', 'f64', 192), ('P-521', 'f64', 384), ('secp192k1', 'f64', 144)}
+=== SUMMARY ===
+{
+ "A_p4": true,
+ "B_second": true,
+ "C_lll": true,
+ "D_controls_all_failed": true,
+ "E_loc": true,
+ "F_p3": true,
+ "G_secp": true,
+ "H_rerun": true
+}

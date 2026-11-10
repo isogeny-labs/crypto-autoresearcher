@@ -1,0 +1,399 @@
+{
+  "audit_interpreter": {
+    "executable": "/usr/local/bin/python3",
+    "version": "3.13.18 (main, Oct 26 2026, 14:08:19) [Clang 23.1.3 ]"
+  },
+  "audited_at": "2026-11-06T02:54:43.009297Z",
+  "auditor": "validator icperf-receipts reader claude-opus-5-5 (SHF-20261106-a114e7)",
+  "challenge_seed": "1dff1750fbd428f43384eafea8c1086978c678f2b52b36a65112a34892a3af0e",
+  "detection_power": {
+    "miss_probability": {
+      "0.01": 0.970299,
+      "0.05": 0.857375,
+      "0.1": 0.729,
+      "0.25": 0.421875,
+      "0.5": 0.125
+    },
+    "replayed_units": 3
+  },
+  "environment_drift": [
+    {
+      "kind": "interpreter_version",
+      "note": "recorded under python 3.11.17, replayed under 3.13.18; reported beside the replay result, never in place of it",
+      "recorded_python_version": "3.11.17",
+      "replay_python_version": "3.13.18",
+      "step_id": "S02-trials",
+      "trial_id": "ctl-neg-support-zero"
+    },
+    {
+      "kind": "interpreter_version",
+      "note": "recorded under python 3.11.17, replayed under 3.13.18; reported beside the replay result, never in place of it",
+      "recorded_python_version": "3.11.17",
+      "replay_python_version": "3.13.18",
+      "step_id": "S02-trials",
+      "trial_id": "ctl-neg-wrong-triple"
+    },
+    {
+      "kind": "interpreter_version",
+      "note": "recorded under python 3.11.17, replayed under 3.13.18; reported beside the replay result, never in place of it",
+      "recorded_python_version": "3.11.17",
+      "replay_python_version": "3.13.18",
+      "step_id": "S02-trials",
+      "trial_id": "geometric-probe-sample"
+    }
+  ],
+  "experiment_id": "EXP-ICPERF-283a70",
+  "findings": [],
+  "float_tolerance": null,
+  "interpreter_parity": {
+    "match": 0,
+    "mismatch": 3,
+    "unknown": 0
+  },
+  "journal_chains": [
+    {
+      "blob": "e595bb1afbea1240365b5452c503fea4db6096ad",
+      "entries": 9,
+      "first_commit": "cd912cacbb1a7f04348809d46e99ea2a6f345725",
+      "first_commit_time": "2026-10-30T15:26:23+00:00",
+      "first_entry_time": "2026-10-30T15:23:35.562921Z",
+      "owner": "executor-run-20261030-01a179ee"
+    }
+  ],
+  "journal_entries": 9,
+  "journal_tip": "c97b6c9d4a64ccbaaf9afbd35c733efba13d22ee6efc26cf56b961dcdb4df7cf",
+  "lean": [],
+  "nonce": "ffaaf906bd7066d4b7a5a0cd66f48ca7",
+  "not_covered": [],
+  "notes": [],
+  "replay_interpreters": [
+    {
+      "executable": "/usr/local/bin/python3",
+      "program": "python3",
+      "python_version": "3.13.18",
+      "version": "3.13.18 (main, Oct 26 2026, 14:08:19) [Clang 23.1.3 ]"
+    }
+  ],
+  "replay_results": {
+    "matched": 3,
+    "matched_within_tolerance": 0,
+    "mismatch": 0
+  },
+  "replays": [
+    {
+      "argv": [
+        "python3",
+        "experiments/EXP-ICPERF-283a70/implementation/run.py",
+        "--stage",
+        "0",
+        "--trial-id",
+        "ctl-neg-support-zero",
+        "--trial-plan",
+        "experiments/EXP-ICPERF-283a70/trial-plan.json",
+        "--run-dir",
+        "research/sheriff/SHF-20261106-a114e7/scripts/readers/icperf-receipts/audit-RBS-ICPERF-67df7d/replay/RUN-ICPERF-74e9a2"
+      ],
+      "compared": [
+        {
+          "equal": true,
+          "file": "raw-result.json",
+          "pointer": "/sample_sum",
+          "result": "equal"
+        },
+        {
+          "equal": true,
+          "file": "raw-result.json",
+          "pointer": "/sum_squares",
+          "result": "equal"
+        },
+        {
+          "equal": true,
+          "file": "raw-result.json",
+          "pointer": "/median",
+          "result": "equal"
+        },
+        {
+          "equal": true,
+          "file": "raw-result.json",
+          "pointer": "/median_split",
+          "result": "equal"
+        },
+        {
+          "equal": true,
+          "file": "raw-result.json",
+          "pointer": "/exact_match",
+          "result": "equal"
+        },
+        {
+          "equal": true,
+          "file": "raw-result.json",
+          "pointer": "/cv_sq_num",
+          "result": "equal"
+        },
+        {
+          "equal": true,
+          "file": "raw-result.json",
+          "pointer": "/cv_sq_den",
+          "result": "equal"
+        },
+        {
+          "equal": true,
+          "file": "raw-result.json",
+          "pointer": "/median_ratio_num",
+          "result": "equal"
+        },
+        {
+          "equal": true,
+          "file": "raw-result.json",
+          "pointer": "/median_ratio_den",
+          "result": "equal"
+        },
+        {
+          "equal": true,
+          "file": "raw-result.json",
+          "pointer": "/cv_in_band",
+          "result": "equal"
+        },
+        {
+          "equal": true,
+          "file": "raw-result.json",
+          "pointer": "/median_ratio_in_band",
+          "result": "equal"
+        }
+      ],
+      "detail": "reproduced",
+      "environment_drift": {
+        "kind": "interpreter_version",
+        "note": "recorded under python 3.11.17, replayed under 3.13.18; reported beside the replay result, never in place of it",
+        "recorded_python_version": "3.11.17",
+        "replay_python_version": "3.13.18"
+      },
+      "interpreter": {
+        "executable": "/usr/local/bin/python3",
+        "interpreter_parity": "mismatch",
+        "python_version": "3.13.18",
+        "recorded_python_version": "3.11.17",
+        "recorded_source": "manifest.yaml#/run/environment/python",
+        "version": "3.13.18 (main, Oct 26 2026, 14:08:19) [Clang 23.1.3 ]"
+      },
+      "matched": true,
+      "population": 3,
+      "result": "matched",
+      "run_id": "RUN-ICPERF-74e9a2",
+      "step_id": "S02-trials",
+      "trial_id": "ctl-neg-support-zero"
+    },
+    {
+      "argv": [
+        "python3",
+        "experiments/EXP-ICPERF-283a70/implementation/run.py",
+        "--stage",
+        "0",
+        "--trial-id",
+        "ctl-neg-wrong-triple",
+        "--trial-plan",
+        "experiments/EXP-ICPERF-283a70/trial-plan.json",
+        "--run-dir",
+        "research/sheriff/SHF-20261106-a114e7/scripts/readers/icperf-receipts/audit-RBS-ICPERF-67df7d/replay/RUN-ICPERF-0ef41e"
+      ],
+      "compared": [
+        {
+          "equal": true,
+          "file": "raw-result.json",
+          "pointer": "/sample_sum",
+          "result": "equal"
+        },
+        {
+          "equal": true,
+          "file": "raw-result.json",
+          "pointer": "/sum_squares",
+          "result": "equal"
+        },
+        {
+          "equal": true,
+          "file": "raw-result.json",
+          "pointer": "/median",
+          "result": "equal"
+        },
+        {
+          "equal": true,
+          "file": "raw-result.json",
+          "pointer": "/median_split",
+          "result": "equal"
+        },
+        {
+          "equal": true,
+          "file": "raw-result.json",
+          "pointer": "/exact_match",
+          "result": "equal"
+        },
+        {
+          "equal": true,
+          "file": "raw-result.json",
+          "pointer": "/cv_sq_num",
+          "result": "equal"
+        },
+        {
+          "equal": true,
+          "file": "raw-result.json",
+          "pointer": "/cv_sq_den",
+          "result": "equal"
+        },
+        {
+          "equal": true,
+          "file": "raw-result.json",
+          "pointer": "/median_ratio_num",
+          "result": "equal"
+        },
+        {
+          "equal": true,
+          "file": "raw-result.json",
+          "pointer": "/median_ratio_den",
+          "result": "equal"
+        },
+        {
+          "equal": true,
+          "file": "raw-result.json",
+          "pointer": "/cv_in_band",
+          "result": "equal"
+        },
+        {
+          "equal": true,
+          "file": "raw-result.json",
+          "pointer": "/median_ratio_in_band",
+          "result": "equal"
+        }
+      ],
+      "detail": "reproduced",
+      "environment_drift": {
+        "kind": "interpreter_version",
+        "note": "recorded under python 3.11.17, replayed under 3.13.18; reported beside the replay result, never in place of it",
+        "recorded_python_version": "3.11.17",
+        "replay_python_version": "3.13.18"
+      },
+      "interpreter": {
+        "executable": "/usr/local/bin/python3",
+        "interpreter_parity": "mismatch",
+        "python_version": "3.13.18",
+        "recorded_python_version": "3.11.17",
+        "recorded_source": "manifest.yaml#/run/environment/python",
+        "version": "3.13.18 (main, Oct 26 2026, 14:08:19) [Clang 23.1.3 ]"
+      },
+      "matched": true,
+      "population": 3,
+      "result": "matched",
+      "run_id": "RUN-ICPERF-0ef41e",
+      "step_id": "S02-trials",
+      "trial_id": "ctl-neg-wrong-triple"
+    },
+    {
+      "argv": [
+        "python3",
+        "experiments/EXP-ICPERF-283a70/implementation/run.py",
+        "--stage",
+        "0",
+        "--trial-id",
+        "geometric-probe-sample",
+        "--trial-plan",
+        "experiments/EXP-ICPERF-283a70/trial-plan.json",
+        "--run-dir",
+        "research/sheriff/SHF-20261106-a114e7/scripts/readers/icperf-receipts/audit-RBS-ICPERF-67df7d/replay/RUN-ICPERF-f21eb1"
+      ],
+      "compared": [
+        {
+          "equal": true,
+          "file": "raw-result.json",
+          "pointer": "/sample_sum",
+          "result": "equal"
+        },
+        {
+          "equal": true,
+          "file": "raw-result.json",
+          "pointer": "/sum_squares",
+          "result": "equal"
+        },
+        {
+          "equal": true,
+          "file": "raw-result.json",
+          "pointer": "/median",
+          "result": "equal"
+        },
+        {
+          "equal": true,
+          "file": "raw-result.json",
+          "pointer": "/median_split",
+          "result": "equal"
+        },
+        {
+          "equal": true,
+          "file": "raw-result.json",
+          "pointer": "/exact_match",
+          "result": "equal"
+        },
+        {
+          "equal": true,
+          "file": "raw-result.json",
+          "pointer": "/cv_sq_num",
+          "result": "equal"
+        },
+        {
+          "equal": true,
+          "file": "raw-result.json",
+          "pointer": "/cv_sq_den",
+          "result": "equal"
+        },
+        {
+          "equal": true,
+          "file": "raw-result.json",
+          "pointer": "/median_ratio_num",
+          "result": "equal"
+        },
+        {
+          "equal": true,
+          "file": "raw-result.json",
+          "pointer": "/median_ratio_den",
+          "result": "equal"
+        },
+        {
+          "equal": true,
+          "file": "raw-result.json",
+          "pointer": "/cv_in_band",
+          "result": "equal"
+        },
+        {
+          "equal": true,
+          "file": "raw-result.json",
+          "pointer": "/median_ratio_in_band",
+          "result": "equal"
+        }
+      ],
+      "detail": "reproduced",
+      "environment_drift": {
+        "kind": "interpreter_version",
+        "note": "recorded under python 3.11.17, replayed under 3.13.18; reported beside the replay result, never in place of it",
+        "recorded_python_version": "3.11.17",
+        "replay_python_version": "3.13.18"
+      },
+      "interpreter": {
+        "executable": "/usr/local/bin/python3",
+        "interpreter_parity": "mismatch",
+        "python_version": "3.13.18",
+        "recorded_python_version": "3.11.17",
+        "recorded_source": "manifest.yaml#/run/environment/python",
+        "version": "3.13.18 (main, Oct 26 2026, 14:08:19) [Clang 23.1.3 ]"
+      },
+      "matched": true,
+      "population": 3,
+      "result": "matched",
+      "run_id": "RUN-ICPERF-f21eb1",
+      "step_id": "S02-trials",
+      "trial_id": "geometric-probe-sample"
+    }
+  ],
+  "runbook_sha256": "2d5aa752d5f2b2fce495b9a836d8637bb6ffed0b00ff3b97c5a8f63396149840",
+  "schema": "crypto.autoresearch.runbook_audit.v2",
+  "scope": "integrity and replay screening of one runbook session; never a validation_report, never evidence about the hypothesis, never an execution proof",
+  "session_dir": "experiments/EXP-ICPERF-283a70/runbook-sessions/RBS-ICPERF-67df7d",
+  "tool_sha256": "8de36933d52efe04c503c1711a85b4e3ea715738db9f3de356372130a743d7ae",
+  "verdict": "clean"
+}

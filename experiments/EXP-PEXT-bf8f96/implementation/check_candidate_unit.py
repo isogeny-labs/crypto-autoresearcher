@@ -17,7 +17,9 @@ from generic_disjoint import classify, exceptional_geometry
 
 
 def verify(unit, joined, expected_form):
-    if unit.get("schema") != "pext.checked-candidate-unit/v1" or unit.get("structure_order") != "left-pgl2-fq/v1":
+    if (unit.get("schema") != "pext.checked-candidate-unit/v1"
+            or unit.get("structure_order") != "left-pgl2-fq/v1"
+            or unit.get("candidate_order_aa") != "reverse-cocycle-build-representatives-buckets-and-roots/v1"):
         raise ValueError("candidate unit schema or order")
     verify_shards([joined], "f27-char3")
     field = BasisField(joined["field"])

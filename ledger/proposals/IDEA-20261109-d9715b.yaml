@@ -1,0 +1,139 @@
+idea:
+  id: IDEA-20261109-d9715b
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: Root number (2-Selmer parity) of the two-point lift through integer lifts of P and Q, tested
+    as a bit of k against a representative-shift control
+  class: representation
+  claim: 'Pre-registered null with an exponent-moving alternative. For an instance (E, P, Q = kP) over
+    F_p take integer representatives (x~_P, y~_P), (x~_Q, y~_Q) in [0, p) and the unique curve E~_{P,Q}:
+    y^2 = x^3 + a x + b over Q through both; a = 0 and b = b_E mod p, so E~ reduces to E, and |Delta|
+    is about p^6. Its root number w equals (-1)^{dim Sel_2 - dim E~[2](Q)} (Monsky) and needs only the
+    bad primes. Null prediction, for every bit j of k and every prime tested: |mean_k w_k (-1)^{k_j}|
+    <= 3/sqrt(N), and the agreement rate between w from (x~_Q, y~_Q) and from (x~_Q + p, y~_Q) lies within
+    3/sqrt(N) of 1/2. Alternative: a bias >= 0.05 at one bit on all primes with shift agreement >= 0.9.
+    The alternative would give k bit by bit from 256 shifted targets Q - 2^j P at one factorisation of
+    a 1536-bit discriminant each, about 2^{103 + 8} by GNFS, below rho.'
+  mechanism: The root number is the only descent invariant of a lift that needs no class group. It is
+    a product of local signs at primes dividing the discriminant, which depends on the integer representatives
+    and not only on the residues, so the shift control decides in one pass whether w can be a function
+    of (P, Q) at all. The bias metric then tests whether the residues of kP leave a trace in a multiplicative
+    function of the lift, which the hybrid-sum flatness of the discrete-log graph predicts they do not.
+  novelty_status: speculative
+  citations:
+  - ref: KR-IC-cd159a
+    provenance: internal
+    claim: Lifting attacks inherit the xedni obstruction; this tests the cheapest lift invariant.
+    verified_by: Mythos ideation 2026-11-09, frontier-map excerpt in the repo brief.
+  - ref: KR-RHO-13bf67
+    provenance: internal
+    claim: A sub-square-root claim must come from the representation; a root number is a representation
+      statistic.
+    verified_by: Mythos ideation 2026-11-09, frontier-map excerpt in the repo brief.
+  - ref: Monsky 1996, parity of 2-Selmer ranks over Q
+    provenance: recalled
+    claim: The 2-Selmer parity equals the root number for elliptic curves over Q.
+    verified_by: recalled; confirm before citing in a result.
+  - ref: Helfgott, root numbers in families
+    provenance: recalled
+    claim: Root numbers equidistribute in non-isotrivial families under standard conjectures.
+    verified_by: recalled; motivates the null only.
+  assumptions:
+  - p >= 5, E of prime order N, x_P different from x_Q so the lift is defined.
+  - Minimal model and conductor from PARI ellminimalmodel and ellglobalred after full factorisation of
+    Delta (about 84 bits at p = 2^14).
+  predictions:
+  - metric: max over bits j of |mean_k w_k (-1)^{k_j}|
+    direction: lower
+    minimum_effect: at most 3/sqrt(N) on every prime (null); at least 0.05 on all primes is the alternative
+  - metric: agreement rate of w under the shift x~_Q -> x~_Q + p
+    direction: lower
+    minimum_effect: within 3/sqrt(N) of 1/2 (null); at least 0.9 is the alternative
+  - metric: '|mean_k w_k|'
+    direction: lower
+    minimum_effect: at most 3/sqrt(N)
+  minimal_test:
+    design: Three primes p in [2^12, 2^14] from crypto/docs/ECDLP_CALIBRATION_PRIMES.md, each with one
+      j = 0 and one random-j prime-order curve. Fix P. For every k in [1, N-1] build E~_{P,kP}, clear
+      denominators, compute w with PARI ellrootno, and recompute w' from the shifted representative. Score
+      the metrics per curve. About 6N root numbers, under an hour. If the alternative fires, register
+      a matched baseline through the ecbench methods list before any follow-up.
+    controls:
+    - Representative-shift arm (w' versus w) on the same k.
+    - Label arm replacing y~_Q by the index of Q in a fixed enumeration, same formula, to detect bias
+      created by the construction.
+    - Discriminant nonzero and v_p(Delta) = 0 checked for every lift.
+    required_metrics:
+    - N and number of lifts scored
+    - per-bit bias vector
+    - shift agreement rate
+    - mean root number
+    - count of degenerate lifts
+  falsification_conditions:
+  - Null falsified by a per-bit bias >= 0.05 reproduced on all three primes and both curves with shift
+    agreement >= 0.9.
+  - Alternative falsified by shift agreement within 3/sqrt(N) of 1/2 on any prime.
+  - A factorisation timeout is infrastructure, not evidence.
+  confounders:
+  - In a prime-order group every Q is some kP, so there is no non-instance control; the shift and label
+    arms replace it.
+  - Small |k| <= 4 can make P~ and Q~ dependent and bias w there; report and exclude them.
+  interpretation_limits:
+  - A confirmed null at p <= 2^14 closes the root number as a cheap bit source at toy size; extrapolation
+    rests on the flatness barrier.
+  - A toy signal must survive the 2^{103} factoring charge before any exponent claim.
+  heuristic_assumptions:
+  - id: H1
+    statement: w(E~_{P,kP}) is independent of the bits of k and of the representative choice up to O(1/sqrt
+      N).
+    rigorous_support: No theorem; consistent with Helfgott-type equidistribution and the exhaustive hybrid-sum
+      flatness record of the barriers lane.
+    validation_plan: The run itself; all k enumerated, no subsampling.
+  target_complexity:
+    time_exponent: null leaves N^{1/2}; alternative would give about 2^{111} at 256 bits, exponent about
+      0.43
+    memory_exponent: O(1)
+    best_known: Pollard rho at 2^{128} on a 256-bit prime-order curve (KR-RHO-13bf67)
+    hidden_overhead: factoring a 1536-bit discriminant per bit, charged at GNFS 2^{103}
+    tradeoff_note: The experiment stores N signs; no tradeoff is defined.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  dominated_by: KR-IC-cd159a dominates every lifting reading; it does not state the root-number question
+    or the shift control.
+  sota_delta: Expected delta 0; value is the pre-registered closure of the one descent invariant cheap
+    enough to matter at 256 bits.
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/index-calculus
+    rows_checked:
+    - KR-IC-cd159a
+    - KR-RHO-13bf67
+    - KR-RHO-53c89f
+    - KR-RHO-898783
+    - KR-IC-9e610d
+    nearest:
+    - ref: KR-IC-cd159a
+      provenance: internal
+      relation: adjacent
+      delta: Xedni uses the rank of lifts; this uses only Selmer parity, computable without descent.
+    - ref: KR-RHO-13bf67
+      provenance: internal
+      relation: adjacent
+      delta: The generic bound does not cover representation statistics; this run measures one.
+    searched:
+      corpus_grep:
+      - repo brief section 2 for root number, parity, Selmer, lift, xedni
+      - barriers lane wave-1 records for hybrid-sum flatness
+      web: []
+      blocked: []
+    lead: LEAD-ICP-char0-lifting-xedni-smoothness
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: Three primes p in [2^12, 2^14] from crypto/docs/ECDLP_CALIBRATION_PRIMES.md,
+        each with one j = 0 and one random-j prime-order curve. Fix P. For every k in [1, N-1] build E~_{P,kP},
+        clear denominators, compute w with PARI ellrootno, and recompute w'' from the shifted representative.
+        Score the metrics per curve. About 6N root numbers, under an hour. If the alternative fires, register
+        a matched baseli'

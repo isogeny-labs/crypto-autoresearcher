@@ -1,0 +1,147 @@
+idea:
+  id: IDEA-20261109-37ca77
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: 'K3 elliptic surfaces over F_p(t): analytic rank from the zeta function is computable, but Shioda
+    height bounds cap relation coefficients, so specialisation recovers k only on a set of size (4 sqrt(r))^{2r}
+    d_T^2'
+  class: barrier
+  claim: Let S be y^2 = x^3 + a(t) x + b(t) over F_p with deg a <= 8, deg b <= 12 and Euler characteristic
+    chi = 2. (i) The Mordell-Weil rank r over F_p(t) equals the order of vanishing of L(S/F_p(t), T) at
+    T = 1/p, computable from point counts over F_{p^i}, i <= 2, once the bad-fibre root lattices contribute
+    rank >= 16. (ii) Every section with polynomial coordinates of t-degree <= 4 in x has canonical height
+    <= 2 chi = 4, so any primitive Z-relation among r + 1 such sections has |c_i| <= (4 sqrt(r))^r d_T
+    where d_T is the discriminant of the trivial lattice. (iii) Specialising a relation supported on sections
+    through (t_0, P) and (t_0, Q) yields k = -c_1 / c_2 mod N, so the set of recoverable k has size at
+    most (2 (4 sqrt(r))^r d_T)^2, below 2^{200} for r <= 20 and d_T <= 2^{10}, a fraction 2^{-56} of Z/N
+    at 256 bits. No exponent change is claimed.
+  mechanism: The L-function of the generic fibre is the characteristic polynomial of Frobenius on the
+    transcendental plus Mordell-Weil part of H^2(S); Tate's conjecture for K3 surfaces over finite fields
+    identifies its zero at T = 1/p with the Neron-Severi rank. The analytic object knows how many independent
+    sections exist, but the height pairing is positive definite with bounded entries, and Hadamard's inequality
+    on the cofactors of the Gram matrix bounds relation coefficients. The XEDN lane found only norm-1
+    relations on rational surfaces; chi = 2 is the first case where the L-function is non-trivial, and
+    the bound shows the DL-reach stays polynomially small.
+  novelty_status: adaptation
+  citations:
+  - ref: IDEA-20260805-5a9d2c
+    provenance: internal
+    claim: Every XEDN Mordell-Weil relation had support 3 or 4 and infinity-norm exactly 1; this record
+      explains the small norm by a height bound and extends it to chi = 2.
+    verified_by: ledger index excerpt in REPO BRIEF 2026-11-09 section 2
+  - ref: IDEA-20260805-e5dd09
+    provenance: internal
+    claim: Rank of the rational family is determined by root multiplicities; for K3 the L-function carries
+      the extra information.
+    verified_by: ledger index excerpt in REPO BRIEF 2026-11-09 section 2
+  - ref: KR-IC-cd159a
+    provenance: internal
+    claim: Lifting to a larger base and looking for dependence is the xedni family.
+    verified_by: frontier map excerpt in REPO BRIEF 2026-11-09 section 3
+  assumptions:
+  - Tate conjecture for K3 surfaces over finite fields (Charles, Madapusi-Pera; recalled) so analytic
+    rank equals algebraic rank.
+  - Shioda height formula with sections meeting O nowhere (recalled).
+  proof_search_map:
+    not_applicable_reason: Barrier with a measured constant; no algorithm.
+    bottleneck: not_applicable
+    baseline_embedding:
+      parameter_slice: not_applicable
+      reproduction_check: not_applicable
+    observation_collision:
+      observable: not_applicable
+      distinct_preimage_search: not_applicable
+    constructive_transforms: []
+    quantifier_order: not_applicable
+    method_ceiling:
+      strongest_certifiable_claim: not_applicable
+      nearby_object_control: not_applicable
+    proof_obligations: []
+  predictions:
+  - metric: analytic rank minus number of independent sections found
+    direction: different
+    minimum_effect: equals 0 on at least 95 percent of surfaces
+  - metric: max |c_i| over all primitive relations divided by (4 sqrt(r))^r d_T
+    direction: lower
+    minimum_effect: at most 1 on 100 percent of surfaces
+  - metric: fraction of random targets k recovered by specialised relations
+    direction: lower
+    minimum_effect: at most 2 (4 sqrt(r))^{2r} d_T^2 / N
+  minimal_test:
+    design: For p in crypto/docs/ECDLP_CALIBRATION_PRIMES.md with p <= 2^10, sample 200 Weierstrass K3
+      models whose Kodaira fibres contribute root-lattice rank >= 16 (verified by Tate's algorithm in
+      Sage). Count points over F_p and F_{p^2} fibre by fibre, obtain the degree <= 4 non-trivial factor
+      of the zeta function using the functional equation, and read the rank. Enumerate polynomial sections
+      with deg x <= 4, deg y <= 6 by linear algebra, compute the height Gram matrix, extract primitive
+      relations and their max |c_i|. For 10^3 uniformly random (P, Q, k) on a smooth fibre, construct
+      two sections through (t_0, P) and (t_0, Q) when possible and record whether any specialised relation
+      yields k.
+    controls:
+    - Rational-surface arm (deg a <= 4, deg b <= 6) reproducing the XEDN norm-1 observation.
+    - 'Random-Gram control: random integer Gram matrices with the same entry bounds, to show the coefficient
+      bound is lattice-generic.'
+    required_metrics:
+    - p
+    - analytic rank per surface
+    - sections found per surface
+    - max |c_i| per relation
+    - d_T per surface
+    - recovered-k fraction
+  falsification_conditions:
+  - A primitive relation with max |c_i| above (4 sqrt(r))^r d_T.
+  - Analytic rank below the number of independent sections found.
+  - Recovered-k fraction exceeding the stated bound by a factor 10.
+  confounders:
+  - Sections meeting O have larger height; restrict or recompute the bound with P.O.
+  - Non-reduced or inseparable fibres at small p; discard those models.
+  interpretation_limits:
+  - Confirms a reach bound at p <= 2^10; proves no new hardness.
+  - Does not address non-polynomial sections of larger height, whose bound grows with height.
+  heuristic_assumptions:
+  - id: H1
+    statement: Sections through prescribed points exist with density independent of k.
+    rigorous_support: None; counting argument only.
+    validation_plan: Record construction success rate versus k in the test.
+  target_complexity:
+    time_exponent: N^{1/2} unchanged; reach fraction at most 2^{-56} at 256 bits
+    memory_exponent: O(p^2) fibre counts in the toy test
+    best_known: Pollard rho, Theta(sqrt(N)) (KR-RHO-13bf67)
+    hidden_overhead: None claimed.
+    tradeoff_note: Barrier record.
+  estimated_cost:
+    implementation: medium
+    compute: low
+  recommended_priority: medium
+  dominated_by: KR-IC-cd159a for lifting; XEDN records for rational surfaces. The chi = 2 bound and the
+    analytic-rank check are not stated in either.
+  sota_delta: 'Exponent delta 0. Content delta: an explicit coefficient bound that turns the XEDN norm-1
+    observation into a theorem-shaped reach limit.'
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/index-calculus
+    rows_checked:
+    - KR-IC-cd159a
+    - KR-RHO-13bf67
+    - KR-IC-5a43e5
+    - KR-RHO-755e35
+    nearest:
+    - ref: KR-IC-cd159a
+      provenance: internal
+      relation: adjacent
+      delta: Row concerns lifts to Q; this record works over F_p(t) where analytic rank is provably computable,
+        and bounds the reach.
+    searched:
+      corpus_grep:
+      - REPO BRIEF section 2 for XEDN, Mordell-Weil, elliptic surface, K3
+      - wave-1 synthesis lead on K3 specialization census
+      web: []
+      blocked: []
+    lead: LEAD-TRF-function-field-xedni-lift
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: For p in crypto/docs/ECDLP_CALIBRATION_PRIMES.md with p <= 2^10, sample 200
+        Weierstrass K3 models whose Kodaira fibres contribute root-lattice rank >= 16 (verified by Tate''s
+        algorithm in Sage). Count points over F_p and F_{p^2} fibre by fibre, obtain the degree <= 4 non-trivial
+        factor of the zeta function using the functional equation, and read the rank. Enumerate polynomial
+        sections with deg x <='

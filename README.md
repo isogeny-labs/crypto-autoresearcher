@@ -9,7 +9,30 @@ canonical receipt with
 `python3 tools/migrate_autolab_archive.py --verify-only --no-harness-output
 --metadata-dir /tmp/autolab-migration-20260802-r1-verify`.
 
-A multi-agent orchestration framework for rigorous, reproducible ECDLP experimentation.
+A multi-agent orchestration framework for rigorous, reproducible research across
+domains, with an established ECDLP experiment toolchain.
+
+Use [`/autoresearch`](.claude/skills/autoresearch/SKILL.md) as the single entry
+point: it calls `coordinate`, `design-experiment`, `run` and `review-evidence`
+when needed and continues full-cycle work through their handoffs. For a bounded
+task, use `/autoresearch run EXP-…`, `/autoresearch review EXP-…`, or
+`/autoresearch design only IDEA-…`. Existing direct skill commands still work.
+This is an agent skill, distinct from the `autoresearch` command-line tool.
+
+[General research tasks](docs/general-research-tasks.md) add typed methods and
+evidence plans to existing handoffs: literature, theoretical, computational,
+empirical, engineering, replication, synthesis, and custom methods. Start with
+`autoresearch research methods`; domain names are open-ended and multiple domains
+can be combined in one task.
+
+Research goals now follow [the Curvesmash-style research loop](docs/challenge-research-loop.md)
+by default: freeze a problem and its success criteria, propose a candidate,
+gather supporting evidence, review the original claims, then use the findings
+to choose the next attempt. `autoresearch campaign next --goal <GOAL-ID>` shows
+the current phase; campaign autopilot drives it through existing role workers.
+The loop maps supported frontier points, rejected attempts and unresolved gaps;
+`autoresearch campaign frontier --goal <GOAL-ID>` exposes that boundary record.
+This applies across research domains and does not require a numerical score.
 
 The project separates research into primary roles with separate authority:
 
@@ -171,10 +194,19 @@ Only the Coordinator may change the official status of a hypothesis. The Idea Ge
 ## Running it locally
 
 ```sh
-git clone <this repo> && cd crypto-autoresearcher
+# Small code checkout; fetch research archives only when needed.
+curl -fsSL https://raw.githubusercontent.com/isogeny-labs/crypto-autoresearcher/main/tools/sparse_checkout.py -o /tmp/autoresearch-clone.py
+python3 /tmp/autoresearch-clone.py clone https://github.com/isogeny-labs/crypto-autoresearcher.git crypto-autoresearcher --profile code
+cd crypto-autoresearcher
 make install          # editable install + all dependencies
 make doctor           # what is missing, before anything costs money
 ```
+
+The code checkout keeps implementation, skills, tests and docs. Before research
+execution, use `python3 tools/sparse_checkout.py apply harness` and materialize the
+selected goal/experiment; whole-ledger coordination needs the full checkout or
+migrated archive manifests. [Clone/storage guidance](docs/sparse-checkout.md)
+explains the profiles and historical-data costs.
 
 `doctor` checks the Python version, dependencies, configuration, credentials
 per backend, role-binding drift, and suite health, then prints the specific

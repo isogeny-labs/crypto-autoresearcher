@@ -1,0 +1,140 @@
+idea:
+  id: IDEA-20261109-7b46cc
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: Flattening-rank floor of the target-specialised Semaev tensor rules out every sum-of-at-most-2^{m-1}-products
+    presentation of prime-field point decomposition
+  class: barrier
+  claim: 'Let T(x_R) in Sym^m(F_p^{d+1}), d = 2^{m-1}, be the coefficient tensor of S_{m+1}(x_1,...,x_m;
+    x_R) on the basis (1, x, ..., x^d) of each slot. Prediction fixed before any run: for m = 3 and m
+    = 4, at every prime p <= 2^12 taken from crypto/docs/ECDLP_CALIBRATION_PRIMES.md with a prime-order
+    curve, the 1-flattening of T(x_R), a (d+1) x (d+1)^{m-1} matrix, has full rank d+1 for all but at
+    most (d+1)d values of x_R (20 for m = 3, 72 for m = 4). Since tensor rank, symmetric rank and border
+    rank are each at least the flattening rank, no identity S_{m+1}(x; x_R) = sum_{t<=r} prod_i a_{t,i}(x_i)
+    with r <= d exists over any extension of F_p for those targets; the rank-2 multiplicative k-sum and
+    border-rank-2 additive k-sum reductions are impossible. No exponent changes.'
+  mechanism: Decomposition of R over F is the search for (x_1,...,x_m) in x(F)^m with T(x_R)(v(x_1),...,v(x_m))
+    = 0, v(x) = (1, x, ..., x^d). Rank r would give sum_{t<=r} prod_i a_{t,i}(x_i) = 0; r = 2 is prod_i
+    (a_{1,i}/a_{2,i})(x_i) = -1, a multiplicative k-sum, and border rank 2 is an additive k-sum sum_i
+    (b_i/a_i)(x_i) = c. The flattening rank is a linear-algebra certificate that neither exists. The exceptional
+    set is cut out by the (d+1)-minors, polynomials of degree at most (d+1)d in x_R, which bounds its
+    size.
+  novelty_status: adaptation
+  citations:
+  - ref: KR-IC-5a43e5
+    provenance: internal
+    claim: S_m has degree 2^{m-2} in each variable and is built by resultants; the tensor here is its
+      coefficient array after one specialisation.
+    verified_by: brief section 3 row text, 2026-11-09
+  - ref: KR-RHO-5b1c0a
+    provenance: internal
+    claim: Representation and subset-sum readings of ECDLP do not beat rho; a k-sum reading would belong
+      to that family.
+    verified_by: brief section 3 row text, 2026-11-09
+  - ref: IDEA-20260723-006
+    provenance: internal
+    claim: Target-sectioned Newton polytope is the full box outside an O(m) exceptional target set; the
+      rank-drop set is compared with it.
+    verified_by: brief section 2 index line, 2026-11-09
+  assumptions:
+  - Characteristic not 2 or 3; S_4, S_5 built by the resultant recursion.
+  - Basis changes in GL_{d+1} per slot leave every rank unchanged, so no coordinate choice on the x-line
+    evades the floor.
+  proof_search_map:
+    not_applicable_reason: A rank certificate about one polynomial; no exponent claim.
+    bottleneck: not_applicable
+    proof_obligations: []
+  predictions:
+  - metric: fraction of x_R with flattening rank d+1 at m = 3
+    direction: higher
+    minimum_effect: at least 1 - 20/p
+  - metric: size of the rank-drop set at m = 3
+    direction: lower
+    minimum_effect: at most 20
+  - metric: rank-drop set contained in the IDEA-20260723-006 exceptional set
+    direction: higher
+    minimum_effect: containment at every tested prime
+  minimal_test:
+    design: 'Sage: build S_4 and S_5 by resultants, specialise x_R, form the (d+1) x (d+1)^{m-1} flattening
+      over F_p, compute rank for every x_R in F_p at three calibration primes p <= 2^12 with p = 1 mod
+      3 and one with p = 2 mod 3. Record the rank-drop set, factor the gcd of the (d+1)-minors in x_R,
+      and for m = 2 factor det M(x_R) symbolically in (a, b). The next agent opens IDEA-20260723-006 for
+      its exceptional-set definition before comparing.'
+    controls:
+    - 'A random symmetric tensor in Sym^m(F_p^{d+1}) at the same p: also full flattening rank, so full
+      rank is a floor, not a fingerprint.'
+    - The random tensor specialised in one slot the same way, to confirm the exceptional-set size bound
+      is generic.
+    required_metrics:
+    - flattening rank histogram over x_R for m = 3 and m = 4
+    - rank-drop set with x_R values and the factored minor gcd
+    - symbolic factorisation of det M(x_R) at m = 2
+    - control histograms
+  falsification_conditions:
+  - Flattening rank below d+1 for at least 1 percent of x_R at any tested prime.
+  - Rank-drop set larger than 20 at m = 3 or 72 at m = 4.
+  - An explicit identity S_4(x; x_R) = sum_{t<=4} prod_i a_{t,i}(x_i) for a non-exceptional x_R.
+  confounders:
+  - Resultant scaling by constants in Sage changes no rank.
+  - Symmetric rank over F_p may exceed rank over the closure; the floor is field independent and unaffected.
+  interpretation_limits:
+  - The rank lies between d+1 and the generic rank; the record does not compute it and rules out nothing
+    at ranks above d.
+  - A bound on presentations of one polynomial, not on algorithms.
+  heuristic_assumptions:
+  - id: H1
+    statement: The (d+1)-minors of the flattening are not identically zero as polynomials in x_R.
+    rigorous_support: At m = 2 the 3 x 3 determinant is a nonzero degree <= 6 polynomial by direct expansion
+      of S_3; unproven here for m >= 3.
+    validation_plan: The minimal test computes the minors; identically-zero minors would appear as rank
+      drop at every x_R.
+  target_complexity:
+    time_exponent: 1/2 unchanged
+    memory_exponent: unchanged
+    best_known: Pollard rho, Theta(p^{1/2}) group operations (KR-RHO-13bf67)
+    hidden_overhead: none; the result is a certificate about a polynomial
+    tradeoff_note: Closes the rank-2 and border-rank-2 k-sum sub-lane of the wave-1 wildcards tensor lead;
+      delta 0.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: high
+  dominated_by: KR-RHO-13bf67 dominates any exponent reading. No row states a tensor rank of a summation
+    polynomial.
+  sota_delta: 'Exponent delta 0. New certified fact: rank floor d+1 for the specialised Semaev tensor
+    and a bounded exceptional target set.'
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/index-calculus
+    rows_checked:
+    - KR-IC-5a43e5
+    - KR-IC-955fd6
+    - KR-IC-5931ee
+    - KR-IC-fbdb61
+    - KR-RHO-5b1c0a
+    - KR-RHO-13bf67
+    nearest:
+    - ref: KR-RHO-5b1c0a
+      provenance: internal
+      relation: adjacent
+      delta: Delaplace-May cost a representation attack over F_{p^2}; this record shows one representation
+        route cannot even be written.
+    - ref: KR-IC-5a43e5
+      provenance: internal
+      relation: adjacent
+      delta: The row defines S_m and says nothing about tensor rank.
+    searched:
+      corpus_grep:
+      - brief section 2 for tensor, rank, k-sum, multiplicative
+      - wave-1 wildcards leads for the specialised Semaev tensor lead
+      web: []
+      blocked: []
+    lead: LEAD-ICP-digit-presentation-solving-degree
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: Sage: build S_4 and S_5 by resultants, specialise x_R, form the (d+1) x (d+1)^{m-1}
+        flattening over F_p, compute rank for every x_R in F_p at three calibration primes p <= 2^12 with
+        p = 1 mod 3 and one with p = 2 mod 3. Record the rank-drop set, factor the gcd of the (d+1)-minors
+        in x_R, and for m = 2 factor det M(x_R) symbolically in (a, b). The next agent opens IDEA-20260723-006
+        for its exceptio'

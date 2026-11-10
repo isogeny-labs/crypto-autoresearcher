@@ -1,0 +1,104 @@
+@translation_commutes_iff_two_torsion.{u_1} : ∀ {E : Type u_1} [inst : AddCommGroup.{u_1} E] (S T : E),
+  Iff
+    (∀ (P : E),
+      @Eq.{u_1 + 1} E
+        (@HAdd.hAdd.{u_1, u_1, u_1} E E E
+          (@instHAdd.{u_1} E
+            (@AddCommMagma.toAdd.{u_1} E
+              (@AddCommSemigroup.toAddCommMagma.{u_1} E
+                (@AddCommMonoid.toAddCommSemigroup.{u_1} E (@AddCommGroup.toAddCommMonoid.{u_1} E inst)))))
+          (@Neg.neg.{u_1} E
+            (@NegZeroClass.toNeg.{u_1} E
+              (@SubNegZeroMonoid.toNegZeroClass.{u_1} E
+                (@SubtractionMonoid.toSubNegZeroMonoid.{u_1} E
+                  (@SubtractionCommMonoid.toSubtractionMonoid.{u_1} E
+                    (@AddCommGroup.toDivisionAddCommMonoid.{u_1} E inst)))))
+            (@HAdd.hAdd.{u_1, u_1, u_1} E E E
+              (@instHAdd.{u_1} E
+                (@AddCommMagma.toAdd.{u_1} E
+                  (@AddCommSemigroup.toAddCommMagma.{u_1} E
+                    (@AddCommMonoid.toAddCommSemigroup.{u_1} E (@AddCommGroup.toAddCommMonoid.{u_1} E inst)))))
+              P S))
+          T)
+        (@Neg.neg.{u_1} E
+          (@NegZeroClass.toNeg.{u_1} E
+            (@SubNegZeroMonoid.toNegZeroClass.{u_1} E
+              (@SubtractionMonoid.toSubNegZeroMonoid.{u_1} E
+                (@SubtractionCommMonoid.toSubtractionMonoid.{u_1} E
+                  (@AddCommGroup.toDivisionAddCommMonoid.{u_1} E inst)))))
+          (@HAdd.hAdd.{u_1, u_1, u_1} E E E
+            (@instHAdd.{u_1} E
+              (@AddCommMagma.toAdd.{u_1} E
+                (@AddCommSemigroup.toAddCommMagma.{u_1} E
+                  (@AddCommMonoid.toAddCommSemigroup.{u_1} E (@AddCommGroup.toAddCommMonoid.{u_1} E inst)))))
+            (@HAdd.hAdd.{u_1, u_1, u_1} E E E
+              (@instHAdd.{u_1} E
+                (@AddCommMagma.toAdd.{u_1} E
+                  (@AddCommSemigroup.toAddCommMagma.{u_1} E
+                    (@AddCommMonoid.toAddCommSemigroup.{u_1} E (@AddCommGroup.toAddCommMonoid.{u_1} E inst)))))
+              P T)
+            S)))
+    (@Eq.{u_1 + 1} E
+      (@HSMul.hSMul.{0, u_1, u_1} Nat E E
+        (@instHSMul.{0, u_1} Nat E
+          (@NSMul.toSMul.{u_1} E
+            (@AddMonoid.toNSMul.{u_1} E
+              (@SubNegMonoid.toAddMonoid.{u_1} E
+                (@AddGroup.toSubNegMonoid.{u_1} E (@AddCommGroup.toAddGroup.{u_1} E inst))))))
+        (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2))) T)
+      (@OfNat.ofNat.{u_1} E (nat_lit 0)
+        (@Zero.toOfNat0.{u_1} E
+          (@NegZeroClass.toZero.{u_1} E
+            (@SubNegZeroMonoid.toNegZeroClass.{u_1} E
+              (@SubtractionMonoid.toSubNegZeroMonoid.{u_1} E
+                (@SubtractionCommMonoid.toSubtractionMonoid.{u_1} E
+                  (@AddCommGroup.toDivisionAddCommMonoid.{u_1} E inst))))))))
+theorem CryptoResearch.Quotient.translation_commutes_iff_two_torsion.{u} : ∀ {E : Type u} [inst : AddCommGroup.{u} E]
+  (S T : E),
+  (∀ (P : E),
+      Eq.{u + 1} (HAdd.hAdd.{u, u, u} (Neg.neg.{u} (HAdd.hAdd.{u, u, u} P S)) T)
+        (Neg.neg.{u} (HAdd.hAdd.{u, u, u} (HAdd.hAdd.{u, u, u} P T) S))) ↔
+    Eq.{u + 1} (HSMul.hSMul.{0, u, u} 2 T) 0 :=
+fun {E} [AddCommGroup.{u} E] S T =>
+  {
+    mp := fun h =>
+      have key := translation_commutes_iff_two_torsion._abel_1_1.{u} S T;
+      Eq.mpr.{0} (id.{0} (congrArg.{u + 1, 1} (fun _a => Eq.{u + 1} _a 0) key))
+        (Eq.mpr.{0}
+          (id.{0}
+            (congrArg.{u + 1, 1}
+              (fun _a =>
+                Eq.{u + 1} (HSub.hSub.{u, u, u} _a (Neg.neg.{u} (HAdd.hAdd.{u, u, u} (HAdd.hAdd.{u, u, u} 0 T) S))) 0)
+              (h 0)))
+          (Eq.mpr.{0}
+            (id.{0}
+              (congrArg.{u + 1, 1} (fun _a => Eq.{u + 1} _a 0)
+                (sub_self.{u} (Neg.neg.{u} (HAdd.hAdd.{u, u, u} (HAdd.hAdd.{u, u, u} 0 T) S)))))
+            (Eq.refl.{u + 1} 0))),
+    mpr := fun hT P =>
+      have key := translation_commutes_iff_two_torsion._abel_1_2.{u} S T P;
+      Eq.mpr.{0}
+        (id.{0}
+          (congrArg.{u + 1, 1} (fun _a => Eq.{u + 1} _a (Neg.neg.{u} (HAdd.hAdd.{u, u, u} (HAdd.hAdd.{u, u, u} P T) S)))
+            key))
+        (Eq.mpr.{0}
+          (id.{0}
+            (congrArg.{u + 1, 1}
+              (fun _a =>
+                Eq.{u + 1} (HAdd.hAdd.{u, u, u} (Neg.neg.{u} (HAdd.hAdd.{u, u, u} (HAdd.hAdd.{u, u, u} P T) S)) _a)
+                  (Neg.neg.{u} (HAdd.hAdd.{u, u, u} (HAdd.hAdd.{u, u, u} P T) S)))
+              hT))
+          (Eq.mpr.{0}
+            (id.{0}
+              (congrArg.{u + 1, 1}
+                (fun _a => Eq.{u + 1} _a (Neg.neg.{u} (HAdd.hAdd.{u, u, u} (HAdd.hAdd.{u, u, u} P T) S)))
+                (add_zero.{u} (Neg.neg.{u} (HAdd.hAdd.{u, u, u} (HAdd.hAdd.{u, u, u} P T) S)))))
+            (Eq.refl.{u + 1} (Neg.neg.{u} (HAdd.hAdd.{u, u, u} (HAdd.hAdd.{u, u, u} P T) S))))) }
+'CryptoResearch.Quotient.translation_commutes_iff_two_torsion' depends on axioms: [propext]
+'agree_ZMod2xZMod4' depends on axioms: [propext, Classical.choice, Quot.sound]
+'harness_sees_mutant' depends on axioms: [propext, Classical.choice, Quot.sound]
+
+real	0m3.655s
+user	0m2.596s
+sys	0m1.440s
+exit=0

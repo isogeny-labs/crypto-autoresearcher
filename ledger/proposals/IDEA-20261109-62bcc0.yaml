@@ -1,0 +1,108 @@
+idea:
+  id: IDEA-20261109-62bcc0
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECC-3fae8b
+  title: 'Sign-normalised complete doubling (4M+4S, no T read) composed with T-dropping affine-Niels addition:
+    10M + 4S per scalar bit, no constant multiply, uniform operation sequence'
+  class: composition
+  claim: 'On Edwards25519 with (X:Y:Z:T), T = XY/Z, the doubling A = X_1^2, B = Y_1^2, C = Z_1^2 + Z_1^2,
+    E = (X_1 + Y_1)^2 - A - B, G = B - A, F'' = C - G, H'' = A + B, X_3 = E F'', Y_3 = G H'', T_3 = E
+    H'', Z_3 = F'' G returns 2 P_1 at 4M + 4S + 7a, never reads T_1, and has Z_3 != 0 for every rational
+    input because G = Z_1^2 + d T_1^2 and F'' = Z_1^2 - d T_1^2 by the curve equation -X^2 + Y^2 = Z^2
+    + d T^2 and -d, d are non-squares. It equals HCD 2008 sec 3.3 with F and H negated, i.e. all four
+    outputs negated, the same projective point, removing the explicit negation. Composition: per bit of
+    a clamped scalar s (bits 253..0; acc = P initially since bit 254 is set), acc <- dbl(acc) producing
+    T; S <- add_noT(acc, N_P) with affine cache N_P = (y - x, y + x, k x y), k = 2d, via A = (Y - X) n_1,
+    B = (Y + X) n_2, C = T n_3, D = Z + Z, E = B - A, F = D - C, G = D + C, H = B + A, X = E F, Y = G
+    H, Z = F G (T omitted); acc <- cselect(bit, S, acc) on (X, Y, Z) only. Omitting T_3 is unconditional
+    because the next operation is always the doubling, which does not read T. Per bit 4M + 4S + 6M + 7a
+    + 7a = 10M + 4S + 14a, 0c, 0I, the same instruction sequence for every bit; the repository scalar_mul
+    costs 5M + 4S on a 0-bit and 16M + 4S + 1I on a 1-bit with a secret-dependent branch. Prediction:
+    identical RFC 8032 outputs; counters read 10 mul and 4 sq per iteration.'
+  mechanism: 'Doubling derivation: set P_2 = P_1 in the unified law: E = 4 X Y, H = 2(X^2 + Y^2), F =
+    2(Z^2 - d T^2), G = 2(Z^2 + d T^2); the curve equation replaces Z^2 + d T^2 by Y^2 - X^2 and Z^2 -
+    d T^2 by 2 Z^2 - (Y^2 - X^2), eliminating T and the constant. Identity traces: 2(0:1:1:0) = (0:1:1:0);
+    2(0:-1:1:0) = (0:1:1:0); 2(i:0:1:0) = (0:-1:1:0). Completeness of the addition half is BBJLP Thm 3.3
+    with alpha = sqrt(-1) (record 1). Symmetry: the HCD mixed system E <-> E^e exploits that doubling
+    is a map from the projective model that only produces T, while addition only consumes it; fixing the
+    operation order dbl, add, select makes the T production and consumption uniform and bit-independent.
+    The cselect is a masked merge of three field elements, so scalar bits are read uniformly; with BigUint
+    the field layer is not constant-time, so the claim is uniform operation sequence, not timing.'
+  novelty_status: unverified
+  citations:
+  - ref: Hisil, Wong, Carter, Dawson 2008, sec 3.3 and sec 4 (mixed coordinate system)
+    provenance: recalled
+    claim: Doubling 4M + 4S; dropping T_3 in additions followed by doublings saves 1M.
+    verified_by: null
+  - ref: BRIEF section 1, src/ecc/ed25519.rs EdPoint::double and scalar_mul
+    provenance: internal
+    claim: Baseline doubles with fe_mul by 2 and an explicit negation; scalar_mul branches on bits.
+    verified_by: this session read the quoted excerpt
+  assumptions:
+  - Scalars are clamped (bit 254 set), giving a fixed 254-iteration loop.
+  - The second operand is affine (Z = 1) as produced by from_affine.
+  - d non-square and -1 square; asserted by test.
+  predictions:
+  - metric: fe_mul per scalar bit
+    direction: lower
+    minimum_effect: 16 (1-bit) / 5 (0-bit) to a constant 10
+  - metric: fe_inv per scalar multiplication
+    direction: lower
+    minimum_effect: 253 worst case to 0 (one final inversion for encoding only)
+  - metric: RFC 8032 mismatches
+    direction: equal
+    minimum_effect: 0
+  minimal_test:
+    design: 'Instrumented Rust test: run RFC 8032 7.1 vectors with the new loop; assert per-iteration
+      counters are identical for all 254 iterations regardless of bit values (uniformity), and totals
+      10M + 4S per bit. Sage script ed25519_dbl_check.sage: double all 8 torsion points and 100 random
+      points, assert Z_3 != 0, Z_3 T_3 = X_3 Y_3, agreement with the affine doubling and with the unified
+      law at P_1 = P_2.'
+    controls:
+    - Old double versus new double agree projectively on identical inputs; new equals -1 times HCD outputs
+      coordinatewise.
+    - Unified doubling (A = (Y-X)^2, B = (Y+X)^2, C = k T^2, D = 2 Z^2) as a second oracle.
+    required_metrics:
+    - per-iteration mul and sq counters and their variance across iterations (must be 0)
+    - torsion doublings with Z_3 = 0 (must be 0)
+    - RFC 8032 mismatches
+  falsification_conditions:
+  - Any rational point doubles to Z_3 = 0 or violates Z_3 T_3 = X_3 Y_3.
+  - Counters differ between a 0-bit and a 1-bit iteration.
+  - Any RFC 8032 mismatch.
+  confounders:
+  - If fe_sq is fe_mul internally the 4S count appears as 4M; count by call site.
+  - cselect implemented with a branch would reintroduce bit-dependent control flow; the test inspects
+    the implementation, not timing.
+  interpretation_limits:
+  - Uniform operation sequence over BigUint is not constant time; the claim is at the formula and control-flow
+    level only.
+  heuristic_assumptions:
+  - id: H1
+    statement: The doubling and the T-free addition are complete and the loop is bit-uniform.
+    rigorous_support: Algebra above; BBJLP Thm 3.3; HCD sec 4 argument that T is produced by doubling
+      and consumed by addition.
+    validation_plan: Counters per iteration plus exhaustive torsion doublings.
+  target_complexity:
+    time_exponent: not an exponent claim; 10M + 4S + 14a per bit
+    memory_exponent: one cached point (3 field elements) plus accumulator
+    best_known: HCD 2008 mixed system 11M + 4S + 1c per bit uncached
+    hidden_overhead: one inversion at the end for encoding
+    tradeoff_note: unified-doubling oracle costs 1c more and reads T; not used in the loop
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: high
+  dominated_by: HCD 2008 sec 4 for the T-dropping idea; the sign normalisation, the affine-Niels 6M addition
+    and the uniform loop are the repository delta.
+  sota_delta: 'Against the repository: variable 5M+4S / 16M+4S+1I per bit with a branch to constant 10M
+    + 4S per bit without branch or inversion. Against HCD mixed system: 1M + 1c fewer per bit via the
+    affine cache.'
+  prior_art:
+    frontier_map: not_applicable
+    not_applicable_reason: Curve25519 explicit-formula campaign; no ECDLP mechanism is claimed.
+    none_found_after:
+    - BRIEF ledger excerpt scanned for doubling, extended, ladder, T-drop
+    - BRIEF repository excerpts read in full

@@ -1,0 +1,13 @@
+# Optional strict-closure certificate emission
+
+2026-11-09. Implementation summary; hand-system software controls only.
+
+`analyze(n_vars, equations, operation_limit, include_certificate=False)` preserves the default result shape and accounting behavior when certificate emission is disabled. When enabled, a complete result includes `certificate` with schema `strict-boolean-lfd-certificate/v1`, n_vars, literal copied equation masks, and every cap 0..N+1. Each cap contains the successful independent basis rows in insertion order. A row has sorted numeric monomial masks; its source identifies an input equation or a prior basis row multiplied by one variable; reductions name the earlier basis rows XORed in order. The internal pivot order is decreasing monomial degree then ascending numeric mask, matching the existing immutable echelon algorithm.
+
+Certificate emission records successful insertions only. It is provenance for membership, not by itself a check of saturation. A separate verifier must check source validity, strict parent multiplication degree, reduction equality, independence/echelon pivots, input containment, and the full multiplication closure. The producer retains `independently_checked_certificate:false` until that separate verification occurs elsewhere.
+
+Trace storage has a hard total ceiling of 200000 charged entries. Input copies, cap/row metadata, source storage, row monomials, and reduction references are charged; transient reduction references for dependent attempts also consume the allowance conservatively. Row extraction and sorting have operation-budget charges. Either operation exhaustion or trace-entry exhaustion returns `status:budget_exhausted`, `exact_lfd:null`, and `certificate:null`, never a truncated emitted proof. The emission-enabled result identifies the exhausted resource. The ceiling bounds the internal production trace; a file reader/verifier must additionally enforce its own byte/schema caps.
+
+One bounded command, `timeout 10s python3 -m unittest test_exact_boolean_lfd -v`, passed 11 tests in 0.003 seconds. New controls reconstruct every emitted row on a small feedback example from sources and reductions, check strict parent degrees, prior references, distinct degree-first pivots, deterministic output, unchanged plain exact degree, extra trace accounting, and null output on both exhaustion routes. These controls are not a scientific certificate replay or independent full-closure validation.
+
+Immutable source snapshots, test log, and hashes are preserved in `exact-boolean-certificate-controls/receipt.json`. Producer SHA256: 0b7d68427744024e61129d190502575849c64b0169795906caa0ce954530ef16. Test SHA256: 46d735706f350d6b47efeead5c5b920c9bc48d8e2a1e69635b1176c9493b540a.

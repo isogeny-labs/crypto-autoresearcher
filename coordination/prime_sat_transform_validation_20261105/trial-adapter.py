@@ -8,7 +8,12 @@ import sys
 import tarfile
 
 
-def digest(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()
+def digest(p):
+    digest = hashlib.sha256()
+    with Path(p).open('rb') as stream:
+        for chunk in iter(lambda: stream.read(1024 * 1024), b''):
+            digest.update(chunk)
+    return digest.hexdigest()
 def put(p,value):
     with p.open('x') as f:f.write(json.dumps(value,indent=2,allow_nan=False)+'\n')
 

@@ -30,14 +30,10 @@ def _bind(source, forms):
     if current != source["moved_form"]:
         raise ValueError("source radical coefficient orbit does not close")
     lift = candidate_lift(field, forms)
-    if lift["status"] == "no_order_n_lift_for_coherent_relation_algebra":
-        return {"schema": "pext.source-radical-binding/v1", "source_map": source,
-                "conjugate_forms": forms, "radical_action": lift,
-                "source_generator_index": 0,
-                "status": "source_generator_checked; no_order_n_lift"}
-    if (lift.get("degree") != field.n or lift.get("order_n_check") is not True
+    if (lift.get("status") != "order_n_radical_lift_checked; source_map_and_model_pending"
+            or lift.get("degree") != field.n or lift.get("order_n_check") is not True
             or len(lift.get("generator_signs", [])) != field.n):
-        raise ValueError("source radical action degree or order mismatch")
+        raise ValueError("source radical action absent, degree or order mismatch")
     return {"schema": "pext.source-radical-binding/v1", "source_map": source,
             "conjugate_forms": forms, "radical_action": lift,
             "source_generator_index": 0,

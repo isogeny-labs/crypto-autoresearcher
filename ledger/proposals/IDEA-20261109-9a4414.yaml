@@ -1,0 +1,111 @@
+idea:
+  id: IDEA-20261109-9a4414
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECC-3fae8b
+  title: Explicit 4-isogeny Edwards25519 to x^2 + y^2 = 1 + (1/121666) x^2 y^2 at 3M + 4S with kernel
+    the rational 4-torsion, exceptional exactly on the four order-8 points, with its dual and Montgomery
+    u-map
+  class: representation
+  claim: 'psi(x,y) = ( 2xy/(x^2+y^2) , (y^2-x^2)/(2+x^2-y^2) ) is a 4-isogeny from E: -x^2 + y^2 = 1 +
+    d x^2 y^2 to E'': x^2 + y^2 = 1 + d'' x^2 y^2, d'' = d + 1 = 1/121666, with kernel {(0,1),(i,0),(0,-1),(-i,0)}.
+    In projective coordinates it costs 3M + 4S and no constant multiply, the same as a projective doubling,
+    and shares every squaring with doubling. The affine formula is regular on all of E(F_p) except the
+    four order-8 points, which it sends to the order-2 points at infinity of E''; E'' is incomplete because
+    a'' = 1 and d'' are both squares. The dual psi-hat(x'',y'') = ( 2x''y''/(y''^2-x''^2) , (y''^2+x''^2)/(2-x''^2-y''^2)
+    ) satisfies psi-hat o psi = [4] up to the automorphism -1, fixed by the script. Quadrupling through
+    psi-hat o psi costs 6M + 8S, equal to two doublings: no speedup is claimed.'
+  mechanism: 'Derivation: compose the classical 2-isogeny with kernel (0,0) on v^2 = u^3 + A u^2 + u,
+    (u,v) -> ( (u^2 + A u + 1)/u , v(1-u^2)/u^2 ), onto V^2 = U(U-(A-2))(U-(A+2)); the order-4 point (1,s)
+    lands on (A+2,0); translate X = U - (A+2) and apply the same isogeny with kernel (0,0) again: discriminant
+    (A+6)^2 - 16(A+2) = (A-2)^2, so the codomain is (2-A) w^2 = z^3 + A'' z^2 + z with A'' = 2(A+6)/(A-2),
+    whose Edwards parameters scale to (a'',d'') = (1, 4/(A+2)) = (1, d+1). Composite u-map: u -> (u+1)^2
+    (u^2 + A u + 1) / ((2-A) u (u-1)^2), degree 4, poles exactly at u in {0,1,infinity}. Substituting
+    u = (1+y)/(1-y) gives y'' = (1 + d y^4)/(1 + 2 d y^2 - d y^4) = (1 + d x^2 y^2)/(1 - d x^2 y^2) =
+    (y^2 - x^2)/(2 + x^2 - y^2), and solving x''^2 = (1-y''^2)/(1-d'' y''^2) gives x'' = 2xy/(x^2+y^2)
+    using 1 - 2y^2 - d y^4 = -(1+d)(1 + 2x^2 - d x^4) on the curve. Codomain check: with T = y^2 - x^2
+    = 1 + d x^2 y^2, (2-T)^2 - (d+1)T^2 = -d (x^2+y^2)^2 identically. Projective: A_1 = X^2, B_1 = Y^2,
+    C_1 = Z^2, E_1 = (X+Y)^2 - A_1 - B_1, G_1 = A_1 + B_1, H_1 = B_1 - A_1, F_1 = 2C_1 - H_1, psi = (E_1
+    F_1 : H_1 G_1 : G_1 F_1). With HCD doubling names E, G = B - A, H = -A - B, F = G - 2Z^2 one has [2]P
+    = (EF : GH : FG) and psi(P) = (-EF : -GH : HF), so the pair costs 4M + 4S. Exceptional locus: X^2
+    + Y^2 = 0 is y(2P) = 0, i.e. 2P of order 4, i.e. P of order 8; psi(P) = (E_1 F_1 : 0 : 0) = (1:0:0).
+    2 + x^2 - y^2 = 0 needs x^2 y^2 = 1/d, non-rational. Symmetry: psi is invariant under translation
+    by (0,-1), (x,y) -> (-x,-y), and by (i,0), (x,y) -> (iy, ix); the invariants x^2+y^2 (up to sign),
+    xy(x^2+y^2), y^2 - x^2 are what the formula is built from.'
+  novelty_status: unverified
+  citations:
+  - ref: Hamburg, Decaf, CRYPTO 2015, and Ed448-Goldilocks 2015, isogeny E_{a,d} -> E_{-a,d-a}
+    provenance: recalled
+    claim: General doubling-shaped 4-isogeny between twisted Edwards curves.
+    verified_by: null
+  - ref: Hisil-Wong-Carter-Dawson 2008 section 3.3
+    provenance: recalled
+    claim: Doubling intermediates A,B,C,E,F,G,H used for the shared-work count.
+    verified_by: null
+  - ref: src/ecc/ed25519.rs
+    provenance: internal
+    claim: The repository doubling uses exactly these intermediates.
+    verified_by: brief excerpt read in this session
+  assumptions:
+  - 121666 is a square mod p (equivalently -486664 is, as RFC 7748 uses); the script asserts.
+  - j(E) is not 0 or 1728, so Aut(E) = {1,-1} and the dual is determined up to sign.
+  predictions:
+  - metric: psi(P) on E' for 1000 random P and all 8 small-order P
+    direction: equal
+    minimum_effect: curve equation holds exactly
+  - metric: psi-hat(psi(P)) versus [4]P
+    direction: equal
+    minimum_effect: equality up to one global sign, same sign on every sample
+  - metric: number of rational P with X^2 + Y^2 = 0
+    direction: equal
+    minimum_effect: exactly 4, all of order 8
+  minimal_test:
+    design: 'scripts/sage/ed25519_isogeny4.sage: build E and E'' over GF(p); assert the codomain equation,
+      homomorphism psi(P+Q) = psi(P)+psi(Q) using the E'' addition law on generic points, kernel images,
+      the dual composition sign, the Montgomery u-map agreement y''(psi P) = (Y''-kappa)/(Y''+kappa) with
+      kappa = 2-A, and that E''(F_p) has four rational 2-torsion points.'
+    controls:
+    - 'Null object: replace d+1 by d in the codomain; the equation check must fail.'
+    - 'Doubling as reference: psi must not equal [2]P on random P (distinct maps).'
+    required_metrics:
+    - codomain failures
+    - homomorphism failures
+    - composition sign
+    - count of rational solutions of X^2+Y^2=0
+  falsification_conditions:
+  - Any random point not on E' after psi.
+  - psi(P) in affine E' for an order-8 point.
+  - psi-hat o psi differs from [4]P by other than a global sign.
+  confounders:
+  - Sign conventions of i and c only permute the kernel points, not the map.
+  interpretation_limits:
+  - No cost advantage is claimed; quadrupling equals two doublings.
+  - E' is incomplete; no scalar multiplication should be moved there.
+  - Image psi(E(F_p)) has index 4, isomorphic to Z/2 x Z/l; psi does not kill the full cofactor 8.
+  heuristic_assumptions:
+  - id: H1
+    statement: The two classical kernel-(0,0) isogenies compose to a cyclic 4-isogeny, not to [2].
+    rigorous_support: The second kernel is the image of (1,s), an order-4 point, so the composite kernel
+      is cyclic of order 4.
+    validation_plan: The script's kernel and composition assertions.
+  target_complexity:
+    time_exponent: not applicable
+    memory_exponent: O(1) field elements
+    best_known: projective doubling 3M + 4S
+    hidden_overhead: none
+    tradeoff_note: shared intermediates give psi and [2]P together for 4M + 4S
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  dominated_by: Hamburg's general isogeny; delta is the Ed25519 instantiation, exceptional locus and shared-work
+    count.
+  sota_delta: No exponent or count improvement; adds an explicit, script-checked map with named exceptional
+    points for this curve.
+  prior_art:
+    frontier_map: not_applicable
+    not_applicable_reason: curve25519 explicit-formula campaign, not an ECDLP mechanism
+    none_found_after:
+    - BRIEF section 2 ledger index searched for isogeny, 4-isogeny, Decaf, Ristretto, 121666
+    - IDEA-20260905-05648a read in excerpt; it certifies torsion, states no isogeny formula

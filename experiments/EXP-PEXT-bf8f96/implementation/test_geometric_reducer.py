@@ -159,8 +159,14 @@ class GeometricReducerTests(unittest.TestCase):
                 self.plan = source_plan
 
             def bind(self, class_index, t_index):
-                return {"cohort": self.cohort, "join_plan_sha256": self.plan_sha256,
+                return {"schema": "pext.candidate-binding/v1",
+                        "experiment": "EXP-PEXT-bf8f96",
+                        "cohort": self.cohort, "join_plan_sha256": self.plan_sha256,
                         "class_index": class_index, "T_index": t_index,
+                        "model": [0, 0], "target": None,
+                        "input_sha256": "a"*64, "manifest_sha256": "a"*64,
+                        "structure_offset": t_index*819,
+                        "structure_end_exclusive": (t_index+1)*819,
                         "quotient_form": self.plan["forms"][t_index],
                         "field": field, "structures_per_T": 819}
 
@@ -176,6 +182,14 @@ class GeometricReducerTests(unittest.TestCase):
                      "input.json": json.dumps({"binding": binding}).encode(),
                      "receipt.json": b"{}\n"}
             restored.append((name, files))
+            from independent_candidate_unit import IndependentCandidateChecker
+            from generic_interval_descent import certify_from_checked_review
+            checker = IndependentCandidateChecker(field)
+            independent = checker.verify(
+                unit, binding["quotient_form"],
+                geometry_ordinals=[row[0] for row in unit["rows"]])
+            generic_descent = certify_from_checked_review(
+                unit, binding, checker, independent, hashlib.sha256(raw).hexdigest())
             reviews.append({"name": name, "class_index": 0,
                             "T_index": ordinal, "chunk": chunk,
                             "compressed_sha256": hashlib.sha256(files["unit.json.gz"]).hexdigest(),
@@ -183,9 +197,8 @@ class GeometricReducerTests(unittest.TestCase):
                             "receipt_sha256": hashlib.sha256(files["receipt.json"]).hexdigest(),
                             "raw_sha256": hashlib.sha256(raw).hexdigest(),
                             "geometry_ordinals": [row[0] for row in unit["rows"]],
-                            "independent": {"valid": True,
-                                            "exceptional": unit["exceptional"],
-                                            "structures": 819}})
+                            "independent": independent,
+                            "generic_descent": generic_descent})
         with tempfile.TemporaryDirectory() as scratch:
             root = Path(scratch)
             review_bytes = b"".join((json.dumps(row) + "\n").encode() for row in reviews)
@@ -209,6 +222,10 @@ class GeometricReducerTests(unittest.TestCase):
                                          read_order="reverse")
             self.assertEqual(forward, backward)
             self.assertEqual(len(forward[0][0]["units"]), 2)
+            self.assertEqual(forward[0][0]["units"][0]["prospective_descent"]
+                             ["covered_count"], 819)
+            self.assertEqual(forward[0][0]["units"][0]["prospective_descent"]
+                             ["descent_status"], "unresolved")
 
 
 if __name__ == "__main__":

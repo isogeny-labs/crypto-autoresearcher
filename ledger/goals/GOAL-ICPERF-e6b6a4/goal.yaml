@@ -335,16 +335,40 @@ research_goal:
         At the RBS-ICPERF-de8978 evidence review (DEC-20261106-ecf261 NA-3).
       asserts_nothing_about: >-
         H-ICPERF-4cb536 or C1.
+    - id: IMP-C1-d5ec1e-partial-output
+      raised: '2026-11-07'
+      condition: >-
+        research_dispatch cannot archive partial output of a failed source. The snapshot
+        archive TASK-20261106-d5ec1e of the terminal session RBS-ICPERF-de8978 cannot complete:
+        its source TASK-20261106-724d14 declares 36 artifact paths and 14 exist. A scratch commit,
+        never pushed, was REFUSED with "completed archive task TASK-20261106-d5ec1e path_sha256 must
+        cover every archive and source artifact" (DEC-20261107-3e9d71).
+      what_is_blocked: >-
+        TASK-20261106-d5ec1e. Not TASK-20261107-c5a0f4 or the new C1 session: neither depends on it.
+        Interim custody is PR #3127, with hashes recorded by archive TASK-20261107-c5a0f4.
+      clears_when: >-
+        a reviewed tooling change supports per-path void of never-produced paths, or a
+        Coordinator decision rules another lawful custody.
+      recheck: >-
+        At the C1 evidence review, together with IMP-C1-dccfdc-partial-output.
+      asserts_nothing_about: >-
+        H-ICPERF-4cb536 or C1.
   next_action: >-
-    C1: RBS-ICPERF-de8978 stopped at USD 0 on a GitHub 500 during the claim push, before
-    launch (DEC-20261106-3a91f7). It is reopened, not replaced. Once DEC-20261106-3a91f7 is on
-    origin/main, after claim TASK-20261106-724d14 epoch 1 expires (2026-11-07T01:54:40Z), and
-    when its before_relay conditions hold, re-relay CARD-EXP-ICPERF-127dbd-2 unchanged to
-    executor-mechanical with the five relay facts. Its step 2 reopens the session (S02
-    attempt 2, claim epoch 2, T1 RUN-ICPERF-8b0d47 then T2 RUN-ICPERF-5ffa79). Record
-    tools/token_usage.py, then run snapshot TASK-20261106-d5ec1e alone before any review.
+    C1: S1 ran once (T1 RUN-ICPERF-8b0d47, job exit 42), but wrapper v3a could not locate the
+    results, so RBS-ICPERF-de8978 is terminal as an implementation_error. That is not evidence, and
+    no -r2 is triggered (DEC-20261107-b74e2c). The snapshot d5ec1e is impeded
+    (IMP-C1-d5ec1e-partial-output, DEC-20261107-3e9d71). The unratified approval state of PR #3132
+    was reset by DEC-20261107-e41c08. The red-team review TASK-20261107-9d2b6a (PR #3140) led
+    DEC-20261107-a83c51 to adopt controls K-1 to K-7. The director returned v3c
+    (TASK-20261107-d07e94, archived in PR #3144). DEC-20261107-c3e91a rules its K-7 blockers. The
+    proxy and CA variables pass under pins, every bash step starts as /bin/bash -p, and credentials
+    come only from the named environment variables. That changes bytes, so v3d comes first. Next:
+    once PR #3144 and the c3e91a ledger archive are on main, dispatch TASK-20261107-5f7d2b (v3d, zero
+    runs) to the experiment-director and write its custody receipt. Then dispatch the red-team
+    reconfirmation TASK-20261107-a9406e on the v3d bytes. Only then may DEC-20261107-7802ec be
+    written, carrying the filed_before_affected_data qualification. No launch before that approval.
     Other ICPERF lanes continue as separately ranked.
-  next_action_recorded_at: '2026-11-06'
+  next_action_recorded_at: '2026-11-07'
 
   owner: coordinator
   created_at: '2026-09-13'

@@ -1,0 +1,59 @@
+idea:
+  id: IDEA-20261109-bbd3e2
+  question_id: RQ-ISO-68bbac
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  class: measurement
+  novelty_status: adaptation
+  title: Uniformity of the fixed-degree auxiliary-isogeny sampler over O_pk (aux-side ZK gap)
+  attack_type: security_proof_gap
+  assumption_attacked: The ZK simulator's requirement that E_aux be distributed as the codomain of a uniformly
+    random isogeny of degree d = 2^e - q from E_pk.
+  claim: The signer's norm-equation solver over O_pk (using I_sk to pull back to O_0) produces a law on
+    left O_pk-ideals of norm d whose chi-square against the uniform law on the d*prod_{l|d}(1+1/l) ideals
+    rejects at p < 0.01 for a positive fraction of (E_pk, d) at toy scale. This is the aux-side counterpart
+    of the response-side record; it extends H-ALISO-014 and H-ALISO-016 (p1243 auxiliary discriminant
+    search / geometric principalization) and the admissibility statistics of H-SSIQ-dfee7e. The published
+    torsion images of phi_aux are intentionally recoverable (verifier's Kani step); no SIDH-type secret
+    is involved. No Lean coverage; missing statement recorded.
+  mechanism: Toy p; fix E_pk with known End; for each d in a sample of 2^e - q values, enumerate all left
+    O_pk-ideals of norm d (feasible for d < 2^20 at toy p), run the signer's solver 10^6 times, tabulate
+    codomain classes, compute chi-square and the maximal per-class ratio to uniform. Repeat for 20 keys
+    to test whether the deviation pattern is key-dependent (would make E_aux a key distinguisher) or key-independent
+    (pure simulator mismatch).
+  quantitative: ideals of norm d about d*prod(1+1/l); 10^6 samples per (key, d); 20 keys x 10 values of
+    d.
+  cleared:
+    checked:
+    - 'H-ALISO-014: p1243 auxiliary discriminant search (auxiliary norm-equation object)'
+    - 'H-ALISO-016: p1243 auxiliary geometric principalization (ideal-to-isogeny translation of the aux
+      ideal)'
+    - 'H-SSIQ-dfee7e: admissible-divisor statistics, integer-only Arm I'
+    disproven: none in the brief
+    lean: no Lean coverage; would need "for d coprime to p the left O_pk-ideals of norm d number d*prod_{l|d}(1+1/l)"
+      (formalizable) and "the solver output law is uniform on them" (the heuristic)
+    exp: none; nearest surface is aburan28/cryptanalysis (p1243_auxiliary_* packages per H-ALISO-014..017)
+  kill_test: If chi-square p-values exceed 0.01 for all (key, d) and the maximal per-class ratio is below
+    1.5, the aux-side simulation gap is empirically closed at toy scale.
+  cost: CPU-days; ideal enumeration dominates.
+  distinguish: Proof gap. A key-dependent deviation would upgrade to a public-key distinguisher but not
+    to key recovery.
+  prior_art:
+    frontier_map: not_applicable
+    searched:
+      corpus_grep:
+      - H-ALISO-014
+      - H-ALISO-015
+      - H-ALISO-016
+      - H-ALISO-017
+      - H-SSIQ-dfee7e
+    none_found_after:
+    - 'brief grep: auxiliary isogeny / FixedDegree'
+    - 'brief grep: KLPT output distribution'
+    - 'brief grep: uniform ideal sampler'
+    not_applicable_reason: This campaign is isogeny/formula engineering, not an ECDLP-mechanism claim;
+      the ECDLP frontier map does not cover the relevant literature.
+  nearest_record:
+    id: H-ALISO-016
+    relation: extends

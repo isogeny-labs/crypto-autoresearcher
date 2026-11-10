@@ -1,0 +1,153 @@
+idea:
+  id: IDEA-20261109-606aa3
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: GHS Weil descent on a composite-degree binary toy family as the positive control of the cover-transfer
+    lane, the ladder-slope estimator must report an exponent below 1/2 on the one cover transfer with
+    a published sub-rho record
+  class: control
+  claim: 'For E over F_{2^{ln}} in the GHS-weak locus (magic number m with cover genus g = 2^{m-1} or
+    2^{m-1} - 1 small, Menezes-Teske-Weng), the descended hyperelliptic C over F_{2^l} has Jac(C)(F_{2^l})
+    of size about 2^{lg} containing the prime-order subgroup of E, and Gaudry-Theriault index calculus
+    with large primes costs about 2^{l(2 - 2/g)}. The ladder-slope estimator alpha (cost proportional
+    to #<P>^alpha, the estimator of GOAL-ICEX-001 per IDEA-20260805-4d31bc) must return alpha = (2 - 2/g)/n
+    with a 95 percent interval excluding 1/2 over at least 6 rungs l, while matched rho returns alpha
+    = 1/2 +- 0.03. For the smallest admissible case g = 2, n = 3 the prediction is alpha = 1/3. This is
+    a control, the mechanism is KR-IC-5ea2f8; the point is that the estimator used to judge prime-field
+    claims has never been shown to detect a true cover transfer of the shape the F_p size law forbids.'
+  mechanism: GHS builds the Weil restriction of a function field extension and takes a subfield curve;
+    the DL moves by the conorm-norm map into Jac(C) over the subfield, where index calculus with factor
+    base of size about 2^{l(1 - 1/g)} beats rho on E whenever (2 - 2/g)/n < 1/2. Over F_p there is no
+    subfield, so the same construction yields a Jacobian over F_p of size p^g and cost at least p (Wave-1
+    admissibility record); the control shows what a genuine positive looks like to the estimator.
+  novelty_status: known
+  citations:
+  - ref: KR-IC-5ea2f8
+    provenance: internal
+    claim: GHS Weil descent and cover attacks are effective on weak fields.
+    verified_by: brief section 3, index-calculus table, read 2026-11-09
+  - ref: KR-IC-ae532f
+    provenance: internal
+    claim: GLS-assisted GHS descent broke a prime-order subgroup over F_{2^{5*31}}, the published positive
+      of this shape.
+    verified_by: brief section 3, read 2026-11-09
+  - ref: IDEA-20260805-4d31bc
+    provenance: internal
+    claim: The ladder-slope estimator is the instrument this control calibrates.
+    verified_by: brief section 2 index line, read 2026-11-09
+  assumptions:
+  - crypto/research/ghs-c2pnb contains or can be extended to compute the GHS cover; the next agent reads
+    it for field degrees, curve files and any Jacobian arithmetic.
+  - If no Jacobian index calculus exists in the repos a minimal Gaudry-Theriault for genus 2 and 3 over
+    F_{2^l} must be written in Sage; cost is charged.
+  proof_search_map:
+    not_applicable_reason: Control run, mechanism is a frontier row.
+    bottleneck: not_applicable
+    baseline_embedding:
+      parameter_slice: not_applicable
+      reproduction_check: not_applicable
+    observation_collision:
+      observable: not_applicable
+      distinct_preimage_search: not_applicable
+    constructive_transforms: []
+    quantifier_order: not_applicable
+    method_ceiling:
+      strongest_certifiable_claim: not_applicable
+      nearby_object_control: not_applicable
+    proof_obligations: []
+  predictions:
+  - metric: alpha_GHS from the ladder fit, g = 2, n = 3
+    direction: lower
+    minimum_effect: 95 percent interval entirely below 0.45 and containing 1/3
+  - metric: alpha_rho on the same instances
+    direction: different
+    minimum_effect: interval containing 1/2, width at most 0.06
+  - metric: alpha_GHS on the non-weak arm
+    direction: different
+    minimum_effect: no finite transfer within budget, reported as not applicable
+  minimal_test:
+    design: Build toy curves E over F_{2^{3l}} for l = 8..20 in the GHS-weak locus with cover genus 2
+      (fall back to genus 3 and alpha = 4/9 if genus 2 is not available for n = 3), prime subgroup order
+      r near 2^{3l}. Compute the descent, map 20 random instances per rung, run genus-g index calculus
+      with large primes, charge all field operations including descent and linear algebra. Run matched
+      rho (cryptanalysis ca_rho.h via ecbench if a binary-field group is exposed, otherwise Sage) on the
+      same instances. Fit log cost against log r for both.
+    controls:
+    - Matched rho on identical instances.
+    - Non-weak arm, same field degrees, generic curve with large magic number, descent budget capped.
+    - Prime-field toy curve of equal group size, no descent exists, estimator reports rho only.
+    required_metrics:
+    - l, n, g, m, r per rung
+    - charged ops for descent, relation collection, linear algebra, descent of the target
+    - alpha_GHS and alpha_rho with intervals
+    - rungs used and failures
+  falsification_conditions:
+  - alpha_GHS interval contains 1/2 on the weak arm with a correct descent, the estimator cannot see a
+    true positive and must not be used to judge prime-field transfer claims.
+  - Descent produces a Jacobian not containing the subgroup of order r, construction error, run void.
+  - Fewer than 6 rungs complete within budget, infrastructure, no conclusion.
+  confounders:
+  - Large-prime variation changes the constant and the small-l slope; report with and without large primes.
+  - Linear algebra dominates at small l; charge it explicitly rather than extrapolate.
+  interpretation_limits:
+  - A passing control says nothing positive about F_p; it certifies the instrument.
+  - Binary-field results do not transfer to prime fields (no subfield), the Wave-1 admissibility record
+    remains the F_p closure.
+  heuristic_assumptions:
+  - id: H1
+    statement: Toy GHS-weak curves with genus-2 or genus-3 covers exist at n = 3 for the field sizes used.
+    rigorous_support: Classification of weak fields is published (KR-IC-5ea2f8); the specific toy parameters
+      must be read from crypto/research/ghs-c2pnb or constructed.
+    validation_plan: Enumerate b in F_{2^{3l}} by Frobenius-orbit size and compute the GHS genus formula
+      before any index calculus.
+  target_complexity:
+    time_exponent: 2^{l(2 - 2/g)} on the subfield Jacobian, alpha = (2 - 2/g)/n in log r; prime field
+      unchanged at N^{1/2}
+    memory_exponent: 2^{l(1 - 1/g)} factor base plus large-prime graph
+    best_known: KR-IC-5ea2f8 and KR-IC-a4dd54 for the control; Pollard rho KR-RHO-13bf67 for F_p
+    hidden_overhead: Descent and linear algebra, both charged.
+    tradeoff_note: Control only, the exponent gain is the published one.
+  estimated_cost:
+    implementation: medium
+    compute: low
+  recommended_priority: medium
+  dominated_by: KR-IC-5ea2f8 and KR-IC-ae532f dominate the mechanism entirely. The record adds only the
+    use of a known positive to calibrate the estimator.
+  sota_delta: Exponent delta 0 for prime fields. Instrument calibration on the one cover transfer that
+    beats rho.
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/index-calculus
+    rows_checked:
+    - KR-IC-5ea2f8
+    - KR-IC-ae532f
+    - KR-IC-a4dd54
+    - KR-IC-46d822
+    - KR-IC-1fcdbc
+    - KR-RHO-13bf67
+    nearest:
+    - ref: KR-IC-5ea2f8
+      provenance: internal
+      relation: same
+      delta: Same mechanism; this record runs it as a calibration control for an estimator, not as an
+        attack.
+    - ref: KR-IC-ae532f
+      provenance: internal
+      relation: special_case
+      delta: Toy-size re-enactment of the record's shape with the slope estimator attached.
+    searched:
+      corpus_grep:
+      - brief section 1b for ghs-c2pnb (directory listed, contents unread)
+      - brief Wave-1 transfer records for positive controls (trace-2 pairing only)
+      - brief Wave-2 drinfeld for Carlitz positive control (polynomial-time shape only)
+      web: []
+      blocked: []
+    lead: LEAD-TRF-ghs-binary-composite
+    lead_delta:
+      kind: answers_obstruction
+      statement: 'New test: Build toy curves E over F_{2^{3l}} for l = 8..20 in the GHS-weak locus with
+        cover genus 2 (fall back to genus 3 and alpha = 4/9 if genus 2 is not available for n = 3), prime
+        subgroup order r near 2^{3l}. Compute the descent, map 20 random instances per rung, run genus-g
+        index calculus with large primes, charge all field operations including descent and linear algebra.
+        Run matched rho (cryptanalysi'

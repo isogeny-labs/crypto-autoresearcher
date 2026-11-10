@@ -1,0 +1,16 @@
+# isolation record, TASK-20261107-5f7d2b, final, 2026-11-07T08:48:11Z
+-- every test, harness, mutation run and C1 script ran as: env -i HOME=$HOME TMPDIR=<scratchpad>/tmp PATH=<scratchpad>/isobin:/usr/bin:/bin bash ...
+-- isobin holds only two relative symlinks: aws -> .../tests/fake-aws, fake-launch-remote -> .../tests/fake-launch-remote
+total 8
+lrwxrwxrwx 1 root root 73 Nov  7 06:26 aws -> ../dir-5f7d2b/experiments/EXP-ICPERF-127dbd/implementation/tests/fake-aws
+lrwxrwxrwx 1 root root 83 Nov  7 06:26 fake-launch-remote -> ../dir-5f7d2b/experiments/EXP-ICPERF-127dbd/implementation/tests/fake-launch-remote
+command -v aws: <scratchpad>/isobin/aws
+readlink -f aws: <scratchpad>/dir-5f7d2b/experiments/EXP-ICPERF-127dbd/implementation/tests/fake-aws
+env | grep -c AWS_: 0
+/usr/bin/aws, /bin/aws: ls: cannot access '/usr/bin/aws': No such file or directory ls: cannot access '/bin/aws': No such file or directory 
+-- inside the suites the only AWS_* values are the literal dummies the cases set (AKIDFAKEFAKEFAKEFAKE, fakesecretfakesecretfakesecret0000) and the constants the scripts add; no real credential, proxy value or endpoint was used. The suites refuse to start when an AWS_* variable is in their own environment (their own check printed 0).
+-- the director session itself (outside env -i), for the record only:
+command -v aws in the session shell: [] (empty = no aws executable on the session PATH)
+AWS_* variable NAMES in the session shell (values never printed): AWS_ACCESS_KEY_ID AWS_CA_BUNDLE AWS_SECRET_ACCESS_KEY 
+-- the PY-1 and V-1 local reads (evidence/py1-botocore-origin.txt, v1-local-checks.txt) ran the venv's python and realpath/sha256sum only; the aws executable was never run.
+-- no AWS, kubectl, CodeBuild or isolab call was made; no call went through the platform proxy; nothing was written under /root/.ccr.

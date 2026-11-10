@@ -1,0 +1,61 @@
+{
+  "schema": "semaev.sat-export-control/v1",
+  "unit_command": "python3 -m unittest -v test_certificate_sat.py",
+  "tests_passed": 5,
+  "unit_exit_code": 0,
+  "commands": [
+    {
+      "command": [
+        "/usr/bin/python3",
+        "/home/ec2-user/crypto-lfd-unbounded-20261109/analysis/semaev-bound-labels-20261109/certificate_sat.py",
+        "encode",
+        "/home/ec2-user/crypto-lfd-unbounded-20261109/analysis/semaev-bound-labels-20261109/sat-control/request.json",
+        "--output-dir",
+        "/home/ec2-user/crypto-lfd-unbounded-20261109/analysis/semaev-bound-labels-20261109/sat-control/bundle"
+      ],
+      "exit_code": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/python3",
+        "/home/ec2-user/crypto-lfd-unbounded-20261109/analysis/semaev-bound-labels-20261109/certificate_sat.py",
+        "check-model",
+        "/home/ec2-user/crypto-lfd-unbounded-20261109/analysis/semaev-bound-labels-20261109/sat-control/request.json",
+        "/home/ec2-user/crypto-lfd-unbounded-20261109/analysis/semaev-bound-labels-20261109/sat-control/model.txt",
+        "--profile-limit",
+        "4",
+        "--output",
+        "/home/ec2-user/crypto-lfd-unbounded-20261109/analysis/semaev-bound-labels-20261109/sat-control/checked-model.json"
+      ],
+      "exit_code": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/python3",
+        "/home/ec2-user/crypto-lfd-unbounded-20261109/analysis/semaev-bound-labels-20261109/certificate_sat.py",
+        "check-model",
+        "/home/ec2-user/crypto-lfd-unbounded-20261109/analysis/semaev-bound-labels-20261109/sat-control/request.json",
+        "/home/ec2-user/crypto-lfd-unbounded-20261109/analysis/semaev-bound-labels-20261109/sat-control/unproved-unsat.txt",
+        "--output",
+        "/home/ec2-user/crypto-lfd-unbounded-20261109/analysis/semaev-bound-labels-20261109/sat-control/unproved-unsat-result.json"
+      ],
+      "exit_code": 2,
+      "stderr": ""
+    }
+  ],
+  "cnf_variables": 1770,
+  "cnf_clauses": 5610,
+  "serialized_clauses_independently_checked": true,
+  "positive_lower_bridge": 3,
+  "solver_executed": false,
+  "dataset_admission": false,
+  "source_sha256": {
+    "certificate_sat.py": "8daf3cac029675b55c8295571f7f52d06a9e6ff825fb8155abaf14645b254c5b",
+    "test_certificate_sat.py": "cd765c4f3133839f732a55669fbe255ddbede17670a987dc41fe97777fcf0f29",
+    "encode_certificate.py": "2a58e6e9621e24f55d24375e11d5004a5fb7eca870e7c72d321cea985508d6b0",
+    "check_candidate.py": "d91161db73efd1fa4ad075540a0a7a7d2f7709b2e804e4c9c2f6e64b85f62bfe",
+    "attach_capacity_bound.py": "12da7817efbe3c3771799cfd035da0bac05e760ca8fae3ea084505798371ae23"
+  }
+}
