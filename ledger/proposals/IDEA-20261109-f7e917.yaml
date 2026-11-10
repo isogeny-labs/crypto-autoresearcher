@@ -1,0 +1,148 @@
+idea:
+  id: IDEA-20261109-f7e917
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: 'Null control for the ascent lane: on a base-changed E/F_p viewed over F_{p^3}, Gaudry''s factor
+    base is the subgroup E(F_p), and translated bases trace back onto most of E(F_p)'
+  class: control
+  claim: 'Let E/F_p have prime order N and view it over F_{p^3} = F_p(theta). (A) The Gaudry factor base
+    F_0 of points R with x(R) in F_p equals E(F_p) exactly (odd degree forces y in F_p), so a random R
+    in E(F_{p^3}) decomposes over F_0 with probability N over the order of E(F_{p^3}), about p^{-2}, against
+    about 1/6 for a curve that is not a base change. (B) For the translated base F_theta of points with
+    x(R) in theta + F_p, decomposition probability is about 1/6, but every relation maps under the trace
+    Tr(R) = R + sigma(R) + sigma^2(R) to a relation in E(F_p) among Tr(F_theta), and Tr(F_theta) covers
+    at least 0.6 N of E(F_p). So the ascent is a prime-field index calculus with a factor base of size
+    about 0.63 N, cost at least N. Predictions fixed before any run: decompositions over F_0 equal 0 in
+    10^4 samples; the F_theta rate lies in [0.10, 0.25]; the coverage ratio of Tr(F_theta) over N lies
+    in [0.55, 0.72] at every rung.'
+  mechanism: The Weil restriction W of a base-changed curve is isogenous to E x T with T the 2-dimensional
+    trace-zero part, and the N-part of the DL lives in the E factor. Any decomposition relation in E(F_{p^3})
+    projects under Tr onto a relation in E(F_p); the effective prime-field factor base is Tr(F), whose
+    size is what matters. For F_0 the trace is multiplication by 3 and the base is the subgroup itself,
+    so no nontrivial target decomposes. For a translate the trace behaves like a random map from about
+    p points onto N, hitting 1 - 1/e of E(F_p). A small trace image with non-negligible decomposition
+    rate is the one way an ascent could help; this record measures that the natural base has no such property.
+    RESEARCH_DIEM_DESCENT.md must be read for whether the base-change case was already recorded.
+  novelty_status: adaptation
+  citations:
+  - ref: KR-IC-46d822
+    provenance: internal
+    claim: Gaudry decomposition over E(F_{q^n}) uses the factor base x in F_q and costs q^{2-2/n}; it
+      presumes E is not a subfield curve.
+    verified_by: REPO BRIEF 2026-11-09 section 3; file not opened
+  - ref: KR-IC-5931ee
+    provenance: internal
+    claim: prime-field Semaev index calculus cannot beat generic methods; the traced relations land in
+      this regime.
+    verified_by: REPO BRIEF 2026-11-09 section 3; file not opened
+  - ref: KR-IC-64659b
+    provenance: internal
+    claim: Diem's subexponential result needs n about sqrt(log q) with q the base field; here q = p cannot
+      shrink.
+    verified_by: REPO BRIEF 2026-11-09 section 3; file not opened
+  assumptions:
+  - p in {2^12, 2^14, 2^16} with E of prime order; F_{p^3} built from a fixed irreducible cubic with root
+    theta.
+  - Decomposition is decided by the Weil-restricted Semaev S_4 system, cross-checked by exhaustive triple
+    search at the smallest rung.
+  predictions:
+  - metric: decompositions of random R over F_0 in 10^4 samples
+    direction: lower
+    minimum_effect: equals 0
+  - metric: decomposition rate over F_theta
+    direction: different
+    minimum_effect: within [0.10, 0.25]
+  - metric: coverage ratio of Tr(F_theta) over N
+    direction: higher
+    minimum_effect: at least 0.55
+  - metric: decomposition rate over F_0 for a non-base-change control curve over F_{p^3}
+    direction: different
+    minimum_effect: within [0.10, 0.25]
+  minimal_test:
+    design: Sage. Enumerate F_0 and F_theta (about p points each, one cube root per x). Sample 10^4 random
+      R in E(F_{p^3}); for each base test whether R is a sum of three base points up to sign (exhaustive
+      at 2^12, Semaev S_4 Weil restriction at larger rungs, both at 2^12). Compute Tr on F_theta and count
+      distinct images. Repeat on a control curve E' with random coefficients in F_{p^3} and a prime-order
+      subgroup, base x in F_p.
+    controls:
+    - E' not a base change, same p and base shape (positive control for the decomposition tester).
+    - Exhaustive versus algebraic decomposition agreement at the 2^12 rung.
+    - Coverage under Tr of a uniformly random subset of E(F_{p^3}) of the same size as F_theta, as the
+      random-map reference.
+    required_metrics:
+    - N, order of E(F_{p^3}), sizes of F_0 and F_theta
+    - decomposition counts per base and per curve
+    - coverage ratio for F_theta and for the random-subset reference
+  falsification_conditions:
+  - Any decomposition over F_0 on the base-changed curve (a bug or a mathematics error; stop).
+  - Coverage ratio below 0.30 at two rungs with F_theta decomposition rate above 0.05; then a small effective
+    prime-field base exists and the ascent lane reopens.
+  - Control curve E' decomposition rate below 0.05; then the tester, not the claim, failed.
+  confounders:
+  - Sign conventions in decomposition change rates by constant factors; report the convention.
+  - At 2^12 the sets are small and coverage variance is a few percent; the band is set accordingly.
+  interpretation_limits:
+  - Measured at n = 3 and p at most 2^16 on one translate; other 1-dimensional F_p-rational subvarieties
+    of W are excluded only by the KR-IC-5931ee regime they trace into, not by this run.
+  heuristic_assumptions:
+  - id: H1
+    statement: the trace restricted to a translated base behaves as a random map onto E(F_p).
+    rigorous_support: None; Tr is a group homomorphism W -> E and F_theta is not a subgroup, so no structure
+      forces a small image. Heuristic.
+    validation_plan: the coverage metric against the random-subset reference at three rungs in this record's
+      Sage script.
+  target_complexity:
+    time_exponent: at least 1 in log_p for the ascent route (factor base about 0.63 N); delta +0.5 against
+      best known
+    memory_exponent: 1
+    best_known: rho p^{1/2} (KR-RHO-13bf67); Gaudry q^{2-2/n} only when the curve is defined over F_{q^n}
+      and not over F_q
+    hidden_overhead: cube roots in F_{p^3} per base point, polynomial
+    tradeoff_note: a control; it quantifies why ascent cannot shrink the field
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  dominated_by: KR-IC-46d822 and KR-IC-64659b fix extension-field costs; KR-IC-5931ee closes the traced
+    prime-field regime. None states the base-change degeneracy or the trace-coverage measurement.
+  sota_delta: 'Exponent delta 0 (the route is worse by p^{1/2}). Instrument delta: a null control that
+    distinguishes a genuine extension-field curve from an ascended prime-field curve by two measured rates.'
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/index-calculus
+    rows_checked:
+    - KR-IC-46d822
+    - KR-IC-64659b
+    - KR-IC-5931ee
+    - KR-IC-081a58
+    - KR-IC-5ea2f8
+    - KR-RHO-755e35
+    nearest:
+    - ref: KR-IC-46d822
+      provenance: internal
+      relation: adjacent
+      delta: Gaudry's base on a genuine F_{q^n} curve versus the same base on a base change, where it
+        degenerates to the subgroup.
+    - ref: KR-IC-5931ee
+      provenance: internal
+      relation: adjacent
+      delta: the traced relations are a prime-field index calculus with base about 0.63 N, the regime
+        that row closes.
+    searched:
+      corpus_grep:
+      - REPO BRIEF section 2 for ascent, Weil restriction, trace zero, base change, Diem
+      - REPO BRIEF section 3 index-calculus rows
+      web: []
+      blocked:
+      - RESEARCH_DIEM_DESCENT.md and the crypto ic executable not opened; the next agent checks whether
+        an ascent or subfield-curve case is already recorded and whether ic can host the decomposition
+        tester
+    lead: LEAD-ICB-nonlinear-frob-stable-bases
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: Sage. Enumerate F_0 and F_theta (about p points each, one cube root per x).
+        Sample 10^4 random R in E(F_{p^3}); for each base test whether R is a sum of three base points
+        up to sign (exhaustive at 2^12, Semaev S_4 Weil restriction at larger rungs, both at 2^12). Compute
+        Tr on F_theta and count distinct images. Repeat on a control curve E'' with random coefficients
+        in F_{p^3} and a prime-order subgr'

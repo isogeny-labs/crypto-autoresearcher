@@ -1,0 +1,153 @@
+idea:
+  id: IDEA-20261109-4668b8
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: 'Degree-2 cover y^2 = x^6 + b of a j = 0 prime-field curve: the order condition is automatic,
+    the genus-2 index calculus costs p^{1+o(1)}'
+  class: transfer
+  claim: 'Let E_b be y^2 = x^3 + b over F_p with p = 1 mod 3 and prime order N, and C_b the genus-2 curve
+    y^2 = x^6 + b. The map phi(x, y) = (x^2, y) is a degree-2 cover C_b -> E_b; the second involution
+    (x, y) -> (-x, -y) has quotient Y^2 = X^3 + b^2, so Jac(C_b) is F_p-isogenous to E_b x E_{b^2} and
+    the number of F_p-points of Jac(C_b) is N * N_2 with N_2 the order of E_{b^2}(F_p). N is odd, so phi^*
+    is injective on E_b[N] and (phi^* P, phi^* Q) is a DL instance in Jac(C_b)(F_p) with the same logarithm.
+    Claim, fixed before any run: on a ladder of toy primes the charged genus-2 index calculus on the transferred
+    instance has log-slope at least 0.9 in log p, matched rho on E_b has slope 0.5 plus or minus 0.05,
+    and the transfer loses by a factor growing as p^{1/2}; at p near 2^256 that factor is about 2^128.'
+  mechanism: Every cover C -> E over F_p puts E into Jac(C) up to isogeny, so divisibility of the Jacobian
+    order by N is never the obstacle in the prime-field transfer lane; the obstacle is that the base field
+    cannot shrink. GHS and cover attacks gain by trading q^n for q; here q = p stays, the Jacobian has
+    about p^2 points, the degree-1 factor base has about p/6 orbits under the order-12 automorphism group
+    of C_b, and enumerating it already exceeds the 2^127 rho budget. A reduced divisor splits into two
+    F_p-points with probability about 1/2; double large primes give the Gaudry-Thome-Theriault-Diem cost
+    p^{1+o(1)}; a reduced base of size B = p^alpha costs 2p^2/B + B^2, minimised at p^{4/3}. The record
+    turns this into a measured slope so the lane has a charged number rather than a sentence.
+  novelty_status: adaptation
+  citations:
+  - ref: KR-IC-a4dd54
+    provenance: internal
+    claim: genus-g index calculus over F_q costs q^{2-2/g} up to log factors; for g = 2 this is q.
+    verified_by: REPO BRIEF 2026-11-09 section 3 row text; file not opened
+  - ref: KR-IC-5ea2f8
+    provenance: internal
+    claim: GHS and cover attacks are effective only for special fields and curves; the gain comes from
+      the field shrinking.
+    verified_by: REPO BRIEF 2026-11-09 section 3 row text; file not opened
+  - ref: KR-RHO-13bf67
+    provenance: internal
+    claim: the matched baseline is rho at p^{1/2} group operations.
+    verified_by: REPO BRIEF 2026-11-09 section 3 row text; file not opened
+  assumptions:
+  - p = 1 mod 3, p > 3, b nonzero mod p; x^6 + b is then squarefree and E_b nonsingular.
+  - E_b(F_p) has prime order N; instances where it does not are skipped and counted.
+  predictions:
+  - metric: fraction of ladder instances with N dividing the order of Jac(C_b)(F_p) and ord(phi^* P) =
+      N
+    direction: higher
+    minimum_effect: equals 1.0
+  - metric: fitted log-slope alpha_IC of charged genus-2 index calculus cost against log2 p
+    direction: higher
+    minimum_effect: at least 0.9
+  - metric: alpha_IC minus alpha_rho (matched rho on E_b)
+    direction: higher
+    minimum_effect: at least 0.35
+  minimal_test:
+    design: 'Ladder p in about {2^16, 2^18, 2^20, 2^22, 2^24}, five b per rung with E_b of prime order.
+      In Sage build C_b, compute its Frobenius polynomial and check it equals L_{E_b} times L_{E_{b^2}}.
+      Push P and Q through phi^*. Run a genus-2 index calculus: factor base = degree-1 points of C_b modulo
+      the order-12 automorphism group; relations from random combinations a*D_P + c*D_Q whose Mumford
+      u(x) splits over F_p; sparse elimination mod N; charge every Jacobian operation in F_p multiplications.
+      Matched rho on E_b via cryptanalysis ca_rho.h with the negation map, same charging. Fit slopes by
+      least squares on log2 cost against log2 p.'
+    controls:
+    - A random genus-2 curve over the same p that does not cover E_b; check that N does not divide its
+      Jacobian order, so the divisibility is the cover's doing.
+    - Matched rho on E_b at each rung, same instance set.
+    - Splitting fraction of reduced divisors recorded per rung; expected near 1/2.
+    required_metrics:
+    - N, N_2, Jacobian order, ord(phi^* P)
+    - charged F_p multiplications per rung for IC and for rho
+    - alpha_IC, alpha_rho, their difference with standard errors
+    - splitting fraction, factor base size, relation count, matrix dimension
+  falsification_conditions:
+  - alpha_IC below 0.75 on a ladder of at least five rungs with standard error below 0.08.
+  - N fails to divide the Jacobian order, or ord(phi^* P) < N, on any rung (a mathematics error; stop
+    and recheck).
+  - A Jacobian-side method on the same instances with charged cost below matched rho at two consecutive
+    rungs.
+  - Timeouts and memory kills are infrastructure, not evidence.
+  confounders:
+  - Cantor arithmetic costs about 3 to 4 times an elliptic addition; charging in F_p multiplications removes
+    wall-clock bias.
+  - At toy scale the factor base is enumerable; at 2^256 it is not, so measured slopes understate the
+    asymptotic loss, never overstate it.
+  interpretation_limits:
+  - A confirmed slope is a measurement at p at most 2^24 on j = 0 curves; it supports, not proves, the
+    p^{1+o(1)} law.
+  - Covers over extension fields are KR-IC-5ea2f8 territory and are not addressed.
+  heuristic_assumptions:
+  - id: H1
+    statement: genus-2 index calculus with double large primes costs p^{1+o(1)} and no known Jacobian
+      method solves the N-subgroup below that.
+    rigorous_support: Heuristic (Gaudry-Thome-Theriault-Diem, recalled; KR-IC-a4dd54). No theorem lower-bounds
+      Jacobian DLP.
+    validation_plan: the ladder slope alpha_IC and the splitting-fraction control in this record's Sage
+      script, with ca_rho.h as the matched arm.
+  - id: H2
+    statement: Jac(C_b) is isogenous to E_b x E_{b^2} and phi^* is injective on the N-part.
+    rigorous_support: Provable from the two commuting involutions of C_b and gcd(N, 2) = 1; the Frobenius-polynomial
+      check certifies it per instance.
+    validation_plan: Sage frobenius_polynomial equality per rung.
+  target_complexity:
+    time_exponent: 1 in log_p (needs below 1/2 to matter); delta +0.5 against best known
+    memory_exponent: 1 (factor base of about p/6 orbits)
+    best_known: rho at p^{1/2} (KR-RHO-13bf67), about 2^127 with the j = 0 automorphism
+    hidden_overhead: Cantor arithmetic constant and one Frobenius-polynomial check per instance, both
+      polynomial
+    tradeoff_note: no reduced-base choice helps; B = p^{2/3} gives p^{4/3}, the full base gives p^{1+o(1)}
+  estimated_cost:
+    implementation: medium
+    compute: low
+  recommended_priority: medium
+  dominated_by: KR-IC-a4dd54 fixes the cost law; KR-IC-5ea2f8 fixes that covers help only when the field
+    shrinks. Neither row states the prime-field sextic cover or its order identity.
+  sota_delta: 'Exponent delta +0.5 (worse). New content: an explicit cover of a secp256k1-shaped curve
+    whose order condition is provably automatic, with a charged toy slope.'
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/index-calculus
+    rows_checked:
+    - KR-IC-a4dd54
+    - KR-IC-5ea2f8
+    - KR-IC-46d822
+    - KR-IC-ae532f
+    - KR-IC-cd159a
+    - KR-RHO-755e35
+    - KR-RHO-53c89f
+    - KR-RHO-13bf67
+    nearest:
+    - ref: KR-IC-5ea2f8
+      provenance: internal
+      relation: adjacent
+      delta: GHS covers descend F_{q^n} to F_q; this cover keeps F_p and measures the resulting loss.
+    - ref: KR-IC-a4dd54
+      provenance: internal
+      relation: special_case
+      delta: the cost law applied to a genus-2 Jacobian isogenous to E times a twist over the same prime
+        field.
+    searched:
+      corpus_grep:
+      - REPO BRIEF section 2 for cover, genus 2, Kani, sextic, GHS, Weil descent, correspondence
+      - REPO BRIEF section 3 rows KR-IC-* and KR-RHO-755e35, KR-RHO-53c89f
+      web: []
+      blocked:
+      - research/ghs-c2pnb and RESEARCH_SECP256K1_CM.md not opened; next agent reads them for an existing
+        cover pipeline and the secp256k1 trace and twist data
+    lead: LEAD-ICP-residual-partial-relations
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: Ladder p in about {2^16, 2^18, 2^20, 2^22, 2^24}, five b per rung with E_b
+        of prime order. In Sage build C_b, compute its Frobenius polynomial and check it equals L_{E_b}
+        times L_{E_{b^2}}. Push P and Q through phi^*. Run a genus-2 index calculus: factor base = degree-1
+        points of C_b modulo the order-12 automorphism group; relations from random combinations a*D_P
+        + c*D_Q whose Mumford u(x) splits '
