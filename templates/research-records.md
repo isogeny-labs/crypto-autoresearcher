@@ -490,6 +490,27 @@ may also cite a `LEAD-*` id with provenance `internal`.
 `special_case` whose provenance is not `recalled`. See
 `knowledge/frontiers/ecdlp/README.md` for the map itself.
 
+## Probe and nearest neighbour on ideas
+
+An ECC-area idea dated **IDEA-20261111-* or later** carries a `probe` and a
+`nearest` block (`tools/check_probe_admission.py`; advisory until 2026-12-01,
+an error after). Source: `docs/autoresearcher-harness-review-20261110.md`, I1
+and I12.
+
+```yaml
+probe:                                  # "designed" means the probe ran
+  command: python3 probes/<name>.py --bits 24   # committed; <= 10 CPU-minutes
+  evaluator: probes/<name>.py           # committed code that emits exactly one number
+  metric: relations_per_second          # what that number is
+  threshold: 1.5                        # pre-stated pass line
+  direction: higher_is_better           # or lower_is_better
+  cpu_minutes: 5                        # number, <= 10
+  instance: "24-bit prime-field curve, factor base 2^8"   # the scaled-down instance
+nearest:
+  id: IDEA-20261001-aaaaaa              # closest existing IDEA-* or LEAD-* id
+  difference: "one sentence, >= 40 characters, on what this idea changes"
+```
+
 ## Citation provenance
 
 Any record field naming an external work — `structural_ingredients[].citation`,

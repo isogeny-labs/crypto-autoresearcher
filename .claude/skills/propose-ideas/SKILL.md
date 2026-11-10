@@ -82,9 +82,17 @@ step 2).
    memory exponents versus the best known, and cost. Send incomplete
    ideas back to the subagent for completion — do not repair them yourself.
    Count every idea you send back; the count goes in the session receipt
-   (step 7), which is the only place this signal exists (`tune-skill`,
+   (step 8), which is the only place this signal exists (`tune-skill`,
    "Bounces").
-5. Save each complete idea as `ledger/proposals/IDEA-YYYYMMDD-<tok>.yaml`
+5. For each ECC idea (IDEA-20261111-* on), have the generator write the `probe:`
+   and `nearest:` blocks (`templates/research-records.md`, "Probe and nearest
+   neighbour"): a committed command of at most 10 CPU-minutes, a one-number
+   evaluator, a threshold, and the nearest `IDEA-*`/`LEAD-*` with a stated
+   difference. Run `python3 tools/check_probe_admission.py <IDEA.yaml>` and
+   fix what it prints. An ECC idea without a probe is not "designed"
+   (AGENTS.md "Approval is bounded by execution";
+   `docs/autoresearcher-harness-review-20261110.md` I1, I12).
+6. Save each complete idea as `ledger/proposals/IDEA-YYYYMMDD-<tok>.yaml`
    (`python3 tools/allocate_id.py --next idea --date YYYYMMDD`, then
    `--check`). Keep a proposal under 8 KB: the claim, mechanism, predictions,
    minimal test and falsification conditions are the record; a derivation,
@@ -95,12 +103,12 @@ step 2).
    the exact research-question, proposal, and any literature-note paths before
    treating the ideas as filed. The task must pass the dispatcher's post-commit
    verification.
-6. Push the branch and open or refresh a PR against `main` naming the new
+7. Push the branch and open or refresh a PR against `main` naming the new
    `RQ-*`/`IDEA-*` records, then enable auto-merge
    (`gh pr merge <n> --auto --merge`; see "Branch and PR hygiene"). A filed
    idea that exists only in a local commit is not a proposal the program can
    use.
-7. Report to the user: one-line summary per idea (ID, class, claim,
+8. Report to the user: one-line summary per idea (ID, class, claim,
    novelty status, cost) plus the generator's recommended first test, and
    end with `python3 tools/session_receipt.py --skill propose-ideas --role
    coordinator --outcome proposed --created <RQ/IDEA ids> --bounced <n>`
