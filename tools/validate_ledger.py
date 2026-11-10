@@ -3938,6 +3938,15 @@ def main() -> int:
     check_confound_assessments(ctx)
     check_ceremony(ctx)
     check_aged_handoffs(ctx)
+    # Harness review 2026-11-10 (crypto:docs/autoresearcher-harness-review-20261110.md):
+    # standalone modules so each rule has its own tests and dates.
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    from check_probe_admission import check_probe_admission      # I1, I12
+    from check_evidence_witness import check_evidence_witness    # I6b
+    from check_handoff_expiry import check_handoff_expiry        # I8
+    check_probe_admission(ctx)
+    check_evidence_witness(ctx, repo_root=REPO)
+    check_handoff_expiry(ctx)
 
     current = set(ctx.errors)
     if args.update_baseline:
