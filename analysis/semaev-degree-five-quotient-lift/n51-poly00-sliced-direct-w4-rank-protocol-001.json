@@ -1,0 +1,347 @@
+{
+  "analysis_plan": {
+    "blinded": false,
+    "frozen_before_data": true,
+    "inputs": [
+      "validation/n51-poly00-sliced-independent.sys SHA a67b8e5f8c5e7df622552f2e9f0ecc45e0882afe290d71933e595c05c567fa31",
+      "validation/n51-poly00-sliced-sys-check-001.json SHA b17835ae4e076f918dc645fb209e6e393af576ca051851025d67f253c6dd74b1",
+      "original n51 polynomial00 accepted D4 map SHA 90878ee8bc6bda02957f25728380a9e677cd13b0f46c9eed1828349da796f115",
+      "checked affine relation SHA c37ca7f727b716acac28463f2db58126588e994a71eb6a66c8c18015f0273985"
+    ],
+    "outputs": [
+      "Write-once admission, start, stdout, stderr, finish, result and export records; compare final W4 rank with 226437."
+    ],
+    "script": {
+      "path": "analysis/semaev-m2-last-fall-degree/code/lfdclose2.c",
+      "sha256": "2413e3a3f34d0fdda8a53b0d62acff53aeaabc593b1c55fe42a3d7db8af3cc4f"
+    }
+  },
+  "arms": [
+    {
+      "description": "Run the direct lfdclose2 D4 fixed-point closure on the SHA-pinned polynomial00 51-variable affine slice.",
+      "id": "direct-w4",
+      "instrument": {
+        "binary_sha256": "f7f920e697b263129e91b44814e18c32b228392496770c29869ab4d00a9e6f04",
+        "build": [
+          [
+            "reuse",
+            "pinned runtime /home/ec2-user/fall-degree-runtime-20261029/bin/lfdclose2, SHA-256 f7f920e697b263129e91b44814e18c32b228392496770c29869ab4d00a9e6f04"
+          ]
+        ],
+        "commit": "4168b0f989ab289bef99257c50a96a1f32753668",
+        "env": {},
+        "flags": {
+          "chunk_rows": "20000",
+          "degree": "4",
+          "input_sha256": "a67b8e5f8c5e7df622552f2e9f0ecc45e0882afe290d71933e595c05c567fa31"
+        },
+        "repo": "crypto-autoresearcher",
+        "threads": 1
+      },
+      "parameters": {
+        "degree": 4,
+        "generators": 51,
+        "variables": 51
+      },
+      "role": "candidate"
+    },
+    {
+      "description": "Compare with the original independently checked D4 quotient dimension 45615, transferred to the affine slice by Proposition 2.5b; target kernel dimension 272052-45615=226437.",
+      "id": "checked-seed",
+      "instrument": {
+        "binary_sha256": "ca5a760e138e667a687418bb5d69c31c9b462b32029295b15a50e70c56f77e89",
+        "build": [
+          [
+            "reuse",
+            "prior accepted D4 checker transcript"
+          ]
+        ],
+        "commit": "9decca5e824102c0a1a2149cd0694166e8142d06",
+        "env": {},
+        "flags": {
+          "certificate_sha256": "90878ee8bc6bda02957f25728380a9e677cd13b0f46c9eed1828349da796f115",
+          "checker_stdout_sha256": "4e8d4a386e75f18183c86ac934640361ae9578fbe4e10e0f8cd1968aa1d33b60"
+        },
+        "repo": "crypto-autoresearcher",
+        "threads": 1
+      },
+      "parameters": {
+        "degree": 4,
+        "quotient_codimension": 45615,
+        "variables": 51
+      },
+      "role": "reference"
+    }
+  ],
+  "authors": [
+    "Codex, owner-authorized data preparation"
+  ],
+  "claims": [
+    {
+      "class": "exact_computation",
+      "decided_by": [
+        "rank_comparison"
+      ],
+      "id": "C1",
+      "text": "The direct fixed-point computation gives the exact rank of W4 on the fixed polynomial00 51-variable affine slice; compare it with the checked and theorem-transferred D4 kernel dimension 226437."
+    }
+  ],
+  "controls": {
+    "aa": {
+      "comparison": null,
+      "not_applicable_reason": "One deterministic exact rank calculation; no timing comparison.",
+      "present": false
+    },
+    "negative": {
+      "arm": null,
+      "not_applicable_reason": "Fixed named equations and exact rank; no sampled null population.",
+      "null_population": null,
+      "present": false
+    },
+    "positive": {
+      "arm": null,
+      "expected_detection": null,
+      "not_applicable_reason": "The exact direct-rank engine previously completed the matched n51 polynomial01 slice; the current input is cross-checked termwise and no statistical detector is involved.",
+      "present": false
+    }
+  },
+  "created": "2026-11-11",
+  "decision_rule": {
+    "comparison_ids": [
+      "rank_comparison"
+    ],
+    "effect_size_measure": "rank difference",
+    "interval": "none, exact",
+    "multiple_comparison_correction": "none",
+    "statistic": "rank_W4 - 226437",
+    "text": "Only a successful fixed-point termination with W4_one=0 and rank 226437 establishes equality of direct W4 and the theorem-transferred checked seed kernel. A smaller rank shows the seed is coarse; a larger rank or W4_one=1 contradicts the accepted quotient and requires diagnosis. Timeout, OOM or malformed output leaves exactness unknown. This rank alone does not establish an LFD-six lower bound.",
+    "threshold": "Exact rank equality to 226437 with W4_one=0",
+    "verdict_vocabulary": [
+      "seed_exact_dimension",
+      "seed_coarse",
+      "contradiction_requires_diagnosis",
+      "unknown"
+    ]
+  },
+  "execution": {
+    "backend": "local",
+    "checkpoint": {
+      "after_restore": {
+        "counted_units": "valid",
+        "wall_time": "invalid"
+      },
+      "grace_seconds": 10,
+      "interval_seconds": null,
+      "policy": "none",
+      "restore_validation": "none"
+    },
+    "measurement_class": "throughput",
+    "placement": {
+      "checkpoint_detail": "One direct D4 rank trial with the already pinned binary; no build, checkpoint or automatic retry. Preserve all results and failures. Launch only after budget, host, lock and duplicate checks.",
+      "counter_memory_bytes": 0,
+      "max_workers": 1,
+      "memory_per_worker_bytes": 34359738368,
+      "pod_memory_bytes": 42949672960
+    },
+    "queue": "local-frontier-highmem-pending-budget-and-duplicate-gates",
+    "retries": {
+      "infrastructure_only": true,
+      "max_attempts": 1
+    },
+    "timeout_seconds": 14400
+  },
+  "freeze": {
+    "status": "frozen",
+    "protocol_sha256": "b14654b6216818971760e289e7e3eb5ea6e24e3f668ec3ad6a6c35bd726cd751",
+    "commit": "4168b0f989ab289bef99257c50a96a1f32753668",
+    "frozen_at": "2026-11-11T02:01:31Z",
+    "filed_before_affected_data": true
+  },
+  "hypotheses": [],
+  "inadmissible": [
+    "Inferring D5 correctness or LFD>=6 from a D4 control.",
+    "Calling a native checker qualified if status or any exact field differs.",
+    "Retrying after failure or timeout under this one-attempt protocol."
+  ],
+  "invalidation_rules": [
+    "Any source or binary hash mismatch prevents execution.",
+    "A failed independent checker prevents a claim from that stage.",
+    "A counter failure prevents a solution-count comparison.",
+    "Killing1 in an over-approximating quotient is not membership evidence in the true closure.",
+    "Missing later stages remain unknown, even if an earlier stage proves a smaller lower bound.",
+    "Deferred export or missing checkpoint/certificate carries no mathematical bound.",
+    "Restore request mismatch or unverified state prevents native launch."
+  ],
+  "links": {
+    "original_d4_map_sha256": "90878ee8bc6bda02957f25728380a9e677cd13b0f46c9eed1828349da796f115",
+    "original_d4_checker_stdout_sha256": "4e8d4a386e75f18183c86ac934640361ae9578fbe4e10e0f8cd1968aa1d33b60",
+    "sliced_sys_sha256": "a67b8e5f8c5e7df622552f2e9f0ecc45e0882afe290d71933e595c05c567fa31",
+    "sliced_sys_check_sha256": "b17835ae4e076f918dc645fb209e6e393af576ca051851025d67f253c6dd74b1",
+    "affine_witness_sha256": "c37ca7f727b716acac28463f2db58126588e994a71eb6a66c8c18015f0273985",
+    "source_sha256": "2413e3a3f34d0fdda8a53b0d62acff53aeaabc593b1c55fe42a3d7db8af3cc4f"
+  },
+  "literature": [
+    {
+      "claim": "A checked original D4 quotient restricts to an onto quotient of the same dimension under an internal affine generator-span relation.",
+      "provenance": "internal",
+      "ref": "theorem-dossier.md Proposition 2.5b",
+      "verified_by": "Codex 2026-11-11"
+    },
+    {
+      "claim": "Independent direct W4 rank 226437 on the named slice would establish exactness of the transferred D4 seed kernel.",
+      "provenance": "internal",
+      "ref": "N51-POLY00-AFFINE-SLICE-WITNESS.md and Proposition 1.8",
+      "verified_by": "Codex 2026-11-11"
+    }
+  ],
+  "measurement": {
+    "clock": "counted",
+    "counters": [],
+    "isolation_required": "L0",
+    "order": "sequential",
+    "record": [
+      "cpu_model",
+      "kernel_release",
+      "source_commit",
+      "binary_sha256",
+      "argv",
+      "input_sha256",
+      "host_memory_preflight",
+      "exit_code"
+    ],
+    "timed_primary_justification": null,
+    "warmups": 0
+  },
+  "metrics": {
+    "primary": [
+      {
+        "aggregation": "per_row",
+        "definition": "Final W4 dimension from lfdclose2 after fixed-point completion on the fixed SHA-pinned input.",
+        "id": "w4_rank",
+        "kind": "exact",
+        "name": "direct W4 rank",
+        "resolution": "1",
+        "source": "produce4.stdout W4_dims final field",
+        "uncertainty": "none_exact",
+        "unit": "F2 dimension"
+      }
+    ],
+    "secondary": [
+      {
+        "aggregation": "per_row",
+        "definition": "direct W4 rank minus 226437; nonpositive by verified containment when both implementations are correct.",
+        "id": "rank_difference",
+        "kind": "exact",
+        "name": "difference from checked seed kernel",
+        "resolution": "1",
+        "source": "derived from w4_rank and checked D4 quotient dimension",
+        "uncertainty": "none_exact",
+        "unit": "F2 dimension"
+      }
+    ]
+  },
+  "protocol_id": "SEMAEV-N51-POLY00-SLICED-DIRECT-W4-RANK-20261111-V1",
+  "question": "What is the exact degree-four Boolean closure dimension of the fixed affine-sliced fresh-n51-poly-00 six-solution system?",
+  "randomization": {
+    "arm_order": "fixed",
+    "arm_order_reason": "One deterministic direct calculation and one prior immutable reference.",
+    "blinding": {
+      "analysis_labels_masked": false,
+      "how": "Named fixed input and exact rank, no statistical comparison.",
+      "unmasked_at": null
+    },
+    "instance_sampling": {
+      "independent_of_arm": true,
+      "rule": "One preselected named n51 polynomial00 six-solution affine slice; no population inference."
+    },
+    "seed_derivation": {
+      "method": "explicit_list",
+      "nonce": null,
+      "note": "Original named input seed, no redraw.",
+      "seeds": [
+        8252374688181865515
+      ]
+    }
+  },
+  "reporting": {
+    "export_schema": "experiment.export/v1",
+    "graphs": [
+      "Exact direct W4 rank versus checked seed kernel dimension; no timing graph."
+    ],
+    "report_dir": "reports",
+    "review_schema": "experiment.review/v1"
+  },
+  "repository": "crypto-autoresearcher",
+  "sample_size": {
+    "instances": 1,
+    "power": {
+      "alpha": 0.05,
+      "correction": "none",
+      "method": "exact",
+      "note": "Exact one-instance calculation, no statistical inference.",
+      "passes": true,
+      "tests_in_family": 1
+    },
+    "preflight_runtime": {
+      "estimated_total_seconds": 14400,
+      "fixed_seconds": 0,
+      "measured_on": "Prior matched n51 polynomial01 slice direct W4 run took 6636.46 seconds; 14400 seconds is the current hard cap, not a prediction for this input.",
+      "per_sample_seconds": 14400,
+      "threads": 1
+    },
+    "replicates": 1,
+    "warmups": 0
+  },
+  "schema": "experiment.protocol/v1",
+  "stopping_rules": [
+    {
+      "kind": "fixed_n",
+      "preregistered": true,
+      "rule": "One fixed named input and one bounded direct D4 rank trial using the pinned existing binary. Stop on exact rank, early constant-one, timeout, OOM or other refusal; no retry."
+    }
+  ],
+  "study_dir": "analysis/semaev-degree-five-quotient-lift",
+  "variable_ledger": {
+    "aa_not_applicable": "Exact deterministic rank; no timed claim.",
+    "comparisons": [
+      {
+        "arms": [
+          "direct-w4",
+          "checked-seed"
+        ],
+        "design": "absolute",
+        "differs_in": [
+          "direct algorithm"
+        ],
+        "id": "rank_comparison",
+        "threshold": "Exact rank 226437 and W4_one=0."
+      }
+    ],
+    "crosses_map": false,
+    "factors": [
+      {
+        "how": "Committed SHA-pinned .sys checked termwise against independently descended sliced binary.",
+        "name": "input equations",
+        "treatment": "fixed"
+      },
+      {
+        "how": "Pinned existing lfdclose2 binary and source; no new build.",
+        "name": "direct algorithm",
+        "treatment": "crossed"
+      },
+      {
+        "how": "Existing Spot host; one CPU, 32 GiB address-space cap, and 40 GiB host memory reservation.",
+        "name": "host",
+        "treatment": "measured"
+      },
+      {
+        "how": "One conditional direct trial after fresh monthly/daily budget, host and duplicate checks.",
+        "name": "order",
+        "treatment": "fixed"
+      }
+    ],
+    "independent": []
+  },
+  "version": 1,
+  "amendments": []
+}
