@@ -90,13 +90,14 @@ A later read-only audit of the three retained D5 maps established a more
 specific fact: **every one of their 1,925,357 rows is exactly the evaluation
 map at two explicit Boolean solutions**. The replayable checker
 `audit_two_solution_quotient.py` (SHA-256
-`c1abe67614231339a77eb70352ff528abd900e9c67626ff0178ae73ebed38a2f`)
+`344b61e4e579ba0fd774e0722f20a6ed6a0a977d2daa3b2a0fe92183f115f2c6`)
 checks the complete native monomial order, derives both assignments from
 the constant and variable images, compares every map row with two-point
-evaluation, and evaluates all 47 retained generators at both assignments.
+evaluation, evaluates all 47 retained generators at both assignments, and
+rechecks the original named binary-field Semaev equation directly.
 Its batch result is
 `validation/n47-poly-d5-two-point-evaluation-audit-001.json` (SHA-256
-`a3849646633e67059993b54da0b1f96a7eb6cc8e0c248fa80273591453d627f5`):
+`5e4bffbecd4965c44c314cca53eaca424527b85ced4d754cd513e5c863151232`):
 
 | Input | Recovered assignment masks | Row mismatches | Failed generator evaluations |
 | --- | --- | ---: | ---: |
@@ -104,7 +105,8 @@ Its batch result is
 | n47 polynomial02 | `0x4aa313ddf03d`, `0xddf03d4aa313` | 0 | 0 |
 | n47 polynomial04 | `0xc2f84a293882`, `0x293882c2f84a` | 0 | 0 |
 
-A one-bit mutation of the first D5 row was rejected at row zero. This proves
+A one-bit mutation of the first D5 row was rejected at row zero; a one-bit
+mutation of the named `a6` also failed the direct field check. This proves
 that these *particular two-coordinate maps* supply only the two solution
 evaluation directions. It does **not** prove the full degree-five quotient
 has dimension two; a different certificate or exact closure computation
