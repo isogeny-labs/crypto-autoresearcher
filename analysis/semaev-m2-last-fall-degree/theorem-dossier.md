@@ -167,6 +167,47 @@ $f=\sum h_ig_i$ with $g_i\in G$ and $\deg(h_ig_i)\le\deg f\le d$, for a
 degree-compatible order, putting $f\in V_{\tilde F,d}$. This is a
 contradiction. $\square$
 
+**Proposition 1.4a** (saturation at the exact solution count gives an upper
+bound). **Proved.** Let $S\ne\varnothing$ be the Boolean zero set of $F$,
+$s=|S|$, and $d\ge\max(2,1+\lfloor\log_2s\rfloor)$. If
+
+$$\operatorname{codim}(W_d(F)\subseteq B_{\le d})=s,$$
+
+then $d_{\tilde F}\le d$. If also $d\ge3$ and
+$\operatorname{codim}W_{d-1}(F)>s$, then $d_{\tilde F}=d$.
+
+*Proof.* Let $I=(\tilde F)$ in $R$, the vanishing ideal of $S$ with the
+field equations. Fix a degree-compatible monomial order and let $T$ be its
+standard monomials for $I$. The quotient $R/I$ is the algebra of functions
+on $S$, so $|T|=s$. The field equations make every element of $T$
+squarefree. Because $T$ is closed under divisors, a monomial of degree $r$
+in $T$ brings all its $2^r$ squarefree divisors into $T$. Consequently
+every standard monomial has degree at most $r_0=\lfloor\log_2s\rfloor$.
+Their evaluations form a basis of the functions on $S$, so evaluation from
+$B_{\le d}$ has rank $s$. Since $W_d(F)$ vanishes on $S$, its stated
+codimension forces $W_d(F)=I(S)\cap B_{\le d}$. Proposition 1.1 then gives
+$V_{\tilde F,d}=I\cap R_{\le d}$.
+
+Every minimal leading monomial of the reduced Gröbner basis of $I$ has
+degree at most $\max(2,r_0+1)$: a squarefree minimal nonstandard monomial
+has all proper divisors in $T$, and a non-squarefree minimal one is a
+square $x_i^2$ because the field equations are in $I$. Degree compatibility
+makes each corresponding basis polynomial have at most that degree, hence
+at most $d$. All basis polynomials therefore lie in $V_{\tilde F,d}$.
+For any $f\in I$, division by this basis yields a standard representation
+whose summands have degree at most $\deg f$. Thus each summand belongs to
+$V_{\tilde F,\max(d,\deg f)}$, and so does $f$. This proves the upper
+bound by the definition of last fall degree. The additional strict
+codimension at $d-1$ gives the opposite bound by Proposition 1.4. $\square$
+
+For a named system with exactly six Boolean solutions, $r_0=2$. In
+particular, an **exact** W5 codimension of six and a checked W4 codimension
+greater than six prove last fall degree exactly five. An exact W5
+codimension of at least seven proves last fall degree at least six by
+Proposition 1.4. A checked six-dimensional quotient map alone only proves
+$\operatorname{codim}W_5\ge6$; the upper-bound direction requires equality
+with the true W5 quotient.
+
 **Proposition 1.5** (dual certificate for $1\notin W_d$). **Proved.**
 Let $d\ge2$ and let $\pi:B_{\le d}\to Z$ be an $\mathbb F_2$-linear map onto a
 vector space $Z$. Put $U=\ker\pi$. Suppose:

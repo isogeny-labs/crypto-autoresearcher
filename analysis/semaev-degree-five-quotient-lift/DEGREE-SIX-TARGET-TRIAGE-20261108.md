@@ -113,6 +113,13 @@ producer-rank premise.
 Its recorded exact count is six, so a checked D5 quotient of codimension at
 least seven would prove LFD at least six for this named input. The 64,638,795,838-byte
 envelope is the retained source-derived profile, not measured D5 usage.
+Proposition 1.4a now gives the converse decision once the **true** degree-five
+closure dimension is known: if `codim W5 = 6`, the checked `codim W4 > 6`
+and six-solution count prove exact LFD 5. If `codim W5 >= 7`, Proposition
+1.4 proves LFD at least 6. Thus an independently exact W5 rank resolves
+this named target in either direction. A six-dimensional checked D5
+quotient by itself is only a lower bound on `codim W5`; the equality case
+needs a completed exact-seed lift or a separate primal rank check.
 The `n51-poly00-original-d5-local-003` output root is absent and its
 2026-11-10 23:30 UTC deadline has expired. The separate solution-factor
 gate's earlier V1/V2 roots are absent and their deadlines expired. A fresh
