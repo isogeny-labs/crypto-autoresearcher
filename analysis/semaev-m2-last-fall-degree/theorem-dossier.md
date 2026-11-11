@@ -815,6 +815,45 @@ then $\rho(g)$ has degree below $d$ and lies in $\ker\pi_G$; the affine
 expansion of $\rho(x_i)$ shows that $\pi_G(\rho(x_i g))=0$. The solution-count
 claims follow from Propositions 1.2 and 1.4. $\square$
 
+**Proposition 2.5f** (one-step closure preserves an internal affine slice).
+**Proved.** Let $U\subseteq B_{\le d}$ be a linear space closed under all
+degree-$d$ variable multiplications, and suppose the affine polynomial
+$e=x+L(y)$ lies in $U$, where $x$ is one Boolean variable and $L$ uses only
+the retained variables $y$. Let $\rho:B\to B'$ set $x=L(y)$ and put
+$U'=\rho(U)\subseteq B'_{\le d}$. Then restriction induces an isomorphism
+
+$$B_{\le d+1}/C_{d+1}(U)\ \cong\
+  B'_{\le d+1}/C_{d+1}(U').$$
+
+In particular, $1\in C_{d+1}(U)$ if and only if
+$1\in C_{d+1}(U')$. The statement applies to the kernel of any checked
+degree-$d$ quotient that kills $e$; exactness $U=W_d(F)$ is not required.
+
+*Proof.* Every $f\in B_{\le d}$ has a unique form $f=f_0(y)+xf_1(y)$,
+with $\deg f_1\le d-1$, and $f+\rho(f)=ef_1$. Since $e\in U$ has degree
+one, degree-$d$ closure puts $ef_1\in U$. Thus the canonical lift of
+every member of $U'$ belongs to $U$, and
+$\ker\rho\cap B_{\le d}\subseteq U$. The same multiplication argument in
+degree $d+1$ gives
+$\ker\rho\cap B_{\le d+1}\subseteq C_{d+1}(U)$.
+Affine substitution sends each generator and allowed multiplication of
+$C_{d+1}(U)$ into $C_{d+1}(U')$, so
+$\rho(C_{d+1}(U))\subseteq C_{d+1}(U')$. Conversely, canonical lifts of
+$U'$ lie in $U$, and multiplication by a retained variable commutes with
+lifting, so $C_{d+1}(U')\subseteq C_{d+1}(U)$ under the natural inclusion
+$B'\subseteq B$. These inclusions and the kernel inclusion prove the
+quotient isomorphism and the assertion about one. $\square$
+
+For the named n50 polynomial03 target, the retained affine relation used
+to eliminate variable 25 is a checked combination of original generators,
+so it lies in the checked original D4 kernel. If the projected and rebased
+slice maps have the same kernel as recorded by the conversion source, this
+proposition identifies the original and sliced *seeded* D5 closures. The
+earlier sliced producer reported `projection_kills_one`, but no independent
+relation transcript or full-size kernel-equivalence check has yet been
+accepted. That report therefore informs target selection; it does not prove
+degree-five membership for either system.
+
 For the named n47 random00 target, this provides a possible
 smaller-certificate route: fix additional Boolean coordinates in a frozen
 subsystem, check its degree-five nonmembership, and lift that certificate to

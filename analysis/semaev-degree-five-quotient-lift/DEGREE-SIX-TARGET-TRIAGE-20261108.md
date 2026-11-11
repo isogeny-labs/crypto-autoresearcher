@@ -7,6 +7,7 @@ allocation profiles. It is not a new closure run or a degree-six bound.
 | --- | ---: | ---: | ---: | --- |
 | `fresh-n47-rand-00`, 48 variables | 0, independently repeated | 61,196 | 86,599,881,493 bytes | One-shot lift terminal: `projection_kills_one`; no D5 certificate |
 | `fresh-n50-poly-03`, 50 variables | 0 | 38,629 | 38,017,488,971 bytes at 4096-row chunks | Frozen one-shot local plan, output root absent; finite USD reservation still a launch gate |
+| Affine restriction of `fresh-n50-poly-03`, 49 variables | 0, inherited from unsatisfiable original | 38,629 | 34,760,782,170 bytes at 4096-row chunks (source profile) | One-shot lift terminal: `projection_kills_one`; no D5 certificate |
 | `fresh-n51-poly-01`, 52-variable original system | 0 | 45,615 | 64,677,063,002 bytes at 60000-row chunks | Prior cloud D5 attempt failed after seed checking, with no candidate object |
 | Affine restriction of `fresh-n51-poly-01`, 51 variables | 0, inherited from unsatisfiable original | 45,615 | 55,355,297,148 bytes at 4096-row chunks | Checked sliced D4 seed; D5 local-plan deadline expired without a run |
 | `fresh-n51-poly-00`, 52-variable original system | 6 | 45,615 | 64,638,795,838 bytes at 60000-row chunks | Original D4 map accepted; D5 V3 and solution-factor gate unlaunched with expired deadlines |
@@ -41,6 +42,25 @@ and a 21,600-second producer timeout. It requires a finite charged/reserved
 local Spot allowance and fresh account-budget headroom before launch. No
 such additional dollar reservation is asserted here.
 
+The earlier 49-variable n50 slice is material to whether that original
+attempt is worth its reservation. Its affine equation eliminates variable
+25 and is a checked combination of original generators. The projected D4
+map was rebased into a checked 38,629-coordinate seed. Its frozen D5 run
+reported full provisional relation rank 79,556 of 79,556 after about 3,110
+seconds, with `projection_kills_one` and no candidate; the source profile
+was 34,760,782,170 bytes and the binary admission report was
+35,385,141,521 bytes. The retained reports are
+`reports/n50-sliced-seed-rebase-20261105/report.md` and
+`reports/n50-sliced-d5-local-20261105/report.md`. Proposition 2.5f now
+proves that one-step closure of a checked D4 kernel is unchanged by slicing
+along an affine relation inside that kernel. If the conversion's claimed
+kernel equivalence and the sliced producer's full-rank status are
+independently verified, the original D4-seeded lift would also kill one.
+Those two independent checks have not been completed, and the D4 kernel
+has not been proved exact W4. Thus the sliced result neither proves
+`1 in W_5` nor rules out a different certificate. It is a strong reason to
+review the proposed original n50 run before spending its USD 20 reservation.
+
 For n51 polynomial-01, the original-system D4 map has SHA-256
 `c160792a7530b20dd17affcdabafb8d95494eed51c8ee6d818af3212f3e304f6`.
 Its zero count, checker acceptance, and original-system D5 estimate are in
@@ -74,9 +94,10 @@ seed; without it, a killed producer projection could reflect an overbroad
 seed. The six-solution target is therefore a distinct future option, not
 an admissible use of its expired V3 authorization.
 
-The n50 polynomial-03 input is the smallest *source-estimated memory*
-candidate among these five presentations, and it uses a polynomial factor base. That does
-not predict its D5 outcome or runtime. The completed n47 count and D5 attempt
+The n50 polynomial-03 original input is the smallest *source-estimated memory*
+unlaunched original-system candidate in this table, and it uses a polynomial
+factor base. That does not predict its D5 outcome or runtime; the completed
+n50 slice is a relevant negative producer observation. The completed n47 count and D5 attempt
 retain their frozen identities. Any n50 D5 launch needs its own
 finite dollar reservation, current budget admission, exact source and input
 readback, and an independent D5 checker acceptance before an LFD-at-least-six
