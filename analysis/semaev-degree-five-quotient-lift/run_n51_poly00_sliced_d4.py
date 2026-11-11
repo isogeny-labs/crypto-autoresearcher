@@ -165,6 +165,10 @@ def admission(plan, ops, revision, stage):
             limits['total_watchdog_seconds'] != 9000 or
             limits['checkpoint_policy'] != 'none'):
         raise RuntimeError('deadline or total watchdog refuses stage')
+    if (stage == 'project' and
+            now + dt.timedelta(seconds=limits['total_watchdog_seconds'] + 60) >
+            parse_utc(limits['deadline_utc'])):
+        raise RuntimeError('full conversion watchdog cannot fit before deadline')
     if prior:
         initial = json.loads((root / 'project.started.json').read_text())
         if now + dt.timedelta(seconds=seconds + 60) > (parse_utc(initial['started_utc']) +
