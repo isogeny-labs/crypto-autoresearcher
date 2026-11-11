@@ -65,3 +65,16 @@ disk, and one-write output root, but its V2 source does not enforce the
 account Budget or absolute deadline; the external admission record must
 enforce those before invoking the pinned command. Retain every exit, OOM,
 timeout and partial file. No n50 launch occurred while preparing this note.
+
+The source-only operational wrapper `admit_n50_poly03_d5.py` and proposed
+`n50-poly03-d5-admission-003.json` now implement that admission gate. The
+operational record remains `authorization_status: pending`, so the wrapper
+refuses before any run. Once the owner authorizes a specific ceiling and
+reservation, the record must be amended, committed, pushed and read back;
+the wrapper checks that its own source, the operations record, the scientific
+plan, frozen protocol and runner are byte-identical to the pushed head. It
+also checks the three live Budget objects, the absolute deadline, locks,
+host memory/disk and absent output root before invoking the unchanged V2
+runner. The EKS duplicate-job check remains an explicit external admission
+step because the wrapper has no cluster access. A failed gate writes no run
+output and licenses no retry.
