@@ -53,10 +53,13 @@ was 34,760,782,170 bytes and the binary admission report was
 `reports/n50-sliced-seed-rebase-20261105/report.md` and
 `reports/n50-sliced-d5-local-20261105/report.md`. Proposition 2.5f now
 proves that one-step closure of a checked D4 kernel is unchanged by slicing
-along an affine relation inside that kernel. If the conversion's claimed
-kernel equivalence and the sliced producer's full-rank status are
-independently verified, the original D4-seeded lift would also kill one.
-Those two independent checks have not been completed, and the D4 kernel
+along an affine relation inside that kernel. The conversion's kernel
+equivalence has a source-level proof and pinned receipts in
+`N50-REBASE-KERNEL-SOURCE-AUDIT.md`; a full-size independent row check
+remains outstanding. If that equivalence and the sliced producer's
+full-rank status are independently verified, the original D4-seeded lift
+would also kill one. Those two independent checks have not been completed,
+and the D4 kernel
 has not been proved exact W4. Thus the sliced result neither proves
 `1 in W_5` nor rules out a different certificate. It is a strong reason to
 review the proposed original n50 run before spending its USD 20 reservation.
