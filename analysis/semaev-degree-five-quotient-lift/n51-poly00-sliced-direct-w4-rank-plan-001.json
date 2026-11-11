@@ -1,7 +1,7 @@
 {
   "schema": "semaev.direct-w4-rank-plan/v1",
   "id": "n51-poly00-sliced-direct-w4-rank-001",
-  "status": "frozen_queued_budget_gate",
+  "status": "frozen_queued_authorization_and_budget_gate",
   "scope": "One exact direct W4 rank computation on the 51-variable affine slice of the six-solution fresh-n51-poly-00 system. This is an exactness gate for the accepted D4 quotient, not a D5 certificate or degree-six claim.",
   "protocol_path": "analysis/semaev-degree-five-quotient-lift/n51-poly00-sliced-direct-w4-rank-protocol-001.json",
   "protocol_file_sha256": "7dfaa8934cf5bb73a28a7b92397f3eb4bf45af8ab8546fd0cf1eb48bb334afc3",
@@ -15,6 +15,9 @@
   "source_sha256": "2413e3a3f34d0fdda8a53b0d62acff53aeaabc593b1c55fe42a3d7db8af3cc4f",
   "binary_path": "/home/ec2-user/fall-degree-runtime-20261029/bin/lfdclose2",
   "binary_sha256": "f7f920e697b263129e91b44814e18c32b228392496770c29869ab4d00a9e6f04",
+  "runner_path": "analysis/semaev-degree-five-quotient-lift/run_n51_poly00_sliced_w4.py",
+  "admission_path": "analysis/semaev-degree-five-quotient-lift/n51-poly00-sliced-direct-w4-rank-admission-001.json",
+  "launch_argv": ["python3", "analysis/semaev-degree-five-quotient-lift/run_n51_poly00_sliced_w4.py", "--launch"],
   "stdin": "Exact bytes of input_path after successful SHA-256 check.",
   "producer_argv": ["/usr/bin/prlimit", "--as=34359738368", "--", "/usr/bin/timeout", "14400", "/home/ec2-user/fall-degree-runtime-20261029/bin/lfdclose2", "4", "1", "20000"],
   "output_root": "/home/ec2-user/fall-degree-data-20261029/n51-poly00-sliced-direct-w4-rank-001",
@@ -43,7 +46,7 @@
     "charges_included": ["existing Spot host time", "idle time", "failed attempt", "storage", "transfer"]
   },
   "prelaunch_gates": [
-    "Owner-approved monthly ceiling and fresh AWS Budget actuals must leave at least USD 15 after every live reservation; the two USD 200 daily objects are one shared allowance, not additive.",
+    "Owner authorization for this USD 15 rank attempt, an owner-approved monthly ceiling, and fresh AWS Budget actuals must leave at least USD 15 after every live reservation; the two USD 200 daily objects are one shared allowance, not additive.",
     "Exact GitHub branch head containing this plan and protocol is read back before execution.",
     "Exact input, input-check, protocol, source, binary, original D4 map, affine witness and checker transcript hashes match.",
     "Reconcile all existing EKS/local frontier jobs, output roots, locks and receipts; refuse if a duplicate or conflicting live computation exists.",
