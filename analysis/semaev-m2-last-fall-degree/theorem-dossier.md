@@ -377,6 +377,30 @@ checked seed inclusion, not an exact seed. The criterion and proof are in
 `../semaev-degree-five-quotient-lift/COMPACT-D5-QUOTIENT-CRITERION.md`;
 no compact n47 certificate has been produced or checked.
 
+**Corollary 1.9a** (early full-rank refutation from an exact seed). **Proved.**
+In Proposition 1.9, assume in addition that $U=W_d(F)$. At any finite stage
+of its relation construction, let $A_j$ be the span of the initial
+$\phi(x_i u_m)$ already processed and the subsequent $T_i(v)$ rows obtained
+from previously verified low-block relations in the earlier span. If a
+separately checked relation
+transcript establishes $\phi(1)\in A_j$, then $1\in W_{d+1}(F)$; in
+particular, a checked $\operatorname{rank} A_j=\dim P$ establishes
+$W_{d+1}(F)=B_{\le d+1}$. For an unsatisfiable $F$ with
+$1\notin W_d(F)$, either checked condition gives
+$d_{\tilde F}=d+1$.
+
+*Proof.* The induction in Proposition 1.9 shows at every stage, without a
+fixed-point assumption, that $A_j\subseteq\phi(C_{d+1}(U))$. It also shows
+$\ker\phi\subseteq C_{d+1}(U)$. Hence
+$\phi(1)\in A_j$ implies $1\in C_{d+1}(U)=W_{d+1}(F)$.
+If $A_j=P$, then $\phi(C_{d+1}(U))=P$ and surjectivity of $\phi$ together
+with the kernel inclusion gives $C_{d+1}(U)=B_{\le d+1}$. The exact
+last-fall-degree conclusion follows from Proposition 1.2. $\square$
+
+The n47 random00 D5 producer reported full relation rank, but it did not
+retain an independently checkable relation transcript. Its output alone
+does not satisfy this corollary's checked-rank premise.
+
 **Proposition 1.10** (dimension floor for an unsatisfiable dual
 certificate). **Proved.** Let $d\ge\max(2,\max_{f\in F}\deg f)$ and suppose
 the Boolean zero set of $F$ is empty. If an onto map
