@@ -2,6 +2,9 @@
 
 This is a comparison of retained, named inputs and source-derived D5
 allocation profiles. It is not a new closure run or a degree-six bound.
+`ZERO-SOLUTION-D5-STATUS-RECONCILIATION-20261111.md` separately binds six
+completed zero-count D5 producer attempts, all of which reported a killed
+projection and emitted no D5 certificate.
 
 | Target presentation | Recorded exact count | Checked D4 quotient dimension | D5 source-derived envelope | Current D5 state |
 | --- | ---: | ---: | ---: | --- |
