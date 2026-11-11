@@ -129,8 +129,13 @@ an explicit nonsingular 50-by-50 monomial minor and the checked affine XOR
 relation. Thus their affine-relation space is exactly one-dimensional: the
 existing `b_0=a_0+1` slice exhausts affine equations in the *linear span of
 the original generators*. This does not exclude affine equations appearing
-only after higher-degree closure or prove a D5 result. The rank witness and
-independent check are in `N51-POLY00-AFFINE-RANK.md`.
+only after higher-degree closure or prove a D5 result. A separate readback
+of the accepted D3 and D4 quotient maps finds affine image rank 52 of 53
+for each. Since the D3 kernel is exact W3 and the accepted D4 kernel
+contains W4, the same relation is also the **only affine relation in W3
+or W4**. An additional internal affine slice cannot reduce the D5 input
+using any relation available through degree four. The rank witness and
+quotient-map checks are in `N51-POLY00-AFFINE-RANK.md`.
 Proposition 1.4a now gives the converse decision once the **true** degree-five
 closure dimension is known: if `codim W5 = 6`, the checked `codim W4 > 6`
 and six-solution count prove exact LFD 5. If `codim W5 >= 7`, Proposition
