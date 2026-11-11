@@ -86,6 +86,30 @@ exact solution count, so Proposition 1.4's strict-inequality bridge does
 not apply. This inspection reuses the retained run receipts and checker
 outputs; it does not claim a fresh independent count replay or a new D5 run.
 
+A later read-only audit of the three retained D5 maps established a more
+specific fact: **every one of their 1,925,357 rows is exactly the evaluation
+map at two explicit Boolean solutions**. The replayable checker
+`audit_two_solution_quotient.py` (SHA-256
+`c1abe67614231339a77eb70352ff528abd900e9c67626ff0178ae73ebed38a2f`)
+checks the complete native monomial order, derives both assignments from
+the constant and variable images, compares every map row with two-point
+evaluation, and evaluates all 47 retained generators at both assignments.
+Its batch result is
+`validation/n47-poly-d5-two-point-evaluation-audit-001.json` (SHA-256
+`a3849646633e67059993b54da0b1f96a7eb6cc8e0c248fa80273591453d627f5`):
+
+| Input | Recovered assignment masks | Row mismatches | Failed generator evaluations |
+| --- | --- | ---: | ---: |
+| n47 polynomial01 | `0x2c1f36c5a42c`, `0xc5a42c2c1f36` | 0 | 0 |
+| n47 polynomial02 | `0x4aa313ddf03d`, `0xddf03d4aa313` | 0 | 0 |
+| n47 polynomial04 | `0xc2f84a293882`, `0x293882c2f84a` | 0 | 0 |
+
+A one-bit mutation of the first D5 row was rejected at row zero. This proves
+that these *particular two-coordinate maps* supply only the two solution
+evaluation directions. It does **not** prove the full degree-five quotient
+has dimension two; a different certificate or exact closure computation
+could still reveal extra directions. No new count or closure run was made.
+
 The local `native-lift-historical-001` directory also contains two named n35
 degree-five maps omitted from the tracked-file screen. `Q35a-D5-lift01` has
 SHA-256 `a3ffa75b43e8e6a5ceffa44c4e26fa37e435bb80b00ff506f5627a8d371fff89`,
