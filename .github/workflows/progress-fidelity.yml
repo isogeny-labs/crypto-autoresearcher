@@ -34,6 +34,7 @@ jobs:
             /tools/progress_fidelity.py
             /tools/progress_dashboard.py
             /tools/progress_metrics.py
+            /tools/vault/git_blob.py
           sparse-checkout-cone-mode: false
       - name: Unlock research vault (AES-256)
         shell: bash
@@ -81,7 +82,7 @@ jobs:
           python-version: '3.11'
       - name: Unit tests
         if: steps.scope.outputs.progress == 'true'
-        run: python3 -m unittest discover -s tests -p 'test_progress_*.py' -v
+        run: PYTHONPATH=. python3 -m unittest discover -s tests -p 'test_progress_*.py' -v
       - name: Validate all submitted claims
         if: steps.scope.outputs.progress == 'true'
         run: python3 -m tools.progress_fidelity portfolio claims/
