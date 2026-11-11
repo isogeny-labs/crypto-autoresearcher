@@ -76,8 +76,10 @@ working coordinates; its checked quotient has dimension 38,629. Thus an
 independent direct W4 rank of **212,547 in 251,176 columns** would establish
 that the current original D4 kernel is exact W4. Together with a checked
 sliced D5 relation transcript, Proposition 2.5f and Corollary 1.9a would
-then prove exact LFD 5 for this named zero-solution input. These retained
-native D4 ranks are gates to reproduce, not independent primal certificates.
+then prove exact LFD 5 for this named zero-solution input. The D3-to-D4
+source and fixed-point receipts are now mapped to Proposition 1.9 in
+`N50-POLY03-D4-LIFT-EXACTNESS-AUDIT.md`; this is conditional source-and-
+execution evidence, not an independent primal D4 rank certificate.
 
 For n51 polynomial-01, the original-system D4 map has SHA-256
 `c160792a7530b20dd17affcdabafb8d95494eed51c8ee6d818af3212f3e304f6`.
