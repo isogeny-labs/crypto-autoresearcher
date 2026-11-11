@@ -426,6 +426,16 @@ def rank_profile(gens, nvars: int = 8, dmax: int = D_MAX):
     }
 
 
+def count_solutions(gens, nvars: int = 8) -> int:
+    """Common zeros over F_2^nvars. In the quotient ring F_2[b]/(b^2+b) an ideal is
+    the unit ideal exactly when this is 0, whatever degree 1 first enters at."""
+    n = 0
+    for a in range(1 << nvars):
+        if all(sum(1 for m in g if (a & m) == m) % 2 == 0 for g in gens):
+            n += 1
+    return n
+
+
 # --------------------------------------------------------------------------
 # Controls
 # --------------------------------------------------------------------------
@@ -698,6 +708,7 @@ def run_experiment(element_order: str = "coord-lex", base_index: int = 0,
                "last_fall": {"domain": pd_["last_fall"], "codomain": pc_["last_fall"]},
                "profile_domain": pd_, "profile_codomain": pc_}
     metrics["primary_max_abs_diff"] = max(abs(a - b) for a, b in zip(pd_["r"], pc_["r"]))
+    metrics["solutions_over_F2"] = {"domain": count_solutions(g_dom), "codomain": count_solutions(g_cod)}
     result["metrics"] = metrics
 
     # ---- controls ---------------------------------------------------------
@@ -739,6 +750,8 @@ def run_experiment(element_order: str = "coord-lex", base_index: int = 0,
     label, why, note = decide_label(
         gl_ok=gl_ok, identity_ok=identity_ok,
         unit_dom=pd_["unit_ideal_at_degree"], unit_cod=pc_["unit_ideal_at_degree"],
+        empty_dom=metrics["solutions_over_F2"]["domain"] == 0,
+        empty_cod=metrics["solutions_over_F2"]["codomain"] == 0,
         homogeneous=result["homogeneity_gate"]["triggered"],
         diff=metrics["primary_max_abs_diff"], delta=delta["delta"], grevlex_dom=gv_d, grevlex_cod=gv_c)
     if note:
@@ -746,13 +759,20 @@ def run_experiment(element_order: str = "coord-lex", base_index: int = 0,
     return finish(label, why)
 
 
-def decide_label(*, gl_ok, identity_ok, unit_dom, unit_cod, homogeneous, diff, delta,
-                 grevlex_dom, grevlex_cod):
+def decide_label(*, gl_ok, identity_ok, unit_dom, unit_cod, empty_dom, empty_cod, homogeneous,
+                 diff, delta, grevlex_dom, grevlex_cod):
     """Frozen label rules, in the order the specification states them."""
     if not gl_ok or not identity_ok:
         return "instrument", "GL-8 or IDENTITY control changed r(d)", None
     if (unit_dom is not None and unit_dom <= 1) or (unit_cod is not None and unit_cod <= 1):
         return "degenerate-unit-ideal", "an ideal contains 1 in degree <= 1", None
+    if empty_dom or empty_cod:
+        # The success criterion requires that neither ideal is the unit ideal, at any degree;
+        # an ideal with no common zero over F_2 is the unit ideal even if 1 first enters
+        # the row space above degree 1.
+        return ("degenerate-unit-ideal",
+                "an ideal has no common zero over F_2^8 (unit ideal), first entering above degree 1",
+                None)
     if homogeneous:
         return "homogeneous-no-op", "system homogeneous after reduction", None
     if delta == 1 and diff != 0:

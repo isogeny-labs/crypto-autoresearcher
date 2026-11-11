@@ -158,6 +158,21 @@ class BooleanLinearAlgebra(unittest.TestCase):
                          [E.Poly2(x) for x in g])
 
 
+class UnitIdeal(unittest.TestCase):
+    def test_count_solutions(self):
+        self.assertEqual(E.count_solutions([], nvars=3), 8)
+        self.assertEqual(E.count_solutions([poly(0b001)], nvars=3), 4)          # b0 = 0
+        self.assertEqual(E.count_solutions([poly(0b001), poly(0b001, 0)], nvars=3), 0)  # b0, b0+1
+        self.assertEqual(E.count_solutions([E.ONE], nvars=3), 0)
+
+    def test_empty_means_one_is_in_the_row_space_at_some_degree(self):
+        # b0 b1 and b0 b1 + 1 have no common zero; 1 enters only at degree 2, not <= 1
+        g = [poly(0b011), poly(0b011, 0)]
+        self.assertEqual(E.count_solutions(g, nvars=3), 0)
+        p = E.rank_profile(g, nvars=3, dmax=3)
+        self.assertEqual(p["unit_ideal_at_degree"], 2)
+
+
 class GLSample(unittest.TestCase):
     def test_replayable_and_invertible(self):
         a, rec_a = E.gl_sample(8)
@@ -245,7 +260,8 @@ class Delta(unittest.TestCase):
 
 
 class Labels(unittest.TestCase):
-    base = dict(gl_ok=True, identity_ok=True, unit_dom=None, unit_cod=None, homogeneous=False,
+    base = dict(gl_ok=True, identity_ok=True, unit_dom=None, unit_cod=None, empty_dom=False,
+                empty_cod=False, homogeneous=False,
                 diff=0, delta=2, grevlex_dom={"status": "unmeasured"},
                 grevlex_cod={"status": "unmeasured"})
 
@@ -261,6 +277,8 @@ class Labels(unittest.TestCase):
         self.assertEqual(self.label(identity_ok=False), "instrument")
         self.assertEqual(self.label(unit_cod=1), "degenerate-unit-ideal")
         self.assertEqual(self.label(unit_dom=0, gl_ok=True), "degenerate-unit-ideal")
+        self.assertEqual(self.label(empty_dom=True), "degenerate-unit-ideal")
+        self.assertEqual(self.label(empty_cod=True, diff=0), "degenerate-unit-ideal")
         self.assertEqual(self.label(homogeneous=True), "homogeneous-no-op")
         m1 = {"status": "measured", "solving_degree": 2}
         m2 = {"status": "measured", "solving_degree": 3}
