@@ -103,6 +103,13 @@ does not give that positive transfer. No D5 slice certificate exists yet.
 For n51 polynomial-00, the original-system D4 map (SHA-256
 `90878ee8bc6bda02957f25728380a9e677cd13b0f46c9eed1828349da796f115`)
 passed independent Python and native C0–C3 checks against exported generators.
+Its retained D3 seed kernel is now independently exact W3: a separate direct
+closure rank of 10,970 in 23,479 columns matches the accepted D3 map's
+12,509-dimensional quotient (`N51-POLY00-W3-EXACTNESS.md`).
+The D3-to-D4 source and terminal fixed-point receipts are mapped to
+Proposition 1.9 in `N51-POLY00-D4-LIFT-EXACTNESS-AUDIT.md`. The conditional
+exact-W4 dimension is 248,589; an independent direct rank would remove the
+producer-rank premise.
 Its recorded exact count is six, so a checked D5 quotient of codimension at
 least seven would prove LFD at least six for this named input. The 64,638,795,838-byte
 envelope is the retained source-derived profile, not measured D5 usage.
