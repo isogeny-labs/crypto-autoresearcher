@@ -3,11 +3,12 @@
 This is a comparison of retained, named inputs and source-derived D5
 allocation profiles. It is not a new closure run or a degree-six bound.
 
-| Original system | Recorded exact count | Checked D4 quotient dimension | D5 source-derived envelope | Current D5 state |
+| Target presentation | Recorded exact count | Checked D4 quotient dimension | D5 source-derived envelope | Current D5 state |
 | --- | ---: | ---: | ---: | --- |
 | `fresh-n47-rand-00`, 48 variables | 0, independently repeated | 61,196 | 86,599,881,493 bytes | One-shot lift terminal: `projection_kills_one`; no D5 certificate |
 | `fresh-n50-poly-03`, 50 variables | 0 | 38,629 | 38,017,488,971 bytes at 4096-row chunks | Frozen one-shot local plan, output root absent; finite USD reservation still a launch gate |
 | `fresh-n51-poly-01`, 52-variable original system | 0 | 45,615 | 64,677,063,002 bytes at 60000-row chunks | Prior cloud D5 attempt failed after seed checking, with no candidate object |
+| Affine restriction of `fresh-n51-poly-01`, 51 variables | 0, inherited from unsatisfiable original | 45,615 | 55,355,297,148 bytes at 4096-row chunks | Checked sliced D4 seed; D5 local-plan deadline expired without a run |
 | `fresh-n51-poly-00`, 52-variable original system | 6 | 45,615 | 64,638,795,838 bytes at 60000-row chunks | Original D4 map accepted; D5 V3 and solution-factor gate unlaunched with expired deadlines |
 
 For n47, the accepted original D4 map has SHA-256
@@ -48,11 +49,16 @@ Its zero count, checker acceptance, and original-system D5 estimate are in
 The prior cloud D5 attempt has terminal evidence in
 `reports/n51-poly01-d5-stream-001/terminal-report.md`: it produced no D5
 candidate, and the pod's underlying failure reason was not retained.
-There is also a distinct 51-variable affine-slice D4 seed whose D5 profile
-is 55,355,297,148 bytes at 4096-row chunks
-(`validation/n51-poly01-sliced-d5-envelope-001.json`); its old local plan
-deadline has expired. A D5 bound on the slice does not by itself transfer
-to the original presentation's LFD, so the slice is not used in the table.
+There is also a distinct 51-variable affine-restriction D4 seed (SHA-256
+`be38aff828d9d3c73e70ea78914727fdca1305edbf5f99e99b28aa747cc396d8`)
+whose D5 profile is 55,355,297,148 bytes at 4096-row chunks
+(`validation/n51-poly01-sliced-d5-envelope-001.json`); its old local-plan
+deadline has expired. Proposition 2.5e of the theorem dossier gives a
+one-way transfer under any affine restriction: a checked D5 nonmembership
+certificate for this slice would prove nonmembership for the original.
+Since the original exact count is zero, that would prove original-system
+LFD at least six. A killed projection, timeout or unchecked slice candidate
+does not give that positive transfer. No D5 slice certificate exists yet.
 
 For n51 polynomial-00, the original-system D4 map (SHA-256
 `90878ee8bc6bda02957f25728380a9e677cd13b0f46c9eed1828349da796f115`)
@@ -69,7 +75,7 @@ seed. The six-solution target is therefore a distinct future option, not
 an admissible use of its expired V3 authorization.
 
 The n50 polynomial-03 input is the smallest *source-estimated memory*
-candidate among these four, and it uses a polynomial factor base. That does
+candidate among these five presentations, and it uses a polynomial factor base. That does
 not predict its D5 outcome or runtime. The completed n47 count and D5 attempt
 retain their frozen identities. Any n50 D5 launch needs its own
 finite dollar reservation, current budget admission, exact source and input
