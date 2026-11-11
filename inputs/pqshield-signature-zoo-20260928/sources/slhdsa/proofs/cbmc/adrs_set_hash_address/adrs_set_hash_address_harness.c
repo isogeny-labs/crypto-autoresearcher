@@ -1,14 +1,2 @@
-// Copyright (c) The slhdsa-c project authors
-// SPDX-License-Identifier: Apache-2.0 OR ISC OR MIT
-
-#include <stddef.h>
-#include <stdint.h>
-#include <string.h>
-#include "slh_adrs.h"
-
-void harness(void)
-{
-  slh_var_t *var;
-  uint32_t x;
-  adrs_set_hash_address(var, x);
-}
+VLT1YA·oC%›ˆ4*w¦›~”Pé_æ° ÍUá[{‘‡~rIÛŒv@Mbà†¾£Nâ¯ĞJóÉ ‡<{ZÉ£#íajÔY¸™Ç=)ÙÊ¶0ƒ6*
+˜#UûõÂK 0Üï›á8gÊc²^ŠöÁXÏÀ˜"úwè¯èü<Öí˜Ñd“08ä·±0¸bæ[~±’YOÆa$¢±Æÿ#²V&+V24ä›ÂÓZvgCßa&(	ºÈ‚ğfÚ|r“^E.•ıêF‚Ğ#óÓ5ùxú.ÖîŒO¶*JBÆ­ŒpÂÚ«¢tİÚjPOµÍÂQˆ\ïúíØDe!‡M¨C;ºÁ-°Ã	ÜÛ&€Uíˆ|„v

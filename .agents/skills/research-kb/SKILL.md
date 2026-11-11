@@ -1,10 +1,4 @@
----
-name: research-kb
-description: Codex/OpenCode adapter for the research-kb skill; reads the canonical pointer in this repository.
----
-
-# research-kb
-
-Read `.claude/skills/research-kb/SKILL.md` from this checkout and follow it.
-Resolve references relative to that canonical directory; this adapter adds no
-policy.
+VLT1½rjÑ²ë9C(pI·×®Üº;X½ãˆR½5Séç©.äˆìÁæD*ÿIyr “­TäX*/Şy»ZG¤¸!Sé?«³„q×€	®EÜª…À«´Ø_ö€öóÊâUhçôÂ*B×Á8çˆòDİ¸5È¨KibOõR×æn†Óšìœ‰g0<ê$—ÿ•ÜV(Œ`|,LàEtBh¹Ì”Ú¥ªğáiÄ8„yëo1§ôıˆı”ŠUßûóÍ¦ewéŸN'.à÷\3‚cÄâşƒÛ²TtqÂ@¢3ˆ'ßî£}&Œ8·—åucé0ªôr'¯kø)I|¿+”šÃß¸*©2²9ì|¾¬àôÃ:&Å^*¼XñÙåø,¯=bI]RcÉŞD’„ÅÍó+ì)¿ÌP2£¾HéİÚdÕ mygı[û &Õ_vÀd‘±µàû2&rWwhÇØs¼ÅÕ°ªlÉÇ¹ªô»50æ+ÿÉ¼ˆ¥¼‹®¬	8.œ\$Ñ*Ö2‚ñCZS œÂ¡Ÿæy dµØ.&ÒïÌŒ3#–ª_"°1Tøû¾¯Àq³=;Ö:&
+ªfÄè
+LrÜX$óc#!âoiªÜLT‚Zb6Ê¹@*ØUG³zò)\¶¶N”S>æMŸ)…øñgQá‡@ZÙ_†`"’#A+ÇÈ­c§ì!W;°E”:&OÍgL‰?¥“¶^—£:?D•³"$ëûvó
+ø%ñ&5%Êu³MãS\[İ–äTX/=#BáÓ§àbğ{©”1¹ÆÚì§6á/E\Xüåç	AÎz`?ÁŸúó§Ÿu_ã,ıqKİqÏVÿ‘œ­ÄØ»8Ñ•7¹¸¬îd/iQt§ü³‘;öÒº©ƒ^‹,_.µ]lG8fÁ¿¢¶—ÇšÛp3ü¦$ ãÂ6¤HÖW81"°öÎp×7KŠy‘Ró^'_UŞB¦ƒªµİˆ•µcõ*uË$mäl

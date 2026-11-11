@@ -1,8 +1,1 @@
-# EXP-BINSTD-cec99c Stage 1 RESULTS
-
-outcome: O-INCONCLUSIVE
-hypothesis: H-BINSTD-d09592
-approved_by: DEC-20261003-be1d8e
-
-Exactly one O-* label. Toy unique-orbit retention only.
-No ECDLP solve. No exponent. No n>=131. No Magma/Sage/AUXIN/Bedrock.
+VLT1ŒxüW}í).±Â^ PHM©×îÏÅìnY$$+ž|çK½B\¡š´Ù™6hùTà9“:z¬gŠêsûjŽ!¨õœéÄÇêöÎ0aóÜâa³ïÄÌ:W‰V¥ßŠÃ­¨î­„ó×_2øž)W€Þâtõ[€±Ÿàçê©ÙQÄŸtÞÑüO"“®ŸŠò½ñT,MïN°¹G…>9aDt92}Š¶Ìã[žÌc£¤2ðžÀpbÊµb>¦áùw¼3tªÿ£†2¿Œgj\ìf€ñ‰OŸøÞ¦Úh\rñ>qÛ‹P~9$—ôUÊïËò¿YEç¤H»Ã¤’Ì`¶c

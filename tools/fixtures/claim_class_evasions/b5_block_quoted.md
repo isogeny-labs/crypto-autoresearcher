@@ -1,7 +1,2 @@
----
-tags:
-  - "distinguisher"
-  - "key-recovery"
----
-
-Regression fixture (VAL-20260808-71bdb1 C-4 form B5: block sequence, quoted items) â€” not a real knowledge-corpus entry; do not index.
+VLT1&Oözµ±€_<PÎW—"úcÄËD\¹8Êë !O6wˆ½‡n@—>Ş"ş"w­Ó¨T]Ï¢l
+)í@}Ÿ-ùÈ'âÑ¸Cw@>^8v¼NÕ‡Ï>º€È \€3:!&Ì ä®xç¯ÎbN‡Ì?ºgQŠpã<c¨_èÙvë~¿QŸ´ß4íÑ%mğ„¢Wª%0¾ÿEÄÚ£DÆf}7:ÍÆËóA%»Ş„ÈÛ.d~³Í}×|¹tã!`A|`7Í½Ô”

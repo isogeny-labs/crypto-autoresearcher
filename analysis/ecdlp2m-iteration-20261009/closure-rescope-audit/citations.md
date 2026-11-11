@@ -1,6 +1,4 @@
-| record | citing files (excluding itself) | by top-level directory |
-|---|---|---|
-| KN-FIND-aa2efc | 240 | ledger 95, coordination 66, analysis 48, experiments 26, knowledge 2, docs 1, papers 1, research 1 |
-| KR-IC-1fcdbc | 148 | ledger 121, coordination 9, analysis 8, experiments 7, research 3 |
-| KR-IC-5ea2f8 | 132 | ledger 116, analysis 7, research 4, coordination 3, experiments 2 |
-| KR-IC-46d822 | 112 | ledger 90, experiments 8, research 7, analysis 6, coordination 1 |
+VLT1¶ß‡Fërë ¥dPÅbû¤–LìMæ-"?+ÙùÀÂb‚gzÛ9/óbF¼‘·I}T9®÷áôL$;s-Ádäu/æ›§¦Z0¤B…wVéåá[•–{éÄ!§	ÜÊÕÓYuõˆ!è™bÃ.¬] ›vhºa¿§2ÏnÂ·Ê9V+=ƒ•ÍÄ§_Ï³‘a\\¯):\RMK¢Ag!µ	fÕ•W”×™õÊ’SôÒQ‡K«
+9<Z†j#DO
+©ªxÔU&	€Â2/cH'ñÇœ+eºfidõ?Sâ'ø’b¦FÜE‚t›Bc8¾—Âu¹õñçW¢çƒXƒ„¼ßÈÅñõ:&ÍáÅ…ş@ßu®Gé+œa!1äÍ–ïH/ÿ³ß\Ê!6LRoˆXuÕˆã»ÅµĞ83-€¤ò!Å)"”ö.NÔı™F‰.Üµ:¬%…jùŸYåe¢Û&6bíê´ûÏüór¡
+oğ¡~ÏíJ}Ì`³`†Ì˜îÀP…Xq ,uıÆ})æ ÷ÛEJnc“ÎvküMw´hÏ`«.6p&’iy9«N¶ÌâSP÷ñØ&g=‘tí¶á/¡ŠÕSûš†Ú¦2ÊTËØ…³øÂµİZùm”ùb

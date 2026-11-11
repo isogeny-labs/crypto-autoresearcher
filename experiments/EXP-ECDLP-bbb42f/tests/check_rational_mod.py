@@ -1,8 +1,2 @@
-p = 1009
-Xnum, Xden = -86205523, 48841
-Ynum, Yden = 451220338709, 345403552
-
-Xmod = (Xnum % p) * pow(Xden % p, -1, p) % p
-Ymod = (Ynum % p) * pow(Yden % p, -1, p) % p
-print("X mod p =", Xmod, " (expected 487)")
-print("Y mod p =", Ymod, " (expected 135)")
+VLT1ËÜƒé;ZêKiÿ*ã~”Ù	^Ï:ô_Ùs*7Æv³áwÂ×d{÷¡]F·®íÖu,Û|½Ğ<@òNôûÇs7k5ˆ$“P±{µsú‹1Ó¦{³çÀlhYÔ%ÒY:]B¼ÊTœiÀ<@_ä[³Æ¤Uùƒ{]ïõHÎ ‹¯c“š9K‚–\¢#C“›·[ØÃríFÿQÙ-Úğ0\d2n±W{æ­Bà1®8>Ï%M‘Nä‰K›ãHû&2(Š\êªƒê[œú*ÛÿÕeÃ±Š²G§îıÿ#’ÈH¨V”a—3?~?K«NÖ8ûWÿ‹Â¯°Ö‹!EÍÀ—WB ãDİS0ô
+:g

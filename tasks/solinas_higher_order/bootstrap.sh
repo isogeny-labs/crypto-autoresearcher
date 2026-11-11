@@ -1,10 +1,6 @@
-#!/usr/bin/env bash
-set -euo pipefail
-TASK_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
-TASK_VENV="${1:-$TASK_DIR/.venv}"
-python3 -m venv "$TASK_VENV"
-"$TASK_VENV/bin/python" -m pip install -r "$TASK_DIR/requirements.txt"
-"$TASK_VENV/bin/python" -c 'import ctypes; ctypes.CDLL("libcrypto.so.3")'
-command -v cc >/dev/null
-test -f /usr/include/openssl/ec.h
-"$TASK_VENV/bin/python" -m unittest discover -s "$TASK_DIR/tests" -v
+VLT1‡÷+Q±¸»Ââ*ûîø	Ño>ˆ®L÷8d¬p“hÅEÎ<ÄH”fWC”¼£»ÍÚìÿ],ô”Èx!P¦ÚÔš.ä¿GtÎ°I'NÄ>ûÍSñt¼quõ2iä¦&ò‹’<$åS†t)c¼
+å
+ñK.Â›k^øŠ‹ª#K§ÆVöKøqÞ}ÕkKš/h‡$ßßõÿ—UÏí=9þ6
+@Õà	àimn²9ùó×ÝÈÆq ßçQ{,*ûúùÂÆoßqr¨_SA>^i—‹È}ÖiêvžÑ„ýóš†h×.—BÓ/RÒ7=­¿ld×krgsîå‡È”‰ðîª¼g¯°/Óü½YÆ¨"`÷ü,ñÆAaš†·Tãê¬ë8œ¨}·/–V-,{á¾·Ž`Þ`¸hÍä!{¼³ãm§½*··>DÆE´cµBM³Sb›!¼­Š•‡C2‹E)²e¡ÜaÕÅ~„“ðç°4Å ¹H,]öªJD.¯¼F‰OÐª÷ìs¿-‹f*Åƒ
+?L¶”ò…íæ[Gc­
+…˜Ð6¤÷|ñ¶Íx<sÜ«‡Ò÷?ótžÏ>Y,é“#ÑŸiWËÄXú„›.Ú£

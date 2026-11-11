@@ -1,11 +1,4 @@
-# RESULTS EXP-BINSTD-0f2222 / H-BINSTD-f4b5bb
-
-outcome: O-FAIL-BAND
-winning_model: None
-holds: {'M1': 0, 'M2': 2, 'M3': 2}
-empty_pool_hits: 0
-twin_ok: True
-cert_ok: True
-
-CLAIM TIER: observational / instrument. No break. No exponent.
-Amazon Bedrock was not selected.
+VLT1‹Y]‘‚­ˆ/\ÂLO¬k$Cxz®<”~­œÃä€F©ÍÁ~#ºÀ!±xù".E¯`Ç>´·.ŠÈÑ/
+áöÕ³nOëÔ¢‘ğ¿:ÿ:2.…ñ;Œİ¶
+5Gè½17ˆ
+˜…€ï„.+3Å…Ï¯”	DìÈ7İòõÄU-v‡ÜÆL@„`š·g*}¡çè}•”hw˜Š1ƒ©B§Â!¸¾F3Ù Hß5ğ„6·q~]ÈW—Es§5Ş‚Ñ:Ús*Î•Ng¾!ƒd{˜6DYĞ+6ŠI3“.2g†š¹T)K)B{p(ƒ9q²ì¹j;{!,8°lÙ=@¹å¼GeÒ¶íğ7ˆSàÿ‘fl#`í´»ÇSi96ıkş*»Yã

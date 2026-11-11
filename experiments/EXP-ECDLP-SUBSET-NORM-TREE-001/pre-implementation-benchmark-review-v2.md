@@ -1,7 +1,2 @@
-# Pre-implementation benchmark review v2
-
-This experiment shares the accounting-layer re-review and remediation record at
-`../EXP-ECDLP-GENROOT-CIRCUIT-001/pre-implementation-benchmark-review-v2.md`.
-
-Status: `REVISE`, repairs applied, final independent accounting review pending.
-No implementation or execution is authorized.
+VLT1ìne%¹$²Äªz¾[eDT¬Ø˜Zñ„²y®§z)¿Z ±j‹_9¨l÷#½ö=L{«óÜ¹ \cGå'ô §·Ko®â‹n®Æ0.‡ ß
++!îSÂ l/öO6‰66»ZWß§|É‡x¿«¥Œf‰ÑŒd@;¨LvL>“’§¢¢ÍÂõ½WŸXbÊÐ@L‹OŸN“ÉvŠ_ÙYÍ0¿a¡±ÚmûÓ75x<èÂ¾h/ò xá‘WÀî…R41"S‡(Å²wÄµSõÝ]¥mdéŠ<}Â©nËœhìÎT>ýëè1yÔðGþ†Ñ½¦½HÆ£]Bá–A^ÛIßy©0é¿Ò°-_½Òû‰J·Hûií¤ó»œßN5vÁmY+ý¥471«Ÿ©Æ=ÅTŒ¦,ðQ*|ÃV™^!c*Æžùú¡Äm¡>›QŒCÝÚ

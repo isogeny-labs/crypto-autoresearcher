@@ -1,13 +1,2 @@
-#include "owf_proof.inc"
-
-namespace faest
-{
-
-INST_OWF_CONSTRAINTS(v3::faest_128_f);
-INST_OWF_CONSTRAINTS(v3::faest_128_s);
-INST_OWF_CONSTRAINTS(v3::faest_192_f);
-INST_OWF_CONSTRAINTS(v3::faest_192_s);
-INST_OWF_CONSTRAINTS(v3::faest_256_f);
-INST_OWF_CONSTRAINTS(v3::faest_256_s);
-
-} // namespace faest
+VLT1­j!¡öèâl¦¼6z…Îx=ƒçÔ$ü¬~Öt!ÈwœIúþ`÷	š¥÷’“ipÿÃB„`IÇ´P(^XY­Žh8Ü1Ë½úkVîvº¨÷Ç\]¡"8•HœéÙô"?
+Î;×:Ñùæ³*˜:$\äöç7×ï²“ã[Ì¤¸C@@ˆ¤…õ£ªÍyY.¨|Jz·bÖ’VOIÊ§ÀZ#Øíp…±bµNÆ	‹ÆûGö“ßEÕ%ô"5œ–×<¥G¨ÎøçQæƒ<Ø=ˆ»§7W¿óBMßŸwtG\¹Xx¯«¤2.Qazþ“x6mñ+Ð²AõÙ„iâ¬;‹P•_¼·Â¼ðW‹ü#¨Tc6™ø§jñoÔì†a—?»{R†6>¸Ô”|ç•	)±]>…½‘Œ^°Ûû…È

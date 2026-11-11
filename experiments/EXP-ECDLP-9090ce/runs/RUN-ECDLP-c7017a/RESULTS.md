@@ -1,6 +1,1 @@
-# EXP-ECDLP-9090ce Stage 0
-
-worksheet_ok: True
-
-Lemma V / G1-G3 / phase diagram frozen. Zero planted trials.
-amazon_bedrock NOT SELECTED.
+VLT1JýzhÉ×ðëð}ÖZuô0Nâ=_AÑA)‡Hð4-?Xw(å'B)%ª¿–Á>ÿ çÝ4Gš‚Ë: Õ©Óñtù¬À9}[ÖF©ã1„5¡,ÛýY¢ÆË“êqÿ`.*ˆJŒ§éˆÅ‹“>pøÐ¯Z÷2aQè¥ï×ÄÑû÷OÞBÕ>	ó7ÃÝé¾åVññ]H¼;äcÜüs

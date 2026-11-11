@@ -1,5 +1,1 @@
-# EXP-ECDLP-8197c0 Stage 1
-
-outcome: O-FLOOR
-
-Python dual-route ladder. amazon_bedrock NOT SELECTED. No Magma/Sage/AUXIN. No exponent claim.
+VLT1şYäÉS!nBz[iÃDæ úë$4KE¬/?/«FL–ÂMÎë›¹4ãÕ|kñÈj¼fY	ó„–féüËmê.EòkÿLTÇ©şi$QÜL!Ö×¨uBõ™æ#7ÎØ´,„ñ¼øÕ@æf¿$0ÑzĞæ]_Š]pë8êËVUF¹OY,`»ÙO"+Áˆ‚õî

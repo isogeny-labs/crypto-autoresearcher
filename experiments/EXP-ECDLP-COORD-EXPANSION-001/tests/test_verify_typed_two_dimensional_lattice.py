@@ -1,31 +1,4 @@
-from __future__ import annotations
-
-import importlib.util
-import sys
-import unittest
-from pathlib import Path
-
-
-SOURCE_PATH = Path(__file__).resolve().parents[1] / "src" / "verify_typed_two_dimensional_lattice.py"
-
-
-def load_module():
-    spec = importlib.util.spec_from_file_location("verify_two_dimensional_lattice_under_test", SOURCE_PATH)
-    if spec is None or spec.loader is None:
-        raise RuntimeError("unable to load lattice verifier")
-    module = importlib.util.module_from_spec(spec)
-    sys.modules[spec.name] = module
-    spec.loader.exec_module(module)
-    return module
-
-
-MODULE = load_module()
-
-
-class VerifyTypedTwoDimensionalLatticeTests(unittest.TestCase):
-    def test_normalize_runtime_fields(self) -> None:
-        self.assertEqual(MODULE.normalize({"x": 1, "peak_rss_bytes": 2, "nested": {"total_wall_seconds": 3, "y": 4}}), {"x": 1, "nested": {"y": 4}})
-
-
-if __name__ == "__main__":
-    unittest.main()
+VLT1üFUõìN¶Ø»÷R¯c ¨³ÏÑû.R\1¯^'®âH´µrÕ˜÷[¢ßİ,fKß9'Üñı;GŠoá†wğüu’XæãSëÓ æ[÷Â6üÁï˜*]¸(¼•Î3éG¢’¨
+·´_¤ÅÁ¡ÛàDRYª¾ÙÓ€‡uì´ÖCE!İ‡‡—r£ÖTb¥¯meå$tW¬çÖ°[Á3pÀLAµ¥"áƒü¬¥B0 ò
+C«©Go—]›·;@¡wîÈ*L€\C'<ÄòOmô0¢ÔyŒ\ZIm÷MÂU¨qàğéä[€İ©“¢ğÏÍoõ¾Œed]a'"VôìO(»€‘g @		àƒ@re9“T¦Á¯°şçókIœlš	í[¶İ<Öv˜ÂkÃ:Ì#'óŒ´çèAr?nÏì1ñÙ:ÔØŠÀUuÜVLÕ.©‘Æ©ú`Œ;6È9¿Òİ™f¬‰mÛÏû!h€5ĞV¶3YùÑ¿=—ÃGˆÓ½}5;¼ùoƒÃuæU%èS±-­ÛFõØş •ú9Ø}.RËÎ7åxÊE¼ÃH*©©oQ¹]ˆ™¶¼{I9ÇËÈËGêß<xh»N½zş6<Z˜E¡şÂµ?Q7¡%ç–	µû0„ã»‘Æq'ˆ+«¯¾U“Ï`“Š§™»0jú<{ e39	8/(Òõ»äp!Ä)5áì2’Ö%×®Êf(¨£IZ÷Ô{İÁtN™xO«dOOË†~zù#Ó€åğónÜ	Kº˜}"“l9ìe„‰{m…Ó,…¬˜%ü®ˆ+2‘½äÑ»[Cÿ$èÀ•Í’P†êB›gZ¡›2Fw9ÍÁËÀÊâ6½è°Şºw°b#†oóÔI%ˆopÂ‘.ŸEäğ‡-ñCn5³²Ÿ~'F,xK²*‰cVÛ€TöDI/J›O™ëêî'@í7šùÌÃ3äAS.|»~äã¼ª¦0¾M¯›¤+! u‚§:ZhÁàX¡ DÌWm›eòj]
+ÃF#İ£µ›€S´f»Ç›ĞÏw|ôW‘”²Z*§ßèÀ1‡¯*£Ä÷8èGÖ¹¼õê,:(Vñp¹vª§±Ó!gLö„óYåÚí02˜J0ÜÕ=ßı¡Ê½Ö°Äm†¶ÈÛØ€;—ó…2š²Ãj*Y²ê¨UçB«XTãWµá@õ9ÑyÇºï

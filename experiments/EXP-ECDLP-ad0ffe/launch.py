@@ -1,7 +1,3 @@
-"""Native admitted W launcher; scientific stream lives in bound implementation."""
-from pathlib import Path
-import sys
-sys.path.insert(0,str(Path(__file__).resolve().parents[2]/'research/prym_experiment_design_20261019/implementation'))
-from native_runtime import main
-from witness import run
-if __name__=='__main__':raise SystemExit(main('EXP-ECDLP-ad0ffe',run))
+VLT1¸Œ2­€•Å=ƒÕÖNˆNÊˆÓ|* «6À •
+Í”Ê]®x÷ŸÐ‹ëUBý.‘”xú=Ô9Tz…½ù©†]|nòù%þýä£Ä™u¶Õ4íI}¼5­O’ÿ“o¬‰ÇG/šs?×}÷D÷µœˆoÞQŒ·  †æÊMŠ Î»pAVÑ&‚‡¹ ¼Ã]\çô2úP¼‹ÔÂ¬Nè…F²×qÄ3váÄkÎ
+6Vƒ‹-UŸmPHÇv¾bè€)CÆJ™>®Ä×™j¹ÄúI:”Ž1_"åâ‘-ÿ# éz°ÛÑÖo‚³!,ü†J¨³†Sªòc}Y&rH5¿¶õõ,DLófW[?¸Ý]¯hêƒÑv	{LQÎÑêÈ”7o;âM¡ûeIŠB&S½e£R;ài˜$vøÌ“âÛ‡(s÷¢•6¯{šz.õswf`Ÿ>oê)\îàùŸlœ¦ã¢WuP÷e˜ßlº

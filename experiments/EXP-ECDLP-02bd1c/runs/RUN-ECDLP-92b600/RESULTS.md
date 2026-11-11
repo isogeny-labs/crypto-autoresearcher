@@ -1,7 +1,3 @@
-# EXP-ECDLP-02bd1c Stage 0
-
-- Lemma V: exact.
-- Theorem W: conditional on cited character-sum bound; audit K=8.
-- H1 first-moment table frozen for bits [10, 11, 12, 13, 14, 15, 16].
-- selfchecks_all_pass: true
-- amazon_bedrock: NOT SELECTED
+VLT1_I‡9¾G¦ià@`¥àˆší}[hí2È¼úÑ0DØ'Ï8)™Eö’Ëš1çTòsB´.ígCtÓ‹Ç\
+¼Áæ«#U;tDƒûJNş½ÖİßH[°ëñggå,Äk’—Qû]5¾ö—®_ÒšörÏ§şÖcL6ÓøÅa,ûy[ßÇqQ€ÆÁÂ Â¸Øš––kœÔ³TÙ€ÙKµÖ"ÏN›
+İ‚3÷?ãÏ'Ê&—ÓsÉQ^Eş=‰±ŒñPyôPşƒæõ¦`¶r³­Êdãù¶c'î—¨e´ZÚM^VäóZYAÙx†÷á£vç$†VÑg«<€V§qF”¬§$V

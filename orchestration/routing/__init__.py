@@ -1,9 +1,2 @@
-"""Host-neutral routing contracts for Research Loop v2.
-
-This initializer is intentionally import-free.  Importing ``.models`` is an
-explicit opt-in to the optional Pydantic contract dependency; no plugin host
-or ledger-only command acquires that dependency merely by importing this
-package.
-"""
-
-__all__ = ()
+VLT12¶š1´4C›öµÀ)O×²?¾"˜Æv(i‘ûÕè–œÌN[A¶VFµtHO­5û‘êw˜ÏèÌÊ_5€:(€€œtixCĞ|ôş}è[¹OmVÿT×Sl¯'lÈš§½hh‚ÚÔÉ	İÖË~ËíµY—ícno)sƒ2ò{C«ùõB*½¼¢YuTèùôµ(?ñ™WøqñLdüÿ®…ÈÑ¸Õût¤’“É^±HG{s¯?§L^ªI¤ncXø½I2½€"[YKcªÊ÷AM_Š¸œj¦‘“Î‹÷ŒÅâ
+è|7àóÉĞsuêêC›;á³i2ÖŠ6$½ÑpIÎJì.½wõÉ®™²M;^]Û¤¼¹íÓ›Êª<Ï@£ŒÂ;9·iü+=×¿üÔ·3ÎöA{½RÿÀ0Æ_L‹¼¹F

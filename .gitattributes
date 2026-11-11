@@ -1,3 +1,14 @@
+# Research vault: tracked files are AES-256-SIV ciphertext in the object store.
+# Bootstrap paths below stay plaintext so GitHub can parse workflows and Git can
+# select the filter. Specific LFS rules later in this file override filter=vault.
+* filter=vault -text -diff
+/.gitattributes -filter -text
+/.gitignore -filter -text
+/.github/** -filter -text
+/.artifacts/** -filter -text
+**/.artifacts.json -filter -text
+/tools/vault/** -filter -text
+/VAULT.md -filter -text
 experiments/EXP-ECDLP-56ee42/implementation/runs/stage-cache/rung_T25_{x,y}.npy filter=lfs diff=lfs merge=lfs -text
 experiments/EXP-ECDLP-56ee42/implementation/runs/stage-cache/rung_T27_{x,y}.npy filter=lfs diff=lfs merge=lfs -text
 experiments/EXP-ECRANK-8156f9/runs/R2-primary/coset-totals.json filter=lfs diff=lfs merge=lfs -text
@@ -45,3 +56,5 @@ research/sheriff/SHF-20261024-46b7da/report.pdf -text -diff
 docs/reports/2026-10-26-ledger-parse-audit/report.pdf -text -diff
 docs/reports/ecdlp-lead-atlas-20261024/report.pdf -text -diff
 docs/reports/2026-10-31-k163-coprime-transfer-lean/report.pdf -text -diff
+
+experiments/EXP-PFIVE-e26798/reports/review-readiness-20261107-f23e4c/report.pdf -text -diff

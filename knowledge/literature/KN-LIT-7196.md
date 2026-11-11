@@ -1,36 +1,7 @@
----
-id: KN-LIT-7196
-type: literature
-title: "Towards a Classification of Non-interactive Computational Assumptions in Cyclic Groups"
-authors:
-  - "Essam Ghadafi"
-  - "Jens Groth"
-year: null
-venue: null
-identifiers:
-  eprint: null
-  doi: null
-  arxiv: null
-  url: null
-tags: [complexity-theory, cryptanalysis, dlp, pairing]
-confidence: reported
-citation_verified: read
-added: "2026-07-24"
-superseded_by: null
----
-
-## Contribution
-No abstract was extractable from the first two pages of the local PDF; contribution recorded from the title only. See local copy for the full text.
-
-## Key claims (as reported)
-- Title-level claim: "Towards a Classification of Non-interactive Computational Assumptions in Cyclic Groups" (abstract not extracted).
-
-## Relevance to this program
-Relevant to pairing-based reductions and endomorphism speedups (MOV/Frey-RÃ¼ck special cases, GLV/GLS) that bound which curve classes are safe baselines.
-
-## Not verified here
-Entry generated during the 2026-07-24 bulk seeding pass from the local PDF's first two pages. Title/authors/year/venue were parsed heuristically and may be incomplete or mis-segmented; claims are relayed from the paper's abstract without independent verification. Upgrade to a fully verified entry after a careful read.
-
-## Local copies
-- `downloads/106240265 (1).pdf`
-- `downloads/106240265.pdf`
+VLT1Îù_D²ƒq¬h€öKæD*\ÃN¤­ãjó?]&,Fè¹`ð÷B—Õ2ü]âMªöQ.?:\/¶ÜX+´››¢Ö†5çOŠÉ/GÊn„(íõ~ñéÌq³½æäŠÑJ+Ó¶†'¯¶Í"#aä¥÷Ò]˜ì×Ê`µñI´ðN€:Rå±Åº¡»z»Hð‰G‹mQu1/±­™Z¸¦\3²17Å™Jëå=sÑÛ`Ýn²ÙÀ’I3Râwã‡A1ªr†×N\Ô`ÏÜîÍOàãÈ¡è~©Q¸K,î±j7›Fœõ1†pw½–+(cÎŽüŽ}>ž(`ž.Ý l¿z#²ïÌ\–!(¾ÀÒÓÔÁU¦jc[+ñGd¤¥ÔûùRðˆÌ¸+E¹J6cÄ¡h#ž’‰<¿Ë
+éŠI:êÑçôäÈ²¨f½itªÝ6õH•=	­[öŸQ5Ü`ñÞLüf{%|GŽ]`nk‰²½Gü+úÚT ìq_!óÖY uÞÑÓÏã9XZ0À6Ç¶ài¥|õÖ©s¤8`HÊÏQ¿£üƒÑWäÏÂ—
+£™å„áBp4 C¨C¬®Ø­»ù‡A¯±tªÙ—>ÜFÜ‹RÚbÀ#ÿG­( ‹+nÝ7—æ
+•áƒ‡rvµØQééF[ì<E~5	Ï÷g¾Y‹àˆ¨6F²²Æ¤I¶Þ0BÐ#Rz ‡vGSaÁ¥ª¯~©á°K0I€¼,®â¦ßˆ‡üÀR YÛ»…lè¨|e¦½(ôÊ-sm2úò{§ö/nV$(´R³ýŠÓìéïÛeYÕ•Œq@hðŠ½«>DlõÊý<ã>YÓ¶G_ò¶ÿN^•J˜WãSm•ªL;79”›Á­	»k4¦r;„Ø¼qCwSÀ¹™°E+£fn$åá{€È±Éž+?×[šw™rø†§]}Ç•ÜÍ¯+IN‘V<›Ý+éð.jáïX+flò7T`±bÍdº5²ú&¿Ì1s(ÂäÉ’À6hÆ ²J¼Ý_ÏèFÒs:apêùÆ~OÖ3Þýº­œ–Êw·Ë~Õä"iU<2MduÉÎKÐ§êif¹íÒÿæH=ääH ÍBu¢á9‰Œ*ðè^Ð¾Žý™)O5¸<—›¥dŒÈKL©H`„ÒSÇb|]PÔÊ]Jî˜‰'Ó”&½O«*ijÏ_ÏþNîûè8é‡Ûýá’êLzÇ•­ê
+¾–a½œ´÷b;mÅÛ^ÅØÙ•i¼ƒø¢n‰ï+Vb¾š «Â/®ª&—ÒU1B,hç&%¾× =MÃFK3ë´¾&ž4ŽPñ_àiÃgÞ<fC?~é¥;P°“ûy‚“¦>cXòª;xµDsðNæ‰e+)‘Þ8cBF‘I¢Í3²Õ¿-•F3j¯V2®À«ú‚q>à˜(Ï^Ð“w^³08óÀ˜þ×â!Î¨7)T´Ãˆæ›ÌGéHÍ¸Øu§é´«Lñ“rMqJî’x²J#:<_û`å¢Hí/Ð6Ãvù3gÀõ¡Ó5ÃV*5µ`ÿ´y–ªÃÍXÂï±õ¯w5,OÖÙ¦zÄst˜ƒ“O1‡'Ã³<	²ÍÈ·dýÖX@Å.|“}Ejú^êÈb«Áû+[¦­
+Q ìiÔsCj7lÛ¶š}Xç(vÏŠ~GlÚïõâôÝ[
+ß%&@â£å’Ð¿n	¸ä3J“Ž*1Åk=±³Á»ÖÁ$µ%ZGW‹PAi§´FiçÇ

@@ -1,21 +1,3 @@
-import hashlib, datetime, os, sys
-d = sys.argv[1]
-files = ["rederivation.json", "stream-replay.jsonl.gz", "wcerts.jsonl.gz"]
-extra = ["logs/driver-pass1.log"]
-def h(p):
-    x = hashlib.sha256()
-    with open(p, "rb") as f:
-        for c in iter(lambda: f.read(1 << 20), b""):
-            x.update(c)
-    return x.hexdigest()
-out = os.path.join(d, "seal.txt")
-assert not os.path.exists(out), "seal.txt exists"
-lines = ["# TASK-20260926-83cebf seal (BR-7). Written after the three sealed files and before report.yaml / attestation.yaml.",
-         "sealed_utc: " + datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.%fZ")]
-for f in files:
-    lines.append("sha256 %s  %s  (%d bytes)" % (h(os.path.join(d, f)), f, os.path.getsize(os.path.join(d, f))))
-for f in extra:
-    lines.append("sha256 %s  %s  (%d bytes; run log of the same pass, sealed alongside)" % (h(os.path.join(d, f)), f, os.path.getsize(os.path.join(d, f))))
-with open(out, "w") as fo:
-    fo.write("\n".join(lines) + "\n")
-print(open(out).read())
+VLT1ÌùQçË+À{ìé÷Ó67¦°Êúx4k6òÔ‘+[&) anş%
+á!mZp¬ÜZºRÕ˜z_û„*‘l0[€B0ÑW¦*$’s™+9É”--è†theËwÊC¿.$Â“š@ƒ|æ›“ù v(MjúqJ¡.w]4ùùÎeY†á*³=û—K%~6&¦ì7$¨ ’ßú¥w®TËun‰N›®Ì©zÄÃHšêTFxKÑYJYÊmr‡=ãQ3Q¥ÀÈJ×Wpa=ÈÆ+j÷ÛºÎíR©Ùˆl5Èq”k}”fœ€ÓéÉ¡)çdD¸
+v…öñ€XZœÃ‰ñï.Çç¡C.½“cÛgQ¬(1YÆ>Xõ¾AÒş¬’™?Š¡ù½i).Ë`EC‡Oë£äêaıCÇK-k\›sŒ—MÛ¯ëC‘œ’øÕ%åXfU¯‚*{nLpSX´‰'ŒlRÏVìoPuJİ«Tïp9‹pö8 Î·‡‚a^û,	Ó‘½b¢Û§eÂnçUCÈU¼Ïj<¶I2šjƒëŸG·4×¨!+†‹“šDUƒ	¶Î	JôOd{5G b6&œ€‰œ+óhaòËÿì8ß¹«ìHâåENÍ´KœIMÕ»£©Xş¿JÆOÓîg¦'vEµsJíñ‡Ä%á!1W@¬ÕF8õxPGÔğêµÍPÙÜá9Úe¸Ñ¶,6ô¾£SçÃNÖaÔ°\wnü‘)|@ô¤/bÎW@ğÒ§[ÿÉ[}JÜ:Jæ‘Èê*§eKt}ËYĞŞÒ2œo=…EÈµ©TüÔ}»?eŸôíÃ!2–á¼éû2ÄÅğ§¼ZP#ØF‘"WW‡ßê/a—ıÊ7à!i(×Xb}‘½Ëx8°n¾lsqMçÃÓgµİP³èm‹ÉÇo¹¯÷_LÆ+˜›øâ3Ïñ§"e”ür…VoÇ²zğ3«Jg|oâ,•ÚÂëú¾œ	çÃ¥Ò]â‘Fƒ¼óĞ0“”›Àü/ûpù]İ„<Â€Ÿ“÷ÖôË,J©y6Iö"£5<˜ÉÔ™XôÒ=Ğ'¥ã´I}¨Yƒí6ı å6ü0@Üi‡$Nú5X¢áñ1Zc•›vƒu,(ãË“v,èÄ˜¶tíBÉp·!Ç~ƒrßŠ{tÏN©öD¥½9}›æ&18—ç&9]‚Š«ñ!(½¿^m4+x×ˆ÷‡ãEe]ÒĞäæƒ˜½ãA}‹o´ÙïÏ¹ƒdæ•2+º$|ğÉã*9æùåqŸ@ï¢“û½—$‹å2Ü=½6*–ëgÄ+½œg‰çİ'»(Z5£3ŒàjşÑâ¤Í­‡ï&

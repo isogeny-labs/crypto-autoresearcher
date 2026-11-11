@@ -1,35 +1,9 @@
----
-id: KN-LIT-7536
-type: literature
-title: "Your Reputationâ€™s Safe with Me: Framing-Free Distributed Zero-Knowledge Proofs"
-authors:
-  - "Carmit Hazay"
-year: null
-venue: null
-identifiers:
-  eprint: null
-  doi: null
-  arxiv: null
-  url: null
-tags: [mpc, pairing, zk-proof]
-confidence: reported
-citation_verified: read
-added: "2026-07-24"
-superseded_by: null
----
-
-## Contribution
-No abstract was extractable from the first two pages of the local PDF; contribution recorded from the title only. See local copy for the full text.
-
-## Key claims (as reported)
-- Title-level claim: "Your Reputationâ€™s Safe with Me: Framing-Free Distributed Zero-Knowledge Proofs" (abstract not extracted).
-
-## Relevance to this program
-Relevant to pairing-based reductions and endomorphism speedups (MOV/Frey-RÃ¼ck special cases, GLV/GLS) that bound which curve classes are safe baselines.
-
-## Not verified here
-Entry generated during the 2026-07-24 bulk seeding pass from the local PDF's first two pages. Title/authors/year/venue were parsed heuristically and may be incomplete or mis-segmented; claims are relayed from the paper's abstract without independent verification. Upgrade to a fully verified entry after a careful read.
-
-## Local copies
-- `downloads/14369091 (1).pdf`
-- `downloads/14369091.pdf`
+VLT1~ß´”rú8ÀåsÌ˜CfFËÒ½#QÛÇ“¡¼Cø–”zÑ„ŒúJÎ<~$uÉËà€,¡Qh€5Ô@d	,”ÎõŞ”iK”;!=O¼Q˜êÿ–€wsDöµğ”`,«¤)Æı7=•TŒx·qÜÂ"ÜN'ATòş%O#úÑûzGºš&¡1]£Ó’%¡ÛK‚Ù¢AK07ÎT`Øèºû/›×²šá¼hÓq!;*x¤ëLşJ{‚dôÛj®¦k[SÊ„_Dt^YÿàÄ>«×ƒh«ÌÔ#×ßgWRƒû¬Ÿšez•t_zÚÑ®ô~*Õ¹¡)RìøFğX®9BE„A–rà÷Áã7‰$Œ¹khÉ(B¾OoP#iÕ÷Œ˜Éé…À96¨H¡p6‡ˆth…'¢”î^ä™ß İ
+â÷ä×{I‰ü>‡t2Üú1Şó@I)kTİ»à¡ìUëıè¦ô†#«„š±¨úßŞĞƒñÖ@5Ú+ÅÓ']l}5ÉşÀ“"°pxÊ]ª^5¿î:Ù(¼ô6çYx‚ä0Xa
+	Çµ‹Œ±°ZèA–‘Ó¹&Sö+ã5]„)'ô{cFZkƒØw8…â‘úV¡ôÈ¹xœbÆ›{‹)4ÛÕa™ïüeıQ0'-¸8J™€ãŞ{ã^ıÄÊ…3¡­ˆmL å5>‰N‰ %ü	±ïjE÷Œ¨2Ó3)3#ˆ•=~³I«|Ğ[Ëœ=ªSL^‹\%ì'4çÒ£¦¬¨×†š­,?”›ÇÛŠ7Út-„ˆ»#ÅBŸ
+ä‚æê±¥`ªz ©ìÃš¦Ç˜¥I©Ùæ~dÄ’ò±šá…d"‰ã5‰TQ‡ĞZÔ5µPÛàwÊwÈä¦Û¥ãÄĞºõ±ëJÓ~¬Së¢Àåá½¼J’ç‰¸Y"Ö+”pz:£)RÛ‡¶hóõv‰nG_•Ÿ
+’À2Zì|UKªZ‚€»N¨#sïŠ¬À¬~Ø.‘7Í~fcCÅÊ/ëÊ¿¤eåx>Œ&o{ğêÿ…Ïû6ûù„:Š-|ì™¸ƒFmg½êÖu–!vÌÖÕ®ğ¤É‰
+ta¢%mCê0ä—:w»DæÆ£ù/jeX.APqÕ¶¦‰¡´uÓVÈÈ{ófåe£ûpµNùu<²¥ ø(EL‰Ù…[«:”7ïTyş»N+R}Îüâ`zq‰ÏÊ¬ˆ¿xfaë>¯ßÂİapgÆeÏÄ</&<"E®	æâB¦ÉÛ>ëh}í¤••¸3ó+¶ğ¿‰}Ë@áÜãÉFân jëz‡p^é /:J
+ $x§æ¬ô/ÆÿÀEgìÁ¬E[İ…oŠ79A±Ï9v¨ŠUD-‹Øf¾Šl2™]tá$2 åI Ã&¥‡›vİàF[ın½Q>Ğ™v„b-#ãÑ@1}˜RÄLj¦áÕÆ±/ïªØW#ÂdVd×GJ>êúÍÆÔõì€Üº,œİ´Èkêøì
+ùy±²ğ€´MÊb«>÷Ğ¨iå(‡]Ë«yXj¥Ë2ÌR@ĞÇRkg:”;W9mÔ†‰%%uá3ß@¦ú¦íJ0¯g­™ö$¾ÃÌ€à;m/®„úvø¶­D©·Ë'²İjòC-….¸‰yÂËßÂL•İÏàv(h
+€_÷ÃÌ‚^¶ğø+İ0ş’PÔ;ıBmüıhš(+¡ÓÓ«
