@@ -96,6 +96,7 @@ jobs:
             agents
             evals
       - name: Unlock research vault (AES-256)
+        if: env.RUN_KERNEL == 'true'
         shell: bash
         env:
           KEY: ${{ secrets.KEY }}
@@ -234,6 +235,7 @@ jobs:
             agents
             evals
       - name: Unlock research vault (AES-256)
+        if: env.BUILD_WORKSPACE == 'true'
         shell: bash
         env:
           KEY: ${{ secrets.KEY }}
