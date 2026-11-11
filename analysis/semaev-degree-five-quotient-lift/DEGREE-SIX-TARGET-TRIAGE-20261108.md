@@ -120,6 +120,11 @@ and six-solution count prove exact LFD 5. If `codim W5 >= 7`, Proposition
 this named target in either direction. A six-dimensional checked D5
 quotient by itself is only a lower bound on `codim W5`; the equality case
 needs a completed exact-seed lift or a separate primal rank check.
+Corollary 1.9b gives a smaller upper-bound witness if the D4 seed is first
+proved exact: a separately checked D5 relation transcript reaching rank
+`dim P - 6` proves exact LFD 5 before the lift reaches a fixed point or
+exports a full map. The current retained D5 outputs have no such transcript;
+their rank numbers do not meet this gate.
 The `n51-poly00-original-d5-local-003` output root is absent and its
 2026-11-10 23:30 UTC deadline has expired. The separate solution-factor
 gate's earlier V1/V2 roots are absent and their deadlines expired. A fresh

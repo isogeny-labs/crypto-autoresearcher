@@ -442,6 +442,39 @@ The n47 random00 D5 producer reported full relation rank, but it did not
 retain an independently checkable relation transcript. Its output alone
 does not satisfy this corollary's checked-rank premise.
 
+**Corollary 1.9b** (early saturation at a nonempty solution set). **Proved.**
+In Proposition 1.9 let $d\ge2$, let $U=W_d(F)$, let the Boolean zero set
+have $s>0$ points, and suppose
+$d+1\ge\max(2,1+\lfloor\log_2s\rfloor)$. Use the
+finite-stage relation space $A_j$ of Corollary 1.9a. If an independently
+checked relation transcript proves
+
+$$\operatorname{rank}A_j\ge\dim P-s,$$
+
+then $\operatorname{codim}W_{d+1}(F)=s$ and $d_{\tilde F}\le d+1$;
+completion of the quotient-lift fixed point is unnecessary for this
+conclusion. If also $\operatorname{codim}W_d(F)>s$, then
+$d_{\tilde F}=d+1$.
+
+*Proof.* Exactness of $U$ gives $C_{d+1}(U)=W_{d+1}(F)$ by Lemma 1.6.
+Proposition 1.9 gives $\ker\phi\subseteq W_{d+1}(F)$, and its induction
+puts every checked row of $A_j$ in $\phi(W_{d+1}(F))$. Thus
+$\phi^{-1}(A_j)\subseteq W_{d+1}(F)$ and
+$\operatorname{codim}W_{d+1}(F)\le\dim P-\operatorname{rank}A_j\le s$.
+Every element of $W_{d+1}(F)$ vanishes on the solutions. The standard-
+monomial argument in Proposition 1.4a shows that evaluation from
+$B_{\le d+1}$ has rank $s$, so the codimension is at least $s$.
+Equality follows, and Proposition 1.4a gives the LFD upper bound. The
+strict degree-$d$ codimension gives the lower bound by Proposition 1.4.
+$\square$
+
+On the named six-solution n51 polynomial00 system, an exact W4 seed and a
+separately checked D5 transcript reaching rank $\dim P-6$ would therefore
+prove exact LFD 5 even if no final D5 map were exported. The retained D4
+seed has not yet received an independent exact-W4 rank proof, and no D5
+relation transcript exists for this target; a producer's rank number alone
+does not satisfy either premise.
+
 **Proposition 1.10** (dimension floor for an unsatisfiable dual
 certificate). **Proved.** Let $d\ge\max(2,\max_{f\in F}\deg f)$ and suppose
 the Boolean zero set of $F$ is empty. If an onto map
