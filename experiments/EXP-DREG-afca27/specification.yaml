@@ -12,6 +12,7 @@
 experiment:
   id: EXP-DREG-afca27          # allocated with tools/allocate_id.py; --check said free (view may omit vault-encrypted ledger files)
   status: draft_proposal
+  version: 1
   derived_from: EXP-DREG-dd668d   # RUN-DREG-826fb8 -> degenerate-unit-ideal
   hypothesis_id: H-DREG-1d0e5d    # proposed reuse; the Coordinator may open a new one
   title: >-
@@ -115,6 +116,35 @@ experiment:
     do not interpret Instance B.
 
   stopping_rules: [one protocol execution, one label per instance, no further edge, D_max = 4 unchanged]
+  budget:
+    enforcement: advisory
+    wall_clock_seconds_per_run: null
+    total_cpu_hours: null
+    maximum_memory_gb: 4
+    maximum_runs: 1
+    maximum_workers: 1
+    note: toy scale (8 boolean variables, rank matrices up to degree 4); the tools/exp_dreg_dd668d.py runner (PR #3106) finishes one instance in under a second on the author's session
+  success_criterion: >-
+    gl_check_passed is true, CONJUGATE-PAIR agrees (r(d) equal for Instance A),
+    both Instance B ideals are non-unit (at least one common zero each), both
+    profiles finish for every d <= 4, and the primary difference on Instance B
+    is 0. Label linear if delta = 1, else nonlinear-but-flat.
+  falsification_criterion: >-
+    The same instrument conditions hold (gl_check_passed, CONJUGATE-PAIR agrees,
+    both Instance B ideals non-unit, both profiles finish) and the primary
+    difference on Instance B is at least 1. Label filtration-gap. The gap is
+    then compared with the UNRELATED-PAIRS spread before anything is said about
+    transport; a gap inside that spread is reported as not distinguishable from
+    unrelated systems.
+  decision_impact:
+    on_positive: >-
+      Profiles agree on the one informative n=1 instance: the toy-scale
+      transport lead stays unfalsified there, and the next step is rung n=2
+      (EXP-DREG-ab3fee), not more n=1 work.
+    on_negative: >-
+      A gap beyond the unrelated-pairs spread: record a toy-scale difference to
+      explain (zero counts differ, 5 vs 3, so first check whether the variety size
+      alone accounts for it); no claim about solving difficulty or ECDLP.
   claim_ceiling:
     tier: toy
     forbids: [an ECDLP exponent, a class-wide slope, any statement about F_16 or cryptographic fields, equating first-fall / last-fall / grevlex degree with degree of regularity]
