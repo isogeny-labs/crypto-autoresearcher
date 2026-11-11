@@ -14,6 +14,7 @@ projection and emitted no D5 certificate.
 | `fresh-n51-poly-01`, 52-variable original system | 0 | 45,615 | 64,677,063,002 bytes at 60000-row chunks | Prior cloud D5 attempt failed after seed checking, with no candidate object |
 | Affine restriction of `fresh-n51-poly-01`, 51 variables | 0, inherited from unsatisfiable original | 45,615 | 55,355,297,148 bytes at 4096-row chunks | Checked sliced D4 seed; D5 local-plan deadline expired without a run |
 | `fresh-n51-poly-00`, 52-variable original system | 6 | 45,615 | 64,638,795,838 bytes at 60000-row chunks | Original D4 map accepted; direct D5 deadline expired; bounded solution-factor gate V3 frozen and pending owner spending authorization |
+| Internal affine slice of `fresh-n51-poly-00`, 51 variables | 6, inherited by checked bijection | No sliced D4 map yet | Unknown until projected/rebased map is profiled | Original-generator XOR witness proves `b_0=a_0+1`; no D5 run |
 
 For n47, the accepted original D4 map has SHA-256
 `3bdad807113e43ec41ac6e9edcb2a282ffa486c7a694eba0dd3e0e9b0fa5162f`.
@@ -110,6 +111,13 @@ The D3-to-D4 source and terminal fixed-point receipts are mapped to
 Proposition 1.9 in `N51-POLY00-D4-LIFT-EXACTNESS-AUDIT.md`. The conditional
 exact-W4 dimension is 248,589; an independent direct rank would remove the
 producer-rank premise.
+The original equations also have the independently checked affine span
+relation `1+a_0+b_0=0` (`N51-POLY00-AFFINE-SLICE-WITNESS.md`). It fixes
+`b_0=a_0+1`, retains all six solutions, and allows a checked D5 quotient
+on the 51-variable slice to transfer back with the same dimension by
+Proposition 2.5b. This is a concrete second presentation of the *same*
+named target, with D4 projection/rebase and D5 resource profiling still
+unperformed; it is not a new random instance or a degree-six result.
 Its recorded exact count is six, so a checked D5 quotient of codimension at
 least seven would prove LFD at least six for this named input. The 64,638,795,838-byte
 envelope is the retained source-derived profile, not measured D5 usage.
