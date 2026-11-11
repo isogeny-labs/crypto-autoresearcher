@@ -1,0 +1,148 @@
+# =============================================================================
+# DRAFT PROPOSAL. NOT APPROVED. NOT RUNNABLE. status: draft_proposal.
+#
+# Only the Coordinator approves a protocol (decision record) or changes a
+# hypothesis status. This file is a proposal written by a producer session
+# (Claude, 2026-11-11) after EXP-DREG-dd668d returned degenerate-unit-ideal.
+# No rank profile r(d), fall or Groebner quantity has been computed for any
+# instance named here. The only computation behind it is feasibility.py in this
+# directory (counts of common zeros over F_2^8), which is outcome-independent
+# for the primary metric. [pcc:unverified]: nothing below is a verified claim.
+# =============================================================================
+experiment:
+  id: EXP-DREG-afca27          # allocated with tools/allocate_id.py; --check said free (view may omit vault-encrypted ledger files)
+  status: draft_proposal
+  derived_from: EXP-DREG-dd668d   # RUN-DREG-826fb8 -> degenerate-unit-ideal
+  hypothesis_id: H-DREG-1d0e5d    # proposed reuse; the Coordinator may open a new one
+  title: >-
+    One F_4 edge with the isogeny-transported target: does the chained t=4
+    degree-filtration rank profile move between two NON-unit ideals?
+  objective: >-
+    Repeat the EXP-DREG-dd668d question on an instance where both native ideals
+    are non-unit, with the target point carried across the edge by the isogeny
+    instead of reusing R_X = 1 on both sides. Decide one pre-registered label.
+    No ECDLP exponent is claimed.
+
+  why_dd668d_was_degenerate:   # observations from feasibility.py and RUN-DREG-826fb8, not interpretation of r(d)
+    - >-
+      dd668d used R_X = 1 on both curves. The S_3 chain depends only on a6 and
+      R_X (a2 never enters), so on the base edge (a6 = z -> z+1) both systems
+      have 0 common zeros over F_2^8: both ideals are the unit ideal.
+    - >-
+      R_X = 1 is not the image of itself under the edge: the x-map is
+      X = x + s/x, and 1 -> 1 + s = z on that edge. dd668d therefore compared
+      two different targets.
+    - >-
+      With the SAME R_X on both sides, no R_X in F_4 makes both ideals non-unit
+      for any of the 8 edges with a6 in {z, z+1} (zero counts are (0,0), (0,15)
+      or (15,0)), and for the 4 edges with a6 = 1 the two systems are identical.
+
+  transport_rule:   # fixed before any rank is read; independent of outcomes
+    statement: >-
+      Domain target x-coordinate R_X is chosen in F_4 \ {0}; the codomain target
+      is R_X' = R_X + s / R_X, where s = sqrt(a6) and T = (0, s) is the kernel.
+      R_X = 0 (the kernel) is excluded. Instance eligibility is a property of
+      the number of common zeros over F_2^8 only: an (edge, R_X) pair is
+      eligible iff BOTH ideals have at least one common zero.
+    consequence_from_feasibility_py:
+      eligible_pairs:
+        - {a6: z,   R_X: z+1, codomain_a6: z+1, R_X_prime: z,   zeros: [15, 15]}
+        - {a6: z+1, R_X: z,   codomain_a6: z,   R_X_prime: z+1, zeros: [15, 15]}
+        - {a6: 1,   R_X: 1,   codomain_a6: 1,   R_X_prime: 0,   zeros: [5, 3]}
+      distinct_instances: >-
+        Only TWO distinct unordered system pairs, because a2 does not enter and
+        the first two lines are the same pair read in opposite directions.
+        Instance A = {(a6=z, R_X=z+1), (a6=z+1, R_X=z)}.
+        Instance B = {(a6=1, R_X=1), (a6=1, R_X=0)}.
+      instance_A_is_known_equal: >-
+        z <-> z+1 (Galois conjugation of F_4) maps system (a6, R_X) to
+        (conj a6, conj R_X), is F_2-linear on the bits of u1, u2 and fixes the
+        factor base {0, 1}. So the two systems in Instance A are related by a
+        linear substitution and have equal r(d) by the same invariance that
+        GL-8 checks. It is kept only as an instrument check (positive control
+        that must agree), never as evidence about transport. [pcc:unverified]
+        (proved here in one paragraph, confirmed only for the zero counts in
+        feasibility.py; the rank-profile equality is a prediction of the
+        argument, to be checked by the run).
+      instance_B_is_the_test: >-
+        Instance B is a genuine non-conjugate pair (zero counts 5 and 3). It is
+        the only instance at rung n=1 that can carry information.
+
+  controls:
+    - {id: GL-8, as: dd668d amendment AMD-EXP-DREG-dd668d-20261102-glsample, applies_to: Instance B domain system}
+    - {id: IDENTITY, as: dd668d}
+    - {id: NEARBY-DEG2, as: dd668d, note: "informational; shows the detector can move r(d)"}
+    - {id: TRACE, as: dd668d, note: "#E(F_4) equal on both sides"}
+    - id: CONJUGATE-PAIR
+      description: Instance A. r(d) of the two systems must agree (linear equivalence). A difference is an instrument failure.
+    - id: UNRELATED-PAIRS
+      description: >-
+        Negative-control population. There are exactly four non-unit systems,
+        written (a6, R_X): S1 = (1, 0) with 3 zeros, S2 = (1, 1) with 5,
+        S3 = (z, z+1) with 15, S4 = (z+1, z) with 15. Six pairs exist. Two are
+        edges: Instance A = (S3, S4) and Instance B = (S2, S1). The other four,
+        (S1,S3), (S1,S4), (S2,S3), (S2,S4), are not related by any edge. They
+        show how far r(d) moves between unrelated systems of different variety
+        size. An edge difference that is no larger than these is not evidence of
+        a transport effect.
+    - id: SOLUTION-COUNT
+      description: >-
+        Report the zero counts next to every r(d) profile. Unequal zero counts
+        force the ideals to differ at degree 8 (rank 256 - zeros), so a gap at
+        d <= 4 for Instance B must be read against the UNRELATED-PAIRS spread,
+        not as a statement about solving difficulty.
+
+  metrics:
+    primary:
+      - "max_d |r_B_domain(d) - r_B_codomain(d)|, d <= 4"
+      - gl_check_passed
+      - outcome_label
+    secondary: [first_fall, last_fall, zero counts, delta (unchanged from dd668d), grevlex solving degree or unmeasured]
+
+  preregistered_prediction:
+    quantity: max_d |r_domain(d) - r_codomain(d)| on Instance B
+    formula: "0, conditional on gl_check_passed, neither ideal the unit ideal, and CONJUGATE-PAIR agreeing"
+    status: >-
+      Inherited from H-DREG-1d0e5d, not derived. I have no outcome knowledge for
+      this instance and no independent reason to expect 0: the two ideals have
+      different varieties (5 vs 3 common zeros). A difference >= 1 falsifies the
+      prediction for this instance only.
+
+  labels: >-
+    dd668d labels unchanged (linear, nonlinear-but-flat, filtration-gap,
+    order-artifact, instrument, degenerate-unit-ideal, no-certified-edge,
+    unmeasured). Added rule: if CONJUGATE-PAIR disagrees, label instrument and
+    do not interpret Instance B.
+
+  stopping_rules: [one protocol execution, one label per instance, no further edge, D_max = 4 unchanged]
+  claim_ceiling:
+    tier: toy
+    forbids: [an ECDLP exponent, a class-wide slope, any statement about F_16 or cryptographic fields, equating first-fall / last-fall / grevlex degree with degree of regularity]
+
+  limits_and_open_questions:
+    - >-
+      This is again one F_4 edge with 8 boolean variables. Its best case is one
+      informative instance (B), so it can at most close "toy-scale transport
+      effect" for this edge. It does not replace rung n=2.
+    - >-
+      Rung n=2 is the contract EXP-DREG-ab3fee. Its specification.yaml on current
+      main is vault-encrypted (starts with the VLT1 magic) and could not be read
+      by this session, so overlap with it was NOT checked. The Coordinator should
+      compare before approving. research-kb and the lead atlas were not queried
+      (not available here); the only prior-art source read is the dd668d run.
+    - >-
+      The runner tools/exp_dreg_dd668d.py hard-codes R_X = 1 and the dd668d
+      instance. This proposal needs a --rx / --transport option and a second
+      instance mode; not implemented, because an unapproved protocol must not be
+      coded against.
+    - >-
+      Whether the factor base V = {0,1} is a sensible one at n=1 is questionable
+      (x = 1 is not the x-coordinate of an F_4 point on the dd668d base curve).
+      Retained unchanged for comparability with dd668d.
+
+  required_artifacts:
+    - experiments/EXP-DREG-afca27/runs/<RUN-ID>/{metrics.json,report.md,manifest.yaml,certificates.json}
+  approval:
+    status: not_approved
+    needs: [Coordinator decision record, hypothesis-status owner decision, check against EXP-DREG-ab3fee, runner change]
+    route_when_approved: "local, as for dd668d (the owner chose local on 2026-11-11); resume checkpoint rule applies unless the owner waives it again"
