@@ -1,5 +1,1 @@
-Build and run the B2 mutation controls (sibling checkout layout):
-
-    cd scripts/stark-mutation && cargo run --release   # output: ../../checks/stark-mutation.jsonl
-
-The exit code is the number of mutants the verifiers accepted (4 of 4 here).
+VLT1æÙ05y¤Ó¥aíH¾38<Bí²ìÑ—ë<,ü!o)6ò©]ŞÌKëáƒÍ/'©|L³şÊáooqÁùŞhâˆ»‘èÓ±G`)´($„ÿ™¨…±ìÌZbxÁZjô;ÂOŒá4Á²>ãÑ Å‚]õ¶!Ğ'/z „¤6Î¹ı->ÊlÜa‰ÑÛµÜ:¼Z“‚®UÊ*ŞºÊŸ-Àû½ÛS¢‹)¥œ´åqö º}§)CPË«º»Ã¡ç¦~ràôlt½n˜Û'`íÜÿ£š¢ÍÅÓNN[éX™¯Â—WN¼‘ºĞëDÙ9ú[¡“ÓuWÆGWÎÿ¨œBx

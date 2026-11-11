@@ -1,10 +1,1 @@
-```yaml
-execution_assessment:
-  card_id: CARD-CAL-stop-exit-01
-  card_sha256: edc055e65646e05e29bd808e787eedab48fbdc9a6db53e610491662438544df1
-  outcome: stopped
-  recommendation: rerun_after_infrastructure_fix
-  reasons:
-  - 'Computed facts: outcome stopped.'
-  interpretation: not_assessed
-```
+VLT1‘]·dŠiÎÅ»ıp’wÂ*Ñ°°Ñj¤1)–¾û‚^ğÅ8yÛJ^Ã-eælkA1ú¥ él^a¡tÅáıUvd~˜dÇû°©­ÕaÒ¯²…¤H@İŒ¼ºrô÷î0üÑZŒm¬™m¹Q40]¯B;Ëğ®éÄê¦~÷x¿Oi‰M$Uß ÿS:¼5ö):³×¥JK)_•à¦iÑ¿æ,¿Âìwº”µï$üÜãæV˜sÖt3Ï›–k=»W-ğ“5ÒX¬g¦.n‰jï¿'œÖö_á[IB?Ëî‡:kÂ”«V”kÏéló³’êƒW;(,0Ê=¶ßÁ·ô¤YåØ’ÍAˆ–VûÒáŠ'CÓsšC¤ÿÂœµÁû©E™]ìô?~'ûMÆybH

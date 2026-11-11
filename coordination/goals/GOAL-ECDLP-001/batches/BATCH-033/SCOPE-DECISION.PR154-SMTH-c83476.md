@@ -1,4 +1,1 @@
-# BATCH-033 scope
-
-In: execute EXP-SMTH-c83476 + snapshot + Val/RT + ledger.
-Out: EXP-SMTH-9d04ba; STR/DEP; crypto-scale claims; goal completion.
+VLT1¨L„å#—üþ²¡ÉžwÌ}â¤.}¶¾‘&¢ Àž—{•÷ÀæM§uRõ˜ñ‹tV`ï|Ü&£½½¡fáï9^êÐ/ßrµœ\3¨6îÈ¸¤	“}Â½¼¬|Þé=Š(;gãPz¨êØ†¤¢DÙ¥0‚#Àˆ.È‘ÊðÑÏXÇOƒ»ÏOÁ»¬"ðUœbZvÐç+Z7žûÖ[Î‹Ïaiý|

@@ -1,55 +1,10 @@
-SHELL = /bin/bash
-# Uncomment for debugging
-#~ FLAGS = -Wall -O3 -std=c++11 -std=gnu++11 -fpic
-#FLAGS = -Wall -O3 -std=c++11 -std=gnu++11
-LDFLAGS = 
-CC = gcc 
-STRIP = strip
-FLAGS = -O3 -Wall 
-LDFLAGS = 
-
-EDIT = vi
-ARC = ../wdsat_solver
-
-SRC_SAT = 
-SRC_GEN = main.c wdsat_utils.c dimacs.c cnf.c xorset.c xorgauss.c wdsat.c
-
-OBJ_SAT = $(SRC_SAT:.c=.o)
-LIB_SAT = $(SRC_SAT:.c=.h)
-OBJ_GEN = $(SRC_GEN:.c=.o)
-LIB_GEN = $(SRC_GEN:.c=.h)
-
-### --- All Binaries
-
-all: ../wdsat_solver clean
-
-../wdsat_solver: $(OBJ_GEN)
-	$(CC) $^ -o $@ $(LDFLAGS) -lm
-
-%.o: %.c %.h
-	$(CC) $(FLAGS) -c $< 
-
-### --- OTHERS
-
-clean:
-	rm -f *.o *~ .*~ > /dev/null
-	
-arc:
-	echo "VERSION -- `date +'%y%m%d%H%M'`" > README
-	vi ./README
-	cd .. ; \
-	mkdir $(ARC)--`date +'%y%m%d%H%M'` ; \
-	cp $(ARC)/*.cpp $(ARC)/*.hpp $(ARC)/*.py $(ARC)/makefile $(ARC)/README $(ARC)/INFO $(ARC)/BEGINNING ./$(ARC)--`date +'%y%m%d%H%M'` > /dev/null 2>&1 ; \
-	tar cvzf ./$(ARC)--`date +'%y%m%d%H%M'.tar.gz` $(ARC)--`date +'%y%m%d%H%M'` ; \
-	rm -rf ./$(ARC)--`date +'%y%m%d%H%M'` ; \
-	cd $(ARC)
-	
-staticlib: $(OBJ_SAT)
-	ar rcs cryptonid.a $(OBJ_SAT)
-
-#~ sharedlib: $(OBJ_SAT)
-	#~ $(CC) $^ -o $@.o $(LDFLAGS) -lm
-	#~ g++ -shared -o $@.so $@.o
-
-doxygen: $(ARC).doxygen
-	doxygen $(ARC).doxygen > /dev/null
+VLT1ïÙšÓá¥Ó¾G&PxˆZ’}sse"P=UÌ©tLÌOôZ£b²Øy±„ß¸\WóÌ2µ3 ãˆğÒç¥§X_‘æc´%È
+ÀvUøëHğŸÇç/L4NÚûÛJT¸€ûú&`ëé¯WÈùf›å’?„oãò±ÿ«ôÃQ"5µt°š2!‹ÙAÖ‚‡ÀM}&÷DñÒĞu°òéÒ''1Qöì}©ëİæ–°MºbK“êkæÍ×:ŠNÈƒ8ü`-Åv‡ä&ü÷’P|İ«¾:ë4#!Xã¡I¬ªú‘é¶ÚÁeO…•æ\}ªÎó)˜×iún(&®@{b$Ì¾Sª¨ë‘¬÷çHÆ¬SÒ»¶f/—de2^árW!¨üşæ•v¼ùâã4oúøJR´ãYHòëè.@ow…úŒHÓPû“¦6§œi"
+»ê&˜¥ë!ƒÕ!Ğ£=7ÅsHB»÷N$×Ÿ‚.®	uv0#Î7è‘<N1`b.ó¡76Í“,I ‰
+Üfk–p¢
+¤9€Wœ¥Ä¶?_IâÿK¸>1ÓlH<ú¸qÅ'Î æ‰»Ô	Ğ8¯ƒÂÑ‹­¸ì6Á¿‰èÿ&÷ıÆ6 Çt.f¸'öIÕÚÕZªl[ÏX¯/yFì(¨Ï	DŠä­è¢ã.áF+ìPk£ImÚnW§Àã/{É?yÛ À ´·c5GofÎ;ï°âpÉÜ¢±kUÀSIMú·Ã´$ŞäôÙ6#½¥6Í~ä7m­î.ùİ
+cCí€ĞÖ°ãp/Á‘°½ˆPº ·aÍ‘ãğ—HC¹J(3HÌí‹EèSy·¬š
+½f)Åˆ¶|åE€NöT¸­YW ÒC$ÈMS°…s3´²ôcÜ/˜7(¢ã¼5]1¦JÚ—Tı	 ”S`m‰qÛ¤b
+Ê¦¤ğäşC œŸÎ¶)OÑşTŒ¯˜á[İ2LênËØS½…¦ÄÙÅ¼káÚåM:«ÁÈz »"·:×‘zÚàhÃåÏK`wi´_õNƒéOt¥(²¼ÕÀ^Ö(6^ÖoJñŒ˜–4àZRØèŒR:‚¶
+›Îëù¥Y‡Ó‹d¶Ğp÷u¬`ÊYúş’Æt't7Ş­«SZáánƒ=õ¦Â0‡8)ßø‡ùæøû×ĞNâáùMe´ÚR0‚ÑÈoµ'‰6Ë©«¡
+d¸ßDLûì­¼EhÌÙ<8ïf6áØn_x­EŞkÖ%˜OÉü½§æÉ½ú4|¯Ê„JG¶Úî”²İ/³ï˜AiëëfÛÉÉ]7öŞ÷1ÿ3¥èwş¢Ş¥2$zˆÒ^¨bÊ@«Ò9)—sw›¤èÔNğ'©fc/ejöoz?Î’>;‡Bñ„sÅM ?F—Ï¶]º||¯ÔGv$pÃ<¥ƒ¢í¨˜? ùM’iß–-é¶i`=.V=¨eGef‚{”Ñ	¸lÆÔ³?°2½µ.=´«=½{¹„ºæ71&U±cÿ ª€Îpü[tşC*A†Èz¨$ØÓ•++	ïuªjíİ)îC zÄ›[)d…ÂÔQª1j¼Úw«ÍD™Q÷ñ^Œõ½W‹¼Qå«wˆ*M"X	M7È—X¶ÇÌ˜ªüÙ

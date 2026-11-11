@@ -1,7 +1,4 @@
-# Decided design: calibration item no-codes
-
-- Experiment id: CAL-no-codes. Card id: CARD-CAL-no-codes-01. Bus address: executor-mechanical-cal.
-- Not in the background.
-- Stop condition: the run command exits with status 2.
-- Command 1 (id run): `python3 evals/calibration/fixtures/emit.py print alpha`, timeout 60 seconds.
-- Bind evals/calibration/fixtures/emit.py. Receipt at `.tmp/calibration-run/no-codes/receipt.json`. Write scope: `.tmp/calibration-run/no-codes/` only.
+VLT1x²b&V=.NBmº´Ÿf½ù‹‡¯Œ	:ßÜ‡{6–Ù®»M±]m‹6ª}Ž–ëù^{ED;ïÃfáûóyE_í“Ál‹>C>;63heúAÎüL†°Q'5OØ>àÕ´’ÝñSÇú HçÌ=H/¶·ªÉ<Û«f¥uŸàJù{”¨C=d%uÞ[’0!•CyUyÜyfØäÛÙ+c?º½³Z´Ó›IçÎKN†q‹§¥ª9…Îž}}wçñ¾ËD)ˆ);«¨äkš´¿¦àoN™§]So“þ¼W^^+¬é>Kø>Jx†´×ßgÁ½ÒS¥¿Ö€C§aæ’h¬*æ2Ó<<éIºxÁ­*ð´ù-¾Œwý4Ú²Øè²ÑR¹°¹÷èÿ¤j›ÔNáY€ùôýPþ¨'x¸êè%ƒà#Vž´µÖB+$ì
+‰P^%1’jÎ¢Õ¶Š†–Ôr@DµF`¸„l™<ã,À{n³L=4
+qµ
+ÏÑ_l›‹Áq1žnî*9Auo^,– :”iQJŠ²ÈÍßnmtòàj)ä!Æ	pÕ/J#{Ê+ª:]z¿~üÌ#{2I¾Ä@{ÍÁ€ˆŒówî9ð%¨ª{¾mÍÐ}•ò	@•“

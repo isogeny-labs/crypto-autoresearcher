@@ -1,13 +1,2 @@
-#!/usr/bin/env python3
-"""Run the task without installing the parent research repository."""
-import os
-from pathlib import Path
-import sys
-
-for key in ("OPENBLAS_NUM_THREADS", "OMP_NUM_THREADS", "MKL_NUM_THREADS"):
-    os.environ[key] = "1"
-sys.path.insert(0, str(Path(__file__).parent / "environment"))
-from polynomial_ml.cli import main
-
-if __name__ == "__main__":
-    raise SystemExit(main())
+VLT1¶ôU±fLZÄ$*Šõci¤TÏ(’y‡mçÍÍ:®­ÇÛ§sôú5êQª"øùÁÚö‘(J@Å%éãÖ µôÁèA‘İ0z£¤è‚¶Y_˜®?¶V |Ö¬ŠIß^/šwY¶_Z	qÓl7ßâò¿–Œ2'9ÀòpB‘ZÆë/Ù$ù:Í¢E{ˆR*lÁ[àZzwÎ$)ìèf¬_\»Öº²ô%¦Ğ…˜"¡éÿJ|\·|¢¿4iÖ1•oÈ<ÆVÖÿÒÂÙ±ı3ß Ş4gpmnrP–‚˜EYUM^¥İq’-ƒœŞYBÔD·2%âVËÔ±æƒ
+Í¤:‘ÏlÿĞ?2ßS	¬Îùæ…­‘àµğHü—“¨åÆÁåYŒí¯Ï oé­±µıXÑÁ5~³ºOÚÂÏ¯‘[‹ü›»®Crá7xRñéù9ÏLx–åßDsï8Ïø‚ÊJ»õû˜¡ÈfCù’ôw)HÚî+®óÓaÍ[<.ªÏÏîª„Y`P?òíò~>‡m6Ôö¡ò+ÿ

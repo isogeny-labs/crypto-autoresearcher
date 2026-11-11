@@ -1,4 +1,2 @@
-import CryptoResearch.Helper
-namespace CryptoResearch.Control
-theorem good : P := by trivial
-end CryptoResearch.Control
+VLT1‹‡q!Èº¤Žu¢6%õÈsXã}—ÐU‚DTÚ¶XR’¨²°naá|~¨h’²¬Ò|Ñúýy>%bSèªÄñŽv™ú‹CËÝð«HPHaqºfZ\°"boP!Yåˆ‰…*+¬â0á¿†ÂLËm­œ›S7¾(ÃÚ6	4Rð“o3d
+…qö\!Ž

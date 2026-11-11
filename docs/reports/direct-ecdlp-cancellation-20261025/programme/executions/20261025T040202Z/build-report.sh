@@ -1,8 +1,4 @@
-#!/usr/bin/env bash
-set -euo pipefail
-cd "$(dirname "$0")"
-python3 plot.py
-pandoc REPORT.md --standalone --from=markdown+tex_math_dollars --pdf-engine=xelatex \
-  -V geometry:margin=20mm -V fontsize=10pt -V mainfont='DejaVu Serif' \
-  -V sansfont='DejaVu Sans' -V monofont='DejaVu Sans Mono' \
-  -V colorlinks=true -V urlcolor=blue -o report.pdf
+VLT1cs×i©ÕÜº6@æIøÖE}È=N¾oØ»®Š.[
+Ì'Â)—Â{srÒ¼nñô6jxÚÍ¿7áŠ¦çcVÒ¾m±¼jûT$¸²ÀyF©í¥ZXë&_Ö2¼~èÁG´™ðr:û~Œ}à2œ˜Êª­Ž«"Ï‘^aŽ‚ûîlÁJnURâ*.¾ûzÍfBY]'Ü°Câa
+àÊž	7YiÕñðÚ=jgõïÆ`jÖÀþ…ñTbHäŸ„?Ñ‡­ÉJ·¦‰‘ÆyÐcªø_÷éQ­e‡EÞ?%C%ý¬¦¥ú£Nô¦Œ@jyR£Æ_ýo»W] `žÓ2i°¥‘t—uGùÕ]Ý*ÞXo4¸úMÌà%/"ëW¶½9ÓÿÔN·“Ak Õ>²ªö
+#†¬¨Ýü¯@¶ï¿µïÇ8×[Ÿ‡;_k¹ÎN-eåŽÆaãºƒEú;#Ô&¬#GÔD¬â2ñvFî

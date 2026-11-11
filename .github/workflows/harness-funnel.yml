@@ -1,0 +1,106 @@
+# artifact-store: no-pull (reads committed specification files and lists run directories through git; it never opens stored bytes)
+name: harness-funnel
+
+# Reports how work moves from proposal to evidence, and checks the
+# approved-but-unrun experiment WIP policy.  Operational signal only.
+# The checkout is blobless and sparse.  The funnel reads the ledger and
+# experiments/*/specification.yaml blobs, and lists experiments/*/runs/ entries
+# from git tree objects (git ls-tree), so no run blob is fetched.
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - "ledger/**"
+      - "experiments/*/specification.yaml"
+      - "coordination/experiment_wip_policy.json"
+      - "tools/harness_funnel.py"
+      - "tools/experiment_wip.py"
+      - ".github/workflows/harness-funnel.yml"
+  schedule:
+    - cron: "23 5 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: harness-funnel-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  funnel:
+    if: ${{ !github.event.pull_request.draft }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /ledger/
+            /coordination/
+            /tools/
+            /schemas/
+            /experiments/*/specification.yaml
+
+      - name: Unlock research vault (AES-256)
+        shell: bash
+        env:
+          KEY: ${{ secrets.KEY }}
+          PYTHONDONTWRITEBYTECODE: "1"
+        run: |
+          set -euo pipefail
+          set +x
+          umask 077
+          if [ -z "${KEY:-}" ]; then
+            echo "vault: KEY is unavailable; refusing to run on ciphertext" >&2
+            exit 1
+          fi
+          tool="$RUNNER_TEMP/cavault.py"
+          git show "HEAD:tools/vault/vaultctl.py" > "$tool"
+          py=python3
+          if ! "$py" -c 'import cryptography' >/dev/null 2>&1; then
+            venv="$RUNNER_TEMP/cavault-venv"
+            if "$py" -m venv "$venv" >/dev/null 2>&1; then
+              py="$venv/bin/python"
+              "$py" -m pip install --quiet --disable-pip-version-check 'cryptography>=42'
+            else
+              "$py" -m pip install --quiet --disable-pip-version-check --break-system-packages 'cryptography>=42'
+            fi
+          fi
+          "$py" "$tool" install-key --quiet
+          "$py" "$tool" setup --quiet --script "$tool"
+          "$py" "$tool" unlock --quiet
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: python -m pip install --quiet pyyaml pytest
+
+      - name: Funnel report (JSON artifact and headline)
+        run: |
+          mkdir -p funnel-out
+          python3 tools/harness_funnel.py --runs-source git --json > funnel-out/harness-funnel.json
+          python3 tools/harness_funnel.py --runs-source git > funnel-out/harness-funnel.txt
+          python3 tools/harness_funnel.py --runs-source git --check | tee funnel-out/headline.txt | tee -a "$GITHUB_STEP_SUMMARY"
+
+      - name: Experiment WIP report
+        run: python3 tools/experiment_wip.py --runs-source git --report | tee funnel-out/experiment-wip-report.txt
+
+      - name: Experiment WIP check (policy mode)
+        run: python3 tools/experiment_wip.py --runs-source git --check | tee funnel-out/experiment-wip-check.txt
+
+      - name: Unit tests for the two tools
+        # headline_counts lists every experiments/*/runs/ directory and runs in the full-checkout shard of validate.yml
+        run: python -m pytest -q tools/test_harness_funnel.py tools/test_experiment_wip.py -k 'not headline_counts'
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: harness-funnel
+          path: funnel-out/
+          retention-days: 90

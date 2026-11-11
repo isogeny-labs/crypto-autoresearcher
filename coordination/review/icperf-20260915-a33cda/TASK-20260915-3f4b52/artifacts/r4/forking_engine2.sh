@@ -1,4 +1,2 @@
-#!/bin/bash
-echo "forking-engine2 version 0.0"
-( exec sleep 300 ) &
-exec sleep 100
+VLT1·+'íÌ2Qg$7Q‡p"æ‡–* X°C"Î…jAUEÒoÙ/\
+Ğ÷u0¿˜ò)ÒL	vP|tRS¬.ñ–´uf]çÕW£ €¤Ù¼gRbÏ Ç4AT4†ÎDú!Ëğ4)@

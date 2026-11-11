@@ -1,6 +1,5 @@
----
-tags: [distinguisher,
-  key-recovery]
----
-
-Regression fixture (VAL-20260808-71bdb1 C-4 form B2: legal multi-line YAML flow sequence) â€” not a real knowledge-corpus entry; do not index.
+VLT1ø1«k±æsifí©§’u¸´[°±B&9ñş4Ê¦Ì¡QWá?d€
+õ		•àU…ÂÓãRàÖe—h‚¢ÉˆØ5À…¥·yö¤ù6­[Î?(Ü’§tôÒÓ8ü
+RÓ[ËÇ	±sidö®NhLwfuÀdÅ÷-`ñ.Zh±™"“}¡Z-%#×a4yª#t¹ÔÈ“C
+Úü2£r~p;½ M
+.éšÑñgHUŠÆ¸¬ºå†dôùË

@@ -1,11 +1,3 @@
-import sys, time
-sys.path.insert(0, "experiments/EXP-ECDLP-bbb42f")
-from driver.planted import find_anomalous_curve
-from driver.sampler import field_prime_for_bits
-from driver.ecc import seeded_rng
-
-p = field_prime_for_bits(24)
-seed_rng = seeded_rng(20260902004, 24, "planted-origin", 0)
-t0 = time.time()
-found = find_anomalous_curve(p, seed_rng, max_attempts=30000)
-print("found after", found["attempt"], "attempts, time=", time.time() - t0)
+VLT1J£÷¡ç¶ÿtncU°éz"%0EÚÙPÐ³‡šz+ÊF¦ÞÏ¸qF±þ8'8Ñ?M›e¸f<›Ðëß(É?$8+ßOW¯°• ¹VF@>diÆòœäRÚË“>á4mqzu àiÝ²³˜<“1³æ(NÛ‚z`7Å’]cÉä;»›/ÄøYvèî?Œ}7%¿ŒA;ÂeýÅ[Ü\ªa¢§¼ÞÔi	SŸÀíÁñµÙ,Ü;:Í5,F.	ÉM¨£FKªPÛ8l›Y”åß·Êxt'Ñ‘‡ù^,ÐXa‰Ö/â`7¢¢3ÎôMâócä
+¢¾ZlÓ…ÙÆfiNt°hp‰üÚ¤«¡¸çÞCu†ó­¤gÿä2k¤	ž¸]«8e;(EçV]›ñÖËi¥ò‰è¹x°OÛRº²´¼·stL‚X!ÔþÊL`qsb]%@UË‡°íŽl‡[½JZòÇ³žà­mÖ¢š«ª/©t< <9Aw|¨íM¶%,„ú‡6 Þ5Yï:
+‡!€n9ãD¹7³¤4œ«‘C&xhf.|þã~|Åã¿–¬cÓ{Zk³‘ ö‚…›uµA=“Áù

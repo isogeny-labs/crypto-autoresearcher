@@ -1,23 +1,3 @@
-// SPDX-License-Identifier: Apache-2.0
-
-#include <mem.h>
-#include <string.h>
-#include <stdlib.h>
-
-void
-sqisign_secure_free(void *mem, size_t size)
-{
-    if (mem) {
-        typedef void *(*memset_t)(void *, int, size_t);
-        static volatile memset_t memset_func = memset;
-        memset_func(mem, 0, size);
-        free(mem);
-    }
-}
-void
-sqisign_secure_clear(void *mem, size_t size)
-{
-    typedef void *(*memset_t)(void *, int, size_t);
-    static volatile memset_t memset_func = memset;
-    memset_func(mem, 0, size);
-}
+VLT1³sÜˆQØ$óĞ5ÌF£)2¿ ö€§ÈÆ"ÔÍ¿•»m
+O;)8O‚O–ÉéDÛÆÁ…îûk½„có†!¬İ–²‚m¥ÿÆŠÎ©¤SÙã¦½ó¾;4Ã.f²¥²üì«# õ—¢¿™S*Û~è¸Gp$ŞªP%S­ˆÅĞ<rDœi„@Ìeğ¸ïY¶‘ÏÅ7ø	X¥xú¢âo4½œ‚É-ARçz˜Ú?{w¾&;\bH,½îanÛ‰êç€Dåíşæõ7ÕÂI§XÄ­ÚMÿ¾jmÕ—_o¤’ïÌ ÖşW»=/“ =j¬ãùÀäĞÙd#ÇsÂó.ÿíÈ¡M6j£øM•‹³Aj_0V,ÿC@¼.±´£wuS¶»Ê=Û¼x©ËT«,ÌøŞ—Ô’(æî}Î=R_Xı‡s‘1ï¯ƒ'Óõ«oB´; ‚±.„à‹ôFİs¯ˆhR¢Ûå4å=±3Ìet&î	ùÏøˆUu½(+L?èë0¬´
+3e¿_ŸÂh‡ûBÆÈfª½>Êí0V Ğè¿Óõëâ°¥Eòœ©øü¬T_âıLg0>ìmg-‰A<ÁšÜˆH¿€x×ƒÊø¹Ì‡bÄ] L9—+H«¤Eòƒ„¤Î¡À¢VØP[áÓĞ£!«¾ËÚ

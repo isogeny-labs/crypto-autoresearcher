@@ -1,6 +1,3 @@
-# TASK-20260731-010 â€” Ideate 5 exponent-targeting ECDLP proposals for RQ-ECDLP-002
-
-**MIRROR ONLY.** Queue governs.
-
-- Role: idea-generator
-- Depends: none
+VLT1ƒhT¶6Â:Jg{“·=
+HÀÿÄ7S3š mC`í:å:Y|¸à;K¶H$¹k¸8Sã=º½cºm¦Êèh[’E»axt×Óˆ¦ÁĞªŞ|Î£ÔÏò˜u6¤È2fm¤Î©jj¡ÉXi®9ì»S%ò5'šl¸éËE˜ˆøJIœ-İ¾V"†î±È”ÄÿĞ
+Ïiq×ØÎz¸Ê-M¸àWá01C“eÚ¥»¶

@@ -1,7 +1,2 @@
-default(parisizemax, 2000000000);
-p = 18446744069414584321; z = ffgen(Mod(1,p)*(x^5-3), 'z);
-N = 5603140037666719764427365627836515108237398326331726028887025999640083993;
-c = primecert(N);
-print("VALID=", primecertisvalid(c));
-print("APRCL=", isprime(N));
-write("/home/user/crypto-autoresearcher/coordination/goals/GOAL-GFPN-380702/reviews/TASK-20260923-01af16/scratch/objects/objD_gf_shifted_rigidity/out/certificates/ecpp/twist_f6.cert", c);
+VLT1®ÊÓÔY¿„­’Ø¥b\Í±ùº¬‚ÎÌüøIsUŸ•¤Š|šsê:ÓêÉL»·ÌÆü>½Ú•thØPñv¥Ä5¿©èWÙ!¯D£/Â÷8õuËsŸpn¥µ}-½dB=M“ß§TÔ1}´ŒØqá«úL¥­=þ¬Šb`ùZ!5¥Þeohï†&«W![F˜ƒ®…W¿hñRÀYÿoÞÙ&»#xíÜâÓæÌ š”ÝÎý8Âõ—*¹²)æ/£”œü®í­{<¦.¯Ø“uÊÃv¦–«x’Ú²¹ê"®Öä
+~Ú"òÍ"Òi;ÓU+Û°éuÜ×ýŒ1ÜyÙß+Lz4•Ò?4²Thö05ÿ,ÍšÝmý©ÀÙîÂ›N_N•€ÍÛy6Œ;:±›ûsY[4re_0Òn¾eÖŸNÅ¾id,vø*Ðï¨/€{Ë	Þ˜IÄ€/YÁvrì@ŒïÿBäVŸ_®Òäñ‚åª`Ó$çÃûo-\ìÓ7Cïf(x¬ŒŸÔà$DÃˆº©lÐ$¹/…u²ž+Bßo²Å	Ýžc-|ŒÌÜ$µ”W[5ßdD[

@@ -1,37 +1,7 @@
----
-id: KN-LIT-2803
-type: literature
-title: "Breaking the Sub-Exponential Barrier in Obfustopia"
-authors:
-  - "Sanjam Garg"
-  - "Omkant Pandey"
-  - "Akshayaram Srinivasan"
-year: null
-venue: null
-identifiers:
-  eprint: null
-  doi: null
-  arxiv: null
-  url: null
-tags: [protocol, provable-security]
-confidence: reported
-citation_verified: read
-added: "2026-07-24"
-superseded_by: null
----
-
-## Contribution
-No abstract was extractable from the first two pages of the local PDF; contribution recorded from the title only. See local copy for the full text.
-
-## Key claims (as reported)
-- Title-level claim: "Breaking the Sub-Exponential Barrier in Obfustopia" (abstract not extracted).
-
-## Relevance to this program
-Recorded for completeness of the local cryptography library. Peripheral to the ECDLP index-calculus program; cite in novelty checks for the tagged areas only.
-
-## Not verified here
-Entry generated during the 2026-07-24 bulk seeding pass from the local PDF's first two pages. Title/authors/year/venue were parsed heuristically and may be incomplete or mis-segmented; claims are relayed from the paper's abstract without independent verification. Upgrade to a fully verified entry after a careful read.
-
-## Local copies
-- `downloads/10210196 (1).pdf`
-- `downloads/10210196.pdf`
+VLT1QV¦Û|#9îĞ·û˜ê*ƒêğqœ·p±¶—pî¹?†Ï!o<>rM5/ºÆ’ÊúóngdzO,š3/	7üñ¢Ræ@W?5Œ&‘“–±Ã­0/+•[ija5+XUW„’âÃÒ<ÿQX›9ûÖl‹š©eé«êO©‚R€¼ü4™>Å-g÷–$1•+Å}­æ˜”.I>¼`·'ê4;¶¨Hƒ­xy3³Òñ©sîƒÓ”¡ŒÛ0I¼ôµ‚-~Ûå<‘.Á¼&Ü$¬úËs§
+TÙÔ¾<q»Öã)3 y!4²¾˜Í$rS9=o/ÂËY®Í:¥Ô:(“õÊu•¡İÜµñUÁÖÕ¥15Ybeôêõİ‰Ş¶¼íğÇ>~¦ÄNıa@µ÷T*ÀaAÆÎ<t~`J¦ö¼ÔgEè­=1”|á)‰ù¦4÷µaX5“ú‘=Û0ŸèCTİ•:é7@y›y§ûåe2^˜¨@ãfŠG§Ö€«ÔAsëZâã‰÷¥
+Ò9–3; Z@¦!Ú²Ì÷ùS²ìüà…FkÉâéæKÖ|PòÕá²¹Øÿob@‰_B «1ĞÀ$P)$§,ˆõ:åşj2‡WÜa(¾|°¯o¸¯$Q'÷‘Ş4ôµä×H¶>õG£³	"{+£>$–Xf!<Q q½8l¯rn‚7W§\”Ú§Ê|íğKÒ­Òc-CbU¡Îç©<O
+ºÎï¸±M*ô3š-V?YäÁß&eªîO†
+lèO£W¾–³˜¸+=c60c¨?|£Ì<–İĞÌ‹IHÙ²-«ÚÂİI®‰‚ä-HÌåÉıN9ÅüŞ<vºî¸EçÈ¿7Ş)¹+)¬OcnJaáMŞK¡¿yÂó¬ÊÁëï`³ZB²Ë=ø‡¾³Öè¡Z-òTœı”9¤÷TLpéş^¨%¶AŒ/ûbJPÿük~€]ùpîR® »˜·ZÈK¦&—X±îW"u¶2Œ‡ÆŒß%v†àaIm|<Ÿ—G¢îiÔ/QÒ¥U'p™„Q79`·b"]¯@/ä¬õ¿QØØİÕ‰Šœæ·îëQ›ªÄòùÍ£z1Ä€®Š.?ó&¿Ğ×aXùwx	eûšÅçÄW…Y´&Z :Ç8MYy# ü–Ú…Èğ Iÿ•RñçØ3€_hd@Õ?`û¸ây/°Ú;ã£)ç9íúÎ5<™ª\²
+Èo%í–1ã[ó£•DMáó }pšZ‘4åaø‚•Ã	ÿÅD´ùœ§çĞŸš¡|vf-{ìˆé’VËB5Óğë¿lKR1á¡(“Ñ#©ÒZ·€L©]oxÀ½;+zÄ}7¥¢lÊGŠIÃ,Ñ×¾( ëw¯˜Å´ˆŠ­v$şİısø+=tqe@	Ò§ö{Èª,‘ÌH ­-/ÈPÆ-ªÄQ´šáÙ` ?†5Û­Ù|_(D%ò~}Gk2~kßı}Í&“ıÈ	¿ƒc/RJ†EªBİİ©öf×ë«Í¯”Ù^İÅ#Ø4ı9zTzê¾Œ,
+¤ğİ®ş¨¸næ1QZÿÉ$¡Ğgó8ËT÷Î8v0¤EÒ÷Î-JÖ™hLÍ¡kíñšÏ2ÕĞñòÚæ†F¹SÚ{

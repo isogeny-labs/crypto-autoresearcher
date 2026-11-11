@@ -1,5 +1,5 @@
-# Director compile input (dispatch pending)
-
-Compile `experiments/EXP-ACTCOST-b416fc/specification.yaml`, its final protocol/config, exact committed worker/launcher/exporter/analyzer and trial-plan into a runbook and task card only after these exist and the command-level isolated route is bound. The draft is not runnable: route-obstruction.md is a concrete missing service/adapter contract, not an optional clock field. Do not fill hashes/session/claim TTL/metric JSON pointers from guesses. Return actual LINT/CARD results or exact missing values. Root dispatches only after published inputs and scope; no director was dispatched by this preview.
-
-Execution is serial in existing BATCH-a99822. All6908 named worker executions, controls/warmups/failures, complete costs and immutable receipt paths must be mechanically represented. Any runbook cannot compile becomes an explicit implementation-route finding; it does not permit a local-clock scientific launch.
+VLT12úÄÒ\•-≈5¢£‚ø‹l\GÒêΩø~§◊b'+bXJô∏EŒF“µõ∑%Áù
+Q©’ºª~˚|;ÈÍ∫∂D˘#üã8î*Ñ<"eø˙õa√◊x®ªûΩ∫VîôG˙{ò≤ám.ŒÔ…ßΩÅê˙Û¥£âõœI9çºøä”0:èw¡w«Wˆ*ﬂÑqœ≠S€≠ËPˆbÇÍÔùc:«ä”‰PxH4+ª93ò
+¬ﬂ	ù°Tp…¡F‚‡ùXŒõsæÔâ≤Xz^#é7Tcä∑ÒùzçØIÛ5Œ2Éµ≠§gƒO$?nòË‘sÚ ¢2 }¯ûÓ5TÈ≠Qó≤oÄ3S`wƒt_∞ ìP›·¡Õl’5î—∆gŸÄÓ»Ù:`+g«Õ◊æ\ÍLz…#Âª»<b(£‚ÑTå=AiyLÔô§U∂ÉéQ¢a ®d≤“ê∫HÑií¬ﬁÖ˛„&£Óø3)o˜ò£A˝rôIIˆ
+xÈYAàèõ9<◊0!eBØj ‹ﬁßóÉΩ)õVJΩÉ‹πlUAÃ><z†?M®<ÇÒçr–è∆í”≥ÿùèºƒ§YîöEÖ…?ÿ≠!R˜ÈA4uQ¶;◊à∂]≤*ê0ñ–&πëD«ÅTT“$ñèe≥ñÂJºh8†¥[	m¯Ë§≥ïz≤tƒFúâ–^√}ré4‘»Ωw§¸€è™´iàŒK}2;Í©-Í≠HËÚ~9ﬁS$Û◊≠«å·dœmtÅrÜﬁË˜é≈”tjcÊ¯Ö†´# ∂„Éø`QØè\Ì®ÕlÓ∞	ØãpÑs¿ÿ<¶¥|:iÒ'ﬂÜu9≥n0"Ëõ{¨ ’¶kâë’tÒkù+c£≥!ôq&$•û»jÄÚO|mm—"fyëˆZ‡$ô∏3PhyLÄ1
+‘ﬂÖ{4á9º~'¬Ñ—ﬂbh˜T≤ŒÔO¿…∏-•¸G,Zãiä¿Âc©ú¨!#åØë´íúã∏¢Ö%4Îçﬂ¡¡ÑºíœtfKCŒ@=∞®é»Xå$pÀmhÄïqˆbT,‹qÌM∂ÈÈeñ5›Í2[Äú∏)ÑVrÒŒúÒ„≥%DeüÈ±áO%H	öNÅ»∂”„™GUL_ﬂV'ÓÑ™Œi\qb∂óE%	*l+J.&Ø˛ó’¬tc≈"ÍˆeNH∂ΩRßôÇ¨ÿ	∑Ì¿ı∆§∑	u≥éÅDÉõÇØ]h%æ£wÃß4ô√HÅõ|6ÊsàbSˇ;êbıüÌÛñ.üîF∏±"Òz%eÛ~>uc IF≠ßå∑Ô•8

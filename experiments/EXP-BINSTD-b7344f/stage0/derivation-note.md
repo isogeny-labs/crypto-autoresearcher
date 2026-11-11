@@ -1,29 +1,5 @@
-# Derivation note â€” V(Î²) â‰¤ 0 for Ï â‰¥ 1 (HOLD-U)
-
-Experiment: EXP-BINSTD-b7344f / TASK-20261001-8c14b5 / H-BINSTD-32867d.
-
-## Closed form
-
-With IC deterministic at Î¼_IC = Ï Â· Î¼_Ï and rho completion time exponential,
-a budget share Î² to IC gives (Î¼_Ï normalized to 1):
-
-```
-V(Î²) = 1 - (1/(1-Î²)) Â· (1 - exp(-ÏÂ·(1-Î²)/Î²))
-```
-
-## Non-positivity for Ï â‰¥ 1
-
-V(Î²) â‰¤ 0 for all Î² âˆˆ (0,1) whenever Ï â‰¥ 1 reduces to:
-
-```
-(1-Î²)/Î² â‰¥ -ln(Î²)    i.e.    t - 1 â‰¥ ln t    at t = 1/Î²
-```
-
-For t > 1, f(t) = t - 1 - ln t has f(1) = 0 and f'(t) = 1 - 1/t â‰¥ 0, so
-f(t) â‰¥ 0. Equality only at t = 1 (Î² â†’ 1, degenerate). Thus max_Î² V(Î²) â‰¤ 0
-on the Stage-0 grid for every Ï â‰¥ 1 (numerical check within 1e-9).
-
-## Scope
-
-Modeled / derived only. No ECDLP attack run. No break / exponent / CDCL /
-positive-portfolio claim. Stage 1 is a controlled null on the W4 instrument.
+VLT1Î…à*d>5
+fL}@ÖÈEŽŒ™|ûìh¢FTÿ7<Þ`>rïÓî¤h×Z,Ì×A¿‡l7Šy=-yçÇ‘Þ„ž«Ü‡Ùth;À‡¯hƒßøÆµ9`ˆo²Ù™+ô5k³æÇp\=àG#X»P~ô©ž6…<*âû!ÿNÿö•„h?úr·F[|Š¯Nª/Úu)Îe%+–|O7Á9	4õe[°¦åg²µ‰µ&Âç‚ú| %…·ðU‹øÀˆž‘Á¶ÈZ^*Ú¼)ÃÍÐò^$lýS P”-Æ4ú|ÔÇzçnY~û¦®ž{/‡ÞÛ<¹†G>æ7v.½öñûsãi\¦©÷i#ÁqqýnÂŸò*cp=2ù¹ÀUŸˆ™:Q¢>
+eÁ—8¨žÜþôåYá÷Þ".wëöR{¨AW/ûwÿêÑo§s	"E¸BwâHWe®9Ôùø„:êxGqœ2]¤1ˆv=-ÐöÚS®¥@$N¹&ÄWYÃ•7òY=jJK¯ê®uzV{€œ#‡{îF¦ñ!(ž©Ž [£ÿòR¢~cïÙ„ãŠBÔï;áôZ•¡eM¿)?@}n*÷@×[Ü¯ê8ò…‹^I7QÓ´38µK mqiS›¬Gãš“Ì×‚ëŠ‚4?ó"+$hi{™Û%f-œa4{-yžÅÜÐ’t£|76ù#Öðo‡Œfûòˆ…“É$ÊK¬S?Ë9«I=š1)ÿ÷ÿ°F(È@PñÓãð5#iÜ?Â	`
+¥"¬eX{^!G­fXâ”Y²¾TNpA”ô¥¶ÀcY®wŽq|Rã´øþŒðüí3wŠ\^$ªxôyË¡‰H%Ç\¦Å,l9ZV;ªä·3ækµ˜ƒì´JtV	•³•	÷ÔÖGLë
+d(ò†½ÑºÕ2Úfõ×ªÀÆù¥ÁzÐ#ú&~}|ú&¼"›-ûÂË‘#²g‹¤<*VæpL…½D7D4È•~¢êŒíLÎœastAFROsÙA‘ˆŸJÕêÀxsÝ=š6T~¶ Ý(4‚Qc&å`<ÖÌS	—”KòZ¸Ï$|oÇ]7L·×š€2Bøô”U÷ÓìYn³‚†qÇÌùÓUÉL‡#@yÐjî,wÔQåª%ÌYYîÙÌ­ÿµð

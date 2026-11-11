@@ -1,6 +1,1 @@
-# TASK-20260730-010 execution notes
-
-Denser p=31 full deg-xâ‰¤3 enum: 120 surfaces, 14 eligible, **2 verified
-relations with max_|coeff|=1**. Baseline EXP-XEDN-006 had 0/48. Gate flag
-`gate_supported=false` only because single-size slope fit has n=1 (no CI);
-falsification not met. Validity `valid`.
+VLT1šë|¥©Qñ‚R°S†µó¤cïú›k>‰JÊ[W¿¦ÉcG¼^/rŠ-—±õŸtD´]IP 	R³bÏ˜±¿„¶ñ@+ÂÉª‘Û,d•—m*Éë¡O5rÜìD*£ÎÍ‡¥Š²í×0§¤&ì“c¸´óF¼É}â_Åü.´k?MP‹ˆO%‰hêå1‚åmkA0ñø*eíßÎfBï3f¼¡jº)(ÿtëÚ	‰»-AÓ‰–xŠªl¥4é~ð3YÅmŠ Cïë„g_n¯5["<]Ê6)'P²ðF5çŠ}¡zýÀÓ0HTŸ5—÷ûtmŠÿ˜ ,í¤m¾oq´g”çÅ’¸›÷ÁJµM}†p‚ÑN½6ÒD4PÐå	\ª°š+	ÜtŽ­6wÐ~

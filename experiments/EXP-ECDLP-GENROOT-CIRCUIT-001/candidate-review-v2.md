@@ -1,9 +1,1 @@
-# Candidate review v2
-
-The current shared ranking is preserved at
-`../EXP-ECDLP-SUBSET-NORM-TREE-001/candidate-review-v2.md`.
-
-The next root-only theorem question is bounded tensor separation for the
-complete-projective source membership element. Composition-tower fiber norms
-remain the leading representation-change alternative. No source or execution is
-authorized.
+VLT1ŞöXê@‡Yvaú1éKõË½Q0[¬ÏR,¨_z7ÿší.­@ïºôKØ.û‰mÎOÀi™xLÑÀ£k· DW“X’O5ñÑ×TCV—zœ`{<¤Å>Å©ŠÕÑ§YÀï,X$»X†æ&ãélu\ã¤zÔ)9‡póäEBZµSwÿ·ãfH¨Œà¼Ğ«‹°“:#‰É×~‡ä‰Ã-•Ç°¦Y+ú%^æÉg#>`ªa	²XòÃ`scéÿİ’joÔì*®I{~Wš¨ÑD IwRCx5st“=—ØÌ?>d\ú†ôªÆù´·"¡nÂwœ†eûzâX	ì#Ä´ál&…ÕáŠ8“äô«"»¸äBÎ>U•.bÁµÄÄtíLïˆ«–¡ø6×°½Æ”VÀ„ÍÿÊÖqƒYÂ)ª?ÆršŸzË}˜U@8¹³¤y°w&ñ…°ƒsXª9|vÌû’º€WÓÂÉ»Y^ŸŸ‡a°6EXÖ

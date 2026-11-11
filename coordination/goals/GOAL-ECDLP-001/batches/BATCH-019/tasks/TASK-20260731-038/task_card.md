@@ -1,8 +1,2 @@
-# TASK-20260731-038 â€” Red-team relations=200 repair interpretation
-
-**MIRROR ONLY.** Authoritative card is the `tasks[]` entry in
-`coordination/goals/GOAL-ECDLP-001/batches/BATCH-019/dispatch_queue.json`.
-
-- **Role:** red-team
-- **Depends on:** TASK-20260731-035, TASK-20260731-036
-- **Archived by:** TASK-20260731-039
+VLT1á¢Ê|†¤©·[âÍp]©ûUµ:ÛJUxêMI[›$(“$›øÀ5¥ö¤6ÊÈ6çÿÛ@YÎSÝ—iŠ4âFÎ*¨R[íV Å7VŽÃÙö>ý!Õ·ƒ™þ8káwÔžžy¶2çg[;.nô6jUj•,‰¡âyÌ»'7x!0l\m¨±Ð¡—[OÃÒtÚ³¼Ò«‡Æ&'—„àÉ¶ÅGBÀ8rª‘#`S˜†û5l#*‘+vO_döGÓ³Ðªã¬á[ˆ±“!ÂYIS± SúÕ=%<)h¨‘iÌ´ô>fôÓ’_(9œÜ’Ÿx:x|	¯fN=¨qÜw…é»Ó%óÕ _•‹JµrÎ%OÚFA‘­
+i'‡’÷£QDàÖQ‰#*¨W —È‘ÆRÆKLYq?ýei~¤ÙÒ‚É€<7®b0žúƒr=UÓ–„{

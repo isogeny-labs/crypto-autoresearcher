@@ -1,31 +1,7 @@
-"""Exact m-membership oracle (uncharged, verifier arithmetic only): the set of
-all sums of m signed factor-base points with repetition. Used for B0
-agreement checks in smoke, tests and the accounting audit."""
-
-from __future__ import annotations
-
-from verify import O, VCurve
-
-
-class MembershipOracle:
-    def __init__(self, fx, points, m: int):
-        vc = VCurve(fx["p"], fx["a"], fx["b"])
-        signed = []
-        for P in points:
-            signed.append(P)
-            signed.append(vc.neg(P))
-        self.m = m
-        sums = set()
-
-        def rec(depth, start, acc):
-            if depth == m:
-                sums.add("INF" if acc is O else acc)
-                return
-            for i in range(start, len(signed)):
-                rec(depth + 1, i, vc.add(acc, signed[i]))
-
-        rec(0, 0, O)
-        self.sums = sums
-
-    def member(self, R) -> bool:
-        return ("INF" if R is O else R) in self.sums
+VLT1Sð¶çþH­½D+tÍÝ·ºe‘{©~ÅcáÜäQñß]Íó¡|¹?•bWxiµ(rŠè[Zö¢ºî¨ˆ‚–|H{44:^ðÊÐŠãvâFÂéwbÎ¥¥ /’´4 :Ž=f†xœÕé‹À_ E“ˆ[¬ˆþì¹k·€@Æ»ü a¾	Áz|›*l)RÃÂfÊ3[yàfQ£ZPù³T/Šx¨ç{»û#À­Çæ\it¸›[cÂuæ&Ç>xþ¢1WcÏœvï¡ï¾ã3<û]ðíw>„5vÛ‚˜ê@#Öþdá½ó;ÿÇÂNoN«®D¾¨¬ïXÔ6óP.q¨ŠŽéH÷‡<úlp•‡¿}ë^çÇ³ràQž²	w¡‘óQ¶¼µõˆ¶‘ë‚†T-êe}Ç›w7P?yØ-ƒE@MöÅß02zÕ~lçù%àq¢~ŠCh“­TB"ÿÖì<*=¦¸„×ö÷’{Ûà*ßÈÇ(mnV%ŸXþöDÍ‚FË{X}—
+ÀÍÉQö@eˆrÄ)YI‘çÊ %ç¸z­Ú(X´”QÛ7so	ßct½ÜmelâƒÌüy<&Í®ü•½×mi˜Ã‘c¤,'þ‡m·ŸÐI…˜™÷,Íü{¿sålíô®²
+°¸uSçr9øçÎ9âŠT£|ã´¢“×~x:èãÚb
+°?"Èq`ŠfRBš
+&GÌÚi66ÕÊ´œÝTQˆ¬sÂ
+¹9+#ëüãj`Ë‰$^š–ÜÐÄ1kt-ßK`ÒÑpX¦à¿¢¥±ÉtÖÔñ&È.µGÂÙ‘ØjôÇ¬£ÊýÖÛ}»µÓ[™ó‚*ó}"‰¾¹?nê!æp‹¹¨²À•®K#œtc£]™¤S«¤°ýìÐ«^UÞ bÂcÒGÙ|ÂÃJÒ-…ÄÁ¹s!2hžOÆáøŽ4-u<‰“`iŠÛn‘bDÓÉ$ãž¸íÀí¢f€Ëäµâ­ëCYˆÔYçxÁBtªïú\þâBbhlÛ“é»„ë‹>Þ Ø¬bj(‹t–¹ùŠV›®º&u®)ÓÉ‰3±&B«@„{¯Aøˆ@7ï„–Ì2×}\£1e/;›j€º›£w2ç»_ï¬<Ì4’í[*npcm”%L<<±h2"Œ£Ýoqhjlbp‹D¼Ç
+c~Ï¸¶uß	)©ûíŠ,Ú—{‰¡F±*òÑKds(cò¹¤–æß«éïÓ2å
