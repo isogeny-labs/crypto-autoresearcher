@@ -13,7 +13,7 @@ projection and emitted no D5 certificate.
 | Affine restriction of `fresh-n50-poly-03`, 49 variables | 0, inherited from unsatisfiable original | 38,629 | 34,760,782,170 bytes at 4096-row chunks (source profile) | One-shot lift terminal: `projection_kills_one`; no D5 certificate |
 | `fresh-n51-poly-01`, 52-variable original system | 0 | 45,615 | 64,677,063,002 bytes at 60000-row chunks | Prior cloud D5 attempt failed after seed checking, with no candidate object |
 | Affine restriction of `fresh-n51-poly-01`, 51 variables | 0, inherited from unsatisfiable original | 45,615 | 55,355,297,148 bytes at 4096-row chunks | Checked sliced D4 seed; D5 local-plan deadline expired without a run |
-| `fresh-n51-poly-00`, 52-variable original system | 6 | 45,615 | 64,638,795,838 bytes at 60000-row chunks | Original D4 map accepted; D5 V3 and solution-factor gate unlaunched with expired deadlines |
+| `fresh-n51-poly-00`, 52-variable original system | 6 | 45,615 | 64,638,795,838 bytes at 60000-row chunks | Original D4 map accepted; direct D5 deadline expired; bounded solution-factor gate V3 frozen and pending owner spending authorization |
 
 For n47, the accepted original D4 map has SHA-256
 `3bdad807113e43ec41ac6e9edcb2a282ffa486c7a694eba0dd3e0e9b0fa5162f`.
@@ -104,11 +104,13 @@ least seven would prove LFD at least six for this named input. The 64,638,795,83
 envelope is the retained source-derived profile, not measured D5 usage.
 The `n51-poly00-original-d5-local-003` output root is absent and its
 2026-11-10 23:30 UTC deadline has expired. The separate solution-factor
-gate output is also absent and its 2026-11-09 23:30 UTC deadline has expired.
-That gate would check whether solution evaluations factor through the D4
-seed; without it, a killed producer projection could reflect an overbroad
-seed. The six-solution target is therefore a distinct future option, not
-an admissible use of its expired V3 authorization.
+gate's earlier V1/V2 roots are absent and their deadlines expired. A fresh
+V3 first-attempt packet is frozen in `N51-POLY00-FACTOR-GATE-V3-ADMISSION.md`,
+with an absent write-once root and 2026-11-13 23:30 UTC deadline. Its
+operational authorization remains pending. That gate checks whether solution
+evaluations factor through the D4 seed; without it, a killed producer
+projection could reflect an overbroad seed. Even a successful gate would
+not establish a seventh D5 quotient direction.
 
 The n50 polynomial-03 original input is the smallest *source-estimated memory*
 unlaunched original-system candidate in this table, and it uses a polynomial
