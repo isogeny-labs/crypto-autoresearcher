@@ -65,16 +65,19 @@ kill one. That D5 check has not been completed, and the D4 kernel has not
 been proved exact W4. Thus the sliced result neither proves
 `1 in W_5` nor rules out a different certificate. It is a strong reason to
 review the proposed original n50 run before spending its USD 20 reservation.
-The retained native D3 closure reports rank 8,130 in 20,876 columns,
-leaving the checked 12,746-coordinate D3 map (SHA-256
-`d5e27dbe345b6a5f3100f41d6be1df4702be2de0a52b07dbfec3907d5425a94d`).
+An independent Python direct closure now verifies exact W3 rank 8,130 in
+20,876 columns and matches every equation mask against the separate
+Möbius-interpolation descent. The retained 12,746-coordinate D3 map passed
+the independent certificate checker; equality of dimensions proves its
+kernel is W3 (`N50-POLY03-W3-EXACTNESS.md`). The D3 map SHA-256 is
+`d5e27dbe345b6a5f3100f41d6be1df4702be2de0a52b07dbfec3907d5425a94d`.
 The D4 lift reports four rounds ending at relation rank 58,955 in 97,584
 working coordinates; its checked quotient has dimension 38,629. Thus an
 independent direct W4 rank of **212,547 in 251,176 columns** would establish
 that the current original D4 kernel is exact W4. Together with a checked
 sliced D5 relation transcript, Proposition 2.5f and Corollary 1.9a would
 then prove exact LFD 5 for this named zero-solution input. These retained
-native ranks are gates to reproduce, not independent primal certificates.
+native D4 ranks are gates to reproduce, not independent primal certificates.
 
 For n51 polynomial-01, the original-system D4 map has SHA-256
 `c160792a7530b20dd17affcdabafb8d95494eed51c8ee6d818af3212f3e304f6`.
