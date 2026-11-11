@@ -8,6 +8,7 @@ allocation profiles. It is not a new closure run or a degree-six bound.
 | `fresh-n47-rand-00`, 48 variables | 0, independently repeated | 61,196 | 86,599,881,493 bytes | One-shot lift terminal: `projection_kills_one`; no D5 certificate |
 | `fresh-n50-poly-03`, 50 variables | 0 | 38,629 | 38,017,488,971 bytes at 4096-row chunks | Frozen one-shot local plan, output root absent; finite USD reservation still a launch gate |
 | `fresh-n51-poly-01`, 52-variable original system | 0 | 45,615 | 64,677,063,002 bytes at 60000-row chunks | Prior cloud D5 attempt failed after seed checking, with no candidate object |
+| `fresh-n51-poly-00`, 52-variable original system | 6 | 45,615 | 64,638,795,838 bytes at 60000-row chunks | Original D4 map accepted; D5 V3 and solution-factor gate unlaunched with expired deadlines |
 
 For n47, the accepted original D4 map has SHA-256
 `3bdad807113e43ec41ac6e9edcb2a282ffa486c7a694eba0dd3e0e9b0fa5162f`.
@@ -53,8 +54,22 @@ is 55,355,297,148 bytes at 4096-row chunks
 deadline has expired. A D5 bound on the slice does not by itself transfer
 to the original presentation's LFD, so the slice is not used in the table.
 
+For n51 polynomial-00, the original-system D4 map (SHA-256
+`90878ee8bc6bda02957f25728380a9e677cd13b0f46c9eed1828349da796f115`)
+passed independent Python and native C0–C3 checks against exported generators.
+Its recorded exact count is six, so a checked D5 quotient of codimension at
+least seven would prove LFD at least six for this named input. The 64,638,795,838-byte
+envelope is the retained source-derived profile, not measured D5 usage.
+The `n51-poly00-original-d5-local-003` output root is absent and its
+2026-11-10 23:30 UTC deadline has expired. The separate solution-factor
+gate output is also absent and its 2026-11-09 23:30 UTC deadline has expired.
+That gate would check whether solution evaluations factor through the D4
+seed; without it, a killed producer projection could reflect an overbroad
+seed. The six-solution target is therefore a distinct future option, not
+an admissible use of its expired V3 authorization.
+
 The n50 polynomial-03 input is the smallest *source-estimated memory*
-candidate among these three, and it uses a polynomial factor base. That does
+candidate among these four, and it uses a polynomial factor base. That does
 not predict its D5 outcome or runtime. The completed n47 count and D5 attempt
 retain their frozen identities. Any n50 D5 launch needs its own
 finite dollar reservation, current budget admission, exact source and input
