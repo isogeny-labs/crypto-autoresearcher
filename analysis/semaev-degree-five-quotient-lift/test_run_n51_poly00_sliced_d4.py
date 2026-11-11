@@ -10,7 +10,7 @@ import hashlib
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from run_n51_poly00_sliced_d4 import (admission, command, validate_output,
-                                      verify_prior_publication)
+                                      verify_prior_publication, PLAN, PROTOCOL)
 
 
 class SlicedD4RunnerTests(unittest.TestCase):
@@ -54,15 +54,21 @@ class SlicedD4RunnerTests(unittest.TestCase):
             started_file = output / 'project.started.json'
             stdout_file = output / 'project.stdout.txt'
             stderr_file = output / 'project.stderr.txt'
-            for path in (admission_file, started_file, stdout_file, stderr_file):
-                path.write_bytes(path.name.encode())
             digest = lambda path: hashlib.sha256(path.read_bytes()).hexdigest()
-            receipt = {'status': 'accepted_stage',
+            admission_file.write_text(json.dumps({'plan_sha256': digest(PLAN),
+                                                  'protocol_file_sha256': digest(PROTOCOL)}))
+            started_file.write_text(json.dumps({'plan_sha256': digest(PLAN)}))
+            stdout_file.write_bytes(b'project stdout')
+            stderr_file.write_bytes(b'')
+            finished = {'stdout_sha256': digest(stdout_file),
+                        'stderr_sha256': digest(stderr_file)}
+            (output / 'project.finished.json').write_text(json.dumps(finished))
+            receipt = {'stage': 'project', 'status': 'accepted_stage',
                        'admission_sha256': digest(admission_file),
                        'started_sha256': digest(started_file),
                        'stdout_sha256': digest(stdout_file),
                        'output_sha256': digest(project_file),
-                       'finished': {'stderr_sha256': digest(stderr_file)}}
+                       'finished': finished}
             receipt_path = output / 'project.receipt.json'
             receipt_path.write_text(json.dumps(receipt))
             published.write_bytes(receipt_path.read_bytes())
@@ -77,6 +83,34 @@ class SlicedD4RunnerTests(unittest.TestCase):
                 stdout_file.write_bytes(b'tampered')
                 with self.assertRaisesRegex(RuntimeError, 'transcript changed'):
                     verify_prior_publication(plan, 'rebase')
+                stdout_file.write_bytes(b'project stdout')
+                rebase_file = output / 'rebased.bin'
+                rebase_file.write_bytes(b'rebased')
+                r_admission = output / 'rebase.admission.json'
+                r_started = output / 'rebase.started.json'
+                r_stdout = output / 'rebase.stdout.txt'
+                r_stderr = output / 'rebase.stderr.txt'
+                r_admission.write_text(admission_file.read_text())
+                r_started.write_text(started_file.read_text())
+                r_stdout.write_bytes(b'rebase stdout')
+                r_stderr.write_bytes(b'')
+                r_finished = {'stdout_sha256': digest(r_stdout),
+                              'stderr_sha256': digest(r_stderr)}
+                (output / 'rebase.finished.json').write_text(json.dumps(r_finished))
+                r_receipt = {'stage': 'rebase', 'status': 'accepted_stage',
+                             'admission_sha256': digest(r_admission),
+                             'started_sha256': digest(r_started),
+                             'stdout_sha256': digest(r_stdout),
+                             'output_sha256': digest(rebase_file),
+                             'finished': r_finished}
+                (output / 'rebase.receipt.json').write_text(json.dumps(r_receipt))
+                (published.parent / 'rebase.json').write_bytes(
+                    (output / 'rebase.receipt.json').read_bytes())
+                plan['stage_publications']['rebase'] = 'rebase.json'
+                self.assertEqual(verify_prior_publication(plan, 'check'), r_receipt)
+                stdout_file.write_bytes(b'tampered')
+                with self.assertRaisesRegex(RuntimeError, 'transcript changed: project'):
+                    verify_prior_publication(plan, 'check')
 
 
 if __name__ == '__main__':

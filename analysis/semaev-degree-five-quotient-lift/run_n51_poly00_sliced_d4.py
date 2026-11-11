@@ -106,30 +106,39 @@ def verify_prior_publication(plan, stage):
     if prior is None:
         return None
     root = Path(plan['output_root'])
-    receipt = root / (prior + '.receipt.json')
-    if not receipt.exists():
-        raise RuntimeError('prior stage receipt missing')
-    value = json.loads(receipt.read_text())
-    if value['status'] != 'accepted_stage':
-        raise RuntimeError('prior stage not accepted')
-    if (sha(root / (prior + '.admission.json')) != value['admission_sha256'] or
-            sha(root / (prior + '.started.json')) != value['started_sha256']):
-        raise RuntimeError('prior stage custody record changed')
-    _, prior_stdout, prior_stderr, _ = stage_paths(root, prior, plan)
-    if (sha(prior_stdout) != value['stdout_sha256'] or
-            sha(prior_stderr) != value['finished']['stderr_sha256']):
-        raise RuntimeError('prior stage transcript changed')
-    published = REPO / plan['stage_publications'][prior]
-    committed(published)
-    if published.read_bytes() != receipt.read_bytes():
-        raise RuntimeError('prior stage receipt differs from published GitHub bytes')
-    if prior in ('project', 'rebase'):
-        output = Path(plan['projected_output'] if prior == 'project' else plan['rebased_output'])
-        if sha(output) != value['output_sha256']:
-            raise RuntimeError('prior stage output digest mismatch')
-    if prior == 'check' and sha(Path(plan['checker_receipt'])) != value['stdout_sha256']:
-        raise RuntimeError('prior checker stdout digest mismatch')
-    return value
+    latest = None
+    for earlier in STAGES[:STAGES.index(stage)]:
+        receipt = root / (earlier + '.receipt.json')
+        if not receipt.exists():
+            raise RuntimeError('prior stage receipt missing: ' + earlier)
+        value = json.loads(receipt.read_text())
+        if value['stage'] != earlier or value['status'] != 'accepted_stage':
+            raise RuntimeError('prior stage not accepted: ' + earlier)
+        admission_path = root / (earlier + '.admission.json')
+        started_path = root / (earlier + '.started.json')
+        if (sha(admission_path) != value['admission_sha256'] or
+                sha(started_path) != value['started_sha256'] or
+                json.loads(admission_path.read_text())['plan_sha256'] != sha(PLAN) or
+                json.loads(admission_path.read_text())['protocol_file_sha256'] != sha(PROTOCOL) or
+                json.loads(started_path.read_text())['plan_sha256'] != sha(PLAN)):
+            raise RuntimeError('prior stage custody record changed: ' + earlier)
+        finished = json.loads((root / (earlier + '.finished.json')).read_text())
+        if finished != value['finished'] or finished['stdout_sha256'] != value['stdout_sha256']:
+            raise RuntimeError('prior finish record changed: ' + earlier)
+        _, earlier_stdout, earlier_stderr, _ = stage_paths(root, earlier, plan)
+        if (sha(earlier_stdout) != value['stdout_sha256'] or
+                sha(earlier_stderr) != finished['stderr_sha256']):
+            raise RuntimeError('prior stage transcript changed: ' + earlier)
+        published = REPO / plan['stage_publications'][earlier]
+        committed(published)
+        if published.read_bytes() != receipt.read_bytes():
+            raise RuntimeError('prior stage receipt differs from GitHub bytes: ' + earlier)
+        if earlier in ('project', 'rebase'):
+            output = Path(plan['projected_output'] if earlier == 'project' else plan['rebased_output'])
+            if sha(output) != value['output_sha256']:
+                raise RuntimeError('prior stage output digest mismatch: ' + earlier)
+        latest = value
+    return latest
 
 
 def admission(plan, ops, revision, stage):
@@ -312,7 +321,7 @@ def run(stage, launch):
                 if output != stdout_path:
                     receipt['output_sha256'] = sha(output)
                     receipt['output_bytes'] = output.stat().st_size
-            except (OSError, KeyError, TypeError, ValueError) as error:
+            except (OSError, KeyError, TypeError, ValueError, SyntaxError) as error:
                 receipt['error'] = str(error)
         write_once(receipt_path, receipt)
         print(json.dumps(receipt, sort_keys=True))
