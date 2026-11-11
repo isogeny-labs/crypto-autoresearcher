@@ -12,7 +12,7 @@ projection and emitted no D5 certificate.
 | `fresh-n50-poly-03`, 50 variables | 0 | 38,629 | 38,017,488,971 bytes at 4096-row chunks | Frozen one-shot local plan, output root absent; finite USD reservation still a launch gate |
 | Affine restriction of `fresh-n50-poly-03`, 49 variables | 0, inherited from unsatisfiable original | 38,629 | 34,760,782,170 bytes at 4096-row chunks (source profile) | One-shot lift terminal: `projection_kills_one`; no D5 certificate |
 | `fresh-n51-poly-01`, 52-variable original system | 0 | 45,615 | 64,677,063,002 bytes at 60000-row chunks | Prior cloud D5 attempt failed after seed checking, with no candidate object |
-| Affine restriction of `fresh-n51-poly-01`, 51 variables | 0, inherited from unsatisfiable original | 45,615 | 55,355,297,148 bytes at 4096-row chunks | Checked sliced D4 seed; D5 local-plan deadline expired without a run |
+| Affine restriction of `fresh-n51-poly-01`, 51 variables | 0, inherited from unsatisfiable original | 45,615 | 55,355,297,148 bytes at 4096-row chunks | One-shot D5 lift terminal: `projection_kills_one`; no D5 certificate |
 | `fresh-n51-poly-00`, 52-variable original system | 6 | 45,615 | 64,638,795,838 bytes at 60000-row chunks | Original D4 map accepted; direct D5 deadline expired; bounded solution-factor gate V3 frozen and pending owner spending authorization |
 | Internal affine slice of `fresh-n51-poly-00`, 51 variables | 6, inherited by checked bijection | Original D4 quotient dimension 45,615 transfers by Proposition 2.5b; projected bytes unchecked | Unknown until projected/rebased map is profiled | Original-generator XOR witness proves `b_0=a_0+1`; 51 sliced generators independently checked; frozen USD 5 D4 conversion packet queued, no D5 run |
 
@@ -93,7 +93,10 @@ candidate, and the pod's underlying failure reason was not retained.
 There is also a distinct 51-variable affine-restriction D4 seed (SHA-256
 `be38aff828d9d3c73e70ea78914727fdca1305edbf5f99e99b28aa747cc396d8`)
 whose D5 profile is 55,355,297,148 bytes at 4096-row chunks
-(`validation/n51-poly01-sliced-d5-envelope-001.json`); its old local-plan
+(`validation/n51-poly01-sliced-d5-envelope-001.json`). Its retained one-shot
+D5 attempt reported full provisional rank 103,877/103,877 and
+`projection_kills_one`; the exact result and stdout digests are in
+`ZERO-SOLUTION-D5-STATUS-RECONCILIATION-20261111.md`. Its old local-plan
 deadline has expired. Proposition 2.5e of the theorem dossier gives a
 one-way transfer under any affine restriction: a checked D5 nonmembership
 certificate for this slice would prove nonmembership for the original.
@@ -121,6 +124,13 @@ unperformed; it is not a new random instance or a degree-six result.
 Its recorded exact count is six, so a checked D5 quotient of codimension at
 least seven would prove LFD at least six for this named input. The 64,638,795,838-byte
 envelope is the retained source-derived profile, not measured D5 usage.
+The original 51 generators have quadratic-part rank exactly 50, certified by
+an explicit nonsingular 50-by-50 monomial minor and the checked affine XOR
+relation. Thus their affine-relation space is exactly one-dimensional: the
+existing `b_0=a_0+1` slice exhausts affine equations in the *linear span of
+the original generators*. This does not exclude affine equations appearing
+only after higher-degree closure or prove a D5 result. The rank witness and
+independent check are in `N51-POLY00-AFFINE-RANK.md`.
 Proposition 1.4a now gives the converse decision once the **true** degree-five
 closure dimension is known: if `codim W5 = 6`, the checked `codim W4 > 6`
 and six-solution count prove exact LFD 5. If `codim W5 >= 7`, Proposition
