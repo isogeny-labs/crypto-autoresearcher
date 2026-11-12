@@ -1,0 +1,136 @@
+idea:
+  id: IDEA-20261109-e03654
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: F_p-linear carrier certificate for a prime-order curve, the Scanlon hypotheses that fail, the
+    complete list of computable additive carriers (Lie, formal group, etale p-torsion, H^1(O), H^0(Omega)),
+    and a toy script proving each kills the N-part, with the anomalous arm as positive control
+  class: barrier
+  claim: Scanlon's polynomial-time Drinfeld DLP needs (H1) a scalar ring that is an algebra over a finite
+    constant field and (H2) a module scheme equal to G_a. For E/F_p of prime order N not equal to p both
+    fail, and the exact identity separating the worlds is (tau - 1)^p = tau^p - 1 in L{tau} against (pi
+    - 1)^N not equal to pi^N - 1 in End(E). Theorem, Hom(E(F_q), (F_q, +)) is nonzero iff char F_q divides
+    the group order, the trace equation of KR-IC-f5c584 being the positive instance in characteristic
+    2. Hence every computable additive carrier of E/F_p, namely Lie(E) through E(F_p[eps]) = E(F_p) x
+    F_p split by the constant lift, the formal group of any Weierstrass lift, E[p] etale over F_{p^{k_p}},
+    H^1(E, O_E), and H^0(E, Omega^1) through omega_P = d f_P / f_P, is killed by p and induces the zero
+    map on the subgroup of order N. Prediction, a script that evaluates each carrier on toy curves returns
+    no bit of k when N is prime to p and returns k when N = p through the formal-group and H^0(Omega)
+    carriers. Exponent delta 0.
+  mechanism: A port of function-field DLP methods must name the F_p-linear structure it uses. This record
+    enumerates the only candidates, each an F_p-vector space scheme attached to E by a canonical functor,
+    and observes that all are p-torsion, so a homomorphism out of a group of order prime to p into them
+    is zero. The constant-lift splitting of the tangent bundle shows that even the compatible lift trick
+    of the p-adic wave has no infinitesimal shortcut, the compatible tangent coordinate of Q is k times
+    that of P, and knowing it is knowing k mod p.
+  novelty_status: adaptation
+  citations:
+  - ref: KR-IC-f5c584
+    provenance: internal
+    claim: The trace of x is a group morphism E to F_2 on ordinary binary curves, forcing a linear equation
+      after descent.
+    verified_by: REPO BRIEF 2026-11-09 section 3 row text, file not opened in this session
+  - ref: KR-RHO-53c89f
+    provenance: internal
+    claim: Anomalous curves are solved in polynomial time, the positive arm.
+    verified_by: REPO BRIEF 2026-11-09 section 3 row text, file not opened in this session
+  - ref: KR-RHO-13bf67
+    provenance: internal
+    claim: A sub-square-root algorithm must use the representation, the carriers are the representation's
+      only additive pieces.
+    verified_by: REPO BRIEF 2026-11-09 section 3 row text, file not opened in this session
+  assumptions:
+  - Toy curves are drawn from crypto/docs/ECDLP_CALIBRATION_PRIMES.md style prime-order instances at p
+    below 2^20, plus anomalous toys from the p-adic wave's generator.
+  - The carrier list is complete for canonical functors from commutative group schemes to F_p-vector spaces
+    that are computable in poly(log p), a claim of completeness, not of novelty.
+  predictions:
+  - metric: mutual information between carrier output and k on non-anomalous toys
+    direction: lower
+    minimum_effect: zero, carrier output independent of k across 1000 instances
+  - metric: success rate of the formal-group and H^0(Omega) arms on anomalous toys
+    direction: higher
+    minimum_effect: 1.0
+  minimal_test:
+    design: Sage script, for each toy (E, P, Q = kP) compute, one, the tangent components of all lifts
+      of P and Q in E(F_p[eps]) and verify the constant lift is the unique torsion section when p does
+      not divide N, two, the formal-group log mod p^2 of random lifts, three, the etale p-torsion field
+      degree k_p and the p-Sylow of E(F_{p^{k_p}}) for k_p at most 12, four, Semaev's omega_P when N =
+      p. Report whether any output determines k mod p or k mod N.
+    controls:
+    - Anomalous toy curves at the same bit size, arms two and four must succeed.
+    - Random relabelling of Q, outputs must be statistically identical.
+    required_metrics:
+    - per-arm output table
+    - mutual information estimate with k
+    - anomalous-arm success rate
+  falsification_conditions:
+  - Any carrier output on a non-anomalous toy that is correlated with k beyond 3 sigma over 1000 instances,
+    which would contradict the order-coprimality theorem and indicate an implementation leak.
+  - The anomalous arm fails, then the script is wrong and the record is invalid, not supported.
+  confounders:
+  - Choosing lifts of P and Q with correlated tangent components smuggles k in by construction, lifts
+    must be drawn independently and the dependence reported.
+  interpretation_limits:
+  - This is a certificate that a class of ports is empty, with no positive mechanism for E/F_p. It does
+    not bound non-additive exploitation of the representation.
+  heuristic_assumptions:
+  - id: H1
+    statement: The five carriers exhaust the computable additive functors on E.
+    rigorous_support: Ext^1(E, G_a) is one-dimensional and Hom(E, G_a) = 0, the list follows from the
+      long exact sequences of the p-adic and cohomology waves, a written proof is owed in the notes file.
+    validation_plan: Reviewer attempts to name a sixth computable additive carrier, any success amends
+      the list, not the vanishing.
+  target_complexity:
+    time_exponent: 1/2 unchanged
+    memory_exponent: O(1) beyond the toy point lists
+    best_known: Pollard rho, KR-RHO-13bf67, and polynomial time only when N = p, KR-RHO-53c89f
+    hidden_overhead: none
+    tradeoff_note: No tradeoff, a closure certificate.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: low
+  dominated_by: KR-RHO-53c89f and KR-IC-f5c584 jointly contain the two positive instances, the p-adic
+    and cohomology waves filed the formal-group and H^1(O) arms separately, this record unifies them under
+    one theorem and adds the Lie and H^0(Omega) arms.
+  sota_delta: Exponent delta 0. Delta for the program, one theorem statement that makes every future function-field
+    port name its carrier and fail or pass in one line.
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/generic-rho
+    rows_checked:
+    - KR-RHO-13bf67
+    - KR-RHO-53c89f
+    - KR-RHO-755e35
+    - KR-IC-f5c584
+    - KR-IC-cd159a
+    - KR-IC-5931ee
+    nearest:
+    - ref: KR-RHO-53c89f
+      provenance: internal
+      relation: special_case
+      delta: The row states the anomalous attack, this record identifies it as the unique elliptic instance
+        where a Drinfeld-type additive carrier survives.
+    - ref: KR-IC-f5c584
+      provenance: internal
+      relation: adjacent
+      delta: The trace morphism is the characteristic-2 instance of the carrier theorem, absent for odd
+        prime-order curves over F_p.
+    searched:
+      corpus_grep:
+      - REPO BRIEF wave index for jets, Greenberg, formal group, Lie, Cartier, trace morphism
+      - p-adic wave records on torsion-section lift and additivity radius
+      - cohomology wave records on E^natural and Cartier operator
+      web: []
+      blocked:
+      - none
+    lead: LEAD-RHO-lhw-modular-filter-price
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: Sage script, for each toy (E, P, Q = kP) compute, one, the tangent components
+        of all lifts of P and Q in E(F_p[eps]) and verify the constant lift is the unique torsion section
+        when p does not divide N, two, the formal-group log mod p^2 of random lifts, three, the etale
+        p-torsion field degree k_p and the p-Sylow of E(F_{p^{k_p}}) for k_p at most 12, four, Semaev''s
+        omega_P when N = p. Report whether'
