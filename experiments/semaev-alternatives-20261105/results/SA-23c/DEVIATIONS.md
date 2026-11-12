@@ -1,0 +1,4 @@
+- Lane 2 was paused for ~1 h so the Part 1 Jacobi run (a third process) did not exceed two heavy processes; chunk 229_10_19 restarted from scratch.
+- Chunk 229_10_19 was killed (rc 143, logged in results/chunks_229.jsonl as a malformed line) and rerun; the 25 completed chunks (24 ranges + fallback) are the record.
+- Held-out Jacobi run split into two jobs (1e5-4e5, 4e5-1e6), serial, one process each; Part 1 ran with one enumeration lane only.
+- Section file used for Gram/verify: work/s_229_12_all.txt (concatenation of the 25 chunk files).
