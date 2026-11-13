@@ -1,0 +1,52 @@
+id: LEAD-TRF-quartic-genus5-humbert-cover
+family: transfer
+title: Quartic-extension genus-5 (twisted Humbert) cover of E/F_(q^4), odd q, with index calculus on the cover
+mechanism: >-
+  E: y^2 = eta (x - a)(x - a^q)(x - a^(q^2)) h1(x), a of degree 4, descends to a
+  non-hyperelliptic genus-5 curve C/F_q (the (Z/2)^4 cover of P^1 branched at the
+  four conjugates of a and oo), with Jac C ~ Res E x D and D: y^2 = N(eta) m_a(x).
+  Index calculus on C (hyperplane and quadric relations, iota-folded factor base,
+  quadric descent of T(P)) recovers logs through the explicit transfer; the next
+  exponent-changing step is double large primes (GTTD, q^(2-2/g) = q^1.6).
+disposition: open_next_step
+next_action:
+  step: >-
+    Add a double-large-prime arm (graph-based combination of residuals with two
+    outside points) to the study crate and compare it against the single-large-prime
+    and iota baselines under a frozen protocol, with isolated measurement before any
+    wall-time claim.
+  discriminates: >-
+    If the double-large-prime arm's IC / expected-steps-rho ratio falls with q where
+    the single-large-prime arm's rises, the exponent route is live at toy scale; if
+    not, the cover line is constant-factor only. Either way the line does not reach
+    prime-field or F_(2^131) targets (no subfield descent; 2 has order 130 mod 131,
+    so every b gives magic number 1, 2, 130 or 131).
+best_measured: >-
+  [unverified assertion, unisolated L0] median IC / expected-steps rho 3.08 at
+  q = 12007 (lp:0.5 + LA precheck), 3.32 (iota + precheck); rho faster at every q.
+evidence:
+  - repo: crypto
+    path: research/humbert_genus5_cover_20261021/README.md
+    note: construction, zeta check 12/12, classifier, 90-run IC vs matched rho (PR 2580)
+  - repo: crypto
+    path: research/humbert_genus5_cover_20261021/lp_20261027/PROTOCOL.md
+    note: single large prime v1; P1 falsified, LA-retry confound (PR 2710)
+  - repo: crypto
+    path: research/humbert_genus5_cover_20261021/lp_20261027/PROTOCOL_v2.md
+    note: precheck faster on 8/8 multi-round instances; lp:0.5 crossover exploratory (PR 2710)
+ledger_refs: []
+known_results:
+  - KR-IC-5ea2f8
+  - KR-IC-a4dd54
+related:
+  - LEAD-TRF-odd-prime-ghs-cover-floor
+  - LEAD-TRF-small-genus-cover-general
+  - LEAD-ICB-large-prime-variants
+  - LEAD-ICP-residual-partial-relations
+forecloses:
+  - quartic extension genus five cover
+  - Humbert curve Weil descent index calculus
+  - iota folded factor base on a genus 5 cover
+  - single large prime on the genus 5 cover
+areas: [PEXT]
+last_reviewed: 2026-11-13
