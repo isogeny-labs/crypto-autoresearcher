@@ -46,11 +46,11 @@ PROCESS_SCRIPT_ENV = "CAVAULT_SCRIPT"
 # Paths that must stay readable before the vault is unlocked.  GitHub parses
 # workflows before any step runs; Git needs .gitattributes to apply filters.
 PLAINTEXT_PREFIXES = (
-    ".gitattributes",
     ".gitignore",
     ".github/",
     ".artifacts/",
     "tools/vault/",
+    ".codex/environments/",
 )
 PLAINTEXT_FILES = {"VAULT.md"}
 LFS_POINTER_PREFIX = b"version https://git-lfs"
@@ -340,6 +340,7 @@ def _repo_root() -> Path:
 def _is_plaintext_path(path: str) -> bool:
     return (
         path in PLAINTEXT_FILES
+        or Path(path).name == ".gitattributes"
         or path.endswith(".artifacts.json")
         or any(path == prefix or path.startswith(prefix) for prefix in PLAINTEXT_PREFIXES)
     )
@@ -354,8 +355,26 @@ def _default_script() -> str:
 
 
 def _configure(script: str) -> None:
+    import shlex
+    import tempfile
+
+    # Shared Git config must never depend on a disposable worktree's files.
+    common = Path(_git("rev-parse", "--git-common-dir", capture=True).stdout.decode().strip()).resolve()
+    installed = common / "vault" / "vaultctl.py"
+    installed.parent.mkdir(parents=True, exist_ok=True)
+    source = Path(script).read_bytes()
+    if not installed.exists() or installed.read_bytes() != source:
+        fd, temporary = tempfile.mkstemp(prefix=".vaultctl-", dir=installed.parent)
+        try:
+            with os.fdopen(fd, "wb") as handle:
+                handle.write(source)
+            os.chmod(temporary, 0o700)
+            os.replace(temporary, installed)
+        finally:
+            if os.path.exists(temporary):
+                os.unlink(temporary)
     python = sys.executable or "python3"
-    command = f'"{python}" "{script}"'
+    command = shlex.join([python, str(installed)])
     _git("config", "filter.vault.process", f"{command} filter")
     _git("config", "filter.vault.clean", f"{command} clean")
     _git("config", "filter.vault.smudge", f"{command} smudge")
@@ -402,7 +421,7 @@ def _needs_smudge(path: str) -> bool:
             head = handle.read(64)
     except OSError:
         return False
-    return not head.startswith(LFS_POINTER_PREFIX)
+    return is_ciphertext(head)
 
 
 def _dirty_paths() -> list[bytes]:
@@ -417,104 +436,112 @@ def _status_path(item: bytes) -> str:
 
 def cmd_setup(args: argparse.Namespace) -> int:
     _configure(args.script or _default_script())
+    if args.codex:
+        # Keep the selected environment outside disposable worktrees. Codex
+        # reads this Git setting when choosing a worktree setup script.
+        common = Path(_git("rev-parse", "--git-common-dir", capture=True).stdout.decode().strip()).resolve()
+        environment = common / "vault" / "codex-environment.toml"
+        environment.parent.mkdir(parents=True, exist_ok=True)
+        environment.write_text(
+            'version = 1\nname = "Research vault"\n\n[setup]\n'
+            'script = "python3 tools/vault/vaultctl.py unlock"\n', encoding="utf-8"
+        )
+        _git("config", "--local", "codex.localEnvironmentConfigPath", str(environment))
+        worktree_config = _git("config", "--get", "extensions.worktreeConfig", check=False, capture=True)
+        if worktree_config.stdout.strip() == b"true":
+            _git("config", "--worktree", "codex.localEnvironmentConfigPath", str(environment))
     if not args.quiet:
         print("vault: git filters configured (AES-256-SIV)")
     return 0
 
 
 def cmd_unlock(args: argparse.Namespace) -> int:
-    _repo_root()
-    _configure(args.script or _default_script())
-    paths = _tracked_paths()
-    locked = _sample_locked_state(paths)
-    if locked is False:
-        if not args.quiet:
-            print("vault: working tree already unlocked")
-        return 0
-    if locked is None:
-        if not args.quiet:
-            print("vault: no vaulted paths present in this checkout")
-        return 0
-
-    dirty = _dirty_paths()
-    if dirty and not args.force:
-        # A case-insensitive filesystem cannot hold two tracked paths that
-        # differ only by case; Git reports one as dirty forever.  Tolerate
-        # exactly that, never arbitrary local edits.
-        folded = {path.lower() for path in paths}
-        collisions_only = all(
-            _status_path(item).lower() in folded for item in dirty
-        )
-        if not collisions_only:
-            raise VaultError(
-                "vault: refusing to unlock over local changes (use --force to discard)"
-            )
-
-    existing = [rel for rel in paths if _needs_smudge(rel)]
-    if not existing:
-        if not args.quiet:
-            print("vault: nothing to unlock")
-        return 0
-    # Decrypt the index blobs directly.  This avoids Git's smudge fast path,
-    # empty-content edge cases, and sparse-checkout interactions entirely.
+    """Unlock ciphertext in place without replacing any plaintext local edits."""
     import tempfile
 
-    # Use the index blob ids, not :path specs: path-based batch input breaks
-    # on names that Git's object-spec parser treats specially.
-    index_oids = {}
+    root = _repo_root()
+    os.chdir(root)
+    _configure(args.script or _default_script())
+    # Do not sample the first file: an interrupted unlock leaves a mixed tree.
+    # Bootstrap paths may also contain ciphertext from older vault revisions.
     raw = _git("ls-files", "-s", "-z", capture=True).stdout
-    for entry in raw.split(b"\0"):
-        if not entry:
+    entries = {}
+    for row in raw.split(b"\0"):
+        if not row:
             continue
-        meta, path = entry.split(b"\t", 1)
-        parts = meta.split(b" ")
-        if len(parts) >= 3:
-            index_oids[path.decode("utf-8", "surrogateescape")] = parts[1].decode()
-    with tempfile.NamedTemporaryFile("wb", delete=False) as request:
-        for rel in existing:
-            request.write(index_oids[rel].encode() + b"\n")
-        request_path = request.name
-    written = 0
-    try:
-        with open(request_path, "rb") as stdin:
-            proc = subprocess.Popen(
-                ["git", "cat-file", "--batch"],
-                stdin=stdin,
-                stdout=subprocess.PIPE,
-            )
-            assert proc.stdout
-            for rel in existing:
-                header = proc.stdout.readline().split()
-                if len(header) < 3 or header[1] != b"blob":
-                    raise VaultError("vault: cannot read index blob during unlock")
-                size = int(header[2])
-                data = proc.stdout.read(size)
-                proc.stdout.read(1)
-                if data.startswith(LFS_POINTER_PREFIX):
-                    # The worktree holds the materialised LFS object; leaving
-                    # the pointer here would silently replace it.
-                    continue
-                if len(data) == len(MAGIC) + 16:
-                    # A 20-byte ciphertext (4-byte magic + 16-byte SIV tag)
-                    # can only represent empty plaintext.
-                    plain = b""
-                else:
-                    try:
-                        plain = decrypt(data)
-                    except VaultError:
-                        raise VaultError(
-                            f"vault: authentication failed for {rel} "
-                            "(wrong KEY or tampered blob)"
-                        )
-                with open(rel, "wb") as handle:
-                    handle.write(plain)
-                written += 1
-            proc.stdout.close()
-            proc.wait()
-    finally:
-        os.unlink(request_path)
+        meta, rel = row.split(b"\t", 1)
+        mode, oid, stage = meta.split()
+        if stage == b"0" and mode in (b"100644", b"100755"):
+            entries[os.fsdecode(rel)] = (mode, oid)
+    paths = sorted(entries, key=lambda p: (Path(p).name != ".gitattributes", p))
+    written = []
+    seen = set()
+    for rel in paths:
+        candidate = Path(rel)
+        if candidate.is_symlink() or not candidate.is_file():
+            continue
+        info = candidate.stat()
+        identity = (info.st_dev, info.st_ino)
+        if identity in seen:
+            continue  # Case-colliding names share a file on macOS.
+        seen.add(identity)
+        with candidate.open("rb") as handle:
+            if handle.read(len(MAGIC)) != MAGIC:
+                continue  # Preserve plaintext edits, LFS payloads and pointers.
+            handle.seek(0)
+            data = handle.read()
+        # Authenticate even empty ciphertexts; length alone proves nothing.
+        plain = decrypt(data)
+        fd, temporary = tempfile.mkstemp(prefix=".vault-unlock-", dir=candidate.parent)
+        try:
+            with os.fdopen(fd, "wb") as handle:
+                handle.write(plain)
+            os.chmod(temporary, stat.S_IMODE(info.st_mode))
+            current = candidate.stat()
+            if (current.st_ino, current.st_mtime_ns, current.st_size) != (
+                info.st_ino, info.st_mtime_ns, info.st_size
+            ):
+                raise VaultError(f"vault: file changed during unlock: {rel}")
+            os.replace(temporary, candidate)
+        finally:
+            if os.path.exists(temporary):
+                os.unlink(temporary)
+        written.append(rel)
+
+    # Git's size shortcut compares plaintext size with ciphertext size until
+    # index stat data is refreshed. Update only paths whose filtered bytes AND
+    # mode match their existing index entry, preserving staged and local edits.
+    if written:
+        payload = b"\0".join(os.fsencode(p) for p in written) + b"\0"
+        result = subprocess.run(
+            ["git", "check-attr", "-z", "--stdin", "filter"], input=payload,
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True,
+        )
+        fields = result.stdout.split(b"\0")
+        filters = {os.fsdecode(fields[i]): fields[i + 2]
+                   for i in range(0, len(fields) - 1, 3)}
+        algorithm = _git("rev-parse", "--show-object-format", capture=True).stdout.decode().strip()
+        unchanged = []
+        for rel in written:
+            candidate = Path(rel)
+            mode, oid = entries[rel]
+            data = candidate.read_bytes()
+            selected = filters.get(rel)
+            if selected == b"vault":
+                data = encrypt(data)
+            elif selected not in (b"unset", b"unspecified"):
+                continue
+            actual = hashlib.new(algorithm, b"blob " + str(len(data)).encode() + b"\0" + data).hexdigest().encode()
+            executable = bool(candidate.stat().st_mode & 0o111)
+            if actual == oid and executable == (mode == b"100755"):
+                unchanged.append(os.fsencode(rel))
+        if unchanged:
+            with tempfile.TemporaryFile() as request:
+                request.write(b"\0".join(unchanged) + b"\0")
+                request.seek(0)
+                subprocess.run(["git", "update-index", "-z", "--stdin"], stdin=request, check=True)
     if not args.quiet:
-        print(f"vault: unlocked {written} files (AES-256-SIV)")
+        print(f"vault: unlocked {len(written)} files (AES-256-SIV; local edits preserved)")
     return 0
 
 
@@ -627,10 +654,11 @@ def build_parser() -> argparse.ArgumentParser:
     setup = add("setup", cmd_setup, "configure repository Git filters")
     setup.add_argument("--script", help="absolute path to this script for filter commands")
     setup.add_argument("--quiet", action="store_true")
+    setup.add_argument("--codex", action="store_true", help="select persistent Codex worktree setup")
 
     unlock = add("unlock", cmd_unlock, "re-check out the worktree through the smudge filter")
     unlock.add_argument("--script", help="absolute path to this script for filter commands")
-    unlock.add_argument("--force", action="store_true", help="discard local worktree changes")
+    unlock.add_argument("--force", action="store_true", help="compatibility option; plaintext local edits are always preserved")
     unlock.add_argument("--quiet", action="store_true")
 
     status = add("status", cmd_status, "report whether the worktree is locked")

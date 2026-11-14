@@ -12,10 +12,11 @@ or running anything.
 GitHub parses workflows before any step can execute, and Git needs attributes
 to select a filter, so these paths are deliberately **not** encrypted:
 
-- `.gitattributes`, `.gitignore`
+- `.gitattributes` at every depth, and root `.gitignore`
 - `.github/**` (workflows, composite actions, CI scripts)
 - `.artifacts/**` and `**/.artifacts.json` (artifact-store config and manifests read via `git show` in CI)
 - `tools/vault/**` (the decryptor and the bulk encryptor)
+- `.codex/environments/**` (worktree setup, readable before unlock)
 - `VAULT.md`
 
 Everything else, including `AGENTS.md`, `docs/`, source, the ledger and
@@ -25,10 +26,24 @@ coordination records, is ciphertext in the object store.
 
 ```sh
 export KEY=...                     # or keep `export KEY=...` in ~/.zshrc
-python3 tools/vault/vaultctl.py setup
+python3 tools/vault/vaultctl.py setup --codex
 python3 tools/vault/vaultctl.py unlock
 git status                          # clean: plaintext cleans back to ciphertext
 ```
+
+Codex's checked-in `.codex/environments/environment.toml` runs `unlock` as
+its worktree setup script. Select **Research vault** as the project's local
+environment, or run `setup --codex` to select a persistent copy in Git’s
+common directory (including this worktree’s override). The selected copy survives
+worktree removal. Setup also installs the filter under the common Git directory
+so filter commands survive worktree removal. This configuration must remain plaintext so Codex can read it
+before setup. Existing branches predating this fix must first incorporate it.
+
+`unlock` decrypts only ciphertext already present on disk, resumes interrupted
+unlocks, and preserves plaintext edits, staged changes, symlinks and LFS files.
+The legacy `--force` option no longer discards plaintext edits. It authenticates
+empty encrypted files too. Nested `.gitattributes` are bootstrap text because
+Git reads index attributes before checkout and before any setup script can run.
 
 A fresh clone has ciphertext on disk until `unlock` runs. If `KEY` is missing,
 Git fails closed: it never stores plaintext and never reports success.
