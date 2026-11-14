@@ -1,0 +1,149 @@
+idea:
+  id: IDEA-20261109-d7b615
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: Every F_p-rational (N,N)-gluing of a prime-order curve with itself is the product polarisation,
+    so no Igusa or Humbert invariant depends on k, and the cyclic N-isogeny of E x E with kernel generated
+    by (P, Q) is multiplication by k in disguise
+  class: barrier
+  claim: 'Let E/F_p have prime order N with Frobenius eigenlines L_1 = E(F_p) and L_p in E[N] (eigenvalues
+    1 and p, distinct since p is not 1 mod N). (i) The Frobenius-stable Lagrangian subgroups of ((E x
+    E)[N], e_N + e_N) are exactly N + 3: the N - 1 graphs of beta = (k, -k^{-1}) in F_N x F_N = End(E)/N
+    for k in F_N^*, and the four products of eigenlines. (ii) The instance (P, Q = kP) lies in exactly
+    one, the graph of (k, -k^{-1}). Lifting beta to beta~ in End(E) (for j = 0, End = Z[w] and Z[w]/N
+    = F_N x F_N), the unipotent M = [[1, 0], [-beta~, 1]] in GL_2(End E) carries the kernel onto E[N]
+    x 0, so the quotient is (E/E[N]) x E = E x E over F_p and the induced principal polarisation is the
+    pullback of the product polarisation by M, hence isometric to it. The glued surface is (E x E, product)
+    for every k: not a Jacobian, with the product moduli point and no Igusa-Clebsch invariants. (iii)
+    The cyclic isogeny Phi: E x E -> (E x E)/<(P, Q)> = E x E is (R, S) -> ((pi - 1) R, S - kR) up to
+    Aut(E x E). Evaluating Phi at (T, 0) for T in E[ell](F_{p^d}) reveals k mod ell, so an algorithm that
+    evaluates a prime-degree-N isogeny of E x E from a rational cyclic kernel generator in N^gamma operations
+    solves ECDLP in N^gamma poly(log N). Velu-type evaluation enumerates the kernel (gamma = 1); no surface
+    analogue of sqrt-elu is published; gamma < 1/2 is not claimed.'
+  mechanism: '(E x E)[N] is the F_N[Frob]-module L_1^2 + L_p^2 with distinct eigenvalues, so stable subspaces
+    split as W_1 + W_p. Lagrangian of dimension 2 forces (2,0), (0,2) or (1,1); in the (1,1) case W_1
+    is a line of slope k in L_1^2 and isotropy e(R,T)^{ac+bd} = 1 forces W_p = W_1^perp, slope -k^{-1}:
+    the graph of beta with Nm beta = -1. Frobenius-equivariant endomorphisms of E[N] are End(E)/N, so
+    beta lifts, and the change of basis by M is an automorphism of E x E defined over F_p; polarisations
+    transport along it. Hayashida-Nishi (recalled, characteristic 0): E x E with End(E) = Z[w] contains
+    no curve of genus 2, consistent with (ii).'
+  novelty_status: adaptation
+  citations:
+  - ref: KR-IC-a4dd54
+    provenance: internal
+    claim: Genus-2 index calculus needs a Jacobian; the gluing from the instance never produces one.
+    verified_by: brief section 3 index-calculus table, row KR-IC-a4dd54
+  - ref: KR-RHO-755e35
+    provenance: internal
+    claim: Isogenous objects are equally hard; here the N-isogeny of E x E returns to E x E and its evaluation
+      is the discrete log.
+    verified_by: brief section 3 generic-rho table, row KR-RHO-755e35
+  - ref: KR-RHO-13bf67
+    provenance: internal
+    claim: Generic lower bound sqrt(N); the isogeny evaluation in (iii) is not generic, so the bound does
+      not apply to it.
+    verified_by: brief section 3 generic-rho table, row KR-RHO-13bf67
+  assumptions:
+  - N prime, p not 1 mod N, so the eigenvalues 1 and p are distinct mod N.
+  - For (ii) over F_p one needs End_{F_p}(E) to surject onto End(E)/N; true for j = 0 with p = 1 mod 3
+    and for any ordinary E whose endomorphisms are F_p-rational.
+  - The Hayashida-Nishi statement is recalled and must be verified in the literature before citation.
+  predictions:
+  - metric: number of Frobenius-stable Lagrangian subgroups of (E x E)[N] at toy N
+    direction: equal
+    minimum_effect: exactly N + 3, with N - 1 graphs of norm -1 elements
+  - metric: isomorphism class of the glued polarised surface over all k at toy ell replacing N in the
+      construction
+    direction: equal
+    minimum_effect: the product (E x E, product polarisation) for every k
+  - metric: value recovered from the second coordinate of Phi(T, 0) at toy N
+    direction: equal
+    minimum_effect: k mod ell exactly, at cost N kernel points
+  minimal_test:
+    design: '(a) Pure linear algebra over F_N for N <= 10^4: model E[N] as F_N^2 with Frob = diag(1, p)
+      and the standard symplectic form, enumerate Frobenius-stable Lagrangians of the direct sum and classify.
+      (b) Symbolic check in Sage that M maps the graph of beta onto E[N] x 0 and that the transported
+      form equals the product form. (c) At p <= 2^12 with N prime, implement the cyclic isogeny of E x
+      E with kernel <(P, Q)> by Velu-style kernel enumeration on each coordinate, evaluate at (T, 0) for
+      T in E[ell] over F_{p^d} with small d, and read k mod ell; record the operation count. (d) Read
+      igusa_clebsch_verification_output.txt and the gluing code it came from to check which kernels were
+      used.'
+    controls:
+    - A kernel not stable under Frobenius (graph of a random non-equivariant anti-isometry over F_{p^d})
+      must give a surface not isomorphic to E x E over F_p, to show the classification bites.
+    - Operation count of (c) compared with N and with sqrt(N) rho on the same toy.
+    required_metrics:
+    - count and types of Lagrangians at each toy N
+    - transported polarisation matrix
+    - recovered k mod ell and kernel size used in (c)
+    - operation counts of (c) and of rho
+  falsification_conditions:
+  - A Frobenius-stable Lagrangian not of the two listed types.
+  - A gluing along the graph of an equivariant norm -1 class whose quotient is a genus-2 Jacobian.
+  - An evaluation of (c) in fewer than N^{1/2} operations would be a break and would enter through the
+    descent gate IDEA-20260801-003, not through this record.
+  confounders:
+  - Aut(E x E) is larger than Aut(E)^2 for j = 0; isomorphism tests must allow GL_2(Z[w]).
+  - At toy sizes with small d, E[ell] over F_{p^d} is cheap only because N is small; (c) is a demonstration,
+    not a cost model.
+  interpretation_limits:
+  - Closes the Igusa/Humbert reading of ECDLP for self-gluings and restates ECDLP as a prime-degree isogeny
+    evaluation on E x E; it proposes no evaluation algorithm.
+  heuristic_assumptions:
+  - id: H1
+    statement: No algorithm evaluates a prime-degree-N cyclic isogeny of an abelian surface from a rational
+      kernel generator in N^{1/2 - delta} operations.
+    rigorous_support: None; Velu costs N and sqrt-elu is known only for elliptic curves.
+    validation_plan: Literature check in paper/ and third_party for abelian-surface isogeny evaluation;
+      any claimed algorithm is tested on (c).
+  target_complexity:
+    time_exponent: N^{1/2} unchanged, delta 0; the reformulation needs gamma < 1/2 against Velu's gamma
+      = 1
+    memory_exponent: O(1)
+    best_known: Pollard rho, KR-RHO-13bf67 and KR-RHO-0528e7
+    hidden_overhead: Kernel enumeration of N points in every known evaluation method.
+    tradeoff_note: None defined.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  dominated_by: KR-IC-a4dd54 dominates any genus-2 transfer reading; the transfer-wave Kani lead and the
+    moduli-wave Humbert lead stated the size law. Neither states that self-gluings are products or the
+    isogeny-evaluation reading.
+  sota_delta: Exponent delta 0. New content is the exact classification of rational (N,N)-kernels, the
+    product conclusion, and the evaluation equivalence.
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/index-calculus
+    rows_checked:
+    - KR-IC-a4dd54
+    - KR-IC-5ea2f8
+    - KR-RHO-755e35
+    - KR-RHO-13bf67
+    - KR-RHO-53c89f
+    nearest:
+    - ref: KR-IC-a4dd54
+      provenance: internal
+      relation: adjacent
+      delta: The row costs genus-2 index calculus on a Jacobian; this record shows the gluing from the
+        instance is never a Jacobian.
+    - ref: KR-IC-5ea2f8
+      provenance: internal
+      relation: orthogonal
+      delta: Cover attacks map E to a Jacobian over a subfield; this record concerns abelian-surface quotients
+        of E x E over F_p.
+    searched:
+      corpus_grep:
+      - brief section 2 for Kani, Humbert, Igusa, gluing, abelian surface
+      - wave-1 transfer leads and wave-2 moduli leads on Kani covers
+      web: []
+      blocked: []
+    lead: LEAD-ICB-nonlinear-frob-stable-bases
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: (a) Pure linear algebra over F_N for N <= 10^4: model E[N] as F_N^2 with Frob
+        = diag(1, p) and the standard symplectic form, enumerate Frobenius-stable Lagrangians of the direct
+        sum and classify. (b) Symbolic check in Sage that M maps the graph of beta onto E[N] x 0 and that
+        the transported form equals the product form. (c) At p <= 2^12 with N prime, implement the cyclic
+        isogeny of E x E with kern'
