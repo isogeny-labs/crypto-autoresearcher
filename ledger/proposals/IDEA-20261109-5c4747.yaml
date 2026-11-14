@@ -1,0 +1,94 @@
+idea:
+  id: IDEA-20261109-5c4747
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECC-c52b0d
+  title: An S2-invariant Montgomery ladder state (sigma1, sigma2, pi, delta) in which the secret bit enters
+    only as the sign of delta; symmetry costs 2M per step relative to RFC 7748
+  class: algorithm
+  claim: Let the ladder registers be R0 = (X0:Z0), R1 = (X1:Z1) with R1 - R0 = P = (u_P:1). Store sigma1
+    = X0Z1+X1Z0, sigma2 = X0X1, pi = Z0Z1, delta = X0Z1-X1Z0. For bit b and s = 1-2b, the step u = sigma1
+    + s delta, w = 2pi (cmov (u,w) := (u_P,1) when u = w = 0), A = u+w, B = u-w, AA = A^2, BB = B^2, E
+    = AA-BB, X_D = AA BB, Z_D = E(AA + 121665 E), X_A = (sigma2-pi)^2, Z_A = u_P delta^2, sigma1' = X_D
+    Z_A + X_A Z_D, sigma2' = X_D X_A, pi' = Z_D Z_A, delta' = s (X_D Z_A - X_A Z_D) computes the same
+    multiples as the RFC 7748 ladder step for every u in F_p and every clamped scalar, at 7M+4S+1c plus
+    two conditional negations, one zero-test and one cmov, versus 5M+4S+1c plus two conditional swaps.
+    The differential-add half and the state update are symmetric under R0 <-> R1; the only bit-dependent
+    operations are the two sign flips.
+  mechanism: 'The symmetric functions sigma1, sigma2, pi and the antisymmetric delta of the pair of projective
+    points are bihomogeneous of bidegree (1,1), so they carry a single common scale and determine the
+    unordered pair together with its ordering through the sign of delta (sigma1^2 - delta^2 = 4 sigma2
+    pi). Selecting R_b is the linear extraction (X_b Z_{1-b} : Z_b Z_{1-b}) = (sigma1 + s delta : 2 pi),
+    which degenerates only when Z_{1-b} = 0, i.e. R_{1-b} = O, in which case R_b = -+P and the constant
+    pair (u_P,1) is correct; this is the single cmov. The RFC quantities satisfy DA+CB = 2(sigma2-pi)
+    and DA-CB = -2 delta, so the differential add is unchanged up to the uniform factor 4. The two output
+    points must be re-symmetrised, which is the 4M the symmetry costs. The ladder starts after the forced
+    bit 254 with R0 = P, R1 = 2P = ((u_P^2-1)^2 : 4u_P(u_P^2+486662u_P+1)) and ends with one cmov between
+    (X_D:Z_D) and (X_A:Z_A), then x = X Z^(p-2) with 0^(p-2) = 0.'
+  novelty_status: speculative
+  citations:
+  - ref: RFC 7748 section 5
+    provenance: recalled
+    claim: ladder step with conditional swap, 5M+4S+1c
+    verified_by: null
+  - ref: BRIEF section 1, src/ecc/x25519.rs ladder
+    provenance: internal
+    claim: repository executes the step as 9 fe_mul + 1 a24 multiply, std::mem::swap selection
+    verified_by: this session read of the BRIEF excerpt
+  assumptions:
+  - Scalars are clamped (bit 254 set, bits 0-2 clear); the start state uses bit 254 = 1.
+  - Field inversion follows the 0 -> 0 convention used by RFC 7748 for Z = 0.
+  predictions:
+  - metric: equality s2_ladder(k,u) == rfc_ladder(k,u)
+    direction: equal
+    minimum_effect: all tested k and u, including u in {0, 1, p-1, two order-8 u}
+  - metric: field multiplications per step
+    direction: higher
+    minimum_effect: exactly +2M, same S and c
+  minimal_test:
+    design: 'Section 8 of tools/ansatz_edwards25519.sage: 40 random clamped scalars against random and
+      low-order u, plus RFC 7748 vector 1. Then a Rust ladder_sym in x25519.rs with fe_sq, masked conditional
+      negation and cmov, tested against x25519 on the RFC vectors and 10^4 random inputs.'
+    controls:
+    - RFC ladder itself reproduces the RFC 7748 vectors
+    - low-order inputs return the all-zero output in both ladders
+    - operation counter in ecbench reports 7 fe_mul-or-fe_sq ... per step split as 3M+4S plus 4M
+    required_metrics:
+    - mismatch count over the test set
+    - M, S, c per step by instrumented counting
+    - count of secret-dependent operations per step (expected 2 cneg, 1 ctzero, 1 cmov)
+  falsification_conditions:
+  - Any (k,u) where the two ladders differ, including low-order u.
+  - An instrumented step count other than 7M+4S+1c.
+  confounders:
+  - The u = w = 0 cmov masks a genuine collapse on malformed inputs; test must include twist u and u =
+    -1.
+  interpretation_limits:
+  - Constant time is argued at the formula level; the BigUint backend is not constant-time regardless.
+  - No speed claim; the record states a cost, 2M per step, for a symmetry.
+  heuristic_assumptions:
+  - id: H1
+    statement: a sign-only selection is cheaper to audit than a 4-element cswap
+    rigorous_support: none; count of secret-dependent operations is reported, not valued
+    validation_plan: report both counts, draw no speed conclusion
+  target_complexity:
+    time_exponent: not applicable
+    memory_exponent: 4 field elements of state versus 4 in RFC
+    best_known: RFC 7748 ladder, 5M+4S+1c with Z1 = 1
+    hidden_overhead: one zero-test and one cmov per step
+    tradeoff_note: +2M per step buys an S2-symmetric step with sign-only secret dependence
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: low
+  dominated_by: RFC 7748 ladder dominates on cost (5M vs 7M per step). This record is filed for the symmetry
+    structure and the measured price, not as a replacement.
+  sota_delta: Multiplication delta +2M per step; secret-dependent operation set changes from two 2-element
+    cswaps to two 1-element conditional negations plus one cmov.
+  prior_art:
+    frontier_map: not_applicable
+    not_applicable_reason: Curve25519 ladder-engineering campaign; no ECDLP mechanism is claimed.
+    none_found_after:
+    - BRIEF section 2 searched for ladder, cswap, symmetric functions
+    - BRIEF section 1 x25519.rs read for the current selection mechanism
