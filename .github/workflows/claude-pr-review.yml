@@ -47,6 +47,7 @@ jobs:
           fetch-depth: 0 # full history so "did this record already exist?" resolves
           filter: blob:none
       - name: Unlock research vault (AES-256)
+        if: ${{ env.ANTHROPIC_API_KEY != '' }}
         shell: bash
         env:
           KEY: ${{ secrets.KEY }}
