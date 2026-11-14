@@ -1,0 +1,129 @@
+idea:
+  id: IDEA-20261109-58a146
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: 'Eisenstein-multiplier free relations P_i = theta P_j with Nm theta <= K inside the small-x factor
+    base on j = 0 prime-order curves: Poisson null with mean 2 B^2 n_K / N, n_K about 0.605 K, so CM multiplies
+    the integer small-multiplier supply by about 0.6 sqrt(K) at equal degree and leaves relation supply
+    at B^2 K / N'
+  class: relations
+  claim: 'Let E/F_p have j = 0, End(E) = Z[omega], prime order N, and let F be the small-x base with B
+    x-values below L = p^beta. A pair (P_j, theta) with theta in Z[omega] modulo units, 2 <= Nm theta
+    <= K, is a free relation when x(theta P_j) lies in F; it costs one GLV multiplication and no Semaev
+    solve, and its algebraic degree is Nm theta. The number of such multiplier classes is n_K = #{theta
+    : 1 < Nm theta <= K}/6 = pi K/(3 sqrt 3) + O(sqrt K), against sqrt(K) - 1 integer multipliers of degree
+    <= K. Prediction: the count C_K of hits is Poisson with mean mu_K = 2 B^2 n_K / N, C_K / mu_K in [0.8,
+    1.25] whenever mu_K >= 30, for K up to 1000 and beta in {1/3, 1/2}. Consequence: one relation per
+    base element needs K about N/B, so the free supply is a constant-factor effect and the exponent is
+    unchanged.'
+  mechanism: The wave-2 torsion record counts coincidences P_i = +-k P_j with integer k; IDEA-20260726-002
+    and the GLV spectral-forcing lead use only the unit multipliers (factor 3). On j = 0 every element
+    of Z[omega] is a computable endomorphism of degree Nm theta, so the multiplier set at a given degree
+    bound is a disc in the Eisenstein plane rather than a segment of integers. The record fixes the counting
+    and the null before any run.
+  novelty_status: adaptation
+  citations:
+  - ref: KR-IC-5931ee
+    provenance: internal
+    claim: Prime-field index calculus with naive bases cannot beat generic methods; a constant-factor
+      relation supply does not change that.
+    verified_by: brief section 3 row KR-IC-5931ee
+  - ref: KR-RHO-0528e7
+    provenance: internal
+    claim: The CM endomorphism is a constant-factor structure; here it supplies about 0.6 sqrt(K) more
+      multipliers, still a constant in N.
+    verified_by: brief section 3 row KR-RHO-0528e7
+  - ref: IDEA-20260726-002
+    provenance: internal
+    claim: phi-orbit factor bases use the unit multipliers; this record adds non-unit multipliers of bounded
+      norm.
+    verified_by: brief section 2 ledger index excerpt
+  assumptions:
+  - Toy j = 0 curves with prime N exist among the calibration primes; the next agent filters p = 1 mod
+    3.
+  - omega acts as (x, y) -> (zeta x, y) with zeta a primitive cube root of unity in F_p.
+  predictions:
+  - metric: C_K divided by mu_K at mu_K >= 30
+    direction: inside interval
+    minimum_effect: between 0.8 and 1.25 for every K and beta tested
+  - metric: C_K at K = 1000 divided by the integer-multiplier count at degree bound 1000
+    direction: higher
+    minimum_effect: at least 10 (closed form 0.605 sqrt(1000) = 19)
+  minimal_test:
+    design: For j = 0 prime-order curves with p in [2^16, 2^24] and bases beta in {1/3, 1/2}, enumerate
+      theta in Z[omega] modulo units with 2 <= Nm theta <= 1000 (ordered by norm), compute x(theta P_j)
+      for every P_j in F by GLV and look up membership. Record C_K for K in {10, 30, 100, 300, 1000}.
+      Repeat the integer-multiplier statistic of the wave-2 record on the same bases.
+    controls:
+    - Random symmetric subset of E(F_p) of the same size in place of the small-x base.
+    - Generic (a != 0) curve of the same size with integer multipliers only.
+    required_metrics:
+    - C_K and mu_K per curve, beta, K
+    - integer-multiplier counts at matched degree bounds
+    - number of distinct relations after removing theta, theta' pairs that give the same unordered pair
+  falsification_conditions:
+  - C_K / mu_K outside [0.8, 1.25] at mu_K >= 30 on two or more curves.
+  - Random-subset control departing from Poisson (counting error).
+  confounders:
+  - theta and its conjugate or associates give the same unordered pair; count classes modulo units and
+    record duplicates.
+  - Small-x bases are symmetric under negation; the factor 2 in mu_K accounts for +-.
+  interpretation_limits:
+  - A confirmed null is a constant-factor statement at toy sizes; it does not price the full index calculus.
+  - An excess would be a structural signal and would need the random-subset control to pass.
+  heuristic_assumptions:
+  - id: H1
+    statement: x(theta P_j) is equidistributed over x-values of E(F_p) as P_j ranges over the base and
+      theta over norms up to K.
+    rigorous_support: Exponential sums give equidistribution only for K beyond the Weil range; at toy
+      sizes the random-subset control substitutes.
+    validation_plan: compare C_K with the random-subset arm at each K.
+  target_complexity:
+    time_exponent: N^{1/2} unchanged (delta 0)
+    memory_exponent: O(B) for the base lookup
+    best_known: Pollard rho at Theta(N^{1/2}), KR-RHO-13bf67; prime-field IC above it, KR-IC-5931ee
+    hidden_overhead: B n_K GLV multiplications to harvest the free relations
+    tradeoff_note: no tradeoff defined
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: low
+  dominated_by: KR-IC-5931ee dominates any prime-field IC reading; KR-RHO-0528e7 states the constant.
+    The wave-2 small-multiplier record states the integer case; this record extends it to the CM ring.
+  sota_delta: Exponent delta 0. Counted delta is 0.605 K Eisenstein multipliers against sqrt(K) integers
+    at equal degree, with the relation supply B^2 K / N unchanged in form.
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/index-calculus
+    rows_checked:
+    - KR-IC-5931ee
+    - KR-IC-5a43e5
+    - KR-IC-b0fcda
+    - KR-RHO-0528e7
+    - KR-RHO-13bf67
+    - KR-IC-955fd6
+    nearest:
+    - ref: KR-IC-5931ee
+      provenance: internal
+      relation: adjacent
+      delta: The row forecloses naive prime-field index calculus; this record counts one constant-factor
+        relation source inside it.
+    - ref: KR-IC-b0fcda
+      provenance: internal
+      relation: adjacent
+      delta: Frobenius-invariant bases gain a factor n on subfield curves; here the gain is a bounded-norm
+        multiplier count on a CM curve.
+    searched:
+      corpus_grep:
+      - brief prior waves for small-multiplier, division-polynomial relations, phi-orbit base
+      - brief section 2 for IDEA-20260726-002, IDEA-20260727-001
+      web: []
+      blocked: []
+    lead: LEAD-ICB-cofactor-projected-ladder-base
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: For j = 0 prime-order curves with p in [2^16, 2^24] and bases beta in {1/3,
+        1/2}, enumerate theta in Z[omega] modulo units with 2 <= Nm theta <= 1000 (ordered by norm), compute
+        x(theta P_j) for every P_j in F by GLV and look up membership. Record C_K for K in {10, 30, 100,
+        300, 1000}. Repeat the integer-multiplier statistic of the wave-2 record on the same bases.'
