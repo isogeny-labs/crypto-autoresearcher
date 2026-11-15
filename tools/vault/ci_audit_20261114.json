@@ -1,0 +1,435 @@
+{
+  "schema": "engineering.audit/v1",
+  "base_commit": "021964c35d5aca0cd967757555fc914cb784e00a",
+  "scope": [
+    "fresh worktree verification",
+    "CI regression repair",
+    "committed-content I/O audit"
+  ],
+  "fresh_worktree": {
+    "tracked_paths": 181016,
+    "ciphertext_files_on_disk": 0,
+    "cached_attribute_files": 83,
+    "attribute_warning_bytes": 0,
+    "configured_setup": "Research vault",
+    "setup_unlocked_files": 0,
+    "expected_case_collision": "coordination/goals/GOAL-ECDLP-001/batches/BATCH-49720f/final/CHECKPOINT.json",
+    "app_worktree_api": "did not return; created and verified via Git and selected setup script"
+  },
+  "coordination": {
+    "conflict_check": "allow",
+    "task": "T-5928",
+    "claim": "T-5928 reclaimed at 2026-11-15T08:40:30Z, fencing epoch 3, after task query showed ready; scope check allowed. Process-local HTTP override only.",
+    "existing_work_preserved": true,
+    "latest_task_read": "Task query responded with ready epoch2; successful explicit claim returned claimed epoch3. No service restart or global endpoint change."
+  },
+  "baseline": {
+    "targeted_tests": {
+      "passed": 62,
+      "failed": 6,
+      "subtests_passed": 419,
+      "log": "/tmp/car-ci-baseline-targeted-20261114.log"
+    },
+    "ci_runs": [
+      43649778302,
+      43646847846,
+      43649778257
+    ]
+  },
+  "sources": [
+    "VAULT.md",
+    "docs/security/git-vault.md",
+    "docs/agent-contract-extended.md#literature-first",
+    "https://git-scm.com/docs/git-cat-file",
+    "https://git-scm.com/docs/git-grep",
+    "https://raw.githubusercontent.com/pyca/cryptography/main/tests/hazmat/primitives/test_aead.py"
+  ],
+  "changes": {
+    "git_objects": "authenticate committed content before text decoding; constant-memory batch streaming",
+    "decision_search": "replace ciphertext grep with batched authenticated object reads",
+    "ci_backend": "probe empty AES-SIV roundtrip, install cryptography>=46 when unavailable",
+    "instructions": "move full persistent-loop section to binding supplement without relaxing budgets",
+    "lead_atlas": "point moved DREG goal evidence at canonical sharded path",
+    "parity": {
+      "owner_commit": "05b897aa3610e46916ae191987c19cab1afa007c",
+      "owner_repo": "isogeny-labs/crypto",
+      "files": {
+        "tools/pcc/pcc.py": "09bdeb6a07be017ba7990dee01dee15dfdfa615d49c41dc821fe9241f1ded52a",
+        "tools/pcc/test_pcc.py": "6015f12690eeff88412e02d373797fd6497b7016586c085a5cba1b958312dd24"
+      },
+      "scope": "copy owner-locked canonical files and their approved digests; no owner repository edits"
+    },
+    "progress_test_expectations": "Align stale tests with already-enforced synthetic/assumed-input vocabulary; preserve metric values and strengthen no-measurement assertions.",
+    "handoff_schema": {
+      "replacements": 26,
+      "mechanism": "existing hash-pinned schema supersession registry",
+      "originals_changed": false,
+      "new_execution_authority": false
+    }
+  },
+  "validation": {
+    "status": "in progress",
+    "first_targeted_group": "70 passed, 2 subtests passed",
+    "word_budget": {
+      "always_loaded": 5671,
+      "largest_wake": 8677
+    },
+    "shared_code_parity": "19 files pass after sync with owner-locked versions",
+    "ledger_integration": "29 tests pass; 26 missing-budget cards corrected by pinned supersessions; original cards unchanged",
+    "collection": "5852 tests collect cleanly before exporter cache integration",
+    "goal_identifier_fixtures": "61 tests pass after complete vault bootstrap is copied",
+    "vault_and_committed_objects": "15 tests pass",
+    "cache_and_committed_reader": "22 tests pass",
+    "latest_fast_group": "27 tests pass",
+    "benchmark_gate": "20 records pass"
+  },
+  "audit_inventory": {
+    "source_paths_in_selected_roots": 1015,
+    "roots": {
+      "cairn": 11,
+      "cli": 3,
+      "groebner_compare": 17,
+      "harness": 493,
+      "orchestration": 83,
+      "src": 61,
+      "tools": 347
+    }
+  },
+  "coverage_limit": "Active reader repairs, fresh-checkout verification and scoped software/native controls. Repository-wide semantic audit, versioned frozen-producer migrations, archived syntax diagnoses and a global performance frontier remain unfinished.",
+  "backend_reproduction": {
+    "version": "cryptography 42.0.8",
+    "openssl": "OpenSSL 3.2.2 4 Jun 2024",
+    "empty_roundtrip": "ValueError",
+    "implication": "import success alone does not establish required AES-SIV support",
+    "upstream_test": "TestAESSIV.test_empty"
+  },
+  "artifact_hydration": {
+    "local_status": "five validation archives restored and SHA-256/size checked",
+    "credentials": "existing ecc-challenges-new profile; no permission changes",
+    "benchrec_gate": "20 records pass; progress report current",
+    "checks_bypassed": false
+  },
+  "existing_repair_branches": [
+    {
+      "pr": 3268,
+      "head": "bdfcedb13364dc1c8864d26d7df974a197cdfd80",
+      "scope": "committed-evidence readers and canonical PCC synchronization"
+    },
+    {
+      "pr": 3270,
+      "head": "22ee589bc227df864f75094a615ea59dd6cd0180",
+      "scope": "immutable progress blob cache"
+    }
+  ],
+  "local_collection": {
+    "initial": "5838 tests, 2 errors: external tests package collision and missing optional psutil",
+    "repair": "isolate repository tests namespace; install declared psutil extra into ignored local venv",
+    "after_namespace_fix": "5847 tests, one legacy absolute helper import corrected"
+  },
+  "integration": {
+    "existing_pr": 3268,
+    "merge_conflicts": "21 encrypted-file conflicts resolved at plaintext level; both instruction sections retained; newer owner-locked PCC version retained",
+    "first_integration_attempt": "Goal CLI fixtures copied only the former git_blob helper, missing the new authenticated-reader bootstrap modules",
+    "remedy": "Copy git_objects.py and vaultctl.py into sealed CLI fixtures as well",
+    "path_only_hygiene_diff": "Existing PR removes unnecessary content-based rename/copy detection; retained"
+  },
+  "optimization_scope": {
+    "implemented": [
+      "one streaming Git batch for committed decision reads",
+      "immutable exporter cache keyed by repository, full commit ID and path; symbolic refs uncached",
+      "path-only merge-hygiene diff omits content-based rename/copy detection"
+    ],
+    "performance_claim_status": "No new speedup claim or Pareto-frontier claim; current revision measurements and independent review remain pending."
+  },
+  "published_repair": {
+    "pr": 3268,
+    "head": "8d6fcf80e406950cdc30604984c6b5bbaaff1620",
+    "merged_feature_pr": 3270,
+    "base_main_merged": "a50600ef28",
+    "hosted_checks": "running"
+  },
+  "hosted_followup": {
+    "head": "8d6fcf80e406950cdc30604984c6b5bbaaff1620",
+    "fidelity_failure": "new authenticated reader omitted from sparse checkout",
+    "fix": "include complete tools/vault package and tests/__init__.py",
+    "pcc_failure": "three PR-body strong-claim lines lacked required annotation",
+    "pcc_fix": "explicit pcc:unverified annotation; local prose lint has zero findings",
+    "core_dependency": "declare cryptography>=46 for authenticated readers"
+  },
+  "local_full_run_attempts": [
+    {
+      "attempt": 1,
+      "status": "interrupted",
+      "reason": "older editable checkout imported; isolated environment corrected"
+    },
+    {
+      "attempt": 2,
+      "status": "interrupted",
+      "reason": "temporary repositories inside the project inherited parent pytest configuration; affected nine tests pass in isolated layout"
+    },
+    {
+      "attempt": 3,
+      "status": "running",
+      "temp_root": "external SSD directory outside the Git checkout",
+      "workers": 2,
+      "shards": 4,
+      "logs": ".venv/tmp/evidence"
+    }
+  ],
+  "followup_verification": {
+    "sparse_progress_fidelity": {
+      "tests": 39,
+      "result": "passed",
+      "head": "216d57edb127ecc983b91940d8e133944ca6e48c",
+      "note": "Explicit read-tree materialization after no-checkout creation; initial empty-index attempt ran zero tests and is retained as failed setup evidence."
+    },
+    "vault_package_tests": {
+      "passed": 16
+    },
+    "imports_atlas_vault": {
+      "passed": 54,
+      "subtests": 423
+    },
+    "admission_history_controls": {
+      "passed": 5
+    },
+    "hosted_head": "8d6fcf80e406950cdc30604984c6b5bbaaff1620",
+    "hosted_failures": [
+      "progress-fidelity sparse bootstrap closure",
+      "harness shard1 test package import and historical atlas admission validation",
+      "harness shard3 mutable atlas test fixtures"
+    ],
+    "full_local_suite": "attempt3 still running, observed failures retained; no green claim",
+    "merge": "held until applicable current-head checks pass"
+  },
+  "continued_audit": {
+    "runtime_pr": "https://github.com/isogeny-labs/crypto-autoresearcher/pull/3307",
+    "syntax_inventory": "tools/vault/repository_inventory_20261114.json",
+    "vault_optimization": {
+      "change": "Reuse authenticated ciphertext object identity; recheck plaintext digest before normal Git index refresh. Remove redundant parent AES encryption without a stat-only shortcut.",
+      "custody_tests": 21,
+      "scope": "software fixture controls; component wall-time gain unmeasured",
+      "tradeoff": "Retains one SHA256 digest and one clean-match flag per unlocked file; memory/time frontier remains unmeasured before the frozen fixture run.",
+      "rejected_approach": "Stat-only index refresh failed fresh filtered-worktree status; failure evidence retained locally."
+    },
+    "path_controls": {
+      "passed": 79,
+      "subtests": 5,
+      "scope": "overlapping vault, review-phase and campaign-batch controls"
+    },
+    "local_environment": {
+      "wide_tails": "7 passed after installing declared optional numba dependency in task venv",
+      "sympy": "39 passed and47 subtests using explicit Python arithmetic backend; installed flint0.9 ordering issue remains",
+      "provenance": "2 affected SGCP nodes passed at stable head78cb; earlier changing-head failures retained",
+      "msolve": "local executable links to unavailable libflint24; three descent controls failed infrastructure",
+      "native_actor": "macOS rejects RLIMIT_AS with ValueError; memory enforcement was not weakened",
+      "live_cairn": "Installed local binary rejects objectives lacking new solver packages; three optional live controls failed"
+    },
+    "full_suite": "Attempt3 diagnostics retained: shard1 reached explicit1800s timeout; shard2 14failed/977passed; shard3 8failed/2242passed; shard4 in progress. Not a green complete run."
+  },
+  "standalone_job_dependencies": {
+    "jobs": [
+      "merge-hygiene",
+      "ledger"
+    ],
+    "dependency": "cryptography>=46 in the selected runtime Python, after actions/setup-python",
+    "reproduction": "clean task-owned venv lacks cryptography; decrypt reports VaultError caused by ModuleNotFoundError",
+    "coordination": "Existing claimed T-5928 epoch1 covers this isolated worktree. Fresh scope/task queries timed out; no conflicting ownership response, settings change, or service restart."
+  },
+  "local_full_shards_attempt3": [
+    {
+      "shard": 1,
+      "files": 84,
+      "exit": "timeout",
+      "seconds": 1800.029837,
+      "log": ".venv/tmp/evidence/car-ci-local-shard-1-attempt3-20261114.log"
+    },
+    {
+      "shard": 2,
+      "files": 66,
+      "exit": 1,
+      "seconds": 727.5908770000001,
+      "log": ".venv/tmp/evidence/car-ci-local-shard-2-attempt3-20261114.log"
+    },
+    {
+      "shard": 3,
+      "files": 118,
+      "exit": 1,
+      "seconds": 1258.1651324170002,
+      "log": ".venv/tmp/evidence/car-ci-local-shard-3-attempt3-20261114.log"
+    },
+    {
+      "shard": 4,
+      "files": 72,
+      "exit": "timeout",
+      "seconds": 1800.0126848750006,
+      "log": ".venv/tmp/evidence/car-ci-local-shard-4-attempt3-20261114.log"
+    }
+  ],
+  "local_full_shards_scope": "Diagnostic on an edited worktree and mixed local optional dependencies, not a frozen complete success. Shards1 and4 censored at1800s; raw logs retained. Hosted CI remains the current-head integration gate.",
+  "canonical_benchmark_guard": {
+    "owner": "crypto-autoresearcher",
+    "change": "Read base records through required Git filters and preserve existing-object failures; malformed base JSON cannot disappear from the closed-record guard.",
+    "tests_passed": 54,
+    "subtests_passed": 76,
+    "shared_code_parity_files": 19,
+    "consumer_sync": "Owner-first change; crypto and cryptanalysis copies require synchronization after the owner lands.",
+    "initial_content_controls": {
+      "passed": 49,
+      "subtests": 71
+    },
+    "comparison_snapshot_hardening": {
+      "change": "Pin head/requested commits and their merge base once; failed comparisons never become empty diffs. Disable rename folding and include deletion/type changes in closed-record custody checks while preserving new-entry add/modify selection.",
+      "negative_cases_reproduced_on_prior_source": 6,
+      "cases": [
+        "missing base",
+        "explicit empty base",
+        "unrelated history",
+        "deleted closed record",
+        "renamed closed record",
+        "closed record replaced by same-ID symlink"
+      ],
+      "final_control_log": ".venv/tmp/evidence/benchmark-custody-final-include-empty-base-20261115.log",
+      "diagnostic_log_note": "Early unit runs overlapped one diagnostic log; partial diagnostics preserved, distinct serialized final run used."
+    },
+    "single_observation_comparison": {
+      "diagnosis": "First-only directional metrics were assigned synthetic zero gain and rendered as comparison panels. Two new lifecycle controls fail before repair.",
+      "repair": "Only multi-record series receive first-record gain anchors; actual single-record reference ratios remain. Empty-chart rendering uses an explicit fixed fixture.",
+      "regression_controls": "75 tests and76 subtests across benchmark, renderer and metric exporter modules pass",
+      "generated_reports": "regenerated all4 progress files; source observations unchanged; exactly3 synthetic self-comparisons removed"
+    }
+  },
+  "latest_integrated_reader_regression": {
+    "passed": 140,
+    "scope": "overlapping goal-ID, metrics, decision, history, vault and encrypted consumer controls"
+  },
+  "merge_hygiene_pipeline": {
+    "failed_job": 132729443406,
+    "failed_head": "595857e2d75a269e29363d4b628ddcd8549d71c0",
+    "validation_started": "2026-11-15T06:54:48Z",
+    "cancelled": "2026-11-15T07:17:12Z",
+    "local_unchanged_empty_diff_candidates": 18439,
+    "repair": "Batch tree/index metadata and authenticated unique-object streams; compare staged plaintext and current worktree, preserve storage-representation equality, reject unsafe ancestors before content reads.",
+    "controls_passed": 112,
+    "subtests_passed": 2,
+    "full_local_checker": "PASS against a50600ef2881459f5220e76978057eb08d43e205",
+    "timeout_minutes_unchanged": 30,
+    "current_head_ci": "e38418779a: merge-hygiene SUCCESS at 2026-11-15T08:34:23Z; remaining harness and formal jobs were still running at 08:40Z."
+  },
+  "software_unlock_measurement": {
+    "record": "docs/benchmarks/records/20261115T0723Z-vault-unlock-cached-ciphertext.json",
+    "source_candidate": "e05debd9bc",
+    "baseline": "595857e2d7",
+    "protocol": "tools/vault/unlock_benchmark_protocol_20261114.json",
+    "warmups_retained": 2,
+    "observations_per_arm": 5,
+    "baseline_wall_median_seconds": 0.9993370840002171,
+    "candidate_wall_median_seconds": 0.8599877910000941,
+    "derived_median_paired_baseline_over_candidate": 1.0788585202303207,
+    "candidate_slower_pairs": 2,
+    "scope": "64MiB software unlock fixture on shared unpinned local host; overlapping ranges; full-repository timing and cache memory remain unmeasured",
+    "storage": "raw archive uploaded and read back with matching SHA256",
+    "validation": "source pins, deterministic input regeneration, custody controls and raw trace arithmetic; no independent timing replication",
+    "report_pdf": "output/pdf/vault-unlock-20261114.pdf",
+    "report_svg": "docs/benchmarks/vault-unlock-20261114/unlock.svg",
+    "progress_export": "Three separately scoped software series export median, observed minimum/maximum and baseline; 18 progress-metric controls pass."
+  },
+  "verified_ci_repair_closure": {
+    "pr": 3268,
+    "verified_head": "e38418779a4c94d4242557f23cd93323b8cde966",
+    "state": "MERGED",
+    "merged_utc": "2026-11-15T09:11:27Z",
+    "merge_commit": "28fdeedbf3540c047063693a024552ea93beb029",
+    "checks_successful": 30,
+    "checks_legitimately_skipped": 2,
+    "checks_pending_or_failed": 0,
+    "unresolved_threads": 0,
+    "latest_started_check_count": 30,
+    "merge_method": "merge commit, expected-head guard"
+  },
+  "audit_main_validation": {
+    "pr": 3307,
+    "code_parent": "45b8fd26a83acc1a3618dd27572a61dd2670ca0c",
+    "base": "main",
+    "retargeted_utc": "2026-11-15T09:14Z",
+    "observed_utc": "2026-11-15T10:03Z",
+    "observed_checks": "one successful prose gate and one skipped migration only; full validation did not start on a base edit",
+    "workflow_evidence": ".github/workflows/validate.yml excludes edited events; full CI must run on the published completed audit record revision",
+    "status": "Source repair and owner artifact copy prepared for a new current-head CI run; not merged",
+    "latest_failed_head": "e874faaccded57d53377b6d8315c3e7903a45a30",
+    "failure": "One shard3 renderer integration assertion; aggregate correctly failed. Twenty latest checks succeeded, one skipped, two failed including aggregate;22 started."
+  },
+  "shared_artifact_owner_followup": {
+    "owner": "crypto",
+    "pr": 4296,
+    "head": "886d984437c83d38d73ef13d9673e9b53099fa73",
+    "source": "tools/artifacts/artifacts.py",
+    "fix": "required filters for sparse index data and metadata, explicit absence vs failure, plaintext size and temporary cleanup",
+    "owner_unit_tests_passed": 35,
+    "owner_parity_files": 21,
+    "status": "owner merged; exact source copied into this audit revision",
+    "archive_input_readback": "Original registry bytes match Git, storage and recorded digest. Existing guarded archival verifier plus exact offline cache resolves the lookup; three existing archive controls pass. CI records job reports only the unrelated ongoing open record, which is preserved.",
+    "merge_commit": "c0e8723ff0780900958374eceb96c123e33c4f00",
+    "merged_utc": "2026-11-15T11:19:23Z",
+    "owner_merge_policy": "gate,size,artifacts; unrelated ongoing records failure was preserved and nongating",
+    "consumer_unit_tests_passed": 29,
+    "consumer_tests": "Preserved every existing consumer method and added the exact four owner filter helper/control methods; test files have distinct consumer-only coverage."
+  },
+  "consumer_native_diagnostics": {
+    "cryptanalysis": {
+      "base": "66b636486d04018aef499fb1ba92cee414fe1fa4",
+      "sanitizers": "address,undefined; Debug native CPU build",
+      "native_tests_passed_initially": 18,
+      "remaining_test_passed_after_sparse_materialization": 1,
+      "static_analyzer_translation_units": 23,
+      "static_analyzer_diagnostics": 0,
+      "analyzer_positive_control": "deliberate null dereference detected",
+      "scope_limit": "default AppleClang21 analyzer and CPU controls, not complete semantic or GPU validation",
+      "native_followup": {
+        "pr": 1543,
+        "head": "d3f1876ad7945a381f065d4a152132290c23b1eb",
+        "changes": "Pre-allocation launch-dimension/walk-ID bounds and optional PTX output early-clobber constraints",
+        "before": "4invalid-launch assertions failed on original source; exact legal-allocation PTX counterexample retained",
+        "local": "19ASan/UBSan Ctests pass;8extracted PTX before/after compiler comparisons identical",
+        "device_execution": false,
+        "bounded_fuzz": {
+          "replays_passed": 7,
+          "runs_passed": 7,
+          "max_seconds_per_harness": 60,
+          "hard_timeout_seconds": 100,
+          "rss_limit_mib": 1024,
+          "seed": 12345,
+          "compiler": "LLVM23.1.1, fully instrumented static C library and harnesses",
+          "source_corpus": "private copies; originals unchanged",
+          "limitations": "No LeakSanitizer or device execution; hosted fuzz workflow was manually disabled and remains so; toolchain setup failures retained",
+          "source_head": "d3f1876ad7945a381f065d4a152132290c23b1eb"
+        }
+      },
+      "optional_tls_followup": {
+        "pr": 1544,
+        "head": "ed99e2c8d7857f3e32ecd643be5314eedacc2e2a",
+        "change": "Only Rustls lock version/checksum0.23.45 to0.23.46, plus audit receipt",
+        "upstream_advisories": [
+          "GHSA-vp88-798v-h67f",
+          "GHSA-w44r-93j7-qv28",
+          "GHSA-c8m5-c952-6cm4",
+          "GHSA-h2v8-394m-p7vv"
+        ],
+        "local": "locked redis-cache feature check passes;10cache controls pass;1existing dedicated-server test ignored",
+        "limitations": "No live TLS/Redis or local Rust1.87 run; installed Rust1.99.1; source/host setup diagnostics retained"
+      }
+    },
+    "crypto": {
+      "base": "719ece9f04e68f3c0fff199ff103675aa16922dc",
+      "toolchain": "existing Rust1.99.1 selected per process, no global change",
+      "full_library_passed": 6304,
+      "full_library_failed": 61,
+      "full_library_ignored": 138,
+      "full_library_status": "diagnostic, not green",
+      "initial_failures_passing_after_fixture_replays": 47,
+      "remaining_platform_failures": 14,
+      "platform_limitation": "Linux /proc-based worker report, restore and execution context requirements on macOS; safeguards unchanged",
+      "scope_limit": "focused replay successes are not a newly passing complete suite; original failed logs retained"
+    }
+  }
+}
