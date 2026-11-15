@@ -1,0 +1,225 @@
+{
+  "schema": "engineering.audit/v1",
+  "base_commit": "021964c35d5aca0cd967757555fc914cb784e00a",
+  "scope": [
+    "fresh worktree verification",
+    "CI regression repair",
+    "committed-content I/O audit"
+  ],
+  "fresh_worktree": {
+    "tracked_paths": 181016,
+    "ciphertext_files_on_disk": 0,
+    "cached_attribute_files": 83,
+    "attribute_warning_bytes": 0,
+    "configured_setup": "Research vault",
+    "setup_unlocked_files": 0,
+    "expected_case_collision": "coordination/goals/GOAL-ECDLP-001/batches/BATCH-49720f/final/CHECKPOINT.json",
+    "app_worktree_api": "did not return; created and verified via Git and selected setup script"
+  },
+  "coordination": {
+    "conflict_check": "allow",
+    "task": "T-5928",
+    "claim": "T-5928 claimed, fencing epoch 1; process-local HTTP loopback endpoint override matched the running local service; no global settings changed",
+    "existing_work_preserved": true
+  },
+  "baseline": {
+    "targeted_tests": {
+      "passed": 62,
+      "failed": 6,
+      "subtests_passed": 419,
+      "log": "/tmp/car-ci-baseline-targeted-20261114.log"
+    },
+    "ci_runs": [
+      43649778302,
+      43646847846,
+      43649778257
+    ]
+  },
+  "sources": [
+    "VAULT.md",
+    "docs/security/git-vault.md",
+    "docs/agent-contract-extended.md#literature-first",
+    "https://git-scm.com/docs/git-cat-file",
+    "https://git-scm.com/docs/git-grep",
+    "https://raw.githubusercontent.com/pyca/cryptography/main/tests/hazmat/primitives/test_aead.py"
+  ],
+  "changes": {
+    "git_objects": "authenticate committed content before text decoding; constant-memory batch streaming",
+    "decision_search": "replace ciphertext grep with batched authenticated object reads",
+    "ci_backend": "probe empty AES-SIV roundtrip, install cryptography>=46 when unavailable",
+    "instructions": "move full persistent-loop section to binding supplement without relaxing budgets",
+    "lead_atlas": "point moved DREG goal evidence at canonical sharded path",
+    "parity": {
+      "owner_commit": "05b897aa3610e46916ae191987c19cab1afa007c",
+      "owner_repo": "isogeny-labs/crypto",
+      "files": {
+        "tools/pcc/pcc.py": "09bdeb6a07be017ba7990dee01dee15dfdfa615d49c41dc821fe9241f1ded52a",
+        "tools/pcc/test_pcc.py": "6015f12690eeff88412e02d373797fd6497b7016586c085a5cba1b958312dd24"
+      },
+      "scope": "copy owner-locked canonical files and their approved digests; no owner repository edits"
+    },
+    "progress_test_expectations": "Align stale tests with already-enforced synthetic/assumed-input vocabulary; preserve metric values and strengthen no-measurement assertions.",
+    "handoff_schema": {
+      "replacements": 26,
+      "mechanism": "existing hash-pinned schema supersession registry",
+      "originals_changed": false,
+      "new_execution_authority": false
+    }
+  },
+  "validation": {
+    "status": "in progress",
+    "first_targeted_group": "70 passed, 2 subtests passed",
+    "word_budget": {
+      "always_loaded": 5671,
+      "largest_wake": 8677
+    },
+    "shared_code_parity": "19 files pass after sync with owner-locked versions",
+    "ledger_integration": "29 tests pass; 26 missing-budget cards corrected by pinned supersessions; original cards unchanged",
+    "collection": "5852 tests collect cleanly before exporter cache integration",
+    "goal_identifier_fixtures": "61 tests pass after complete vault bootstrap is copied",
+    "vault_and_committed_objects": "15 tests pass",
+    "cache_and_committed_reader": "22 tests pass",
+    "latest_fast_group": "27 tests pass",
+    "benchmark_gate": "20 records pass"
+  },
+  "audit_inventory": {
+    "source_paths_in_selected_roots": 1015,
+    "roots": {
+      "cairn": 11,
+      "cli": 3,
+      "groebner_compare": 17,
+      "harness": 493,
+      "orchestration": 83,
+      "src": 61,
+      "tools": 347
+    }
+  },
+  "coverage_limit": "Repository-wide audit and Pareto-frontier criteria remain unfinished; no performance advantage asserted.",
+  "backend_reproduction": {
+    "version": "cryptography 42.0.8",
+    "openssl": "OpenSSL 3.2.2 4 Jun 2024",
+    "empty_roundtrip": "ValueError",
+    "implication": "import success alone does not establish required AES-SIV support",
+    "upstream_test": "TestAESSIV.test_empty"
+  },
+  "artifact_hydration": {
+    "local_status": "five validation archives restored and SHA-256/size checked",
+    "credentials": "existing ecc-challenges-new profile; no permission changes",
+    "benchrec_gate": "20 records pass; progress report current",
+    "checks_bypassed": false
+  },
+  "existing_repair_branches": [
+    {
+      "pr": 3268,
+      "head": "bdfcedb13364dc1c8864d26d7df974a197cdfd80",
+      "scope": "committed-evidence readers and canonical PCC synchronization"
+    },
+    {
+      "pr": 3270,
+      "head": "22ee589bc227df864f75094a615ea59dd6cd0180",
+      "scope": "immutable progress blob cache"
+    }
+  ],
+  "local_collection": {
+    "initial": "5838 tests, 2 errors: external tests package collision and missing optional psutil",
+    "repair": "isolate repository tests namespace; install declared psutil extra into ignored local venv",
+    "after_namespace_fix": "5847 tests, one legacy absolute helper import corrected"
+  },
+  "integration": {
+    "existing_pr": 3268,
+    "merge_conflicts": "21 encrypted-file conflicts resolved at plaintext level; both instruction sections retained; newer owner-locked PCC version retained",
+    "first_integration_attempt": "Goal CLI fixtures copied only the former git_blob helper, missing the new authenticated-reader bootstrap modules",
+    "remedy": "Copy git_objects.py and vaultctl.py into sealed CLI fixtures as well",
+    "path_only_hygiene_diff": "Existing PR removes unnecessary content-based rename/copy detection; retained"
+  },
+  "optimization_scope": {
+    "implemented": [
+      "one streaming Git batch for committed decision reads",
+      "immutable exporter cache keyed by repository, full commit ID and path; symbolic refs uncached",
+      "path-only merge-hygiene diff omits content-based rename/copy detection"
+    ],
+    "performance_claim_status": "No new speedup claim or Pareto-frontier claim; current revision measurements and independent review remain pending."
+  },
+  "published_repair": {
+    "pr": 3268,
+    "head": "8d6fcf80e406950cdc30604984c6b5bbaaff1620",
+    "merged_feature_pr": 3270,
+    "base_main_merged": "a50600ef28",
+    "hosted_checks": "running"
+  },
+  "hosted_followup": {
+    "head": "8d6fcf80e406950cdc30604984c6b5bbaaff1620",
+    "fidelity_failure": "new authenticated reader omitted from sparse checkout",
+    "fix": "include complete tools/vault package and tests/__init__.py",
+    "pcc_failure": "three PR-body strong-claim lines lacked required annotation",
+    "pcc_fix": "explicit pcc:unverified annotation; local prose lint has zero findings",
+    "core_dependency": "declare cryptography>=46 for authenticated readers"
+  },
+  "local_full_run_attempts": [
+    {
+      "attempt": 1,
+      "status": "interrupted",
+      "reason": "older editable checkout imported; isolated environment corrected"
+    },
+    {
+      "attempt": 2,
+      "status": "interrupted",
+      "reason": "temporary repositories inside the project inherited parent pytest configuration; affected nine tests pass in isolated layout"
+    },
+    {
+      "attempt": 3,
+      "status": "running",
+      "temp_root": "external SSD directory outside the Git checkout",
+      "workers": 2,
+      "shards": 4,
+      "logs": ".venv/tmp/evidence"
+    }
+  ],
+  "followup_verification": {
+    "sparse_progress_fidelity": {
+      "tests": 39,
+      "result": "passed",
+      "head": "216d57edb127ecc983b91940d8e133944ca6e48c",
+      "note": "Explicit read-tree materialization after no-checkout creation; initial empty-index attempt ran zero tests and is retained as failed setup evidence."
+    },
+    "vault_package_tests": {
+      "passed": 16
+    },
+    "imports_atlas_vault": {
+      "passed": 54,
+      "subtests": 423
+    },
+    "admission_history_controls": {
+      "passed": 5
+    },
+    "hosted_head": "8d6fcf80e406950cdc30604984c6b5bbaaff1620",
+    "hosted_failures": [
+      "progress-fidelity sparse bootstrap closure",
+      "harness shard1 test package import and historical atlas admission validation",
+      "harness shard3 mutable atlas test fixtures"
+    ],
+    "full_local_suite": "attempt3 still running, observed failures retained; no green claim",
+    "merge": "held until applicable current-head checks pass"
+  },
+  "standalone_job_dependencies": {
+    "jobs": [
+      "merge-hygiene",
+      "ledger"
+    ],
+    "dependency": "cryptography>=46 in the selected runtime Python, after actions/setup-python",
+    "reproduction": "clean task-owned venv lacks cryptography; decrypt reports VaultError caused by ModuleNotFoundError",
+    "coordination": "Existing claimed T-5928 epoch1 covers this isolated worktree. Fresh scope/task queries timed out; no conflicting ownership response, settings change, or service restart."
+  },
+  "merge_hygiene_pipeline": {
+    "failed_job": 132729443406,
+    "failed_head": "595857e2d75a269e29363d4b628ddcd8549d71c0",
+    "validation_started": "2026-11-15T06:54:48Z",
+    "cancelled": "2026-11-15T07:17:12Z",
+    "local_unchanged_empty_diff_candidates": 18439,
+    "repair": "Batch tree/index metadata and authenticated unique-object streams; compare staged plaintext and current worktree, preserve storage-representation equality, reject unsafe ancestors before content reads.",
+    "controls_passed": 112,
+    "subtests_passed": 2,
+    "full_local_checker": "PASS against a50600ef2881459f5220e76978057eb08d43e205",
+    "timeout_minutes_unchanged": 30
+  }
+}

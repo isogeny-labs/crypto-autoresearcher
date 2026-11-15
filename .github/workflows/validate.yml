@@ -85,13 +85,13 @@ jobs:
           tool="$RUNNER_TEMP/cavault.py"
           git show "HEAD:tools/vault/vaultctl.py" > "$tool"
           py=python3
-          if ! "$py" -c 'import cryptography' >/dev/null 2>&1; then
+          if ! "$py" -c 'from cryptography.hazmat.primitives.ciphers.aead import AESSIV; c=AESSIV(bytes(64)); assert c.decrypt(c.encrypt(b"", None), None) == b""' >/dev/null 2>&1; then
             venv="$RUNNER_TEMP/cavault-venv"
             if "$py" -m venv "$venv" >/dev/null 2>&1; then
               py="$venv/bin/python"
-              "$py" -m pip install --quiet --disable-pip-version-check 'cryptography>=42'
+              "$py" -m pip install --quiet --disable-pip-version-check 'cryptography>=46'
             else
-              "$py" -m pip install --quiet --disable-pip-version-check --break-system-packages 'cryptography>=42'
+              "$py" -m pip install --quiet --disable-pip-version-check --break-system-packages 'cryptography>=46'
             fi
           fi
           "$py" "$tool" install-key --quiet
@@ -167,13 +167,13 @@ jobs:
           tool="$RUNNER_TEMP/cavault.py"
           git show "HEAD:tools/vault/vaultctl.py" > "$tool"
           py=python3
-          if ! "$py" -c 'import cryptography' >/dev/null 2>&1; then
+          if ! "$py" -c 'from cryptography.hazmat.primitives.ciphers.aead import AESSIV; c=AESSIV(bytes(64)); assert c.decrypt(c.encrypt(b"", None), None) == b""' >/dev/null 2>&1; then
             venv="$RUNNER_TEMP/cavault-venv"
             if "$py" -m venv "$venv" >/dev/null 2>&1; then
               py="$venv/bin/python"
-              "$py" -m pip install --quiet --disable-pip-version-check 'cryptography>=42'
+              "$py" -m pip install --quiet --disable-pip-version-check 'cryptography>=46'
             else
-              "$py" -m pip install --quiet --disable-pip-version-check --break-system-packages 'cryptography>=42'
+              "$py" -m pip install --quiet --disable-pip-version-check --break-system-packages 'cryptography>=46'
             fi
           fi
           "$py" "$tool" install-key --quiet
@@ -203,7 +203,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - run: python3 -m pip install 'PyYAML>=6.0'
+      - run: python3 -m pip install 'PyYAML>=6.0' 'cryptography>=46'
       - name: Conflict markers, parseability and identifier collisions
         run: |
           if [ -n "$DIFF_BASE" ]; then
@@ -258,13 +258,13 @@ jobs:
           tool="$RUNNER_TEMP/cavault.py"
           git show "HEAD:tools/vault/vaultctl.py" > "$tool"
           py=python3
-          if ! "$py" -c 'import cryptography' >/dev/null 2>&1; then
+          if ! "$py" -c 'from cryptography.hazmat.primitives.ciphers.aead import AESSIV; c=AESSIV(bytes(64)); assert c.decrypt(c.encrypt(b"", None), None) == b""' >/dev/null 2>&1; then
             venv="$RUNNER_TEMP/cavault-venv"
             if "$py" -m venv "$venv" >/dev/null 2>&1; then
               py="$venv/bin/python"
-              "$py" -m pip install --quiet --disable-pip-version-check 'cryptography>=42'
+              "$py" -m pip install --quiet --disable-pip-version-check 'cryptography>=46'
             else
-              "$py" -m pip install --quiet --disable-pip-version-check --break-system-packages 'cryptography>=42'
+              "$py" -m pip install --quiet --disable-pip-version-check --break-system-packages 'cryptography>=46'
             fi
           fi
           "$py" "$tool" install-key --quiet
@@ -383,13 +383,13 @@ jobs:
           tool="$RUNNER_TEMP/cavault.py"
           git show "HEAD:tools/vault/vaultctl.py" > "$tool"
           py=python3
-          if ! "$py" -c 'import cryptography' >/dev/null 2>&1; then
+          if ! "$py" -c 'from cryptography.hazmat.primitives.ciphers.aead import AESSIV; c=AESSIV(bytes(64)); assert c.decrypt(c.encrypt(b"", None), None) == b""' >/dev/null 2>&1; then
             venv="$RUNNER_TEMP/cavault-venv"
             if "$py" -m venv "$venv" >/dev/null 2>&1; then
               py="$venv/bin/python"
-              "$py" -m pip install --quiet --disable-pip-version-check 'cryptography>=42'
+              "$py" -m pip install --quiet --disable-pip-version-check 'cryptography>=46'
             else
-              "$py" -m pip install --quiet --disable-pip-version-check --break-system-packages 'cryptography>=42'
+              "$py" -m pip install --quiet --disable-pip-version-check --break-system-packages 'cryptography>=46'
             fi
           fi
           "$py" "$tool" install-key --quiet
@@ -426,7 +426,7 @@ jobs:
             requirements-agent.txt
 
       - name: Install dependencies
-        run: python3 -m pip install 'PyYAML>=6.0'
+        run: python3 -m pip install 'PyYAML>=6.0' 'cryptography>=46'
 
       # The corpus tools parse YAML through libyaml (orchestration/fast_yaml.py); without
       # it they stay correct but fall back to the pure parser, ~10x slower.
@@ -525,13 +525,13 @@ jobs:
           tool="$RUNNER_TEMP/cavault.py"
           git show "HEAD:tools/vault/vaultctl.py" > "$tool"
           py=python3
-          if ! "$py" -c 'import cryptography' >/dev/null 2>&1; then
+          if ! "$py" -c 'from cryptography.hazmat.primitives.ciphers.aead import AESSIV; c=AESSIV(bytes(64)); assert c.decrypt(c.encrypt(b"", None), None) == b""' >/dev/null 2>&1; then
             venv="$RUNNER_TEMP/cavault-venv"
             if "$py" -m venv "$venv" >/dev/null 2>&1; then
               py="$venv/bin/python"
-              "$py" -m pip install --quiet --disable-pip-version-check 'cryptography>=42'
+              "$py" -m pip install --quiet --disable-pip-version-check 'cryptography>=46'
             else
-              "$py" -m pip install --quiet --disable-pip-version-check --break-system-packages 'cryptography>=42'
+              "$py" -m pip install --quiet --disable-pip-version-check --break-system-packages 'cryptography>=46'
             fi
           fi
           "$py" "$tool" install-key --quiet
@@ -768,13 +768,13 @@ jobs:
           tool="$RUNNER_TEMP/cavault.py"
           git show "HEAD:tools/vault/vaultctl.py" > "$tool"
           py=python3
-          if ! "$py" -c 'import cryptography' >/dev/null 2>&1; then
+          if ! "$py" -c 'from cryptography.hazmat.primitives.ciphers.aead import AESSIV; c=AESSIV(bytes(64)); assert c.decrypt(c.encrypt(b"", None), None) == b""' >/dev/null 2>&1; then
             venv="$RUNNER_TEMP/cavault-venv"
             if "$py" -m venv "$venv" >/dev/null 2>&1; then
               py="$venv/bin/python"
-              "$py" -m pip install --quiet --disable-pip-version-check 'cryptography>=42'
+              "$py" -m pip install --quiet --disable-pip-version-check 'cryptography>=46'
             else
-              "$py" -m pip install --quiet --disable-pip-version-check --break-system-packages 'cryptography>=42'
+              "$py" -m pip install --quiet --disable-pip-version-check --break-system-packages 'cryptography>=46'
             fi
           fi
           "$py" "$tool" install-key --quiet
