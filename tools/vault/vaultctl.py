@@ -122,9 +122,24 @@ _CIPHER = None
 def _cipher():
     global _CIPHER
     if _CIPHER is None:
-        from cryptography.hazmat.primitives.ciphers.aead import AESSIV
-
-        _CIPHER = AESSIV(_derive_key())
+        try:
+            from cryptography.hazmat.primitives.ciphers.aead import AESSIV
+        except ImportError as exc:
+            raise VaultError("vault: install cryptography>=46 with AES-SIV support") from exc
+        try:
+            candidate = AESSIV(_derive_key())
+            # Older OpenSSL backends can import AESSIV yet reject empty data.
+            # Never replace authentication with an empty-file length shortcut.
+            if candidate.decrypt(candidate.encrypt(b"", None), None) != b"":
+                raise ValueError("empty roundtrip")
+        except VaultError:
+            raise
+        except Exception as exc:
+            raise VaultError(
+                "vault: AES-SIV empty payload support is unavailable; install a "
+                "cryptography>=46 wheel with OpenSSL >=3.5"
+            ) from exc
+        _CIPHER = candidate
     return _CIPHER
 
 
@@ -143,6 +158,8 @@ def decrypt(data: bytes) -> bytes:
         return data
     try:
         return _cipher().decrypt(data[len(MAGIC) :], [SALT + b"|" + INFO])
+    except VaultError:
+        raise
     except Exception as exc:  # noqa: BLE001 - never leak ciphertext or key
         raise VaultError("vault: authentication failed (wrong KEY or tampered file)") from exc
 
