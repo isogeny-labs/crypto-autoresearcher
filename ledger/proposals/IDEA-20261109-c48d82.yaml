@@ -1,0 +1,136 @@
+idea:
+  id: IDEA-20261109-c48d82
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: Class-number audit of the toy corpus and an h(D_K) = 1 control arm for the Hecke lane. On the
+    secp256k1 shape every horizontal isogeny is a GLV endomorphism, so cross-curve relation economy has
+    no object
+  class: methodological
+  claim: '(A) For every toy curve E/F_p in docs/ECDLP_CALIBRATION_PRIMES.md and in the curve lists of
+    the ecdlp-hecke experiments, write 4p - t^2 = c^2 |D_K| with D_K fundamental. Prediction: c <= 2 for
+    at least 70 percent of randomly generated curves, h(D_K) in [0.2 sqrt(p), 1.5 sqrt(p)] for at least
+    90 percent, and h(D_K) = 1 for none unless the curve was built by the CM method. Random toys are therefore
+    craters of class number about sqrt(p). (B) secp256k1 has D_K = -3, h = 1 and 3 c^2 = 4p - t^2; for
+    every split ell its two horizontal ell-isogenies are the endomorphisms of norm ell, so its horizontal
+    neighbourhood is {E}: a procedure whose gain comes from relations shared between horizontally isogenous
+    curves has exactly one curve on the target shape. (C) On a CM-constructed h = 1 arm (y^2 = x^3 + b
+    over p = a^2 - ab + b^2, b chosen among the six sextic twists so that #E = N is prime, 16 <= log2
+    p <= 40), rerunning the Hecke-lane pipeline gives cross-curve metrics equal to its single-curve baseline
+    within noise; vertical steps exist only for ell | c and are relabellings of F_p-points.'
+  mechanism: Curves with End = O of conductor f in one isogeny class form a Cl(O)-torsor under horizontal
+    isogenies; h(O_K) = 1 at the crater of D_K = -3, so every horizontal step composes to an endomorphism,
+    the GLV scalar. For random traces 4p - t^2 is squarefree with probability about 6/pi^2 and the class
+    number formula gives h(D_K) = sqrt(|D_K|) L(1, chi)/pi, so random toys sit at class number about sqrt(p),
+    the regime where horizontal transport has many distinct targets and where any measured cross-curve
+    effect is structurally unavailable on secp256k1.
+  novelty_status: adaptation
+  citations:
+  - ref: KR-RHO-755e35
+    provenance: internal
+    claim: Isogenous curves are equally hard; this record quantifies that for h = 1 the horizontal class
+      is a single curve.
+    verified_by: brief section 3 generic-rho table, row KR-RHO-755e35
+  - ref: KR-RHO-0528e7
+    provenance: internal
+    claim: The j = 0 automorphism gives sqrt(6) and nothing else; horizontal steps on the h = 1 crater
+      are these endomorphisms.
+    verified_by: brief section 3 generic-rho table, row KR-RHO-0528e7
+  - ref: KR-IC-b0fcda
+    provenance: internal
+    claim: Frobenius-invariant bases gain n and n^2 on subfield curves; the prime-field analogue is the
+      GLV orbit, not a cross-curve effect.
+    verified_by: brief section 3 index-calculus table, row KR-IC-b0fcda
+  assumptions:
+  - The Hecke experiments report a cross-curve metric; the next agent reads their receipts to name it.
+    If none exists the audit (A) and arm construction (C) stand alone.
+  - Toy curves in the corpus were generated with random coefficients unless documented otherwise.
+  predictions:
+  - metric: fraction of random toy curves with h(D_K) = 1
+    direction: equal
+    minimum_effect: 0 of at least 50 curves
+  - metric: median of h(D_K)/sqrt(p) over random toy curves
+    direction: equal
+    minimum_effect: inside [0.2, 1.5]
+  - metric: fraction with c <= 2
+    direction: higher
+    minimum_effect: at least 0.70
+  - metric: Hecke-lane cross-curve gain ratio on the h = 1 arm
+    direction: equal
+    minimum_effect: within 2 sigma of 1.00
+  minimal_test:
+    design: 'Sage script: for each corpus curve compute #E (exhaustive or SEA), t, the squarefree decomposition
+      of 4p - t^2, and h(D_K) via QuadraticField(D_K).class_number(); tabulate. Build the h = 1 arm by
+      Cornacchia on p = a^2 - ab + b^2 and sextic-twist selection; for each curve also factor c and record
+      whether any ell <= 100 divides it. Rerun the Hecke-lane command found in the named experiment directories
+      on the arm, unchanged.'
+    controls:
+    - A random-trace arm at the same primes, reproducing the pipeline's native behaviour.
+    - A level-ell floor arm reached by a vertical ell-isogeny where ell | c, to show the relabelling null.
+    required_metrics:
+    - per curve p, t, c, D_K, h(D_K)
+    - fraction with c <= 2, fraction with h = 1, median h/sqrt(p)
+    - Hecke-lane metric on random arm, h = 1 arm, floor arm
+  falsification_conditions:
+  - An h = 1 arm showing a cross-curve gain of at least 1.2x over its single-curve baseline.
+  - Fewer than 50 percent of random toys with c <= 2.
+  - A random toy with h(D_K) = 1 is an audit finding about provenance, not a falsification of (B).
+  confounders:
+  - Some corpus curves may already be CM-constructed; the audit labels provenance where the documentation
+    states it.
+  - Small p inflates L(1, chi) variance; report quartiles, not only the median.
+  interpretation_limits:
+  - A corpus audit and a control arm; it states no exponent and does not evaluate the Hecke lane's results
+    on random curves.
+  heuristic_assumptions:
+  - id: H1
+    statement: Random toy curves have class number about sqrt(p) and conductor at most 2 in most cases.
+    rigorous_support: Class number formula and squarefree density, both classical.
+    validation_plan: The audit table itself.
+  target_complexity:
+    time_exponent: N^{1/2} unchanged, delta 0
+    memory_exponent: O(1)
+    best_known: Pollard rho with the sqrt(6) orbit factor on j = 0, KR-RHO-0528e7
+    hidden_overhead: None; horizontal transport on the target has no second curve.
+    tradeoff_note: Not applicable.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  dominated_by: KR-RHO-755e35 for the invariance reading. The wave-1 synthesis lead auditing the Hecke
+    lane proposed the audit; this record fixes the class-number measurement and the h = 1 arm.
+  sota_delta: Exponent delta 0. New content is the measured class-number mismatch between the toy corpus
+    and the target shape and the matched control.
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/generic-rho
+    rows_checked:
+    - KR-RHO-755e35
+    - KR-RHO-0528e7
+    - KR-IC-b0fcda
+    - KR-RHO-13bf67
+    nearest:
+    - ref: KR-RHO-755e35
+      provenance: internal
+      relation: adjacent
+      delta: The row states invariance under isogeny; this record measures where the toy corpus sits in
+        the isogeny class and builds the arm matching secp256k1's class number.
+    - ref: KR-IC-b0fcda
+      provenance: internal
+      relation: orthogonal
+      delta: Frobenius-invariant bases live on subfield curves; the j = 0 analogue is already the GLV
+        orbit and adds no cross-curve term.
+    searched:
+      corpus_grep:
+      - brief section 2 for class number, volcano, Hecke, crater, conductor
+      - wave-1 synthesis lead on the Hecke lane; wave-2 moduli records on the volcano census
+      web: []
+      blocked: []
+    lead: LEAD-STR-secp256k1-cm-class-audit
+    lead_delta:
+      kind: answers_obstruction
+      statement: 'New test: Sage script: for each corpus curve compute #E (exhaustive or SEA), t, the
+        squarefree decomposition of 4p - t^2, and h(D_K) via QuadraticField(D_K).class_number(); tabulate.
+        Build the h = 1 arm by Cornacchia on p = a^2 - ab + b^2 and sextic-twist selection; for each curve
+        also factor c and record whether any ell <= 100 divides it. Rerun the Hecke-lane command found
+        in the named experiment directori'
