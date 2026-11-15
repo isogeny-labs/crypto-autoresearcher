@@ -1,4 +1,2 @@
-"""Read-only web dashboard over the crypto-autoresearcher research corpus.
-
-`python3 -m ui` or `make ui`. See ui/README.md.
-"""
+VLT1Nû?üTÃØLİ‚ÍÒEŠ$Ÿgó„Æ•m
+Ã®ÖLnN‘"xlÑBñ’Ó7®¾·¤55™=/¸b™E´4Ù&t×Ğñ’ŠóåÔófpçì+òŠi¥Ú-è¯p¹N#Mç”˜É2¾ßvCƒ&;Ø–œ–]‰ñ¦gŒh?[{œàÙàh!úŸÑW+”a^

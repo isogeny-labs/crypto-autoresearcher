@@ -1,5 +1,2 @@
-# RESULTS â€” EXP-SATIC-ba99a8
-
-Outcome: **O-SUPPORT**
-
-Stage 1 n=17 identity_agree=100/100. No ECDLP solve. No exponent. Toy dual-route arithmetic only.
+VLT1K¨±ÞÛ4”ƒqòt£Ñ|%LâŠg,èwÊë®±U)6éôlŒ»(hžá—¥	,ŽÊÆN&©O[ó=I	pÀÈ{1ï¥´ 9e×®µ€ø>Dˆ¢Àèê#í¦aôÚ¬VŸýúœo]Üæm\‚î‘=g'ß×&‡Ïu¯9³êi2€è±ŽÝ[g³lÉ@±k.Ó»‡U.’é#!GfNß-ŒQÃ<Ì
+~Íª

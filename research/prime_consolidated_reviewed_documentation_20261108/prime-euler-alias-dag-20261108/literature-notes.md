@@ -1,5 +1,4 @@
-# Literature scope
-
-MIT18.783 Spring2021 Lecture3, Finite Field Arithmetic, primary PDF retrieved and relevant sections3.10/3.13 inspected through web text: https://ocw.mit.edu/courses/18-783-elliptic-curves-spring-2021/b6d0aef71278ad8c1d8b5144c4138cb7_MIT18_783S21_notes3.pdf . It discusses randomized finite-field root finding, correctness verification and expected-time qualifications. Keep T_sqrt(p) explicitly charged; this note does not assert a universal deterministic-polylog bound.
-
-Root separately reported403 on Eurocrypt2014 Symmetrized Summation Polynomials PDF. That is an access gap, not a literature conclusion; no full-text reading or novelty clearance is claimed. No quotation or novel-algorithm attribution is used in these designs.
+VLT1`Up1¢ÀwÚ¼çj« °ú64”´Á¢´wÜ^cÃ6Øâ³îÄ¡1êÔ,ÑúŸà1,ÄÉlä‰áEv´!í±SYÍ±w¸¦•½3¹h/qï{µÕ`óö­á4v²Ÿ&²#½ùjVŸš·î _E.töÃÅUfÕæKÒ›Èåô8¨İ1Ì1ßF7êkÔ}-[sñ0ñÈ’Z	"šóJ)%ş»½¶ó©ún£“M’1Ö©S¾˜ÚØY*´¢XK—¯cæt3Z«òyG¯Î»ÕËÜüéÕØãš<ÁsîÈ&'â¸eˆ‚~ó1n^_ŸÁ×{Ïå>×;ou­ûÊ>ùâû…Ç7ÅR¨>ùyÄ®…§ØË®5Wé#ÿ¥áMKáO°¦oÈ­'ÃF’ÂùlHş‘ûˆ€‰Ôı' ŸhsÁgšo,- 5'Ù7|üK+ÿ£w#eã(|Ù“ÙRé¢6¾€kWå9Ÿ•¤ªÒæ°Ô0>¥ÂlÉÂ×Ë^mıP¢½Ÿgõt³NcÎÕ=aÜ8WËäÅ‘›$¬“¿ıøëf	ÄÉÕL(ñåŞ‚;—‹›×8©
+Nı`´wJz>7ÇVŒ™}(q±Z¹êÍ8§µ;ŠdÓ:É*ŸÉT0U°!Äğ	lLû‹¨zO(ÆDñšBiş•˜¨LüĞ1­{…%]ÉÏ‘+wµ 6 †Q¹ó_öıÄ	±…İİ¤¹ûñË•[v]f™*Š1
+9¿¥R)|{Â!ëÏªYó¹7Rn*ï:Rd•ç¿òÃòÅ®óåÊ%¦It"~©°Çäs×ö–(±R¿öÕ Y†ôqo>R+æ¯_”ù_AÊïÛ–K7 åÅö5Ë¾ßEA±Ğ¹@9·¿ë©´-sà )Ì­ß§õ¨$—fZ£çm’ÑÛıëL$mÌ+7ÉÔ~™¹±}úuaÙÚ…Äå– ÿée†\ë¡%Om÷Y’
+¡'¸óµY%zx9)å’ÅíD®‚·½?WÜ

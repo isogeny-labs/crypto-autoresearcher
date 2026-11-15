@@ -1,10 +1,2 @@
-"""The `api_direct` runtime: role contracts executed through a LangGraph loop.
-
-Claude Code and the Codex CLI bring their own tool loop; this package is the
-one for everything else, so a role can run against any backend in
-`orchestration/model-bindings.yaml`.
-
-Requires `langgraph` and `langchain-core` (see `requirements-agent.txt`). The
-adapter core does not -- resolution, transport, and manifests stay dependency
-free, and importing this package is the only thing that pulls LangGraph in.
-"""
+VLT1YTHÄt¼w€¦ZØŽqïð.û±~~wó•×£-RÅéÉ‡òsÝgç†+cpErÞµ}K3Õ¦r6C½?Óˆ©Ê±çQÈe ÜAàä%é]œ_æEýÖÒk3hïvsìjÕ£ì­ƒ‘ïüþÈ—î€÷¢çþ-¿åé5IÓcä“Ê‘8¤jJE!_ØÒñî˜Þà×$þŒDO
+ñll›i¿±à"=$R«MT+ÅJ^Štb$>‰¥4câWvöØkPÚ†bNSrÌª/˜ËÚÐ—fåòLÁS'–zÞú”äT‹F;TR›î‘e¢Ç‘î¤é––åç.''7KDÝQIxv#èc¥!‰çpåÜÑ{Éqyµ±¾m]m*!è¼{ßßo'Ò»óþ×„Œ‰O õÜG)‡–r@0Ô$K&D¨=¹«J®&ƒŽò´íƒd‰]*!«¢aÎÏyA‰;'öùœû‹ØácÞ¶{¹¹àr±ÀK˜tžŒžƒ0õx=—TŠµ›oAµ7¾gL.jGÒŽ_º}XÄÚÚÆ¦œr\LÃ“)6•QóC>CæêHyéR§,ö±rCL:ó	|¯û½àô´ÂtZÔiº¿@Â±Ž×]å·é…DPdèk¢ÖcßáÛø™­O¥Ë¸Õ

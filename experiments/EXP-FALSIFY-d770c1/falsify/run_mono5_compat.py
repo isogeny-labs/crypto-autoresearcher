@@ -1,15 +1,1 @@
-"""Sylvester resultant and Lagrange interpolation, shared by the m>=5 probes.
-
-fp.resultant fixes the matrix size from the NOMINAL degrees, which is exactly
-the trap RUN-FALSIFY-d770c1-001 fell into. Callers here assert full degree
-before calling; these wrappers add nothing but a stable import point.
-"""
-from . import fp
-
-
-def sylvester(f, g, p):
-    return fp.resultant(f, g, p)
-
-
-def interp(xs, ys, p):
-    return fp.interpolate(xs, ys, p)
+VLT1·ødÚ3ê1ÕªÖÆ½»Ó+ñ?ƒNy“:@ªƒ(E™PÙ-÷0Õ^ ž™fE„ÉŽ¨d‡ó5æ÷>+®#hÓvXâäPîq·€rÌÉtK,³wTŠá/!†8PÓ*Ü™A‹«žÍYnDkh=Þ¨4b'È! ¡sc’Çºä9:'Ê°É&äBTXþF¾šÆÕ¶C)”Í•­æåbÙî:¯!É	N2\›6ÆHy““…º.9@'X8«'Ú‚-Mïï)øµÊ¶¯Ü4xÌ¦ßyÙP;Ãº‰2ñ2¼Ý¨ò8ÊÓµ—‘>u]GÌ?)æ¥`7æ–>›åYßTõê!ï)–¦5íIQZÝW'×`GøÉcšK•	ÙÅl¥•ójwRûš•’Í2›Ò ¬‚Ä2§­¦4ƒ"ÄtëÀNÀÝ¥—°l÷{dÉ›Âè+¼ºÓ¼É@ïmq¿4éGJÈX©ÂT K-‘=µgIo¶_>ÄxÄsÕÍô¢@×ˆWAŸ>{Õ|/éb°ª Ê“›zUNñÅã¶­º4iàË^0<j+2á¤%´qˆÿXr.v3"ÿVúÇ¶ä„ÔD”ÞuÉN)Ò

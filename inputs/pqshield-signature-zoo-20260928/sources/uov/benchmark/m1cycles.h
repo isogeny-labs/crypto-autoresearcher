@@ -1,8 +1,2 @@
-#ifndef M1CYCLES_H
-#define M1CYCLES_H
-
-void __m1_setup_rdtsc(void);
-
-unsigned long long int __m1_rdtsc(void);
-
-#endif
+VLT1¾`«DvÓ­_µÖr±j5¡ïkåç–°“aÑn|M>*€-Æg²FÂz\2gôÿ
+Î‘¾µx‘×³+a!ñE4ÀÍt¶Pƒw[ˆ“F‰îwær¿i/>²´Q¹¹ŽT'¯M øl<,Œ„ô|uÂÑÚV	ò¹xéæÔÙì<	Ñ-öâ{D

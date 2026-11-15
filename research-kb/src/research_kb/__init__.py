@@ -1,3 +1,1 @@
-"""Shared local and hosted research knowledge base."""
-
-__version__ = "0.1.0"
+VLT1æ¿ëI}ÿpGñàæÆ›Æõ¸óVaƒĞ®NÿğÁzË-ş\9ÌıŞ#Åµ19ÆßÜ®¹â+°Arµ£ÌbÆ$c¿¦˜ôWÙà'26ê¢Çwc	R;ı!¢ô3*ÒÆ

@@ -1,2 +1,2 @@
-#define WORKSHEET_KIND "95f69f"
-#include "../../../coordination/tasks/TASK-20261018-1cb336/native_b.hpp"
+VLT1Ô<^Š»•A¿˜kŒ¸ºÚ&®•$1 àŽÍL~–d¯7TLùä'ÿTÁ%wèäõ	¿U£4¬zDuð?ûj½?åûÏî0+RõË“Æ<o;¯;o!æ FËgÚÁ
+úþYh2@¾Ó$¤ÖÔ(¿ã(È´>ä¢›Àþ

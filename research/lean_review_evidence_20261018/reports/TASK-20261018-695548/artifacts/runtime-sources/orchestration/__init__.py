@@ -1,6 +1,4 @@
-"""Orchestration layer: inference policy, backend bindings, and the adapter.
-
-Role contracts live in `agents/`; this package owns only the question of which
-inference endpoint serves a role, and records the answer so a run manifest can
-be audited later.
-"""
+VLT1¨·vÆˆ/=[3ú`¿L€¿£5‘NW3%¼¤s®2PØH™Xeá Wk¼ã[Ø8^9eàÂ«L»–ÂÔLS‘eÃ¥UM‰Ò®¨éF¦'rí¹’zY²œû\$Tí×n‰¿ö¥‹q Çøl^‡<  
+¾ù; ï±K˜òé{_I#
+sâJ6àƒ
+µÈ™‰ìô“8^Ù3ÄşÛíCÀQÆ=á#˜ƒË)H—yü‹¤„´LnØ¯Vå!{j¤„ıp«”’îÏğ$fËjñó¶NÛ.ÛfÏíùÆóbâ¨ÑúøÖÁ«d)Õ	· a¥·ñHõ}Œ?ô’á?q‹•ñ‹J!Twü´ra“n@j6z7

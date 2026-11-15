@@ -1,13 +1,2 @@
-/*
- *  SPDX-License-Identifier: MIT
- */
-
-#ifndef RANDOMNESS_H
-#define RANDOMNESS_H
-
-#include <stddef.h>
-#include <stdint.h>
-
-int rand_bytes(uint8_t* dst, size_t num_bytes);
-
-#endif
+VLT1Fü¯ìÓ•	LŸµ^ĞSX¹ş?Nî• òÓÕx«³ÍŠí¥MRıwQt/sc&-GY³­!ÂÀ˜®r.…î¢ihÊÖñe<wF‚­=Eõ¬æù8 I!h{?İå€«J£*qy§LÏ	&	yáY]:
+Ø&Í`uÖòúL®Élß©,Ê‡qN&2ÓõR=	.îOÍdZZjè>X’œe=c‚ÓJó/ĞÊB‹,ßƒ7ó³Ii¶/

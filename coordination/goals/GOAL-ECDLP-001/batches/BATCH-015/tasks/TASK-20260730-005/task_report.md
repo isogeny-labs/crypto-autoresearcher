@@ -1,5 +1,1 @@
-# TASK-20260730-005 â€” completion report
-
-Frozen EXP-STR-004 v3 discharging RT-20260730-001 B-1 remainder by generalizing
-`prediction_failed` to F-1 on either arm with F-4 silent. No commit by this card.
-Archived by TASK-20260730-006.
+VLT1Uñ=’ËkëOÒG’s‰õÏJ¤š(W‡»ëÀ†²®]•ºÕ`µhhÛc¢u¡mWóâ±\P;iØñ.¡ÆZggy&8…çíêô·„^–¶niÀŠi	Œ•k!ùæ@àã9<XVì4Ö5‘Õ™€a™¶}i±zwìÂ7#Á¯§+ğöó25İm;*?·üøñ—FÊôwéĞöÂ…¸G?ÛµXkIára*/¹D…„êØ«‹€ë¹’`-+ilì2[R¼FĞrš§˜²T\´›ÍŞåÛ}¤nÑab¡wŠøÆaIÛ4oÌ™>„ß5ñé)Cª¨›jŞä¸›Ç

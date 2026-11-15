@@ -1,3 +1,1 @@
-\\ 11-cycle level check of the second level-2 image; expected ord[l_11] = 82152 at conductor 45641*82153
-MOD = x^163+x^7+x^6+x^3+1; IN = "down163c.txt"; S = 11; CAP = 200000;
-read("cyc_gen.gp");
+VLT1a ú­¤˜kÑ·Âð-Ü„|ÍÖäùÃ–“å£Ÿ c`2µ×1üüÅžÁr¹eOX°4ûXl9ši'OówQ×ÃJ|`æD×y+˜òÌD|ë#LâÀÚ÷{ì~ð²l–«¹éá±tDVÙ‹·ªçÊ€,·0Q9ðrµÙƒ0„5–énÌ}Ç±W cÀ•Ï@†AŽP®**j2§Ãvó>‰fmº .ê‚œ‡Æ¹HšÑØ,»ùôÊíPƒ¿Œ;ÆjYî—Zã ˆÉ¨#3q¾ž`

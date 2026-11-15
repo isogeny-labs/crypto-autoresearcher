@@ -1,1 +1,1 @@
-theorem rootTrue : True := by trivial
+VLT1Ä—±øñÛ²Øº˜Sà‹«3‚YÉZf¹Î±(ŸÛÞ‡ÓÕ÷=ªZ.Ý•³-³¥¯6l²6æ

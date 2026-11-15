@@ -1,7 +1,1 @@
-all: clean snova
-
-clean:
-	rm -rf ref opt mem avx2
-
-snova:
-	python makesnova.py
+VLT1aˇwïz8’)±êc{ÏŒ~PÃ¨B…_©ÕQ!M<ËèÏuˆé?:dõ[è∂É©@˙’Î©∂ûÌ“˘ëa~i¥ôVH,÷l*:ü^∏¿{R]2¯1ﬁ” Ø]‹H

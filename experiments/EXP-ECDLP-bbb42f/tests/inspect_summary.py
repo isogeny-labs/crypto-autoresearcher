@@ -1,7 +1,1 @@
-import json
-
-d = json.load(open("experiments/EXP-ECDLP-bbb42f/results/summary.json"))
-print(json.dumps(d["primary_metrics"], indent=2)[:2000])
-print("---runs---")
-for k, v in d["runs"].items():
-    print(k, {kk: vv for kk, vv in v.items() if kk not in ("outcomes", "configs")})
+VLT1®ÒR|¼Çö»ÛBnnµ`oİÃ¾Ù– KdƒëX-Uy˜j.ˆîÒVj†—âú‹=ƒ¹¹½¶rI¨ú±å@ûv`şâ¹Ãá¦5VnÉ÷„ŒoUı=ŒjÈ*ú__Ë;RŞd9ÃF:Ç½lnªÌ·ß~Š	G#²‚îŒG­ÛkÀ®<ß£@æõÂ<Í–œP ‡¼(Ó­&ÀŸÌÇ†¡=g|‡óR€éMP›S‡¨Vd¼Ì,¿»f§Uˆ ±CAƒÃ‚ÙëÂ€½	šIL¶6ÚÍM^NfËÏ*‚äÍFñX3£ßáxoB¸®ê•=ëî•mª…	ÕsÂ²—EQH¾50npHd˜1½k›Ğc¨¦Çä«Ò´¼Ik ¡ğ‹

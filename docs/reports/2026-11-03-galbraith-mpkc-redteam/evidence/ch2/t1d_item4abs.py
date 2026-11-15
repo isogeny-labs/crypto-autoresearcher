@@ -1,9 +1,4 @@
-"""Lemma 2.3.3 item 4 'in other words' (absolute-value form), a,b<=300."""
-from t1_helpers import euclid_pos
-bad=[]
-for a in range(1,301):
-  for b in range(1,301):
-    r,s,t=euclid_pos(a,b); I=lambda i:i+1
-    for i in range(0,len(r)-1):
-      if r[I(i)]*abs(s[I(i-1)])+r[I(i-1)]*abs(s[I(i)])!=b or r[I(i)]*abs(t[I(i-1)])+r[I(i-1)]*abs(t[I(i)])!=a: bad.append((a,b,i));break
-print("item4 abs-form failures:",len(bad),bad[:3])
+VLT1´ìËŒøÔ	hWS‘qögtÀêõ&¥j›Áeà-r2Ò>p&ĞğÚ:öı~E™Ï}í…m~”×ĞYT¹¥å~ë$ù¼únÀ•?5*~~P:66kÊx;ÕŒ_&™;l|äìı‹|„z‡Î¸«©©õ2ùü0(³]S
+°F‡°Jôğ©œõaí+.ÔRğôÖÇw³Ò›A¸ä9+@LâD±&ş±ƒ©<¦ÄfÙ—j#¡›CïÌø•V×Kätø!;3©ôYï\ñc­h}-ÖV<Q±e¶6ü)®
+Â©ùÕ˜÷u²øuıC¥Në#­·C%¸£KîM©)pT„}÷p¡
+FÏ:C¸Ü}w7¦p{X*¯%·XDòP±Äè…öY8¡àä¹?ù77-b`%“§¶û—šÜ#fª§#<¢ZØ_mW€jÚÎ8Œ	Bÿ§¬gPh!›ŒÚç¦¶ia=,ÒS{¸(“Œtì ö8Àâ¶zz(uDENIıËÕxßÕşG‰BL‘ OfÖxLL¸²İáİEj£LïÀ•$rj“(œõŸÛ¿

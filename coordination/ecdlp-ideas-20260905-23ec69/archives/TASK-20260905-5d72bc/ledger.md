@@ -1,7 +1,4 @@
-Ledger archive TASK-20260905-5d72bc
-
-Archives the Red Team report RT-20260905-ac087e (TASK-20260905-ac087e), the Coordinator
-ranking decision DEC-20260905-b3d10c and the BATCH-23ec69 batch report. The decision ranks the
-eleven proposals of BATCH-23ec69 and returns eight for additive revision with named repairs;
-it approves no experiment, creates no hypothesis, changes no status and certifies no novelty.
-The receipt in dispatch_queue.json binds commit, parent and every declared path by sha256.
+VLT1—R›U\¬ÕHá,§ªˆ6R=68°|y»Ë,o›€Òu¿Ù÷Ìke¥˜å&¹b$«»ñ`Ww¤¯?Ó¸öä\SiÄã–ŒeñôeÅ<ÈÖM¿µ”–W\"f²â‰›­Ğ¬J03÷½vuÛQ„2óÃ¡]BÏˆ‡£st‚a÷Š+CœÁôt#sGÀÒ:(“B™ĞD{ıõ9ŠVè¥0{ò5«ÚHÈO‰mÏvhœ½|q'Ubƒ^)wpp¹òÌÜ ìÈPÌ2fÒ–â}[p~ÛX¡¤(ht .•RíÒhß¥´(U‚lƒÑŒÛm¹ÌM:WJ
+‚_iíAÔÕ«È§KŞÕ-Ù0ş6šÑÙ×†}d=u·÷µšØ¶ÎÄV½X¹ÕT…}]?ì«M‡(c£ª·3««£¸õoCPJvp¥Z´Êcé›ëÔÉÎ«Ì•á)‹ŸğKp—Š­ş}ºÙMU§+'¢Í÷z
+Í+ò´‹Ò²uÙ§Q­C¤æzŠÙôhojº7jAÔ¼¸n˜²EÄßy?”rqnY/½Åf…ßH¹“j³e„rkBºœ1¨Oˆğ åu>×àg_4œçG£ ÃÓé˜#ê`ÆW(Ø”Ûwõ9~g¹Ò»xw]ÚQn5Ì.2H74î"æÔ
+4Ãån=j

@@ -1,3 +1,1 @@
-namespace Control
-def P : Prop := True
-end Control
+VLT16wgjþ{Ó·~(’,Ù¾ÐÁ¦¬Ôp<ÀÐ!çFT—Ômo¥áCÏ&Êd“F\ÐöëT2xõFO]sÉÌ4À

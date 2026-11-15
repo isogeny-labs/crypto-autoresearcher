@@ -1,24 +1,5 @@
-# RESULTS â€” EXP-BINSTD-16ee30
-
-Hypothesis: H-BINSTD-7cbce1
-Approved by: DEC-20261003-928974
-Predecessor: EXP-BINSTD-5b2fd0 / EV-BINSTD-a99d47
-Outcome: **O-INCONCLUSIVE**
-
-Stage-1 cells: [(17, 3), (17, 4)]
-
-Admission floors: >=3 distinct dimVV, >=2 distinct N_var
-Spearman band (pre-registered; read only after floors): >= 0.7
-
-## Panels
-
-- `n17_l3`: floors_met=False, rho=nan, CI95=[nan, nan], distinct_dimVV=2, distinct_Nvar=4, in_band=False, twin_fail=False, band_reading_authorized=False
-- `n17_l4`: floors_met=True, rho=-0.24128950563237894, CI95=[-0.44095855184409843, -0.17773692341028952], distinct_dimVV=3, distinct_Nvar=2, in_band=False, twin_fail=False, band_reading_authorized=True
-
-## Claims
-
-- break: false
-- exponent_move: false
-- amazon_bedrock: NOT_USED
-- No n>=131 transfer.
-- Not a re-run of EXP-BINSTD-5b2fd0 v1 catalog.
+VLT10/G‰Ÿ}<bP+ ž1F‹²¶l`¸£¼×7u–fQœd£ê~´XÓA…õ«qHÜ2¹Y½n®ofðÛJa£Eå3ßã+Ý3öANå¯)[+bSsã
+Uv7uSGw1õpBg2`½Ñ1Èoêá-à	EŽó–š
+ëóT”=»ÌÀòþzšsFÛn²ð5Š‰äjÉü±?&¤özõ-N_7êŸæÃn`©ÇäVHîçòTÚßÉ3×¶xî}ŽÞ0<Ó»ÆÈ‡³a3—†™M£´ ¡Ô£è™«ÂÁ}eÇ½àHŒÈ}/šÉe"–º{w„=ìNÆÓO”Æs©™ÆÁ¥!8¥—¾¿^ôÞãàpô´VìÌr#þ¤$RÖ{²¢.š}å¬{IâÖˆ!—«†Õ®hNŽo1-?ïìYr¿Îø.Vixô2¥_Ä!‚ÍÇ6à%[;QI;øãJ.²ùŽ-½Ÿï&Þ™‚a•Êv9=ÆAô*ù¢[]‹¨8¿—À'Øu4ãÖNÞ]±õ)Øì­|Ä¸JnËm)aáÑV*râ}J+ü€RFGÞF4¥yñ\p
+ëŽ!LÐDkÇ”ˆ†”.Já@žÄË,Yóò«Zœ"àºHe¬í…^ŠwSpÔkÝN;«x”þ’Ôå´Á(ññb5?!#|ÈœèC²zû	‘'yE§AÀÊIÛ	BU,âj(³;((5…é?¼‰¥¿ê1†‘P£Õ0.éx9Ïxó¡0sÔ9ûB±SSI…o÷Åœg£upïz‡Ú°ˆJæ~àyz8e»‚þE?ë$c%ZÃç’nëVþ*€ßR
+ãý"âoèøQP(äíÈFz¿p¨ÿˆ#$¿±:ÍŸÍŽ@“›…þÒ¤Zìˆ¡,€­›Ïå¡Ðª@\Š®Ò¡œSåÌ’?¬þµµÜŒdvœë›b}Êèf©??€F²ˆþSÔÑd½3Wìó~±Ýø™³‹MåÈw	%¢Y‚ôÉ¿ÆÒHW°Rö‘Úûí ÿ¶v wŒÌØÛÝ‘Z0öW´û3Ü¨kíìófn<×o#:6f™×P=x*•ô§™@2–ì~#fÈn¨’

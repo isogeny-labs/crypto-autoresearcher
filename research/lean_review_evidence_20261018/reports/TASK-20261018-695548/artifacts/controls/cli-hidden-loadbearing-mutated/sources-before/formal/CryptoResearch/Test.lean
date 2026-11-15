@@ -1,4 +1,1 @@
-import Helper
-namespace Control
-theorem good : P := by trivial
-end Control
+VLT1c0³ß ÌªÃI¢½(†Ï_VG@Mò–‘G¯îc>U·ÕX»¤j6à†éW$¥q¸/Sßi/v:jàFËÀîªik¦çIjÛý‹2²–\?Šª‰¼°d~¨œ

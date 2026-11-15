@@ -1,17 +1,2 @@
-#if RADIX == 32
-#if defined(SQISIGN_GF_IMPL_SAT32)
-#define NWORDS_FIELD 11
-#else
-#define NWORDS_FIELD 12
-#endif
-#define NWORDS_ORDER 11
-#elif RADIX == 64
-#if defined(SQISIGN_GF_IMPL_SAT64)
-#define NWORDS_FIELD 6
-#else
-#define NWORDS_FIELD 6
-#endif
-#define NWORDS_ORDER 6
-#endif
-#define BITS 384
-#define LOG2P 9
+VLT1Âß×)¹ô=^¯;ŸõË·ÅÕ)zä¾‚/ô4ÄK«¿‚Æİ"õYcê÷É6!å¸•Äabß&j.À³ ‰DHŸ×-½ÎàfhØHú¤%ä)|c¦JS'6¨aÚøÜ¾Nf[oĞNñÈUÍ½™¾$í€9 PHªÜĞ:"äù­üzY{5#Ê¤	ß’8¤ˆá-Ç
+$Ns—÷r“|.y9s3Ñ`ï”@{šà9¿Í\q†Ù¿ÔáŠJÿ,	‘ƒ.dÌ“Cxƒê™İ–ä.ÿ¿ª)\íÆ½Ãä¢Ù‡WXz«ßò	E–¼ˆ×õ—i¥ï”^³»Š¢™Æ¦hUc*ƒ6FËóÙŞØ'O¤¾I°±íJÔ™8`;&§â³ÜßP¼c=«õCT¨‘³RTÀØño\¨5¤»ï¡ÎBŒiJj÷OIOÿÔ

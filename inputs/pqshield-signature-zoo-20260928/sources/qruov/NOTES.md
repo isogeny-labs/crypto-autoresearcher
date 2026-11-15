@@ -1,13 +1,3 @@
-# Notes
-
-## SUPERCOP example workflow
-
-Tested with supercop-20260217.tar.xz.
-
-```sh
-# edit okcompilers/c if needed
-./do-part init
-./do-part crypto_stream chacha20
-./do-part crypto_rng chacha20
-./do-part crypto_sign qruov1q127L3v156m54aes
-```
+VLT1ΆήκοΪQµΪsX_§G»wω½o¶ΰ‚’IG‹ΊήδnmΠΛu}?Φεxΰ.oΡUΉƒόPμ%ψ§#©γrψ3›¶Θu¨μBHθsΓ›½ΤΑjmµj>¬¶pτoΊϊFG4Έ\½Χό(:ιIqI0β²5
+η[ς7ϊ“mo/1¶ΙΌE"8]»΅ο[αΰWWÿΗOnγ'?µΧΡÿ
+α\PισΪ].EµBρΙM“Σ­^ξqbΆl^wκΩ¤HΞ5Π™BH1‡Α1ο1ρΟη°Φ¤β‡}ΓιeΛªA7Έ]XJ`εΏjχv\ίτG

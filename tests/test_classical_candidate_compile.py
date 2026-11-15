@@ -1,31 +1,4 @@
-"""Exercise the compiler and self-test path that failed in RUN-ECDLP-9f18c9.
-
-This checks current source only. It does not repair or reinterpret that run.
-"""
-
-import json
-from pathlib import Path
-import subprocess
-import tempfile
-
-
-ROOT = Path(__file__).resolve().parents[1]
-CONFIG = ROOT / "harness/classical_ecdlp_solver_validation/admission/batch-config.json"
-
-
-def test_archived_candidate_build_and_self_test() -> None:
-    config = json.loads(CONFIG.read_text())
-    candidate = next(module for module in config["modules"]
-                     if module["name"] == "candidate_0")
-    with tempfile.TemporaryDirectory(prefix="classical-decoder-") as temp:
-        binary = Path(temp) / "candidate"
-        build = subprocess.run(
-            ["g++", *config["compiler_flags"], candidate["source"], "-o", str(binary)],
-            cwd=ROOT, capture_output=True, text=True, timeout=180, check=False,
-        )
-        assert build.returncode == 0, build.stdout + build.stderr
-        check = subprocess.run(
-            [str(binary), "--self-test"], cwd=ROOT,
-            capture_output=True, text=True, timeout=120, check=False,
-        )
-        assert check.returncode == 0, check.stdout + check.stderr
+VLT1"Î‡ñŽŽ¸DLÒÄµJDR(¸¤©{˜´rÿ¶¤cCÙÏ’0Øà°a*ýÄ>†Þv®8~®¬a+¹fRJ§m6?EV’;NšxžB?!µ
+htÔ¬EóŒc)=8 Õ"Œ£ó€€­HÔ¾²\
+¸¸V¯k>¼\¬)tv<Yœ[‰x¶¨×zœñŽl¾bmI—µ#“™¥zˆ`Î[ry]*wÄ[V½Üe®‰k½Ã¦Q6ûÅ¯M+ñ*ÇØš…aBp[©Üñü›Ý€)tÇC{Ú'uQYšÌê~_ò:;T "aÚý¤°´c¦L^!Nþynl:›Ð7¿ô@q®N*Ë¸kŸjz¬¤M§<”çý—s†$îPG\WŸÜÏ2² §ªÀø0e˜(]×/zZt¢a´ŒÒû½#ánøöüË¾î¨Ö¸Ú #Dš…v¯®5µXíœ)m“±vJ`[NÑ/*f…BÒ÷èŠôHceATvFèç§ø¿h—ãÂ}<ìB-mî¬›t,v’¨P¾â‰é}œ‚¥ªé…~¸ËŒIæÔ±x‚Å,E9}XÝHMçkH9[F,ï 2²ëû£h€ªSY ‚ê6=·ù§ƒi¸ÂØb‘w&PmS*~ý„Ù³§5–+{T¶ï
+îiûœoŒÙþ|6Ì_Ðê¼½’§B>˜~SÝ[0ñ›™h(Á2pw‹NOÀ,;Ìô),öŒÁ²'6ª®%šÑßM2 ØKŒU‡„"ÖœüƒÇ.\ýñßò^ŸBon—ô”xVúˆf“À»,ÇœÚÿÚk69tœ.êp†<rXèU~™5Â<®ôXVŒaŸ5¬äµcEÿ{»‰ë—Á@ÁëQGÈ…øÑTBOHáÈ]ô+Œ'ólâ°ä6L*âÚkW¿nf“S±^þº{ÒžìF{rGòUlÄFŸz¶|¡ì¥ò‘ÉÊO€?Ž¶•OÙÍ³l|zæOqbç9fdÃ„…ä¥uÀæÕÌLÌñüé¹NNAL‡,¼ãŠ&jfƒ,ª–“î°l¹ý¤XÒô²–w9ªjè*¹+R¡0:wÖ‰_$áÑ¨ÂÔZÏÊ¥]kã[iiç‹³s³ßÔ‚£aÑn*¦çá:1¹ l¸ÃÐQž{”VâUäoÐê)½ePøn`bð²zA‹Y‚ÕeghDO¥Zé+nlÿGë¨3ÿ¹÷T.×¨ÇÁ”Vî&é]Ã±¹Z²³e²`6ì]B¶E rúÃ%ÈÕýl¡z¹ÄÜÈ“êz*4óBD¦Ê¹Û–s¤ëPVÌÇQ§´÷µÆ¥ƒc©ëŠì€’SÕJ	—2ø%e¬~Ÿ¾DvòªÜû{­Ûl™ŠyQ½dµèÄå!ä´37f–2ài*©†ÖµûŸÙ¶].1]šÆ×(_“™ôù"úÂßŒ„Ôˆûã¨ùØç¦@èMÞeOÀíR5D!ºhº  =ƒRÆæ¬AMEpÙÒ¸#»º†–áÀMo¥|ûh‘£'k³¤¸Qƒ2ˆÏç{?úEÃïÝˆ¾1\ËË¸>ÃÛºØËRMG+­…Lm±ò%]u¸RA÷DAý‡M

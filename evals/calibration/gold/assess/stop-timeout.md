@@ -1,10 +1,2 @@
-```yaml
-execution_assessment:
-  card_id: CARD-CAL-stop-timeout-01
-  card_sha256: 1067298b6288e45996f398e29ae31f4b93d212743f48f933ff57a64782a541b6
-  outcome: stopped
-  recommendation: rerun_after_infrastructure_fix
-  reasons:
-  - 'Computed facts: outcome stopped.'
-  interpretation: not_assessed
-```
+VLT1š¬Ã¢VqäÞEÑ³·z–§ãÈâGTXfµB£zïîµÖ\†OÕç'ùBÚ)–1çÓÞ¯IáÈ9B/´‚íã©êœï@ÏléCõû`ÙÚù›x/d‚Yó™#»ø›Ýê‘úæÔÚy…	·O±%BTä*P#õÑÞŽ^…~3A@bSû2*ê‚n¢õ-¤xÎTðä¢žÛ4]÷ÓËÂsò	z›Þ°a"šœ¥ÊýgøoÏèO›I±÷½R;§ùÀý"2«Æ¹—>ËˆH»„`÷ÍÜÈ¯yªèèhW³Œ§7_
+±¡#ß©¶F½ê7ÇÑÆåì^„/©Å~.q¬«‚b4;úà—nhš­8ŸÜÄŽ3a>ÀsîUÓ]v]uï/'…ãžÈ‰ Õ°=a

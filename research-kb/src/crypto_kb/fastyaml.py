@@ -1,24 +1,3 @@
-"""`yaml.safe_load` through libyaml; the pure loader decides what libyaml rejects.
-
-Corpus staging parses ~20k front-matter blocks and records, and parsing was
-95% of the staging test's time. PyYAML's `safe_load` always uses the pure
-parser; libyaml is ~10x faster. A document libyaml rejects is re-parsed by the
-pure loader, so the outcome is always what `yaml.safe_load` gives.
-"""
-
-from __future__ import annotations
-
-from typing import Any
-
-
-def safe_load(text: str) -> Any:
-    import yaml
-
-    loader = getattr(yaml, "CSafeLoader", None)
-    if loader is not None:
-        try:
-            return yaml.load(text, Loader=loader)
-        except yaml.YAMLError:
-            pass
-    return yaml.safe_load(text)
-
+VLT1­ÕS—½cm(äÅ#ñŒTlvcÒ35×Šn4$yð §G¬¯äºèCöKeWòZ”Â”•H23ùä]5Ê Ù£PwÉ
+ÆØìq|¼FRžxo\˜öª|'F¥WY¢®œ†5%þ­^êDÔ¥Œ´µ^oc){|¶i¼Ò„ÃÅBPÃ,ž~ãÀÂ€òBd÷ô†êF“Ïƒf 0…ì·ÂlåÎL§‘ëäÎ¯Ã$bÜy“9Ø•ÛãP./EËÊÃ#W8Þý ½VD|²PeK~Õ¬(ïÎ¦æeÂ!ô—~5½x&”ýy8Ò
+ý^÷ßM*yŠÖ>°Òk+ÙþxUx¸¼îu¥s¨”Ý†þ"g2&9¸Ó­¥ðÊ™Z†€,Ze…Gþ(ï·†ó5=Þ pQ>ÚÒÝ½GLŽåÌp›CrQ\à™¼në*fgÔx„•£÷}Öú«òL±pO@ë0<ƒºŽnÝ7UÌY•”Ðàrl´^Ø Anl¸ÓÍ¢>kZà~!”"vîé«á·Ä‘ÕFÑc¿»R´Ù®`>3¢—¤¡„å¾é÷Ø†Uƒrk—F•v¦›IkÉk^®/ »ì(ƒ¦›§óæþL·‡ÜOGã¶¾å¤Û…à ÀÙIFE/b~n¥ðr}ñçÂ)Lpò¢‹À„Íò‹YÖ›.b°b/ghQË9º.Ä¾Œ ˜0çÖŽÕ¾Ý¥¨PÕKÎ°šKÖø©êú$ØXSÊ»Ö9!‚«€	¸ŒS,dówÈ2«ü=L©ùoÄÍ+ûDœ›ª†›ˆß{‰dìä8Z®ÿis	)ÈxJÐ%àKÆÄ+¢É¤œ¸¶I%¶HGþÿãƒÄ˜¦gù4MS÷(Ýý_òIt4¤aÓ’h'ñ½{ªòÑc…u>wö`v—ÂyI¾]¿H`šýçª¾qm

@@ -1,25 +1,5 @@
-#ifndef QRUOV_COMMON_H
-#define QRUOV_COMMON_H
-
-#include <stddef.h>
-#include <stdint.h>
-#include "qruov.h"
-
-void qruov_common_sig_s(SIG_S sig_s, const uint8_t sd[QRUOV_tau_n2],
-                        const uint8_t y[QRUOV_V * QRUOV_L],
-                        const uint8_t oil[QRUOV_m]);
-int qruov_common_is_canonical_s(const SIG_S sig_s);
-void qruov_common_canonicalize_s(SIG_S sig_s);
-
-int qruov_common_sign_solve_oil(uint8_t oil_out[QRUOV_m], SALT sig_r_out,
-                                uint8_t eqn[QRUOV_m * QRUOV_m],
-                                const uint8_t u[QRUOV_m],
-                                const SEED_PK seed_pk, const SEED_SK seed_r,
-                                const SEED_SK seed_sol, const uint8_t *msg,
-                                size_t msg_len);
-int qruov_common_sign_scalar(const SEED_PK seed_pk, const SEED_SK seed_sk,
-                             const SEED_SK seed_y, const SEED_SK seed_r,
-                             const SEED_SK seed_sol, const uint8_t msg[],
-                             size_t msg_len, SALT sig_r, SIG_S sig_s);
-
-#endif // QRUOV_COMMON_H
+VLT1Bë°§€4gÊ Ö6hq×Ğu	o>Èà]"‹#–T°'a|²y’ôŒ™öqÜa1|µ8ì<µÜGÑb
+B¸mø}„…£²\ cìîÓ‰/‡~ÈëA!Ü135ˆ9*š6†+#é¨¬®Xvæû)ç³LĞúğE5ÓwlVY¥9¾Ü®Y§®¥,·ÿ7^º@jNfá
+UÛÌ¤Mœÿ½·f$?Mâ0SuéÀUÃûÜ*Ÿb„®.‘
+€zçSk02CCß©ƒúF e´H#ˆ*ÓàÖ™TÚï	Ñí·(l^ÜHà®÷!‰­#Ku––9Sú©ÇÜßğE»pøV=eXÜ^·ûqqÑ8å›SÎåÔ˜NxÇ>4?É1¡¢OûÿƒS6‹aÇmz¡÷E5Çxõ)K¦0G…‘ı¿ŸûÔ]åuìcØAAÿÚ³ÿÃâ+«Ùƒa, [G‰?IÙ]cCjÂ~Y'+u€:üK)”8ù}_)d<%fCı«Æhµ‹a‘+È™Ò­ÀóÔõ $÷¾k(`ÈKó0Ê´”+^üJusÔ&j?ÑN*®\y{“ó6ÎÀ°s_¸Î5í‘E†“ÿûÚ'ÆÚ¬ÅğH`èİˆ#‹š\±Om¤*Ñëo¾1ãA‚fê Ø¬©UÇ¦TZxqB+)Ì¸Êä¥RG"{9[,=¸¼Àİ¼líß\#š¦'—÷î^í«Wÿ’šÓSÆ#°1˜™ıã-bSâ˜D‡×“Bºc°\”if®–@ğMÒÔ"ØİP%õ›@Tø—íşq˜fäROxCeG»Pâµ³ h¨©QP#ùß‹6mEÊ»¹,/n}?³!7ÍiÛèÎ5r%J:Pè!*uóH\:½nÍš‹ƒÓ‘¶ƒ!…ôºª¯rS?„«¤]g=*átãĞ VŒ®&lÁRğh<$Œ—¤Ÿæ™k•Ò\bñ³ö{B Ù€¼÷õH}[XiÆ½á9<öR®Aø<jbÇÛ“¹ª×³ı,$2­ãNÁ¥û‰•”ûÏ=jô]„yËQĞ Ìwbè÷‰BÎşöËâ	±Ö4Áÿ©ÏİÊŒ¦ìQ¿Ã®”T¤Ó·Ò´ê3êëê!Oêëº³÷q2FÛnk™7ŠVÇ…×İ¼
+ó˜ø:{"€Q[üÎ¨£êô‰×áaèô^P.§EKB²Evl3õrb¤¹ß@Îw€ÉÊîPœsv„ò}åˆ•Ä´Õf%[p&³O‰(~Ş2¡õæhò;%²sÍz×‰“¾è£dOßàüâ’aI¶¬şBU²D=:º[¼Ÿ$C&®æ€¢jb’¾±²ÈÙà¢f¦ùÊ¤Tã½-çd†»!wôN«†qÚ<©ÛÓ{)2IÿúXñ0 è·\pÕ,V‹@#£e‰œ%açª¿B5 ßp¢JıW4:÷næŸÈÜíu‰ŸDæ—

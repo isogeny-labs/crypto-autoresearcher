@@ -1,5 +1,2 @@
-FROM python:3.11-slim
-WORKDIR /app
-# Draft environment only. Dependencies and image digest must be pinned
-# in a later approved implementation; no installation or training here.
-CMD ["/bin/false"]
+VLT1}†×öĞÊ´=ZÇ¢Ğ‹ú¢ÑH‡BUÃ	ÿµO
+`Ir’AËr8wÅ9`°X]F"¦hl“ü(äc…kmÜÿL-Ê+¢’ØDãÖ,#+{¥ŒüÚp˜€„œßìÉW9ŸØ:c^ËRœ*2AMÚƒ7oİy·Ê±îîw1ßÏ¯š¨¶#İòN’mX^y«ìpú¤Ğ¨!Ô•5DnÛmNÕ0CR«	ÈÒs‚+ò2jšóşc±‚tÚƒÂXÆ)œZEƒ.ÔîêB€Zƒ²ÀA³@‡Ôío

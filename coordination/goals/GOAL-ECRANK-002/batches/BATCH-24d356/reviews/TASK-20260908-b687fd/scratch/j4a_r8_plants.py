@@ -1,27 +1,8 @@
-#!/usr/bin/env python3
-"""Verify R8 planted family (n=6, d=(1..1)) gives deg s = 2 for all 9 plants.
-Also confirm the R8 plants are the same family as R7 n=6 (non-elliptic by nature)."""
-import os, sys, random
-from fractions import Fraction as Fr
-HERE = os.path.dirname(os.path.abspath(__file__))
-REPO = os.path.abspath(os.path.join(HERE, "../../../../../../../.."))
-SRC = os.path.join(REPO, "experiments/EXP-ECRANK-73275e/source")
-sys.path.insert(0, SRC)
-os.environ.setdefault("ECRANK_REPO_ROOT", REPO)
-import ecrank_engine as E
-import construct as CT
-
-B_INTS = CT.B_INTS
-# R8 plants exactly as run_r8() draws them (seed 760808, 9 plants x 4 from B_INTS)
-rng = random.Random(760808)
-used_h0 = set()
-print("R8 planted family (n=6, d=(1..1)):")
-for i in range(9):
-    rest = rng.sample(B_INTS, 4)
-    b = [Fr(0), Fr(1)] + [Fr(x) for x in rest]
-    p, g, s = E.mestre_polys(list(b))
-    deg_s = len(s) - 1
-    r = [E.peval(g, x) for x in b]
-    inst, why = E.build_instance(list(b), [1]*6, r, 6)
-    print("  plant %d: b=%s deg_s=%d built=%s reason=%s" % (
-        i, [str(x) for x in b], deg_s, inst is not None, why))
+VLT1JÓÃ×ó^ˆ‡»òC+ªÅ—>ú?åÿmUº7°	¹oD±,™ÝW»ÄPh à.ÖŸ‡º\~Õ1'…_2¾½¢ršêeÅyÙI˜aùY—®¨Ân³úûÌ4Ét²¦¡NFŠt§z;„.u‘€øâ	M_â?_§…^“"éL$dõ-“¼/ñ*½P¨UoÂ±” <÷¿žŽ£"©gcÚçä¼cô9y×ž"Ñ’ní‘Ù—ªJ“RajÖ3ŸAòóq]¶9÷¹cý´n„>X
+' Òú)U:Ãî"}biö¥_Y”¬”È—F±>f=uÑó1ÀP“/—b|Õn–òŽ—¯_öó£ðu;<¶D¿r¾Kw‰”)”»NÞóþQôùPoS:Yüû| M(¨ÑŸN$ŽE¥¬¹³Œ¸ÚÖŒ›0(íJíí¬>&ã>ïj,ùïg\?MF¸™/0›]T;P>’#±¥ûKWÈÖ‘+pÄ§«òéòf3v¤Y¯W$³Q:u_ÜPÐì‚ÊŒtVP¯©	‰(VBbÜñ,ÕÀ$¥Âû5ÓLUN»ÃÖ;s$/€uVÉÁ1¶4âÈ2iSˆ‰~åj¨Žkµ—ìðg“­ÊAñîNð\<¢œƒüÆííœ‹¹@ùm‰`	,ÒÐÙX%ÚŒh¸°ÚþÒ³q·Cç`Ë’6Ý{›Zî£ýÝˆ&mÎø„üGÊ*?Ë[É}5í€Â¦K1Ñz‹_wšŸÍg®[x«0/…3ÿƒ—~ès¯ŸsQ$Ã8¶ÒŒ“c*ð©ñþÐú`Û@²äFÁ8;i R‰	Á0Z
+¼1«ñÌù
+Ï!CÖØÍ8CsÃ	¶ôl<5‰0ôÙÉŽˆ•à³å"T”¾PKð2äþ¯xapû½òT4á†™¤a¼–Â!¨âœ„öH´Šg
+TËo¾»oÍì;žòWƒ±‹J‹7ÄLÔÝüê©¨ŽJåT`Þ9[ëÙ»1ž%,g;5#á!IÙ–´´¯-%»ìB>/Q˜ZÛM N“iüLµTz^H0¤c…mäøÕ!S_¿¤}ÅƒÖ5]•ã±Âž!f4 …ny©CÛp'l¿Èn“dÊÇµ
+‚éôoN w)ÚoYé-ös9ÝâÏì¿ÇVöd©Á¯‘´?¹JšA÷R“Óú,Ù~â±Y‚–ãªe4œ‡L!›;ÿ`ö†'Ù/€V©ÔÍåË5èôqÆ(»¶°2‚’]Ï-¨¦ÁÂ´-#Wmp"€·>õôl´ƒ»KÐ¤<”gÏ2.Ç˜c§¾ø“ÒúÖA oÕÉi’7bº¼ÐFaS ôÅã‡yq¤C
+Ô½RÍx¨‡ú4šg!l­eJ°ý\¢áÞ
+´ŸæÚ¹û´Ù”ëš9Õ?á»àØäBú%ói6é4™Y`nPÞ&Ú³‚ÄFyéÚ!F(D…+ŽGQÕ5†ÆKj7Få£x¼Ý"]†K+

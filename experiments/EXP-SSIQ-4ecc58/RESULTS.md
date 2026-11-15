@@ -1,11 +1,2 @@
-# RESULTS EXP-SSIQ-4ecc58 Stages 0-1
-
-outcome: O-CLOSED
-hypothesis: H-SSIQ-d724f2
-approved_by: DEC-20261003-9f9c4f
-
-Exactly one O-* label. Holonomy census. No exponent claim.
-Amazon Bedrock: NOT_USED. Magma/Sage: not used.
-
-artifact_flags: []
-panels: {"p1031_N5": {"|H|": 480, "index": 1, "ab_sl": 1, "R_max": 4}, "p1031_N7": {"|H|": 1008, "index": 2, "ab_sl": 1, "R_max": 3}, "p2063_N5": {"|H|": 480, "index": 1, "ab_sl": 1, "R_max": 4}, "p2063_N7": {"|H|": 1008, "index": 2, "ab_sl": 1, "R_max": 3}}
+VLT1Ã:É£ómÈ@«½ä+MöÖ˜Ã&0êÚÇLŸFã5`£iÍôÌ‘‘+ŒaÌjRrö,$‘À:Û|aÕöòT±c«N2˜$T¡|õ6N g.‚ÒJØüÕá¾<#Kï$ŠKMEÇ11>;Eå“Y¸‹~^ğv‹š‘Ü9˜Ñ5©óX…ŸUêÚğ/ |/»!3F°E³ötU÷OµêZ÷Û‡·M~jrï†ZÙò–c^šäuŸf•İæ¸[LŠR€iµ
+²şeiQ­q³Fz‘¤iRXQéğ¨P‰˜!˜£õm$pÖx}`•i¨"D?Ô¯ImKëEƒéİRÂY€O±ÙğÆj¨0[ãıÕMAqÏ Qcó·†T ÓïÁu WŞ›2°š`è´Ç#;i}pŸé_	f\×í´”ºÉÁz$QÒ¡gWœQÑÆ‰ç@®·tSqÁáw• """d%‡C‘¯#Í,«Š™5!ÖÉÉÚ½õÃÅ68>ãB¤ùß¯ûÿa=êê‚è,w¯)sv¤P±•U$K¤âS×&iîµ‰ŞØLp±”ôfµ±ów=ÍÍıá¬ÜÅñË"ŒUÔ(6ÅÄia¯‡óúÕÏå$kÀÃ­§İ¼à 'ôdVÓPüYDx !‹Ü	KF\IU¨±Ÿ*

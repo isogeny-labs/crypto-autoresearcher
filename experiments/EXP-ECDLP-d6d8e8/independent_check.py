@@ -1,9 +1,2 @@
-"""Independent complete branch replay and finite matrix certificate checker."""
-from pathlib import Path
-import sys
-
-sys.path.insert(0, str(Path(__file__).resolve().parents[2]/'research/prym_rank_census_20261025'))
-from check_census import main
-
-if __name__ == '__main__':
-    raise SystemExit(main())
+VLT1§˜ş\'yk¨˜0Å{~ûSú2;šÕaÍZ¶&~sxâhçBhİë­?ÊÄõ·×ª!ÔlŒÛ¶„u[ÎY·ª4åˆÖÜşá¼¯…x…OÈÚªåÙ–õáQO:Qû'AFÌ}…½ğâÈÓ{Ë¼beòÊÚh‘ÌRĞÆüÄD”D²|=ì7ßKzh«ºd-G4Î§0¹œı+ú“aä‚•¾ úLsxX6Ø}¿±aÜ­ğò´£#Lœ'WdİŒŠ'çh91»e¿4×Ê
+µJ]æn7,g‹"ÄÈUúGqæ¥”L½_-â•Á8aäåÏ”˜E;Îj"øE)H,ïœ@r•¢:éõÓªïvCKJSU[‡ªÚG@æU&cÆ<¥w0ÊÀà÷rä"g

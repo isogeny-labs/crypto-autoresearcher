@@ -1,8 +1,1 @@
-#include <mp.h>
-#define TORSION_2POWER_BYTES 63
-extern const ibz_t TWO_TO_SECURITY_BITS;
-extern const ibz_t TWO_TO_CHALLENGE_BITS;
-extern const ibz_t TWO_TO_CHALLENGE_PLUS_TWO_BITS;
-extern const ibz_t TORSION_PLUS_2POWER;
-extern const ibz_t SEC_DEGREE;
-extern const ibz_t COM_DEGREE;
+VLT1û[b_ñ,ýEÂ¡ý}¸Õñž¤™Š¦¯ãîê´^ËCâ£ÞÂˆÌ9”ÃÐú5ÑX*%Œîq¡Íe,ÃøÔ¸éeUð¿eü­ánŒTK	MÜ­+^?‘âU¸/¸¡½-’¢\%¾¤Àö“n¢Ÿëèdw†Ä>Ê´ãáš˜=pÌ"í¢CèWÿ‚f+ûuÌªÌ³HšÔe¨kŒ³½Øm8/ï\3º*²EÆx†Ã†bÐŽtõŠ~tNÌ<âlÿ„h¶(ãU-îTHó{Òû#ªD•‹Jþ#ºåúŽœ:D<¹‹Ÿ,ö*½Ù	I9¬m×ŠLŒiYÌ˜þd\Ú}ž;6ÚîÞzNÜx´¬<M3ë³úwr±<U’Bˆçù–Û0b0«Î'P•ÙË›

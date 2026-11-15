@@ -1,4 +1,2 @@
-#include <ec_params.h>
-// p+1 divided by the power of 2
-const digit_t p_cofactor_for_2f[1] = {17};
-
+VLT1Vš'
+ÈûµÄNÄöÓŞæĞi”)%.˜\é_šÆcÛL0gIætvDíYi-ÇÅ?‚è¯™a˜$è’Ó;îI¶fww¦5°@ÜÛ‡ı~‹ZÈ¤YgJ4«û›p¼f/n÷`°°61Œ³‚¼#‰€™

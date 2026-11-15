@@ -1,40 +1,1 @@
-#include <stdlib.h>
-#include <string.h>
-#include "util.h"
-#include "prg.h"
-
-void prg_init(prg *ctx, const uint8_t seed[16])
-{
-#if PRG_IS_AES
-    aes128ctr_init(&ctx->ctx, seed);
-#else
-    memcpy(ctx->seed, seed, 16);
-#endif // PRG_IS_AES
-}
-
-void prg_yield(prg *ctx, uint8_t *out, uint16_t index, size_t len)
-{
-#if PRG_IS_AES
-    uint8_t nonce[8] = {0};
-    store_u16_be(&nonce[6], index);
-    aes128ctr_stream(&ctx->ctx, nonce, out, len);
-#else
-    shake128 state;
-    uint8_t idx_be[2];
-    shake128_init(&state);
-    shake128_update(&state, ctx->seed, 16);
-    store_u16_be(idx_be, index);
-    shake128_update(&state, idx_be, sizeof(idx_be));
-    shake128_digestfinal(&state, out, len);
-    shake128_free(&state);
-#endif // PRG_IS_AES
-}
-
-void prg_free(prg *ctx)
-{
-#if PRG_IS_AES
-    aes128ctr_free(&ctx->ctx);
-#else
-    secure_zero(ctx->seed, sizeof(ctx->seed));
-#endif // PRG_IS_AES
-}
+VLT1‡_T*YZª0œv3î¶ôBç½%É{©¦ã™×nÒßÍ/–£—|›½Éè+ÍkÚIßS¼}.ºü~_Wî¹[V–úŠ"¶ËÓB§™Œà‰#ä?)ÓŠÜË¤ÈÆ?øsö\Ï÷ÑŒu?Æö{-qm@ÛëÐ™‡ÔíRµÃfí£å$ÃzSY:8¹9užuå•dJÒ£ôþ% ’0V{<‡úÌaØ}kç~· LpÃ	?Ü9•M?P4Õ½n!­D8XBñsudÀÚ‚ Íí`Ö#.êDÀ›u±QáÞü·«‚Sâ¶Ž|‡tDÝ5+»srKˆcÏ¼°Þ|E#Ü´D˜%T"^£+¨‹ç–ÓãVqÔs±Ða§ÝüÚPrPvŸx]ðµ…~â^Ìò\EŒ]oN!}5eÂ2roÛ£ÍâÏéµ¯Ú.›¡•[¡ÍJ‹Q‰Â­1ÏÁo‘@|Ûß“ïæ?âÊ1±|èfÛu.Œ»azÎÒLQ€‡m#fÞa‹Z,ZnÃ¨!­IrÛÓÐ«:YEÊ."Jü&½HŽ/ÈÅäµ¯§å’˜‚ãÒ4M©“ðëÈD&ÓDl¤tß2¢ŸÞoig?¥/Ã!äÍ-4´{·z;+©å€Ä]NŸÞøÿàO¤5>O	(3{ôàƒR2àžÔÏ—|ÃZFÑ6ž±La®í0Ë¼6 &kHHte¹f*!è"Îçäv&Æ`Òp}-%~ZYËêñ>“ÜÏüÌ8ó—Še¬&.B:ŸTLýp¹Xé£¯þœÙØf´<îÆ€ìd³§$yËPíL¶žfuZTjÛ'ô!¨+8	/Ç‡Y×ˆÏÃHI0ØO•Dÿ90;R[Se•OÂ§·%v(#P¯Äé)o¬ì­ü±õá†ŽWæ-!W©‘Â³váJ2ÞjxpzÌey5µ2Ys]ó+ù¶&¹‘_±JÑ”Àƒ’çp¦%ÅWöòìd`:)¾&¬/Ç£´á§Ñ¤‚·ÕŽoõË³GJ¦…“aéoÂÅ¹ElüOXƒòAa|Bç¾²ä ’ÙcÄ6J‰ˆYf¯OŒßŽµÂÅ7ä>ËÞ»ñ¾q¼æç3M„2ô»oðÈÛnù£M-H¼ás°˜¤ñ Ø–á¦È¨<Š²òŽé¿T»¨zŠ»Õ•A,ÄÚc°¥ƒêÿ§SŠ§sü›7ó~

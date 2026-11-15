@@ -1,6 +1,1 @@
-#include <tutil.h>
-#if RADIX == 32
-#include "fp_p324_3_32.inc"
-#else
-#include "fp_p324_3_64.inc"
-#endif
+VLT1zĞX™buËÆv!‹æ™õÔMÿLÌèçcñË¯}Üİ¦„ğxE-«ÕjD˜RÓ“„‚§Vı8™³"`®;‚Uƒ¢OÇ¶wÎ-ºôğyÛóg½ú#Dá@G¢Ã’&£gb£Sd}×:	\/Åu®F0ı§j

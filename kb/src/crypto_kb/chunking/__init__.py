@@ -1,5 +1,2 @@
-"""Crypto-aware chunking: hierarchy first, token limits second."""
-
-from crypto_kb.chunking.hierarchical import ChunkingConfig, HierarchicalChunker, chunk_document
-
-__all__ = ["ChunkingConfig", "HierarchicalChunker", "chunk_document"]
+VLT1!å1ûkä>~/Ÿ:~ðƒS®ÍÕr»©p™åñ‰
+=#]Us“ÏÞÜölHØów4õq1*´FÔ­ï\+ƒÁÉ„ƒ#u¤E†¶¦·˜v&òÏ ]‹øáÌq5l¨™˜sðùÍóäÂ|L©öþ÷Í&ÆMSå	<†œ…>ø¡¢Bø¸5ÖœMù:§7dïH‡,»ƒã?¼’L¤	ÚÒ-@¬eJ­¬é÷mËœ˜HhÕy ñ¹s0fÜ^ 9	*Ü¨–D­6¸‹ûvSŒó1ÓSƒ$UáØ$'±IƒSÆŽZZ5­ºŽ~,p¨¬( b©ÐhÈ\B

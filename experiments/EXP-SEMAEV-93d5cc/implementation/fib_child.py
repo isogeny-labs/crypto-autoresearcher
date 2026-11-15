@@ -1,22 +1,6 @@
-"""Spawn-safe Groebner child for the EXP-FIB-001 cells.
-
-``driver.decompcost.measure_s4_decomposition`` runs each solve in a ``spawn``
-child, which re-imports ``driver.decompcost`` from scratch, so an arm
-installed in the parent never reaches the child.  The parent replaces
-``decompcost._worker`` with ``solve`` below; the child reads the arm from the
-inherited ``EXP_S4RR_ARM`` environment variable, installs it into its own fresh
-``driver.decompcost`` and runs the original, unmodified ``_worker``.
-"""
-from __future__ import annotations
-
-import os
-import sys
-
-
-def solve(p, a, b, V, xR, q):
-    import arms
-    from driver import decompcost
-    prov = arms.install(decompcost, os.environ["EXP_S4RR_ARM"], fingerprint=False)
-    print(f"fib_child arm={prov['arm']} module={prov['installed_function_module']} "
-          f"sha256={prov['s4_source_sha256'][:12]}", file=sys.stderr, flush=True)
-    decompcost._worker(p, a, b, V, xR, q)
+VLT1uF	îuói^u|¦ÅÚÓÇÜ(§¦‚½å²é,L…);ÜmUèGíoÉ ™N»c¹‘paºú¥†œ-Nbˆ–""Xeždï×ï)qæ¥M_J8MÔ¤'–-„³£Kˆß{ˆµ¯¦í£ipNÖN8ËùF@¹žMh$WKmEcU@1ÍÔ#T4ˆ¶çÒpãYdW=b
+>÷?!¬5nb5@$Ä~ÕÇ5§…¶fØ¬Í»¼g“­Îo¶ßÈË¯€	¤.è†Õ(:…’Ú©î,*¬›SPÅÛÈd;‘=õ_í­¥
+ì2ÀWMÙ¶d93|Öp(Jæ5Â&˜þ:01˜Œ°ê«ý¦HiîPgq&yÑ®²vïnš1ÿôEhË·åèÉW[gAW‚D3MŽ}r#ùîÂ­¦z‚½J 	`ÌêN‡|I›KßLK:tÚŽ:=¢j`ÍV²œ»œ'¾3šb?ÝâDJñmaàG0§¾Ì<¸zGuiéÈ‡vÏÁ½S´ñøc
+4EéwÓ¼DúB (~jÅ?ÍÓ+µ‚±/ÉÔ5Y~Tóµn‹Ìç/Rw …§E,™6!‡ RTb	æ:9|ÿñÉ‘¨*i¨¬G	e'ÑëÑÁ\±p&X<lƒãUÚjf{Qhý©`K¼]óú&Fv=úCCnËyq©~P¿ƒ'$Ž¾;`hë(¹0ª£¢caÕ1iìba
+À€87µÿ0«u11}2dªsé8¸­êE„ 9à ›»—¿*tŸ{u¼6Åë³õgß¡8³fä6Â ‰J¦A]$™â› 8‰Ë@…B"ë¢y2Iº	2‰>øémŠßá> •ßÔ!TŠÚ¼ã/‚q§xòhÈU­åµ$kJ·‡r”q¶4´*ˆ*“|æ$ìžÄ‚ì\ëRB™=Úwí$@KæÜÖØóã¶S`tÀªÚ<S€)†¼-|L
+<«z.ºÍµ;³’9¡IwÌJC&‡±’Z¬k0P×Lë­¾=^…áO¤&úDLk‹¥O~ÍUV=‚]¤åÅÝYb5Çmƒ;([{0™4ñˆ½EäôÅC©X;âœŽOàÛ¾Çà‡z{7êoqS„åU¢¨vìy‹gl¯ùkC°hm2˜¾Ä— «mJÛ¤”œÏŠÄÿ ïª{W¤¢,ïÜ?RîOQPHÈ³

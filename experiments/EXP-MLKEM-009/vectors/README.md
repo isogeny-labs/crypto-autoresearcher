@@ -1,5 +1,2 @@
-# Archived vectors (EXP-MLKEM-009)
-
-First key (seed=1) per parameter set: raw encapsulation key, ciphertext, and shared secret as `*_seed1_{ek,ct,ss}.bin`, generated via wolfSSL postfix scalar `MakeKeyWithRandom` / `EncapsulateWithRandom`.
-
-SHA-256 digests for all four seeds are recorded in run raw JSON.
+VLT1g¶T—¸iİbgïgkeÚË÷(n"-ô¾);Sõ9´ç?5drµXÏ^GB©4¦
+‹ÆXNÌîpWè;©~Ú–‹cVZË®5?tq¹y‘¢SSûp“ˆnVı¨Ë?é³jŠNª Úy×³oÂ™ù–$]ĞKXFô–©FÒ¹Œu²¦´›³ÕîKéÆö¿Ş¸^1.{›¹í™Üm¹ÖúĞ4s+ØJ9hG-Ú¨¯éhmçº¨Ì.WŸÅ"O 9¶EÁ"vz`u°lJ˜JBÅCbÔÓGuıU=ã#=¥nÍ¬TŒW®›J¤ä?_R©(×m´ÙTş„•îé3z¥Iøˆ Oy"¯™†în÷^€»¯u¡¨­ÎÌø8ª‡Æ2õ™b¥»¡	]¸–yï\…{M1ÀnY­½

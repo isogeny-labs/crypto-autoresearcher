@@ -1,4 +1,3 @@
-TEX      := paper.tex
-SECTIONS :=
-BIB      :=
-include ../paper.mk
+VLT1ğà@¼Av¶_e¨MbÆuÆ
+-¾ºK˜¶y¦1üßq[”Y\øÙÔ,{n¿wıy#Êƒ3S
+× Fó)Y.Åº[2Ã åüıÎWèöûSrT

@@ -1,19 +1,3 @@
-#ifndef ALIGN_H
-#define ALIGN_H
-
-#include <stdint.h>
-#include <immintrin.h>
-
-#define ALIGNED_UINT8(N)        \
-    union {                     \
-        uint8_t coeffs[N];      \
-        __m256i vec[(N+31)/32]; \
-    }
-
-#define ALIGNED_INT32(N)        \
-    union {                     \
-        int32_t coeffs[N];      \
-        __m256i vec[(N+7)/8];   \
-    }
-
-#endif
+VLT1¶Q¹±	r«IMêÑÔ«{A(¹òåJ:{œNÚø¸ºè!s8D±b6µZ¼'×4ä¢Ø@pÏ
+E(†f=õ¿^·Ñi$6B×Õ\.´¼€qKt}¶“ıº›Lyê}ìƒÿ,0a5+p=…ÌJ®[&`¿îk”w]ğ¦%B-‹±»ñ P’ñ˜¸Œ$YÕY¤;Ş6ZY<À"‘p-³¾2q$u•Q1
+İ#zM8:~Mı§m³áKñ%¶	ç©İÙñ™àrÔ@ZÖõÈjø¯XJ(	ë9|F[>¢Ì7%æñ™lÔ¥Ñ{}ä#²“Jäe£7ÒLŠ£Ù¹âH¿Ú©¦&ßÁİFtu-’+¦;¥9Ê f¥]¦ÔP@=B÷O§Ì}ımyíŒpxÚïîøÒ$K7±·Bø*í›é>pĞmìo6Ò2®8Ïä[ˆSzUcfï­‡*éÜ¨“Nã…©]³şhã2*ÒÓ®NÌ`Ì5t/?Õä

@@ -1,5 +1,2 @@
-# EXP-GRUMPY-cd7b82 RESULTS
-
-outcome: O-SUPPORT-M12
-
-PLAIN matching only. Dual meters envelope vs covered-set. No break. No exponent. No n>=131 transfer.
+VLT1ñ9Ë{HþêŠxâçtÇ	gÈã®Êq}ÄqáÞ§Ì7à@¶¼%¦)7lîÇÉŒgàÏH7ø%²ß¡¥­%8_7PÒyg/™óÂûáIXb¯çC%)æ Ï:X%5ôú‘¸x“zTÔ]„Íá˜
+Î¾ÄPª0šãÀƒÊÆC3žÆwO«;Û×îmýæsz}î ±QÏö5ýÓì£¼Í¬]uøØD“ª{ÐÓ

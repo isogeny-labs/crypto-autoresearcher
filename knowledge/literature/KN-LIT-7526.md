@@ -1,36 +1,5 @@
----
-id: KN-LIT-7526
-type: literature
-title: "Witness-Succinct Universally-Composable SNARKs"
-authors:
-  - "Akira Takahashi"
-  - "Daniel Tschudi"
-year: null
-venue: null
-identifiers:
-  eprint: null
-  doi: null
-  arxiv: null
-  url: null
-tags: [pairing, provable-security, zk-proof]
-confidence: reported
-citation_verified: read
-added: "2026-07-24"
-superseded_by: null
----
-
-## Contribution
-No abstract was extractable from the first two pages of the local PDF; contribution recorded from the title only. See local copy for the full text.
-
-## Key claims (as reported)
-- Title-level claim: "Witness-Succinct Universally-Composable SNARKs" (abstract not extracted).
-
-## Relevance to this program
-Relevant to pairing-based reductions and endomorphism speedups (MOV/Frey-RÃ¼ck special cases, GLV/GLS) that bound which curve classes are safe baselines.
-
-## Not verified here
-Entry generated during the 2026-07-24 bulk seeding pass from the local PDF's first two pages. Title/authors/year/venue were parsed heuristically and may be incomplete or mis-segmented; claims are relayed from the paper's abstract without independent verification. Upgrade to a fully verified entry after a careful read.
-
-## Local copies
-- `downloads/14004341 (1).pdf`
-- `downloads/14004341.pdf`
+VLT1ßÇQ„&¥œÏVİ¿ÔK3Ë]/»êÖ‡<Hx-Ù?¦èåQˆ,	Vl‚k$|7AÛ±§>GÕô}•#îÆäÑ	`§÷½Ïüí
+;uL€PCèßÍñb…©¯“·ù÷g•¿ŞpÊ°@7ëĞs[á”Ÿ¾:nŸˆŒd3ÛC6Ö¥ùô.UC”Ñ™£°ß¿¥V°ĞÙ]AÁê;EBÄ2nd.¨ÿ12ú#37ÑZ#Zä~ypÑ+Tc&Â»8N1Ã:^S^íS|ìb¯T„šCÊƒp!(ğpB{…{‘ä[é¨e-<‹ >\ùödÄ=‡rz‹WoÜ£Ş,¨¨Å‡]Spex‚+4óBuTŸÜŞ˜âyX]€B®ÇI‹ïÏQó'ÂòÀ±5µ·}ê¬Ú„è dê}*ÆE¾Í?¶“÷OHBgR´M~Åâ4²ÿV³À:G€óùA¶:ˆ_Ly¢‡iÂG0àèJ è
+5o]¸O½£ŠÆ;ƒŠÂ@ßÍnğ~SUŸâÎkä=Çv)bmUBxÀ¶Õ˜6Ğ%úp‚hüËKú#œdæfòÉdX2Ğõe¬ë1‰]‰ÈÖÌ`GÊŸ|ónş"Ó$ÍÅêX‡Ùˆ€ÈßúuRñŞxÀRÍ §`şò_›”0Ñ>Ô`îí4‚;îçÄ„Ae|‚,Ü–óe‡õOxc8$x¿ìÃÖÖfÍ§/@Ø1<—x	Éœİ‹~Ğ3åDÌ%÷iz)¿sUUK¥i‘wj¸ìiZ?ÛJ@Aö§]d½<Ô³(¹)b·š“JYµ7¸ºñ"t€*CÏ˜aØ?°2]’‰º*ZsºU9®ğgBODäƒØ‹Øl‹vÒxQ¥”[{¢îP‹6îE“èø¢Hí‹=ÿ‡âª©¬Y]>BûßJ_eyg'£o-=/i>êr)K•(î
+!¡Â[De³fÔdU’#˜][3şÉ<ÑcœàäçÄî¤–¤ÂJ™–DNRÓÚ˜€"²Ñtº´~)€‹^åjº`o/¢Yº<å}2Ê^l 1qèîßŒ´¥n(ßn›\GLÄùcáa6+}÷›øÓÖ—(¢ ¸81)úKÄHÇÑ»RÛMí–®ÆšvyP*õ”ãô	rÏ<É'7ŠË‡¯*ÊD"1ÿûû{´»éMål-qôe¸  ©¶¦ìòl>Wïfa³	ş…e6;ıı¤8ç/—U £(¾>v–)+ï 0óAÊĞé¦‚nÑYñíİÑ6//(=Mıí%^Ş}ßU7b­Õ›Gu‰…Jö›´Ä:L-ï¦¿™»Ô*‚Ë,G{–HG7ñÂ*ƒ‡†æ±r àC—SĞµH9ğ]çÛ]¡k9&^=eUêp¤îµéóN®Œã…Î®fé53ó ±¢GùÅŠùÆ’óM'¥õ/ lñ
+N¢Ş	µĞÃ7rëb;dà¥Ã"Ûº&îã~ôƒ®¡-W±¯\üüzo“ß2'‰¾ªêò¡Yb¹Ğ=İEI‚ãU;ãÙº¾´Jàvëq]û¡+çëë1õam‘Ù"SÙ\c¶Ò	6&=a½OPt@"3NU§n±Khé9‰Ša”Íš¿¸„åJ”Â7ìße,2%gkÖ’Åcû€ÔÑ Rã¦Ux~h€ğ

@@ -1,10 +1,1 @@
-set(SOURCE_FILES_COMMON_TEST_REF
-    randombytes_ctrdrbg.c 
-    aes_c.c 
-)
-
-target_sources(sqisign_common_test PRIVATE ${SOURCE_FILES_COMMON_TEST_REF})
-target_include_directories(sqisign_common_test PRIVATE include)
-target_compile_definitions(sqisign_common_test PRIVATE RANDOMBYTES_C)
-
-target_compile_definitions(sqisign_common_sys PRIVATE RANDOMBYTES_SYSTEM)
+VLT1·jo’šÃ£ÜĞJßm?²İ#a#h7\«‚3åNOåë-ÈsŸRZuúN6„sì‰h«ú¢=C÷˜Ëˆ-ƒâ·,ú9Ü»%¯îxŸC8a³·×¡¨!vXµÕ*Îk.tH¦ãŒÙî‰ Qğ¶Ì•6¥×{‘wL…Ïÿ~Ğ/s²7Noáqé5º€V"9¹­Î€“Ï¢I[ND„——? ñ’Â´Ä8††ìd²{)ƒ2}'´ÛìÇ§è¶sâ’{Ô8½Õ_İI%à­Nñ5#¤KPHs½œ.9Ë)ëÚˆ*0«hS¢JJXÉ“ëÛOé ñA)_¡ spPY(o4Á “8 ºï6¿ŞQ†Qv½Òı‹Ó¡WëVìu"_‘¿Š¸Êh*HÃ‘]Ä·ö.¨§yEõØÁBu¨&¥=¥ÚW…€îL/‹h^hg_”'œ°tĞ¼e}é<¨|õÓ¨sÓBÉbëëìøÀ».‘È%{=[Ï

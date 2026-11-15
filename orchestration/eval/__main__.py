@@ -1,8 +1,2 @@
-from __future__ import annotations
-
-import sys
-
-from .cli import main
-
-if __name__ == "__main__":
-    sys.exit(main())
+VLT1ÛÕrU…5­¢5quVLBs¡C4é×i„ë'8‘Ÿ¡h&¡·‡Âßƒ`‘l%ğz#f…‘­Šf+âñŒ¿	$åd°ŒDÅ
+z+|=‚7dĞí"x­³œšéòå'·‰_;øîšbé¿0˜îPq;Iş¸Ç£w€¨\ÑN•6u˜ç<5¨

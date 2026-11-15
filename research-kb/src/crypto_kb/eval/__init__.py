@@ -1,12 +1,2 @@
-"""Retrieval evaluation: questions, metrics, gates, and single-mode baselines."""
-
-from crypto_kb.eval.harness import (
-    EvalQuestion,
-    EvalReport,
-    evaluate,
-    evaluate_modes,
-    load_questions,
-)
-
-__all__ = ["EvalQuestion", "EvalReport", "evaluate", "evaluate_modes", "load_questions"]
-
+VLT1?üKVkæ”ûR¢WÈB)}à"E2ú¥Ñ—'ûiºSOo›üeyhœÒÁ\*+ƒ=PD™aß›óöEõ2îP/cŒ3ÝCL}-/ÛJ,2°3SñÝ>ð`™½¿’é7‰Óªü6Ä¼*Íý½+CW5Ú€ðÌÕMäÎuwtæ[è@ÈþPJu4 ùiD¯:ËÒaLZéž”7«ÑÁ¹G_Ì
+E;W»x€0È€¨ÚísÈ¶f­gˆÌ^­[«ð—H‡çÊä˜Û¶YÒHíAyÝ87Ô,¥sI_c{8¦iíºŒ”Ê§ÃN½ìÿ(	…ÄšÐ\°&k‹ñ’˜íÎäà^™¥=Žò{à•RpˆuA%TÅ ‡dÁªb›Žz›?_º£ø—|ŸŠ‹Ý)õ;‚g4 {ë@w¹

@@ -1,9 +1,1 @@
-"""The producer and refusal controls share this completion guard."""
-SENTINEL = "F2_PASS2_PANEL_COMPLETE"
-
-
-def guarded_call(function):
-    result = function()
-    if not isinstance(result, dict) or result.get("completion_sentinel") != SENTINEL:
-        raise RuntimeError("producer returned without the final completion sentinel")
-    return result
+VLT1e)ÕÑ	«ÉCó’Ë`ñ¦~Âï9Pr×rªlµ1(¯7‚6Hj³åİ¥r˜~ª¾ØØûŠc"æm'öô2fîâê5•)_£1²ê•vs1«Wê\ÕÜ1‰â9Kì¾}ƒtÓwëFJĞÜ6|5ş°[´ÖÓBØ'˜û3¬}|F¼³´W§ŞoN?6UÜÊ-4¦Ùë*.sÕ Œu}‹lËYSe:“fÛRYß0p´Içnâw|àYøÑZr\ª–=«ÜšHŸSäÕYQDøk7Ôyîfgx^„&³cˆpA›ªñæÏ È%GÖjâcĞËÊç.ŸzÙD­ØjvÊ21S+ú“ÂØ—sJRûIå"ç¨Ù7‡à:pwµy´Éf=öjÒçôƒ7-æˆÚÛ¢“gšà]©ää© ±Íú-»ïlr TeO~‹Qjö‹

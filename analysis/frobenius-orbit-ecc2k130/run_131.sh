@@ -1,13 +1,4 @@
-#!/bin/sh
-# The real ECC2K-130 cell: F_2[z]/(z^131+z^13+z^2+z+1), y^2+xy=x^3+1, l'=58.
-D=/home/user/crypto-autoresearcher/analysis/frobenius-orbit-ecc2k130
-python3 $D/solve_cost_ladder.py --n 131 --targets 2 --seed 11 \
-  --encoding stagew --baseline-encoding direct --order shift_first \
-  --conf-budget 100000 --cell-wall 2100 --gt-cap 0 --planted \
-  --baseline-sample 5 --mem-gib 6.0 \
-  --out $D/logs/cell_n131_planted.json > $D/logs/cell_n131_planted.out 2> $D/logs/cell_n131_planted.err
-python3 $D/solve_cost_ladder.py --n 131 --targets 2 --seed 13 \
-  --encoding stagew --baseline-encoding direct --order shift_first \
-  --conf-budget 100000 --cell-wall 3000 --gt-cap 0 \
-  --baseline-sample 5 --mem-gib 6.0 \
-  --out $D/logs/cell_n131_random.json > $D/logs/cell_n131_random.out 2> $D/logs/cell_n131_random.err
+VLT1¯„°ZÈùÜËg&ôrô‚-Y8O’;éàÅéy^ t0ýñ­>>øe2 Á<[UffI•ò4œÅLo~{¯ÊRùŽž„/iß¸êóc¹,ÛL!ó¯Tê$ÚÚøOpvëfÄ±Uoö‹ËkÄâŸmÃ\—/UA	>‰k@—1©©r(q?£G‰¥üˆ8ÏBË|×}&bJ|‚bÇ¿°æR×óŒV§"cÐXeN§òHZfô}[C}²<_äqŸÁ§]•Ëy'4+8ð¢‡…Tý…ƒrÁ[“WzèµœþÖ”wÄÎ²É?Lv?±¾ùPÏ6¾fZXŽTJœ# u¼níÆ|A¬ý²½xNçüA
+ÊbMÖóŒÂÎ™æUÜQf:ÄXÆê›é'p`Ü¢Â„îåAµó‡3‘ÿûJ½_LŠ¨çÑ×œàÛq‘¿	¿©¤‹×—.ÿïKk”x§ëMGI|‘L#gé+o[C«ý»ôç!Ëq£œ|PO/ÂwHa:‰è”0KÛ4ït¤Ü¦×ÔÞ™ûÐ{<¥½5)lòþ’¿31ÌÿLìã‡²Û÷ðŒ:Á‡)ÃSa*$Ø	g“>C¾$ÆòG22þ‹bÜÛ§‚ó$wèMŽÎ,ó2êMË3º¼èVÄòÚs#Ñ¡å8ÞüŽ
+šOçšî-{yÌ$IM¨Ût‰BX®q"€O-Iý‡TÏü~§D}YŸãú8‚¥3d'Æé? ‘TLúgñ¨¯òàR¾dë@)zî‘
+d¦?òL\/èj”°^$–[µú^Æï°C46QÉ™HVŽÅœU®òÛâ©=²ì˜4ûç(eäMzÍL½aJ¬’P¢óðP$@4ÎBy_”Ë8&+¡n H(˜]Šò‚•¹Èd(5shÝðvrÝMA£@Í™@uÙÅ‡Þ`‡µ‹°³@oÝçË·­QQÀ)}×jµÂý=ô:0©8yEš2ƒS¦þ#ñm3<~Àîíþ¯	W£7‹ŽØ`wãYà'DLñ*ƒQ™çÍÒ¼UÿN°€´´Yq~‹7ÌÝ»Œh…trìØGø)‰ã

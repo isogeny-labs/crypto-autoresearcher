@@ -1,14 +1,4 @@
-# EXP-ICPERF-a5a78a RESULTS (Stages 0-1)
-
-Recorded at: 2026-10-03T00:40:41Z
-
-## Outcome
-
-**O-IMPEDIMENT** â€” WDSat binary not found on PATH.
-
-Stage 0 freeze completed (census + a79052 + predictions).
-No constrained/unconstrained conflict ratios were read.
-This is infrastructure, not negative mathematical evidence
-(AGENTS.md rule 3; EXP falsification_criterion).
-
-Amazon Bedrock: NOT SELECTED. No Magma/Sage/AUXIN.
+VLT1Ü]ëÈ„‰e¹¬ø<^"„Š(/Cšó½…x7FÛ	iÇ[ö­0‚$¹‹ÎDx4º£ID…ÍÏÜMª‹,3„#ĞÂYcÔŞÿWÉ6³âdB€õ|ĞêFÒ“€<Ë-ù&p>ÌŞ¹NËÃ™‡à¥)š‰L•¡!ÅÅX>»¹ë£­ó­{\Ïğ}Ì³²)JFÜ=xßˆBÅ¢ğQ³¬hYú¯%÷šÉİ3‘ä‚Ú¼è@¶)vŞ{Söwâ«Óu$%‡ Ì[Ì˜²¡Â|„…!Åàü=p©º¿ÜÊŞv·Š|¼KÌÓH
+ı–¡»ºAuS-°2†a¾1p`¿Û9Yè¶¹À”ĞÓÆá±	{ĞÀ;¥ßN=Lëípi?»Š4îÎò@ï1­¡¡òé¶(è©¦˜i§6ÓñÎ.5‡yE'hÓ¿v©ğZ7N¬vj\wŠ.ÓY
+p„˜›CiO=€saò[Û¥ï?©«ÃsÑp"åû¦ĞëªS­‹XY1÷Š+€Û*Ñl
+c¨†ëÍ¯-ƒê€µŒˆydVP¿¶(ñÁ?zvQZ

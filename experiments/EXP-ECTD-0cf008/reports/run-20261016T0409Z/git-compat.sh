@@ -1,5 +1,4 @@
-#!/bin/sh
-if [ "$#" -eq 3 ] && [ "$1" = sparse-checkout ] && [ "$2" = check-rules ] && [ "$3" = --stdin ]; then
-    exec /opt/homebrew/bin/git sparse-checkout check-rules
-fi
-exec /opt/homebrew/bin/git "$@"
+VLT1¶°´l„7>KmìX+8å5òeiWdø˜)±ëüT«ïe¬jrEòP‹þ(B4à¸ºrwüÝ€… ð†ÓZ-‹í5aI¥ƒÚ?@Ä··I´>„Ãÿ(4¬À®.!Ø‘7ztl—t<½ Ïèµ(s_£YuieÍ£ r(e¿Ažíüh]>¤iòpï&¹6I†äƒöÝÞm¸T`õ¸£ê?VÚ“aÖèŸ ¤tÆÆM`ÔÓHÈ
+úëUéÿ¤7@5§NK²W¾ðU
+ãþ|õÁüWþ¤5˜x2î`2
+SOÃÂ6

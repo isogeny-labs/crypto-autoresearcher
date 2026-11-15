@@ -1,1 +1,1 @@
-"""Checkable harness for symbolic numeric-width / peak-byte schema ledger."""
+VLT1j{‡ÅÔ}’@Ú$ê®3GvŸu~†é)šD¨f¥ŠHOœxKÖVÄkİnWb¤†Ä4a%÷YÜ…‚QÈ§ô˜ğHÛ²‘Rç‰2Ú†¯ûïnÈÎ

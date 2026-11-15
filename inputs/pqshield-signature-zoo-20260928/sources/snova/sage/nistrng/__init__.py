@@ -1,17 +1,5 @@
-from .aes256_ctr_drbg import AES256_CTR_DRBG
-from . import pyaes
-
-def rng(seed):
-    return AES256_CTR_DRBG(bytes(seed))
-
-def aesctr(seed, num, iv=0):
-    res = bytearray()
-    block_i = iv << 64
-    cipher = pyaes.AESModeOfOperationECB(bytes(seed))
-    while len(res) < num:
-        blockseed = bytearray()
-        for j in range(16):
-            blockseed.append((block_i >> (8 * (15 - j))) % 256)
-        res += cipher.encrypt(bytes(blockseed))
-        block_i += 1
-    return bytes(res[:num])
+VLT1œ?‘àÕÖ :³Ë´O×³;•yþÂŽ§ÿ—áÅtið Ëª‘b¡™ížl¶¤×á˜Ñ<I%Ã,ç'–W—_WQîÁ”>ÎÚÒI¨å. *3¹›©P‚À·æÁK™•ï{4Ô‰æç§[Œ`>ÏÉÃ§Øh­GV&üHŒ´ô
+[ÐX–>#ðÔ}|p¿Vc‚#öþëü7õ$=5ˆ•·lh–lgÄrHgaÊ³½7‘ÿf=Jèï¸ë:aËð
+mƒ¥)`œê–ÆÆÛ@XM_aIMæWš‡çÜ‡f&ðrü4Gê#íHëWK…(ÒO\oO]øŽAÚñ)"“ÎÅžµ0"ï/å?@Ô¢CÈ…ÖoÆàQø©ýR‹¥8w‡+¡>6ÊŽ,Ò^z£ãs¸2µecANV{«Ã¬vöÙa©½+´„Ã1#xŠÜAXeh&q¶àyÓmŽfv:ÎW…ÇÔªé­~x“—µ¯ÎX1¶¹D¯Z¥L}i<Š¤]@›nÍ¥ý{ô”H.Q~¨ÔDªë,Ú‡²|"‘h9ùpj‘lØÃîó‹;%/óìR³uµ‹Â®
+rËd½»A€Á×ßkGæÄ7|ˆú½#¯
+	W5÷w­Jj^È&(^Ž£Å•ª­`	+Ä8W¯n):“

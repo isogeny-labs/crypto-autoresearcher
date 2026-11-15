@@ -1,32 +1,4 @@
-# TASK-20260731-115 â€” Execute RUN-DS-001-ctrl-ci-identity
-
-**Role:** executor (`executor-implementation`)  
-**Admitted approval snapshot:** `405b8422` (TASK-114 / DEC-20260731-033)  
-**Package:** `07232da8` â€” PA-DS-001-v2-ctrl-ci-identity / CTRL-RT025-CI-IDENTITY
-
-## Authorized run
-
-- Run id: `RUN-DS-001-ctrl-ci-identity`
-- Control: `CTRL-RT025-CI-IDENTITY`
-- Results: `experiments/EXP-DS-001/results/ctrl_ci_identity/`
-- Primary cell: bits=20, B=64, m=4, seed=101 (optional secondary 16/128/4/102)
-
-## Requirements
-
-Record required fields including `ci_of_cost_identity_R`, `ci_identity_pass|fail`.
-Honest `ci_identity_fail` is admissible science, not infrastructure failure.
-
-## Constraints
-
-- Toy ceiling. No S1_met / support / asymptotic.
-- MAKE NO COMMIT (TASK-116 archives).
-- Do not launder EXP-IT / BATCH-027 / theater WIP.
-- Watch assume-unchanged on `ds001_driver.py`.
-- No STR. No H-IC/H-STR edits.
-
-## Deliverables
-
-- `experiments/EXP-DS-001/runs/RUN-DS-001-ctrl-ci-identity/manifest.json` (+ run records)
-- `experiments/EXP-DS-001/results/ctrl_ci_identity/summary.json`
-- `experiments/EXP-DS-001/results/ctrl_ci_identity/ci_identity_report.json`
-- `coordination/goals/GOAL-ECDLP-001/batches/BATCH-026/tasks/TASK-20260731-115/execution_report.yaml`
+VLT1aÍ×eŠO
+Ué@]!:{AìèoşØÄ`ØGĞ[[MMêOÌmL.h2kÏ8Ï«*w]:CµNbû7Ì*ŠyeX£›4ªÉ‚¼À[ %ış‚b·¶|:O´Í~Œ ŒÎ|fÅò“şåœ BÌ6ıù4ƒPÃEìNKyÎéP·OûšTö÷ĞİV×J®Æ£Aÿ®M™[d'SŞËÇı¶„«€»ü©RtÇ_ñÜ-‡t¦NUp±WÇ~Ş'Ğ¢WPÿ`n˜OÜÀY`Iş¿’@ªÿeBSóÔêãZ?Nåé7ˆ½áw#	œlÚ7¤JH!4Õò)¸Í#ííŞ9&óïGXO±É³s}9ŸÛ£=©V0à‚F¤k5–Ó¹“Ëÿ'ÜRUÔòÃ[:²†ßû¡¬²W‘]ÙçœfjüJ•Ág6ØtŒ-ëÌ—–8«øoš…êÆ`mûñ7‚¸§BèFõUxdXÕß±‘CÁ†5È67døg£Nˆp;2p¦‰xĞS}ıŠP¤S@· ¤½uos™éğqıµ—7Öã-˜I¬ÁŞöò7ÿOèëƒ†ÓÈÄ#R{O/ áô~Müç§_‚|<ï¼üR^ºíÔDó­ì¾<%D‰-Ì2­L—¼269şİƒ¾%9‘F$û•)U9>&í>oG­¤Ô£Ñ{î¬‘9qâë®3Ş9{îê&Øb½îÂå2A¿‰ÂÅ§RûÓĞÔÄS=ÁÜ¿:‡ÄNÚ\J\‰»t¢›vƒáÓdmœ/àl¾ãx:¿¾ÜNtoOÒæ&˜Û	 Bjôİ[UíéŸĞ˜ŸaÅÏWrj‚Nœƒï`JU¾>Î:k#(Ú-,¶ã‡ZÈ–¥Aë¹NAê›âi
+Qxc*«ç†r¿
+¹¼Qµµ¸C¸™4NºW”b)´ëÁéÅ,=fÛïü8GÿàÁ;Aç¨…C¶R"G«S¸SÚê&î©Ae–Ú–â6‰V]‰b¸ùÍºüNïNlÀ—3×.gYXš•wgKP¾U¤îÍ²<›§D=,œ¥}½.†Æ(ˆÇéIÚëè^²îA;ËtöpÛÉáóKª¬Ü/tÒöú@1<Óî©:Ñ×ñZàâw¤R\>uîaÓ~gËŠ”oCrşWRyIDól‹A¢,WÂ{[¬ALÚWC`KN=õ÷CG>6ÊHo·8İ[÷Ã•Í„iFj´wrh¢ImLÚ§Ê"°s{<ÇKÊñûï³f-èÚæQ	%øK”ˆSQÜuí ×\qËìcüİ#¥<¾9Gµİ@4]=o™Ä8ÆØ,¹s¢×ß™T¨lTüyÉ IE‘ï_N¦ÇD`k/¿v^Âk–è}áQIaœÓ¡PÚL<O3;ú AèöQ/%ºùø{§iOÉ¤z§}Ãñ[5Eò£ı:KXÀ‡˜³%Mî¾³¯ª„`L4–’ë”Æ'µcŞ/¶Uì£Úx&y×ìüUêãš8ÑÌ¡TĞ¢@«Û†´uÂÒS(v„É°P[6ûnhö×3®”Ìh[1}©¸šV‚„²D\Fû). ãÙ¢$ë”wJoÔ¬·O‹€™†â"µo¡_æ^ùş9ÑçV…Rx&¼Â´Õ2mÆKO!U:×ñ©O¥

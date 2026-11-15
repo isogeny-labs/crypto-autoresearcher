@@ -1,14 +1,2 @@
-# Unlisted Publication Payload
-
-The independent Red Team added a payload originally named
-`._UNLISTED-PAYLOAD`. It is preserved here as `UNLISTED-PAYLOAD.bin` so routine
-AppleDouble cleanup cannot delete the evidence.
-
-The original top manifest remained byte-identical:
-
-```text
-b5426daa7d9ebf66db356ae2080780712e8318f03bec04c37d12b45580bd2b1c  SHA256SUMS
-```
-
-All listed members still passed and the unchanged verifier retained its original
-PASS receipt. V9 checks listed-member integrity but not directory closure.
+VLT1~›Üx°c‹3G™ºyt.c§ÆúééèT¡*r¥zØ‚´¼ÉºÀÍüDó†ÑíÌ"ºBÿ³r¥Ş™îsÚıÏøİ¿qçô†¥4HÉ¤†U­‚sÎ§àÒ"RdÁ×_×ajN
+"<–Í‡œïóF°ûRx2`¦•)éX0AÌzØ™Ÿğ£‚p–»7‚ôÙe¥y³»Ë,«KQfxİbsÎ¶ADå—«ÒËé7~9Õ¼*ÙFXÅ)¸TÍÓ$á¯Xrö»«ñ°ÚëR¿l‚b2áîvEL3<âGˆôQt¥Ê`ĞÕ—0­ù^.ÿK2'ÖÖÖ‘èP6E´±µu¶\ÇşñhÖŒißjqT<8…çİFz°„‚p5±Œ©S†‰¢#>†éÌ¡Äº•8Pï0+mÅ|U4-ú"×6V[sSˆj†n:J¿ÛíÑ5á¸æûnOÓ,OŠ{cglÜaµ(ˆP}–Ê~UÏvpŒûå9Pì›×†pñéÑÍ=ŸøÉƒ=2ğ¸6Øí~y“#ã¯Œ&Põà6²\Q3Íª®ì…ëŞmĞ5OÎ«Œ3N¬FROÒ…í¶{@Géà)›ü¨ô–Éì®í5šúêÜöAvJ!Êl(EâPç‘¼ƒg7ÉqnH —ÿ|,ê¡|m&á±RLÚ¼vTà»`üW­Îá†ğqS‹

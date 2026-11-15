@@ -1,20 +1,5 @@
-# Implementation â€” Autolab isogeny: p1486_quantum_cost_accounting_verify
-
-Historical Autolab port (no re-execution).
-
-## Provenance
-- Source repo: `/Volumes/Volume/autolab`
-- Source commit: `dca04ac33e9ffcfc51edb3ae7e7bd558b1962d95`
-- Source id: `p1486_quantum_cost_accounting_verify`
-- Port tool: `tools/port_autolab_experiments.py`
-- Port tag: `autolab-port-20260731`
-
-## Copied artifacts
-- `source/p1486_quantum_cost_accounting_verify_result.json`
-- `source/p1486_quantum_cost_accounting_verify.py`
-
-## Deviations from live harness execution
-- Run package is an archival import of prior Autolab outputs.
-- `run.code.commit` records the crypto-autoresearcher HEAD at import time;
-  Autolab source commit is recorded in `inputs.parameters.source_commit`.
-- Certificates are `kind: none` (not re-verified).
+VLT1ÔúÒ?$/s]Ø¸§´¥çÏußòI§ó»’.[>HáþWJÙ¬Å„¥M4—ÉÝMnsãµ&;"o¶†\»!”­3HXýlQÛérrpû¦Ë‰íê€tnO¼!‰Âæ©Ôâ‰ñØ¼’í:ãšƒ:1eIZ‚×½M¾ˆƒso§he\ël¹ÑñºNÒ…v7×í¶Œ´ó% 2çòšýZdÓÇÂ.Å°·Ïî-l!tªÇàn< ‰,‘9¢†;eL‘
+)j ;1äÕ2è0Û¹eîç°]É¯€ÑzÏî<{iŒ™¹s’ædöUù´4åÂ#Ó-gãó
+úåž²×’ÃA§éËv¯4»ôÜtÇJg*Q[H
+sÀIÎŸWóÇwZ”šš\“ÒPp¤ñZynÁÃZ[#{¬*UqsF<D‡«ÚJV„gÑÉç­Ù9O€¢©2Wa²e´…ˆìÒ¥˜‚xôGõÖYŠ¨Ú™¼QŸä‡YÐûN­R‹LÞŠÊµ}9»¬	4ZPÝ=6,ž‹è°8ÓQ|#ÞUnsÔ?åÚ:/‚©JÛ;32Á.–ÓæÇë!öæŸ“16HÕ½Ú]Vo©HóÃ$âT{_FK¢bR ™ý¿q÷ íÖÊáÎœwºÛ1NóÓÄTŒ…†{@½¨’£uá‰ÞkL,‡‚àn>–gÎû_Ú-­úKi;¿Û¶ôË›‹'mÿ´'é†¬ø´Ùäúžm@ME¾{¶4ÆÎ$e´¸ãþ×·Y”[ŽMWÇŸm?ˆ9¼0	hòkÐÂkØÍwØ±]¼Md~ÅÂšÇS
+X¡¹.³ˆ{ MoŸ‡ÔÔ€<µŸw(CÇé’Y”'Þ–ò?ŠT%lõ[}8ÏžÆh-¨æ?¾ìÓÅ/§n	tÜBF–‹š²]ç¦Ç&©v¶/;&ÈŒ„îûÎsåó[h!tž‘žÂ••ÛjiiÍ-š%êc]¤ã+ý¨Z×5<àÝ¢Ò9LŸ:¢¦ç²F÷Ù_üßøë“"M‘Ý&Ã+Ì„Â`QÆ€ÃÕ ¢Ý´ìÃÉ°³%ddÇvK?\;S,ynT³/

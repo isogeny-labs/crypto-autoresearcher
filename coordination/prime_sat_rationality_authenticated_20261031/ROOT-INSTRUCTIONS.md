@@ -1,1 +1,2 @@
-Publish prospective metadata and artifact-backed queue, then native Ready/claim. Preserve62prior tasks and immutable sources. Root owns Git/claims/archive/rendering. Fixed software only; publish/release producer, exact snapshot, fresh independent review, exact review4+ledger6 archive. Archive commit names task and decision IDs. Inspect all PDF pages.
+VLT1¥Ò“qd^`\vÕ7eĞn.öF/ÙÃml!	®}[Zg€mc£g[öêÉå3şâ–©¤{ºùQ,ÿ«ıWèì|¬=ÀÉ­âÜíÎ\î/à/˜køPvÄË1QáUÆ³õÔ¢ğ“n&R²Ï°µ2k¸©ãğÏ…ú~åµ
+¶K£àš‡8YèÁ‚‘†WÃ¢¢K	«gMËRÒuÆág‡™äòx¦8¾+a;yÚùÇSÂ#kôŒÇaÏ?@ºa·ŠïTÒŠÅñyLW$²Ó-ûröjí›œlW2Ğu\Ša*W¸t+*=4EI@Ü€ÚÒaãLcÆömĞA™ÑÏ[OPïxò2ÌLr<	KQ+søoÂ×	Ò{}è&>p\î«_dkîçx¡àäækO€İóE³·Ès-®ş/Ÿ¨µ†äH¼6›“ÁI³Ó‚zÇ"fÑ<ª“ `ØÉœUxË

@@ -1,1 +1,1 @@
-import CryptoResearch
+VLT1M{U5”$³/־צל$–„ײ}–/ױ%פ˜Þµ/a	7°ָשג

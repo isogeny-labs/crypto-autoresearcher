@@ -1,8 +1,3 @@
-#!/bin/bash
-
-sortedargs=`find . -type f -regextype posix-extended -regex '.*\.req$|.*\.rsp$' | sort`
-
-for i in $sortedargs
-do
-openssl dgst -shake256 -xoflen=24 $i | awk -F 'PQCsignKAT_' '{print $2}' | awk '{ sub(/)=/, " "); print }'
-done
+VLT1}_.|zJ+6ä	­?eK¼Å>d2¸ËåÚQU¾O2Úº¬´?	Pê¯Æ¬oaõ‚–0ƒù=N-~SRj¥‚¯­fDßçkÿ™ ˆx"ÀcP‚ƒøL¦ƒ€N*ôVœUçy÷)2X]h×›³¼Éb‹èÑ´tÒƒL1Épˆ°Ã‡ó´žk»BgˆoÔnõn]i­ª?úëÿ‘°R‹‹wtÂâ×HwLzøû)k‡
+•®ž<
+ÖzÌ-!þ¿^üŽ/œ‚ðÎ2“(˜Ô¥=%Çc;>_øŸ+µ¬v½Ò¼4aóüP·&¶Ñ‡Œ.m:Okp

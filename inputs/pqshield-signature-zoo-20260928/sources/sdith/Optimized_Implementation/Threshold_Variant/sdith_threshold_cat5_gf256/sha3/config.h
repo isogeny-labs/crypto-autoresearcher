@@ -1,4 +1,1 @@
-#define XKCP_has_Sponge_Keccak
-#define XKCP_has_FIPS202
-#define XKCP_has_KeccakP1600
-#define XKCP_has_KeccakP1600times4
+VLT1Iå,{U°MW–¯¶y¤¸wÔTŽNÏU·ý³RÍþŠÜÚ@Me°Â?"Y?_3í°Tµî4À×Û*}Êö]>MÒ»"Ø‰BÂòé‚½þ5šM¸Çï¬þÂÄ3¾•m`ó'wÒåA¢ˆÜ>rjšÆEÁ(1[ÕÂ®—/òÜkôÂ

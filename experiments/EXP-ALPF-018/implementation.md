@@ -1,23 +1,6 @@
-# Implementation â€” Autolab prime-field: round009_exp017_abelian_surface
-
-Historical Autolab port (no re-execution).
-
-## Provenance
-- Source repo: `/Volumes/Volume/autolab`
-- Source commit: `dca04ac33e9ffcfc51edb3ae7e7bd558b1962d95`
-- Source id: `round009_exp017_abelian_surface`
-- Port tool: `tools/port_autolab_experiments.py`
-- Port tag: `autolab-port-20260731`
-
-## Copied artifacts
-- `source/round009_exp017_abelian_surface_result.json`
-- `source/round009_exp017_abelian_surface_result.md`
-- `source/round009_exp017_abelian_surface.sage`
-- `source/round009_exp017_abelian_surface.sage.py`
-- `source/round009_exp017_abelian_surface.log`
-
-## Deviations from live harness execution
-- Run package is an archival import of prior Autolab outputs.
-- `run.code.commit` records the crypto-autoresearcher HEAD at import time;
-  Autolab source commit is recorded in `inputs.parameters.source_commit`.
-- Certificates are `kind: none` (not re-verified).
+VLT1hx¦ÍÄ»‹J@j«¤%¤ÆÄý¬,„9z¨`ÌÌêq±>¯É 8$š¿ˆßg”(>óyì‚apúHŸ…Ÿ¨Š@§GþY³æ´î‰Ï"öÍ±¥Ã£Äglp‰…M‰•¿ö»zEÔ$ZMšÉŒŠ2½·‡kWY+IWxÞ‘ç­ü±ÆŠI]fÔ@2¥c–\€UÝðü+&hŽhùÕÇmtþ×)Ýîàjï²¡zñ#ÓØíÍ8LP»ÑÉè†—F(HpTXÐvªp&ñ±‘w‘°¨^ÌÈ¶¿M„nXYCøÛIJ°¢‹íEÙLQÑX¢¤jÌ{GÇ±û#¸
+Ú‘e(É‹ÕVúÚÎ=HRÖF2L±‡p›n-×¦;\†p`ÆØ·ß—G#b++ÔüÿµB‰z`“a[ûÉßlåXQ³º¾»‡c	L2t×­é±”ôhNÒZsá}[–zú%÷#}›¢àúâ„¨
+!xèÐ¡NÆ0¨}’¥ðfÊ*a¢ÊI²$§qÂrØŸ´ÄzLÎï_´0D[w§á×`(Œ#ÛëlHX%›ôJÝMƒ]é÷¶Ï
+³Ôfh&ïDJwn°žÂÜ'À¸q®HðkˆÙSrx Æ…¶B×é‹…Òñõî`zº·BHÏÅÔ£[¹ØwìˆÒò–õßÌ÷°
+’j†èWëü­>9\ÆÐWfÈmx…à­£yÊÂÿmPoÿg8<3¨Þå–êñÊ.=ï4Î^Epó/‘øáˆ—ÛEk>…ê“²p²íCø7ö:@i±'³\Ë]oV½=ucyþ¥PÄÈH±ºÉ<Ìµ2ù s¬6’íÜþ:èS“,iÃ°6ÂOñ¾ÿ£—}¢aÕR;ƒþ„Åˆ¡9l
+ÄÖ×áo4†Õä‚;\F5ññÙOÊô‰'ó ºÐñšCRóUiGû³3M¨Ö/D™¢s[}û¡†ì—sØ£Dìë‹÷mgAÞEQ\¼®ŽÅÅL0x>öÔÀOÅšõ0åNl"¢×(+qêÍBã.nŠ'M[-ˆ¾M¸¹LÅ +ö%ø¼†ÿCÆ/Y‹Ü ¦JÃ®@€N"¬C­K¼ü37blŽ>PO{1ïÐ€¶õ])ZB©²Úü(<xÞß«!Ædÿžm]tË4‰:ÁõM²Ûƒå¼ÔÿåèüÍo#eu«¬S±Înpf`]#4H:%3‹Ôë6E ËýA£Ò¦CêlÄ*Ãÿ

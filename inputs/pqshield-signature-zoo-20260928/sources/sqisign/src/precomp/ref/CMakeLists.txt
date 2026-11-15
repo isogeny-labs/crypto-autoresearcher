@@ -1,4 +1,1 @@
-add_custom_target(precomp)
-set_target_properties(precomp PROPERTIES EXCLUDE_FROM_ALL TRUE)
-
-include(${SELECT_SQISIGN_VARIANT})
+VLT1‰u²Öâžõè¢‘òvUkK¡kÓþO58«€V€>ùO #>´ÌokbÀàN)×„^ OzzŠ¡Ì·)glkIôŒÀÂâä„2+¸S‹£¢íþØ=šå­ÁŽå2‰½ûÇjúË_«aB9d¥¬q´³¶¿JøSjXQJÆW7£2ÓnóvàÊ8›z‰á´¿©ÅŽÉ?

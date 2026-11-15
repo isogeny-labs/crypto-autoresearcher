@@ -1,8 +1,2 @@
-# EXP-BINSTD-7cfb11 RESULTS
-
-outcome: O-SUPPORT
-meaning: F <= beta at every completed n=17 surplus with dual agreement (>=3 levels).
-surplus_completed: 4
-beta: 16.0
-scope: toy n=17 GF(2) sparse matrices with frozen |FB|=24, w=4; not an ECDLP solve; no n>=131.
-amazon_bedrock: NOT_USED
+VLT1ÇÚ‡>âÈ"F9dŠY«–P\ÿØNm‰ÐƒÉJ©L~¡—²®ã`$¡ ©-ñÁÚõÝ:>ðEåF"ŸKDì»ñô+ÀDÎª-^80"”»/cŸ}vµ-ž—QùµqÞÊåØYmÿyÐd ’´~ù®J¨zçÓ0žSò4Óðü~Lâ£6ê¼búùä<  ±uE*Èž”ÉÝ9íêŽß¹2i¨z™/þ¤oQiô÷n*Ä…ð"YO:-Ÿ‡þDš¯ò fÛkÏÃXÎ_¸ìþÕÍz:†zBƒé¢]' rRÎxà,¡Œ †Û5+ínšòyF,?„PcKò$þÕ¡Gç„«OÔ\õ©Û”²‰šð¨%.Àf…e}üÜ†
+Ñß.nä/Ñ)Q¨

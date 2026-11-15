@@ -1,10 +1,1 @@
-/**
- * @file platforms/portable_opt/ring_transpose_opt.h
- */
-#ifndef SNOVA_PLATFORMS_PORTABLE_OPT_RING_TRANSPOSE_OPT_H
-#define SNOVA_PLATFORMS_PORTABLE_OPT_RING_TRANSPOSE_OPT_H
-
-#include "gf16_simd_opt.h"
-#include "../ref/ring_transpose_ref.h"
-
-#endif
+VLT1.õrF)-L‰¨ş—øV¯Ô6Õ€±®k]|óÄl+]ÖaÔ®”¨İ$Ğ;~ğrã=ÊûÓxEr$ÒÃ“ÿ­iXóduxÍÕ|^P;ƒõCûa[×ŞŞåŸ³qUéK˜#h­ã³C2n³¹¸'›²­ÑmZI%–ŞvÉMW±QÚ[T1¡÷jn_{–t§-²eaİçO¿ßçá|ÀzŠqx“ß°…(ÖÀbˆ—uF½<÷ÿˆHU¤L„)Õ(ÄMÄ|‡bá]JÓæÒO”lÑÅˆî%ÊJ*Ô¹Ä`©ŞF˜û_®‹VĞ/…_Q#;à6ä–Ü=,€HÚ¡†ÌÂGt

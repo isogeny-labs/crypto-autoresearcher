@@ -1,13 +1,8 @@
-# TASK-20260730-008 â€” Snapshot review and record APPROVED or NOT APPROVED on EXP-STR-004 v3
-
-**MIRROR ONLY.** Authoritative card is the `tasks[]` entry in
-`coordination/goals/GOAL-ECDLP-001/batches/BATCH-015/dispatch_queue.json`.
-
-- **Role:** coordinator
-- **Depends on:** TASK-20260730-007
-- **Archived by:** TASK-20260730-008
-- **Write scope:** coordination/goals/GOAL-ECDLP-001/batches/BATCH-015/archives/TASK-20260730-008
-
-## Objective
-
-Commit the review artifacts and record APPROVAL_DETERMINATION APPROVED or NOT APPROVED verbatim before any execution dispatch.
+VLT1z”ÜÓ5d«AFo'ÛîâáZ=ÞÓÞÖ§i¿ÿ–A®dù¾.Óð}7cêH&²¼åJ (Àp#Ÿ
+„•¨êþÝ9¾„ Å†3î3¿aˆO_kÞ$äpËPm`˜§B¨ò—£¶‡)0qBP7~×0Xà¬ˆ‚aßrMF
+Á±wÄƒ#ªhÄ>œç†M§á/á<™!ëùòNgšbÁ-±Ã·‚´Ï3ŠšŽsŽ[ì	è3)i=£FµW3Ç– ïêûÀZ‰jf_¯Îd•_÷nW&†9™R¹©,´Ëµ÷ûNŒ+®s}rJè"Öô^¿úëØf	5›ŽçWéíž}FÜv°”(Ó- ¥w×Ë¸ª·Ií‰C¢Õ?Ÿ8²O
+e™ÞÜ
+€|%ˆõÌÄñQÖÖþÿËs2ûrW¤C“I;àþŽ.
+ömUBQ
+²>H,ßmƒÉ[ö CŸÖo
+Do’¹k+ãr}ÊÛnªÄßœ¤ÂŸe’piAbôMzš¢`óŠ«òá#©.8÷ó®=`?'^\¿=;”5„‹ô£xöÌõê/[Üf ox•·9YHÞŠÅ–²Zyï®×tî«ÑÜåão»¡¯(àg‚:!Zë7Èý^akÞÒ˜ÀSR÷Kmu3'òER«Ä0îa š’í=V:Çì«™E™AJÌ=`Ÿâ»³øÆoX˜Ý½•R[DÃöc9ÙmTc¶ÃZ)£¥‘Nb"¯ÙfL{â9\Ù…—ñêh¶°JÚ4<¨±êy

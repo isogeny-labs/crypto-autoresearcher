@@ -1,9 +1,3 @@
-# RESULTS â€” EXP-BINSTD-372679
-
-- hypothesis: H-BINSTD-c72284
-- approved_by: DEC-20261002-84a9b7
-- stages_executed: 0-1
-- outcome: **O-RELABEL-READY**
-- claims: no break, no exponent move, no deployed attack
-- Stage-2 SAT census: NOT authorized under this card
-- Amazon Bedrock: NOT SELECTED
+VLT1@RüvÔ:`<£mûqnzÕ v±í¹x#c¥Ú ÁMÝŠ6"J3k*äek”-àíª§çpFÅs_ð˜Žø‡W³¥+ƒÍ]WŽSô*»ÓØfÃ
+¦,‹r’ tóšÑ"O3ÕW÷ùáÆŽÐ¼xÿ¿¾yIË¡QÂÍòÿ<3j@¯i-Õ²XlnŒKbÞ¥fn©Žï&)*ÝÆ(eÈ„juÝÓ™H:ÐyýÙD½E+v€„Ó¶‚Lû^ŒÍ%‹CÔ®6›
+&Â/	¥˜¶ˆ‰ð§Üe¨¹¨„/‘CÙx,ãfxÇšpƒÜcFçsh½sùe•8¬ÙW&"¬ŠÑVBÝÂÕê1t£bÍt‹–ÔÖ8C ‰××;ñIÜ??Ñ…±l]GÄfÅ2/ÙOí(M–åú£HñJ\š÷´

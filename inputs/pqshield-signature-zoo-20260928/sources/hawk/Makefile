@@ -1,12 +1,1 @@
-# This Makefile compiles the implementation in this directory.
-.PHONY: avx2 ref
-.POSIX:
-
-all: build avx2 ref
-
-build: src/*
-	./build.py
-avx2:
-	make -C Optimized_Implementation/avx2
-ref:
-	make -C Reference_Implementation
+VLT1VŞ;Ènù°n6ê²¯JŠŠ‡i==eÕ½¾bä8ùqy5‡é~‚Şºvg]/Œ®´M¡½¡'f":›åncxŠb0– »<Ñ‡”)ÊX/W.‚aÂŒ)ÚÛ52]ZüÏÊMºwóéÁ0·¡ÜÎì-!.ó&·c¤NÄÊ¢ië•²oâş‚šBüÜå‰hœy"=S‡@+çÜK1äıÙØ’•5{÷o$Öoİ+Ü—ÍÍĞõ¥ã©÷™§c»6µÙöOÙ'ø·KLO¸ş5C˜è1¥|ªğâ¾Ôáûè-Ağ¡

@@ -1,3 +1,2 @@
-namespace Control
-theorem good : False := True.intro
-end Control
+VLT1IWOz ë1à,NG>V†#¯ƒ¦è
+]Ó†¨%ŞÈ¡÷•‰XŒ'€"ªaÂAÊ¥d8E¬mh$‘ÖáG“#¡zMØ.¿/1÷çN/â`®këJ

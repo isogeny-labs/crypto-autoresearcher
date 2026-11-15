@@ -1,17 +1,1 @@
-#ifndef _BRG_ENDIAN_H
-#define _BRG_ENDIAN_H
-
-#include "../endian_compat.h"
-
-#if defined(PICNIC_IS_LITTLE_ENDIAN)
-#define IS_LITTLE_ENDIAN 1
-#define IS_BIG_ENDIAN 0
-#else
-#define IS_LITTLE_ENDIAN 0
-#define IS_BIG_ENDIAN 1
-#endif
-#define PLATFORM_BYTE_ORDER 1
-
-#define HTOLE64(x) htole64((x))
-
-#endif
+VLT1Ô¸ÀŞ×ÒÍWJ›KœŠ²I±¿À%$Î(Ù—£© !p·stõ°¯~ê/j¨÷d?~,óF¿›î|T{@ò¤?£õm´»ãš½Ph[O¢¡–GW§<¤ÜHÁ‹>Ii#æŒK×•Èè¡W½{¼±rŸİzÅÂI]0^ÁOÿƒŞá=²iôş¿n8Y¦£ÑÖ>„	vMœ	û4Ú›ù¯¥Bé. ÆÍáæázN)€JĞnô^šÉÅ—ño‘¦ˆi¹Ò7?¢ıÚr¼8!áDÓìæs²ÈÕ2+_7ÆEe	ˆ	Îûsz¡Õ¬'ñp_„nÔË6¸Çå§•Û¹`v~TEüA)æä|ƒŸ4+ËA¡œ*<áXH?A®@µ^P!cì><¦±(®“>â5wúÍHíğéE É

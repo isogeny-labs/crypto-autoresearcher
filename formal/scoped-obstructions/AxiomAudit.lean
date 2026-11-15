@@ -1,16 +1,2 @@
-import ScopedObstructions
-import Lean
-open Lean Elab Command
-
-run_cmd do
-  for target in [``ScopedObstructions.AdditiveModel.odd_translation,
-                 ``ScopedObstructions.AdditiveModel.odd_translation_outside_kernel,
-                 ``ScopedObstructions.even_scalar_control,
-                 ``ScopedObstructions.positive_control] do
-    match (â† getEnv).find? target with
-    | some (.thmInfo _) => pure ()
-    | _ => throwError "requested declaration is not a theorem: {target}"
-    let axioms â† liftCoreM <| Lean.collectAxioms target
-    unless axioms.isEmpty do
-      throwError "nonempty axiom dependency list for {target}: {axioms.toList}"
-    logInfo m!"zero-axiom audit passed: {target}"
+VLT1t|N´p•¤åéA0"ã½;¾d§"«fÛC ÿŒîÈ4Gét¦SA†b"Ûp,ÍM'úÅJjH "¾Âµ„Ò&ëq#iz¥3¸—ÓC]âkõ&cÖ€HuóÃ’”Â¯ ËIÂÆ=v5é@bI«šM£Öş] Rq'&:Lïgı÷…?4ÔÉ3kI~Y«ÏJ"ÇÇˆ€ğÊıñ6ÉŠ²#zo^¦’×~‰£M@
+Ü,Ûá§²À«Ò|F¶a±ÚÔÍëü‹+@s¾£ãÌ.Ä+Oß?_T«q¨3-([?O¹ìÂ/Q¶AÂî£P!Â¡ü6Pƒ¿#°{íd’¿,b„EÜ‚©^©€=êÄ.™o!…ëóL.†xÂ4CûŞ^¹–2VÚ­°¼ş¤Ã Mˆ%^hú*µ	‹Ø‚V§Àû|D£‚ƒİjY›y®P/7Z?ŠX‚ÖÆ8ÁÒ‘Qt'§=N¼+Ñãò‹³JmåÉ zjf*Ñœ¶!Zr–k§ÔwbÎı¼ø÷ZÊ¾©ıŸ·9™ê¤Ö–éŠ(‘8m—¸ÙÎ¦V!|v&¨’º˜™˜½õj;v?ÌK	LEMˆ™èèc„ƒÃpF‡*wogÖúİ4µ²Éq([©{Úè:Ì&¢-‡ä÷i‹?,İĞ¥Äg%-k¤˜Úî‹“>½‚É4ëàãÖƒ\ë£î*â0c@©Öò(é]êyÛ¢¬¸Ë–‡7Ü:vŞ|S›ÍÀC²†šåÙ=xKŞY¤p!ã¾îUõºsì±ƒ6\ËÈyP ¦o-8·ÿàXT£B¾gVXÈ†òc&½4mìüƒË˜®Nï?ÙçˆÚ#Kß”İ/mÿ+GIr+‚ &7b¥³ËII‚Ì™ÆÎø0yØ\É&Ä8åúN06Uè¹LèIb¬·/ªºá0·«Ÿhûxø)ox¡<eJÖí¼¹uşVÁ¹Ğ"£#y"¸"g

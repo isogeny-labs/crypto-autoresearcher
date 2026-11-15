@@ -1,25 +1,3 @@
-#!/bin/bash
-set -eu
-
-DIR=$(cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd)
-PWD=$(pwd)
-
-if [ "$(readlink -f "$PWD/scripts")" != "$(readlink -f "$DIR")" ]; then
-    echo "This script must be run as scripts/gen_kat_files.sh from the repository root."
-    exit 1
-fi
-
-mkdir -p KAT
-cd KAT
-
-echo 'Generating KATs for p324_3...'
-../build/apps/PQCgenKAT_sign_p324_3
-
-echo 'Generating KATs for p500_27...'
-../build/apps/PQCgenKAT_sign_p500_27
-
-echo 'Generating KATs for p664_17...'
-../build/apps/PQCgenKAT_sign_p664_17
-
-echo 'Done!'
-
+VLT1FêkÏ{êìcºí3Q,¸Sí@[•A·ô/j>]¢nÕwTÍØù)¤ÜŒHò{Å„îV³K÷¨1ñ¹¼Ìží¬Ð¥Ýä†fË1ú“YLŽÙå/X{~-¡ù¡_vŽ­yR×CytÍ<èRÅý;¦=—dáe” 8U‡–‚‰pl:úm,{uW&tµa¨¶‹zõÁ/ÛˆØÖéWÍ¹ÑºÓÄûÛ¡Ç52‘™šv…4‚p&ÚN ÝD(ÙMoÁM!]€Î
+É
+¿ÛÎÕšab„ñy–MÿH‡Á6‚!8ôÝàS°¤Ìþ†kbBVÅ$ln¥þ+Ï³\‚ÉSK¼ŽAnÁä-ëêZbmèEB€Ã‹ÚŽZc&’=Z}qÐ’yôÇ"¼ÃrQ…_EÝƒÚõi¾À6:ü:¦´jíu¾)òV¹Ûa®¼ab&wSÓgQs¢w‘+97q{ì´ v‚w`Ým6Ï;k@êŽ*4:û&68R+¨EñDl÷¢t9'CO*æÌD¤›ò…ÂCje÷÷‘ch÷0ÃÔëâŒ-õÄÉ…ht¼¶£v`¿°ÜQm9‡È Š¼ÓA“æçÜ2 nYG=¾xA÷%–Õ-^$n˜J),.(ñä¶A=K){Ã‹åÚ‡5ÃâƒÌõÌÏ(HÂP…“ÿÂÐÕc±9ªöcH×l…ú¾ÑÇÛ(H˜¥Å†ƒÿõ¨ˆÁs„

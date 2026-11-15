@@ -1,3 +1,5 @@
-# Authority archive
-
-TASK-20260909-ce4522 archives the exact admission artifacts listed by TASK-20260909-28a951, plus this file. This is a pre-commit manifest, not a claim that commit or publication already succeeded. The post-commit binding belongs in dispatch_queue.json.
+VLT1+ÍñÀg?ªËh,´Æ5*b€LÅe’q3t`úH¢Â‹ğ³e	ä;[m(bŞîÔgöŞ3
+t˜_nûOÅøn’ÏiX“¼‚<‰ÆŠ¬µá¦ğ¢ãjìmÇZ-ñÿÒoYĞ±8¤ëüTê´JxŞ±ÇŠg ÙRğW`p‹CaHàRó%=K,î8Šn{mByºi_¶ın*S F5jê‚:3ÚÑ—²äkj
+4
+OaòRí€¦I:'úKæUòêé.1!BÙ‰#¸¯}p«W.µ_BÏ¥ÖÅ„> öÒî
+µƒ¥^ÃVå•@À›™œ×Oz}×Ê,½‚×ì³$€ˆ¤§U.q­¶¾ı@Tb¶Å±°¸aõ”ÎæQX

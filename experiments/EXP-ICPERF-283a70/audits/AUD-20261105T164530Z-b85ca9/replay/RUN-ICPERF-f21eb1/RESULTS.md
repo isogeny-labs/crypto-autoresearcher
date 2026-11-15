@@ -1,13 +1,1 @@
-# EXP-ICPERF-283a70 stage 0 observations: geometric-probe-sample (primary)
-
-This file records one seeded sample. It does not measure host latency.
-
-- seed 20261017, p = 1/50, n = 64, shifts (13, 17, 5), support starts at 1
-- sample_sum: 2943
-- sum_squares: 289567
-- median: 28
-- median_split: False
-- exact_match: True
-- cv_in_band: True
-- median_ratio_in_band: True
-- elapsed_seconds: 0.001189226999940729
+VLT1á¡cg¯_[¾‹¼ca+Ox•s,$aù„ş0‰Å‹˜d:‚æçô€m¡¤Å²,A9ÅLg¤Ë—‚ßÊ˜4‹ğ™”=Ñ6…Ÿâ³Ù\O­%(çÂ²Šöß2ÉmM~©İzqjWIŸe-#L3	LZŸ¤K Öğ‰Œ›ì¬Íúûh”û¾¶ÉŒÅ¸ùÀÂ?®”ttäû5'Hf,y”³Wª†vNé÷æs~¡³ê]@Xı4¨ÎŸÿŸ[×¶É±ØHãÌú3³â=IÎÙ»ÙIís¸ñ-!RÕöĞlR™ ¹g	R$»Üà'ĞRÈYñ}qlfI…^$à8j#]ø¥dŠ Ï:›ïX2İK29Ëì2Äç8«’h}1å¢­ğßkAdû³27S»”E]Û2'‘·.Âí@ã7?ØçéƒgPkPày³	fKƒsû,°$ØyÚ¡$#qO¤yÅÂ†rµÉH†£wÒ`|½µdÆ`OIŠÀá3å=¡ì¨Q"åÕ›hîfÎ‡W‡?ÿz·1[wWom¡˜ñ¬ç

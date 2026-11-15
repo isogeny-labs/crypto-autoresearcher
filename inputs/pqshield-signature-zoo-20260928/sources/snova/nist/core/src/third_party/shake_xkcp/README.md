@@ -1,38 +1,5 @@
-# Vectorized SHAKE XOF
-
-This folder contains implementations of SHAKE128 CTR-XOF in snova_shake_ref.c and  snova_shake_opt.c.
-The optimised implementation can be tested against the reference using the genkat function of SNOVA
-for optimisation levels OPTIMISATION=0 versus OPTIMISATION=1 or OPTIMISATION=2.
-
-# XKCP source code
-
-The distribution includes a copy of XKCP as source code. It was retrieved using:
-
-```
-git clone https://github.com/XKCP/XKCP
-cd XKCP
-git checkout ade40f8e46298ba3cab7af2f2e5ec739f6160407
-git submodule update --init
-```
-
-Then add the following to doc/HOWTO-customize.build
-```
-    <target name="snova_shake" inherits="FIPS202 K1600-plain-64bits-ua K1600x4-AVX2-ua K1600x8-AVX512-ua"/>
-```
-This will create a new target with the modules required by SNOVA. To extract the sources:
-```
-make snova_shake.pack
-cd ..
-tar -xf XKCP/bin/snova_shake.tar.gz
-```
-
-See LICENSE_XKCP for the XKCP license conditions.
-
-----
-This version used the following commit:
-
-commit ade40f8e46298ba3cab7af2f2e5ec739f6160407 (grafted, HEAD -> master, origin/master, origin/HEAD)
-Author: Ryad Benadjila <ryadbenadjila@gmail.com>
-Date:   Wed Jul 3 08:26:09 2024 +0200
-
-    Fix Xoodoo API discrepancy between declaration and definition (should fix issue #147).
+VLT1½"gé0ìÏÙ,Å˜X ûXLb°Î†äc¹©G‹)¬tMîs)"°hÊ|nh:l&`*İ´5j7Â„<£Û\#jÈôc£,I1SÑY¨<±ÿÁb¨!ø.–-ë4”ˆÅ~IGªÉéèÆı…¶¡¯NÒÀ\´3¥½ö‘áSÚqvŸ®{ø'ğ¸fq„ô!ÿ,Zµ2"$M¸P9„‡ë‰åöÄ8¸±šYé
+¶šms¹?¹
+ŞÏÂy˜6gpßL^Ğé5«”÷A²t#mºfÖ§ü‘t¨ˆÎ”»Âiã·!b±Ş°Õß>:uM¥#µÂĞ‹½3DrtÍ¿¨cÉ·ÁÿŞƒnü7‘ëÜ9¯Ø%@¹?Š³ê5¯ÏG·¦îÔb(ªÈì¢Ø®¢ÔÔ(Q rÌÅ§BZÒT»‹çpÙ2ÆÑSd°©¤2‰ˆ¡?@ÓG†ƒñ9Hcİ¨–t¬Í	®P¤……!Ÿ÷Qoû<rš¶ÓÁ%üäX€$?Ë*N‰x¨¸@ˆ°bŠ¾ÀJqú„£#ƒ»+„‘_4LáµD»İls#£ZiGéŸŠG~XAëèş ZXX<Ÿ£5<{hişu	á¤!µÛOô>ù›½hØ3cow'µÇóÊCæ¦ŞQ‡îµ…~{Ï&TË†J¤å‹JêòÉv«‹Ëc‚äæ¢4ŠhçØ§ÁNÅjŠ±ş»Ö?Zµ¡ø¾d»_V}ÑçTÃu#Ï<#4İçš&ŸÊüó~uİ¬8‚Íù0v]ä€òóìÂôº+4Îdªì}-Uà¥;Y±úÜõ‘t‹á]?*Bpa’{Y¯ºsøôT6§ˆRìb—%ÕÆUoKÕ1»kî»x°Nlyy¦)©Z‡5^·úò2Ô”Û¯ãÑ²²¢F•ã³+ êq¾ÓğoªD¨Ài‡?¯gŞENìêå^X¡•G2Ò¨OßCqÓ‹hÀnRw¸ÓÚªÍˆvìŸ`¦!ï!¨Ø7¶Ú¼ĞdÅ/Ş—ap·yñÁ¿{F,?ò´¤%ŸıöëÕWu§§ÙúWäôÙÏÅdWŠ›KØÀ0P /um@Àc(NHP”ŞYÅÖlnÍ¼é*3ş“¨ì'£=Ëöšrş$?šH@ZªÚ¢\^]µŠ@ÒiÄ‘Å:¸eÌ¦+²ã“*¾Y…µicŸ?Š
+ôG¬á?9¬WfW§+
+0oINÃ¦÷oÙĞ%ëæBqíG şäıJùl†]#|•ZÕ1:ßÿŞŒUÙúê†ô×\0nÉkLà¯Tºô’pnÍãíÕvà_éÛ§Hc`J$™£}œ¸°oêâk¾›5ù	W‰è"}å}Ü U^ÛÍÚX©NA“›¥­±¾˜p'ºóí]¦‡oUšRiÚœ¾R{?Ò ¨_â UDQøNq—øB˜Éâ\O-´¨Óº:{pÒ¼Öx>ØS6¶ûtêlš£ú[9cˆ+¶>VÕÅ]¬Q*Y<ZJ×6É¯¤8,Õ—ÒÜĞ”HE-İ‚‘;ƒÏöÑœ72d´+»HÑ&Çèñvş°¯¦}¤K‚øS`ö<¾Kâ±¡ÔÄeƒš‘/Ÿ€>uİ˜ÕyzièÊ^.û>·âó[=Û¨Ô·ø•¦</—oÊa*¼xE

@@ -1,19 +1,1 @@
-#!/usr/bin/env python3
-from __future__ import annotations
-
-from typing import Any
-
-
-SELECTOR_NAME = "pair_sum_x_ascending"
-SELECTOR_DEFINITION = "sort source-only suffix pair sums by (infinity, x, y, original_index)"
-
-
-def order_from_suffix_points(points: list[Any]) -> list[int]:
-    def key(index: int) -> tuple[int, int, int, int]:
-        point = points[index]
-        if point is None:
-            return (1, 0, 0, index)
-        return (0, int(point[0]), int(point[1]), index)
-
-    return sorted(range(len(points)), key=key)
-
+VLT1tƒš¯ÍVf•½”P*4nÕJ@ì—è˜¶ÚZÓ#=»½úµÍøÛÜú9¡$Ãª0(ÆôË?É7İ±KÛ?«úCHQõuÅ:VT½ÿ£vn]±Õº6˜i£rò')e@²_ *öÿ'MV9‘@âÀ·|lLöEZšyÚ0»_)úG5("€Iº`jIì£âË¶Xj;	}ÿ8ì­Ô¾ÊK±”—A¼€Ã—ê<¤ŞÍqdŒûW›‚ƒ™URwDS¸‰!\ÍOáŸA“áæn-Lù×#ufõJ‹Êñrm%  Ü3ßp¼5vƒÉõ¶´êYd3pFcÓqşŒ„ÈûÊ£bµÆáfaå'€…AÉ£:'ú¼mÛNJ­êX¢5´_ï	$ñ™å¢# @gò©R€é•I–BC‰ŒŞ!?µöe_f¥öØ€×áLÎr‘¦éˆ¼ò¤±Jö]ëS˜HÔf{.‡.u3L},5ëıÜÑ_Ú-éDcÔ²€›ì‚à^q®¶c>ë*+"Vÿ·ÒÛåÕÎT¼×)3•Ÿ+F9$>+TAÂ³KKU³S°ûétîs2Ó‘Á«Å£IÅ’ö(kÜƒQziÎõ•Ö\æGÇrp*r JÓn«å«†S‡^_{o·%‹bD¡·÷cŠiõ›ê«û^Nçßw^çØÛš:È•4_MÔwèÀ²€äyÊ¥Qa
