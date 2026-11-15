@@ -1,0 +1,110 @@
+idea:
+  id: IDEA-20261109-9a4315
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECC-5038da
+  title: Completed P1xP1 coordinates (E:F:G:H) with Niels-cached (Y+X, Y-X, 2dT) give Ed25519 doubling
+    3M+4S, mixed addition 7M+0c, and remove the per-addition inversion in ed25519.rs
+  class: representation
+  claim: 'Represent an intermediate point as (E:F:G:H) in P^1 x P^1 with x = E/F, y = H/G. Doubling from
+    (X:Y:Z): A = X^2, B = Y^2, C = 2 Z^2, E = (X+Y)^2 - A - B, G = B - A, F = G - C, H = -(A + B), costing
+    0M+4S. Addition of (X_1:Y_1:Z_1:T_1) and a Niels operand (U_2, V_2, W_2) = (Y_2 + X_2, Y_2 - X_2,
+    2 d T_2) with Z_2 = 1: A = (Y_1 - X_1) V_2, B = (Y_1 + X_1) U_2, C = T_1 W_2, D = 2 Z_1, E = B - A,
+    F = D - C, G = D + C, H = B + A, costing 3M+0c (4M with a projective Niels operand carrying Z_2, D
+    = 2 Z_1 Z_2). Leaving completed form costs X = EF, Y = GH, Z = FG (3M) or additionally T = EH (+1M).
+    Hence doubling followed by doubling is 3M+4S, doubling followed by addition is 4M+4S, Niels mixed
+    addition is 7M+0c+0I, projective-Niels addition is 8M+0c+0I. The law is the complete HCD law (d non-square,
+    -1 square), valid for every pair including O, T_2 and T_4, and completed coordinates represent every
+    point. Repository delta for a 255-bit double-and-add: current ~ 255(5M+4S) + 127(11M + 1I) = 2672M
+    + 1020S + 127I; proposed ~ 128(3M+4S) + 127(4M+4S) + 127(7M) + 3M = 1784M + 1020S + 0I (plus the single
+    final inversion to affine).'
+  mechanism: 'The HCD a = -1 law factors through the four quantities E, F, G, H whose pairwise products
+    are the extended coordinates; the Edwards curve sits in P^1 x P^1 and (E:F), (H:G) are its two projective
+    factors, each scaled independently, so the producer need not multiply them together until the consumer
+    says which products it wants. Two Y-like coordinates U = Y + X and V = Y - X diagonalise the negation
+    x -> -x (negation is U <-> V, W -> -W, a free swap), and absorbing 2d into W_2 moves the only full-size
+    constant multiply out of the loop. In the BRIEF excerpt EdPoint::add recomputes d with fe_inv on every
+    call and multiplies by 2 twice with fe_mul; EdPoint::double computes 2 Z^2 with fe_mul and always
+    emits T. The proposal replaces EdPoint with three types: Completed (E,F,G,H), Projective (X,Y,Z),
+    Extended (X,Y,Z,T), plus Niels (U,V,W) and ProjectiveNiels (U,V,Z,W), with conversions as above and
+    a hoisted constant D2 = 2d computed once.'
+  novelty_status: unverified
+  citations:
+  - ref: Bernstein-Duif-Lange-Schwabe-Yang 2011, High-speed high-security signatures (ref10 ge_p1p1, ge_precomp,
+      ge_cached)
+    provenance: recalled
+    claim: completed and Niels representations with the stated counts
+    verified_by: null
+  - ref: Hisil-Wong-Carter-Dawson 2008 section 4.3, mixed coordinate strategy
+    provenance: recalled
+    claim: compute T only before additions; doubling 3M+4S without T
+    verified_by: null
+  - ref: BRIEF section 1, src/ecc/ed25519.rs EdPoint::double and EdPoint::add
+    provenance: internal
+    claim: current counts 5M+4S and 11M+1I per call
+    verified_by: idea-generator session 2026-11-09 read the BRIEF excerpt
+  assumptions:
+  - a = -1 and d is a non-square, so the law is complete (BBJLP Theorem 3.3).
+  - fe_sq exists and is used for squares; 2 Z^2 is an addition, not a multiply.
+  - Base-point Niels operand precomputed once per process; variable-base operand converted once per scalar
+    multiplication (2a + 1c).
+  proof_search_map:
+    not_applicable_reason: Implementation of known complete formulas with an exact count test; no exponent
+      claim.
+    bottleneck: not_applicable
+    proof_obligations: []
+  predictions:
+  - metric: counting-field M per doubling followed by doubling
+    direction: equal
+    minimum_effect: exactly 3M+4S
+  - metric: counting-field M, c, I per Niels mixed addition
+    direction: equal
+    minimum_effect: exactly 7M, 0c, 0I
+  - metric: inversions per 255-bit scalar multiplication
+    direction: lower
+    minimum_effect: 1 (final affine) versus 127
+  minimal_test:
+    design: 'tests/ed25519_completed_niels.rs: wrap the field in a counting type; assert exact per-operation
+      counts; assert scalar_mul_completed(k, B) equals EdPoint::scalar_mul(k, B) on RFC 8032 section 7.1
+      vectors and 10^3 random k; assert the law on the pairs (O, P), (T_2, P), (T_4, P), (P, P) through
+      the completed path agrees with the affine law.'
+    controls:
+    - Existing EdPoint::scalar_mul as the reference oracle.
+    - Replacing W_2 = 2 d T_2 by d T_2 must fail the RFC vectors (sensitivity control).
+    - ecbench before/after on identical scalars, reporting counts first and wall time second.
+    required_metrics:
+    - M, S, c, I per doubling, per addition, per scalar multiplication
+    - vector and random agreement counts
+    - torsion-pair agreement
+  falsification_conditions:
+  - Any count exceeding the stated 3M+4S, 4M+4S, 7M, 8M.
+  - Any disagreement with the reference on RFC vectors, random scalars, or torsion pairs.
+  confounders:
+  - If fe_sq is implemented as fe_mul, S = M and the doubling count reads 7M; report S separately.
+  - Wall time in BigUint is dominated by allocation; counts are the metric.
+  interpretation_limits:
+  - Variable-time schedule unchanged; constant-time requires fixed windows or the ladder record.
+  - The claim is about the repository's hot path, not about new mathematics.
+  heuristic_assumptions: []
+  target_complexity:
+    time_exponent: not an exponent claim; per-scalar field count
+    memory_exponent: 4 elements for completed, 3 for Niels operand
+    best_known: BDLSY 2011 ref10 counts, identical to those stated
+    hidden_overhead: one Niels conversion per variable-base operand; one hoisted constant
+    tradeoff_note: none; strictly fewer operations and no loss of completeness
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: high
+  dominated_by: Nothing within the repository; ref10 implements the same counts. Not a novelty claim.
+  sota_delta: 'Repository delta: -888M and -127I per 255-bit scalar multiplication at equal S, with completeness
+    preserved. Delta to ref10: 0.'
+  prior_art:
+    frontier_map: not_applicable
+    not_applicable_reason: Curve25519 explicit-formula campaign (alternative coordinate systems); no ECDLP
+      mechanism is claimed.
+    none_found_after:
+    - 'BRIEF section 2 ledger index: no record files completed or Niels coordinates for Edwards25519'
+    - 'BRIEF section 1: ed25519.rs has a single EdPoint type with always-T doubling and per-call fe_inv
+      in add'
