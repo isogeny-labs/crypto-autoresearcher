@@ -19,7 +19,7 @@
   "coordination": {
     "conflict_check": "allow",
     "task": "T-5928",
-    "claim": "attempted via MCP and CLI; TLS handshake timeout, then loopback connection refused",
+    "claim": "T-5928 claimed, fencing epoch 1; process-local HTTP loopback endpoint override matched the running local service; no global settings changed",
     "existing_work_preserved": true
   },
   "baseline": {
@@ -74,7 +74,13 @@
       "largest_wake": 8677
     },
     "shared_code_parity": "19 files pass after sync with owner-locked versions",
-    "ledger_integration": "29 tests pass; 26 missing-budget cards corrected by pinned supersessions; original cards unchanged"
+    "ledger_integration": "29 tests pass; 26 missing-budget cards corrected by pinned supersessions; original cards unchanged",
+    "collection": "5852 tests collect cleanly before exporter cache integration",
+    "goal_identifier_fixtures": "61 tests pass after complete vault bootstrap is copied",
+    "vault_and_committed_objects": "15 tests pass",
+    "cache_and_committed_reader": "22 tests pass",
+    "latest_fast_group": "27 tests pass",
+    "benchmark_gate": "20 records pass"
   },
   "audit_inventory": {
     "source_paths_in_selected_roots": 1015,
@@ -125,5 +131,48 @@
     "first_integration_attempt": "Goal CLI fixtures copied only the former git_blob helper, missing the new authenticated-reader bootstrap modules",
     "remedy": "Copy git_objects.py and vaultctl.py into sealed CLI fixtures as well",
     "path_only_hygiene_diff": "Existing PR removes unnecessary content-based rename/copy detection; retained"
-  }
+  },
+  "optimization_scope": {
+    "implemented": [
+      "one streaming Git batch for committed decision reads",
+      "immutable exporter cache keyed by repository, full commit ID and path; symbolic refs uncached",
+      "path-only merge-hygiene diff omits content-based rename/copy detection"
+    ],
+    "performance_claim_status": "No new speedup claim or Pareto-frontier claim; current revision measurements and independent review remain pending."
+  },
+  "published_repair": {
+    "pr": 3268,
+    "head": "8d6fcf80e406950cdc30604984c6b5bbaaff1620",
+    "merged_feature_pr": 3270,
+    "base_main_merged": "a50600ef28",
+    "hosted_checks": "running"
+  },
+  "hosted_followup": {
+    "head": "8d6fcf80e406950cdc30604984c6b5bbaaff1620",
+    "fidelity_failure": "new authenticated reader omitted from sparse checkout",
+    "fix": "include complete tools/vault package and tests/__init__.py",
+    "pcc_failure": "three PR-body strong-claim lines lacked required annotation",
+    "pcc_fix": "explicit pcc:unverified annotation; local prose lint has zero findings",
+    "core_dependency": "declare cryptography>=46 for authenticated readers"
+  },
+  "local_full_run_attempts": [
+    {
+      "attempt": 1,
+      "status": "interrupted",
+      "reason": "older editable checkout imported; isolated environment corrected"
+    },
+    {
+      "attempt": 2,
+      "status": "interrupted",
+      "reason": "temporary repositories inside the project inherited parent pytest configuration; affected nine tests pass in isolated layout"
+    },
+    {
+      "attempt": 3,
+      "status": "running",
+      "temp_root": "external SSD directory outside the Git checkout",
+      "workers": 2,
+      "shards": 4,
+      "logs": ".venv/tmp/evidence"
+    }
+  ]
 }
