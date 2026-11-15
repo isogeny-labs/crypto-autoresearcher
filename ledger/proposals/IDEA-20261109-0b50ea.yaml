@@ -1,0 +1,126 @@
+idea:
+  id: IDEA-20261109-0b50ea
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: Cartier defect of the algebraically normalised third-kind form equals (1 - A) times the finite-field
+    zeta, and the F_p-interpolation degree of k maps to delta(kP) on toy curves with N below p is generic
+  class: representation
+  claim: 'On E/F_p of prime order N with Hasse invariant A not 1, define w_P = (y+y_P)/(2(x-x_P)) dx/y
+    and let C be the Cartier operator on log forms with poles at O and P. Then C w_P - w_P = delta(P)
+    w for a unique delta(P) in F_p. Prediction 1: delta(P) = (1 - A)(c(P) - c_0) for all P, where c is
+    the finite-field zeta of the wave-2 cohomology record on the universal vectorial extension and c_0
+    is a constant. Prediction 2: on toy curves with N < p, the polynomial over F_p of least degree interpolating
+    k maps to delta(kP) on k in [1, N-1] (k read as an integer below p) has degree at least N - 3, the
+    same as for k maps to x(kP) and for a random function; a planted affine function has degree 1. Prediction
+    3: the hybrid spectrum max over a, b of |sum_k e_p(b delta(kP)) e(ak/N)| is at most 3 (N log N)^{1/2}.
+    This claim moves no exponent.'
+  mechanism: C preserves F_p-rational residues and fixes (1/N) d log f_P, so the defect of w_P is the
+    defect of its holomorphic correction e(P) w, namely e(P)(A - 1) w up to sign. The correction e(P)
+    is the chart coordinate of the torsion section of the universal vectorial extension, which is the
+    finite-field zeta. Thus delta is a second, independent route to c, costing one Cartier operator evaluation
+    instead of a Miller loop. An extraction map would be a function of the scalar with low complexity;
+    interpolation degree in the integer k is defined once N < p and separates affine or low-degree structure
+    from a generic function.
+  novelty_status: adaptation
+  citations:
+  - ref: KR-RHO-13bf67
+    provenance: internal
+    claim: Any exponent reading is dominated; delta 0.
+    verified_by: brief section 3 row text; file not opened
+  - ref: KR-IC-f5c584
+    provenance: internal
+    claim: A group morphism to the additive group forces a linear equation in binary Weil descent; here
+      any additive structure of delta along the scalar would be the prime-field analogue and is predicted
+      absent.
+    verified_by: brief section 3 row text; file not opened
+  assumptions:
+  - A not equal to 1 on the chosen toy curves; curves with A = 1 are reported separately.
+  - The wave-2 record defining c(P) is located by title grep in ledger/proposals and its chart convention
+    is used verbatim.
+  predictions:
+  - metric: coefficient of determination of the affine fit delta against c over all P
+    direction: equal
+    minimum_effect: exactly 1 (exact fit on every P)
+  - metric: interpolation degree over F_p of k maps to delta(kP), N < p
+    direction: higher
+    minimum_effect: at least N - 3
+  - metric: interpolation degree of the planted affine control
+    direction: lower
+    minimum_effect: exactly 1
+  - metric: hybrid spectrum of delta along the scalar divided by (N log N)^{1/2}
+    direction: lower
+    minimum_effect: at most 3
+  minimal_test:
+    design: Sage under crypto/sage. Twenty prime-order toy curves with N < p and p at most 2^12 from crypto/docs/ECDLP_CALIBRATION_PRIMES.md,
+      half with j = 0. For each curve enumerate kP for all k, compute delta(kP) by the Cartier formula
+      C(f dx) = (d^{p-1} f / dx^{p-1})^{1/p} dx on the explicit form, compute c(kP) by the filed chart,
+      fit, interpolate, and compute the hybrid spectrum by FFT over Z/N times F_p.
+    controls:
+    - k maps to x(kP) (generic degree expected).
+    - A uniformly random function Z/N to F_p (generic degree expected).
+    - A planted affine function alpha k + beta mod p (degree 1 expected).
+    - Curves with A = 1 as an excluded-case report.
+    required_metrics:
+    - delta(kP) and c(kP) tables
+    - fit residual over all P
+    - interpolation degrees for delta, x, random, planted
+    - hybrid spectrum maxima and the argmax (a, b)
+  falsification_conditions:
+  - The affine fit of delta against c fails on any P with A not 1.
+  - The interpolation degree of delta is below N^{0.9} on any curve while the random control is generic.
+  - The hybrid spectrum of delta exceeds 3 (N log N)^{1/2} while the random control does not.
+  confounders:
+  - Interpolation degree is computed over abscissae k mod p; the restriction N < p is what makes them
+    distinct. Curves with N > p are not eligible.
+  interpretation_limits:
+  - Generic degree at p = 2^12 is evidence about the toy table, not a theorem; a confirmed fit validates
+    the filed identification of c.
+  heuristic_assumptions:
+  - id: H1
+    statement: delta is an affine function of c with slope 1 - A.
+    rigorous_support: Sketch in the mechanism, resting on C fixing d log f_P and on the identification
+      of the torsion section with the flat connection on the N-torsion line bundle; chart conventions
+      unverified.
+    validation_plan: Exact fit on every P at every toy curve, no subsampling.
+  target_complexity:
+    time_exponent: p^{1/2} unchanged
+    memory_exponent: unchanged
+    best_known: Pollard rho, Theta(p^{1/2}) group operations
+    hidden_overhead: none claimed
+    tradeoff_note: delta costs O(log N) per point; no tradeoff defined.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  dominated_by: The wave-2 cohomology record on c(P) for the object; the torsion-wave interpolation-degree
+    record for the statistic. The Cartier route and the N < p interpolation test are the additions.
+  sota_delta: exponent delta 0; validates or kills a filed identification cheaply.
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/index-calculus
+    rows_checked:
+    - KR-RHO-13bf67
+    - KR-IC-f5c584
+    - KR-RHO-53c89f
+    - KR-IC-5a43e5
+    nearest:
+    - ref: KR-IC-f5c584
+      provenance: internal
+      relation: adjacent
+      delta: The row is the trace morphism to F_2 after Weil descent; here the question is whether a de
+        Rham coordinate over F_p has any additive structure along the scalar, predicted none.
+    searched:
+      corpus_grep:
+      - brief section 2 for Cartier, zeta, interpolation degree, universal extension
+      - brief prior-waves cohomology, torsion and complexity sections
+      web: []
+      blocked: []
+    lead: LEAD-ICP-pkm-tower-algebraic-oracle
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: Sage under crypto/sage. Twenty prime-order toy curves with N < p and p at
+        most 2^12 from crypto/docs/ECDLP_CALIBRATION_PRIMES.md, half with j = 0. For each curve enumerate
+        kP for all k, compute delta(kP) by the Cartier formula C(f dx) = (d^{p-1} f / dx^{p-1})^{1/p}
+        dx on the explicit form, compute c(kP) by the filed chart, fit, interpolate, and compute the hybrid
+        spectrum by FFT over Z/N times F_p'
