@@ -203,7 +203,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - run: python3 -m pip install 'PyYAML>=6.0'
+      - run: python3 -m pip install 'PyYAML>=6.0' 'cryptography>=46'
       - name: Conflict markers, parseability and identifier collisions
         run: |
           if [ -n "$DIFF_BASE" ]; then
@@ -426,7 +426,7 @@ jobs:
             requirements-agent.txt
 
       - name: Install dependencies
-        run: python3 -m pip install 'PyYAML>=6.0'
+        run: python3 -m pip install 'PyYAML>=6.0' 'cryptography>=46'
 
       # The corpus tools parse YAML through libyaml (orchestration/fast_yaml.py); without
       # it they stay correct but fall back to the pure parser, ~10x slower.

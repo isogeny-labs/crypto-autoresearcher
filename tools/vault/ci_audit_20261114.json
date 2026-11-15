@@ -225,5 +225,14 @@
       "live_cairn": "Installed local binary rejects objectives lacking new solver packages; three optional live controls failed"
     },
     "full_suite": "Attempt3 diagnostics retained: shard1 reached explicit1800s timeout; shard2 14failed/977passed; shard3 8failed/2242passed; shard4 in progress. Not a green complete run."
+  },
+  "standalone_job_dependencies": {
+    "jobs": [
+      "merge-hygiene",
+      "ledger"
+    ],
+    "dependency": "cryptography>=46 in the selected runtime Python, after actions/setup-python",
+    "reproduction": "clean task-owned venv lacks cryptography; decrypt reports VaultError caused by ModuleNotFoundError",
+    "coordination": "Existing claimed T-5928 epoch1 covers this isolated worktree. Fresh scope/task queries timed out; no conflicting ownership response, settings change, or service restart."
   }
 }
