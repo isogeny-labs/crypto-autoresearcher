@@ -7,7 +7,10 @@ import sys
 import tempfile
 import unittest
 
-import vaultctl
+if __package__:
+    from . import vaultctl
+else:
+    import vaultctl
 
 
 class VaultWorktreeTests(unittest.TestCase):
