@@ -1,0 +1,141 @@
+idea:
+  id: IDEA-20261109-4fc608
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: On j = 0 curves the interpolation degree of the scalar graph {(x(R), x(kR))} is the GLV-minimal
+    norm K(k) <= N/3 for 90.7 percent of keys (mean 5N/36 against the generic N/4), and the total-degree
+    weak set grows from 2 N^{1/4} integer keys to about 2.6 N^{1/2}
+  class: barrier
+  claim: 'Let E/F_p have j = 0, End(E) = Z[omega], prime order N, n = (pi - 1), and for k in (Z/N)^* let
+    K(k) = min Nm(theta) over theta = k mod n. Then K(k) <= N/3 for all k, K(k) <= N/4 for a fraction
+    pi/(2 sqrt 3) = 0.9069 of k, and the mean of K(k) is 5N/36. Let Gamma_k be the (N-1)/2 points (x(R),
+    x(kR)). (A) The least d such that a curve Y a(X) - b(X) with deg a, deg b <= d vanishes on Gamma_k
+    equals K(k) whenever K(k) < (N-1)/4, because x(theta R) = phi_theta / psi_theta^2 has degree K(k)
+    and two rational-function graphs agreeing at more than d + d'' abscissae coincide; for a generic non-CM
+    curve the same d is about (N-1)/4 - 1 for every k. (B) In total degree the minimal curve through Gamma_k
+    is Y psi_theta^2 - phi_theta of degree K(k) whenever K(k)^2 < (N-1)/2 (Bezout and irreducibility),
+    so about 2.6 N^{1/2} keys have interpolation degree below the generic sqrt(N) against 2 N^{1/4} integer-small
+    keys. No exponent changes: recovering theta needs the full graph or at least 2K(k) + 2 static-key
+    samples, which is the brute-force cost over theta.'
+  mechanism: The coset k + n is a translate of the hexagonal lattice n of minimal norm N; its minimal-norm
+    element is the Voronoi reduction, with inradius^2 = N/4, circumradius^2 = N/3 and hexagon second moment
+    (5/12) circumradius^2. The graph of the endomorphism theta is an F_p-rational correspondence of bidegree
+    (Nm theta, 1) on P^1 x P^1 through every point of Gamma_k. The record measures whether the CM structure,
+    and not the integer size of k, controls the interpolation degree, and so tests the wave-2 torsion
+    record on interpolation degree.
+  novelty_status: adaptation
+  citations:
+  - ref: KR-RHO-0528e7
+    provenance: internal
+    claim: The CM endomorphism is the only non-scalar structure of E; here it supplies the minimal interpolant.
+    verified_by: brief section 3 row KR-RHO-0528e7
+  - ref: KR-IC-5a43e5
+    provenance: internal
+    claim: Summation polynomials encode x-coordinate sums; the scalar graph is a different variety (a
+      correspondence of bidegree (K,1)).
+    verified_by: brief section 3 row KR-IC-5a43e5
+  - ref: wave-2 torsion record on interpolation degree
+    provenance: internal
+    claim: States degree k*^2 for k* below N^{1/4} and the generic bound otherwise; this record predicts
+      K(k) instead on j = 0 curves.
+    verified_by: brief, prior waves list; next agent locates the record in ledger/proposals by title and
+      reads which degree notion it fixed
+  assumptions:
+  - Toy curves have p = 1 mod 3, prime N, and 4p - t^2 = 3c^2 recomputed.
+  - Control curves have a != 0 and no small-norm endomorphism.
+  predictions:
+  - metric: fraction of sampled k on j = 0 curves with bidegree d_min equal to K(k)
+    direction: higher
+    minimum_effect: at least 0.95 among k with K(k) below (N-1)/4
+  - metric: mean of K(k) over all k divided by N
+    direction: inside interval
+    minimum_effect: between 0.13 and 0.15 (closed form 5/36 = 0.1389)
+  - metric: bidegree d_min on the generic control curve divided by N
+    direction: inside interval
+    minimum_effect: between 0.24 and 0.26 for every sampled k
+  - metric: count of k with total-degree d_min below sqrt(N) on j = 0, divided by sqrt(N)
+    direction: inside interval
+    minimum_effect: between 2.0 and 3.2
+  minimal_test:
+    design: Three j = 0 prime-order curves with p in [2^12, 2^14] and three matched generic prime-order
+      curves from ECDLP_CALIBRATION_PRIMES. Enumerate E(F_p). For all k compute K(k) by Voronoi reduction
+      in n = (pi - 1). For 400 sampled k plus all k with K(k) < sqrt(N), build the matrix of monomials
+      X^i Y^j (j <= 1, i <= d) and, in a second arm, total degree <= D, evaluated on Gamma_k, and find
+      the least d, D with a nontrivial kernel by rank over F_p.
+    controls:
+    - Generic (a != 0) curves of the same size with the same k sample.
+    - Random relabelling arm with x(kR) replaced by x(sigma(R)) for a random permutation sigma.
+    required_metrics:
+    - K(k) histogram and its mean
+    - d_min and D_min per sampled k, both curve types
+    - number of k with D_min below sqrt(N)
+    - rank-computation wall time per k
+  falsification_conditions:
+  - Some j = 0 key with K(k) below (N-1)/4 whose measured bidegree d_min differs from K(k).
+  - Generic-curve d_min departing from (N-1)/4 by more than 3 for any sampled k.
+  - Relabelling arm showing degrees below the generic bound (would indicate a matrix-construction error).
+  - A timeout is infrastructure, not a result.
+  confounders:
+  - Exact rank over F_p is required; floating-point rank is invalid.
+  - Keys k = +-1 and k = +-lambda (units) have K = 1 and are reported separately.
+  interpretation_limits:
+  - A confirmed law is a degree statement at toy N; it moves no exponent.
+  - Static-key recovery of K-small keys by interpolation never beats brute force over theta of norm <=
+    K.
+  heuristic_assumptions:
+  - id: H1
+    statement: No F_p-rational correspondence of degree below K(k) other than graphs of rational functions
+      passes through Gamma_k in the bidegree-(d,1) family.
+    rigorous_support: Proven for the (d,1) family by the coincidence lemma; for total degree by Bezout
+      when K(k)^2 < (N-1)/2.
+    validation_plan: exhaustive measurement on all K-small keys at three toy sizes.
+  target_complexity:
+    time_exponent: N^{1/2} unchanged (delta 0)
+    memory_exponent: O(N) for the toy graph only
+    best_known: Pollard rho at Theta(N^{1/2}), KR-RHO-13bf67
+    hidden_overhead: none claimed
+    tradeoff_note: Interpolation needs Theta(N) graph points or 2K + 2 static-key samples; neither defines
+      a sub-sqrt tradeoff.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  dominated_by: KR-RHO-13bf67 dominates exponent readings; KR-RHO-0528e7 states the endomorphism; the
+    wave-2 interpolation record states the integer law that this record tests on CM curves.
+  sota_delta: Exponent delta 0. Counted delta is the weak-key set size, 2 N^{1/4} to about 2.6 N^{1/2},
+    and the mean interpolation degree 5N/36 against N/4, both closed form and pre-registered.
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/generic-rho
+    rows_checked:
+    - KR-RHO-13bf67
+    - KR-RHO-0528e7
+    - KR-RHO-755e35
+    - KR-IC-5a43e5
+    - KR-IC-5931ee
+    - KR-RHO-53c89f
+    nearest:
+    - ref: KR-RHO-0528e7
+      provenance: internal
+      relation: adjacent
+      delta: The row gives sqrt(6) in rho; here the same ring gives a degree law for the scalar graph,
+        with no walk.
+    - ref: KR-IC-5a43e5
+      provenance: internal
+      relation: orthogonal
+      delta: Summation polynomials are not evaluated; the object is the correspondence of an endomorphism.
+    searched:
+      corpus_grep:
+      - brief prior waves for interpolation degree, static-key, GLV-minimal
+      - brief section 2 for IDEA entries on scalar graph degree
+      web: []
+      blocked: []
+    lead: LEAD-STR-isogeny-class-generic-invariance
+    lead_delta:
+      kind: answers_obstruction
+      statement: 'New test: Three j = 0 prime-order curves with p in [2^12, 2^14] and three matched generic
+        prime-order curves from ECDLP_CALIBRATION_PRIMES. Enumerate E(F_p). For all k compute K(k) by
+        Voronoi reduction in n = (pi - 1). For 400 sampled k plus all k with K(k) < sqrt(N), build the
+        matrix of monomials X^i Y^j (j <= 1, i <= d) and, in a second arm, total degree <= D, evaluated
+        on Gamma_k, and find the least d, D'

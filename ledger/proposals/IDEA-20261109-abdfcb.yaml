@@ -1,0 +1,146 @@
+idea:
+  id: IDEA-20261109-abdfcb
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: 'Derivative of the E(F_p)-kernel polynomial at its own root, f(P) = prod over S != +-P of (x(P)
+    - x(S)), the elliptic analogue of the G_m character -1/b: predicted character-flat, with a dual-number
+    elliptic-net evaluation in O(log N) ring operations'
+  class: representation
+  claim: 'Let E/F_p have prime order N and let h_1(x) be the product of (x - x(S)) over E(F_p) modulo
+    sign, the kernel polynomial of pi - 1 and the degree-(N-1)/2 factor of psi_N recorded in the wave-2
+    torsion record. Define f(P) = h_1''(x(P)) for P != O. (i) Kohel''s isogeny formula gives f(P)^2 =
+    A(x(P)) / (2 y(P)^2) where x((pi - 1)R) = A(x)/h_1(x)^2, so f^2 is the restriction to E(F_p) of one
+    fixed F_p-rational function of degree N. (ii) On G_m the same construction returns -1/b, a character;
+    on E no homomorphism to F_p^* exists since N does not divide p - 1, so the prediction is that f behaves
+    as a random function: for every multiplicative character chi of F_p^* and every b in Z/N, |sum_{i=1}^{N-1}
+    chi(f(iP)) e(bi/N)| <= 3 sqrt(N) log N at toy p. (iii) When End(E) = Z[omega], the rank-2 elliptic
+    net attached to (P_eps, omega P_eps) over F_p[eps]/(eps^2), evaluated at the index (a,b) with pi -
+    1 = a + b omega, returns eps times f(P) up to an explicit constant and a power of 2y(P), so f is computable
+    in O(log N) ring operations. The record claims no exponent change.'
+  mechanism: h_1 is the one polynomial whose roots are all of E(F_p); its derivative at a root is the
+    only local invariant of the point relative to the whole group, and in G_m this invariant is the inverse
+    character. Kohel's formula x(phi R) = N x - sigma - (3x^2 + a) h_1'/h_1 - 2(x^3 + ax + b)(h_1'/h_1)'
+    evaluated at a root of h_1 isolates 2 y^2 h_1'^2 as the value of the numerator. The dual-number trick
+    computes h_1(x_P + eps) = eps h_1'(x_P) through Stange's net recursion, which is a polynomial identity
+    valid over any ring. RESEARCH_EDS_RESIDUE.md is the repo surface for net code; f times h_p(x_P) times
+    g(x_P) is the h_1-part of the Lauter-Stange periodicity ratio a/b, so the next agent should check
+    whether that file already tabulates W_P(N+1) and W_P(N-1).
+  novelty_status: speculative
+  citations:
+  - ref: KR-RHO-53c89f
+    provenance: internal
+    claim: Pairing transfers exist only for small embedding degree; f is a pairing-like local product
+      but lands in F_p^* with no homomorphism available.
+    verified_by: brief section 3 row KR-RHO-53c89f
+  - ref: KR-IC-5a43e5
+    provenance: internal
+    claim: No summation polynomial is formed; h_1 is a kernel polynomial, not S_m.
+    verified_by: brief section 3 row KR-IC-5a43e5
+  - ref: RESEARCH_EDS_RESIDUE.md
+    provenance: internal
+    claim: Repo artifact on elliptic nets and the Lauter-Stange residue problem; expected to hold net
+      evaluation code.
+    verified_by: path listed in brief section 1; content not read
+  assumptions:
+  - p > 3, prime N, discriminant nonzero; toy curves from ECDLP_CALIBRATION_PRIMES.
+  - For arm (iii) the curve has j = 0 with p = 1 mod 3 and End = Z[omega].
+  predictions:
+  - metric: max over chi and b of |sum chi(f(iP)) e(bi/N)| divided by sqrt(N) log N
+    direction: lower
+    minimum_effect: at most 3 on every toy curve
+  - metric: same statistic for the G_m control f(b) = -1/b on F_p^* indexed by a generator
+    direction: higher
+    minimum_effect: at least (p-1)/(sqrt(p) log p) at the matching frequency
+  - metric: fraction of P at which the dual-number net value equals the direct product up to the declared
+      constant
+    direction: higher
+    minimum_effect: exactly 1 at p <= 2^12
+  minimal_test:
+    design: For five prime-order toy curves with p <= 2^16, enumerate E(F_p), compute f(iP) for all i
+      by direct product (O(N^2) at this size), then for every character chi of F_p^* of order in {2, 3,
+      4, 6, (p-1)/2} and all b compute the hybrid sums by FFT over Z/N. On j = 0 curves at p <= 2^12 implement
+      the rank-2 net over the dual numbers and compare with the direct product at every P. Also regress
+      f(P+Q) against polynomials of degree <= 4 in f(P), f(Q), x(P), x(Q) over all pairs.
+    controls:
+    - G_m arm with -1/b in place of f.
+    - Random-function arm replacing f by a uniformly random map E(F_p) -> F_p^*.
+    required_metrics:
+    - hybrid-sum maxima for each chi, both arms
+    - agreement count of net versus direct values
+    - residual of the degree-4 regression
+    - identity check f(P)^2 (2y^2) = A(x_P) via A(x_0) = x((pi-1)R_0) h_1(x_0)^2 at nearby twist points
+      for the constant
+  falsification_conditions:
+  - A hybrid-sum maximum above 3 sqrt(N) log N for f (interesting if reproducible across curves).
+  - Net value disagreeing with the direct product at any P after the constant is fixed.
+  - Random-function arm exceeding the same bound more often than f does (bound miscalibrated).
+  confounders:
+  - Sign and normalisation of the invariant differential change f by a constant square; fixed once per
+    curve.
+  - Points with y = 0 do not exist on prime-order curves; P = O is excluded.
+  interpretation_limits:
+  - Flat sums at p <= 2^16 are consistent with pseudo-randomness, not a proof.
+  - Even a spike would give one character of k per O(N) summation unless a faster estimator exists.
+  heuristic_assumptions:
+  - id: H1
+    statement: The restriction of a fixed degree-N rational function to E(F_p) has multiplicative-character
+      sums of square-root size.
+    rigorous_support: None; the Weil bound is trivial at degree N. The G_m case shows the analogous object
+      can be a character.
+    validation_plan: exhaustive hybrid sums at five toy primes against the random-function arm.
+  - id: H2
+    statement: The rank-2 net of (R, omega R) at index (a,b) equals a constant times psi_{a + b omega}(x(R))
+      times a parity factor in y(R).
+    rigorous_support: Net terms vanish exactly on a P_1 + b P_2 = O with poles only at the origin; degree
+      count matches.
+    validation_plan: compare with Velu kernel polynomials for Nm theta in {3, 7, 13} before the dual-number
+      arm.
+  target_complexity:
+    time_exponent: N^{1/2} unchanged (delta 0)
+    memory_exponent: O(1) per evaluation; O(N) for the toy table
+    best_known: Pollard rho at Theta(N^{1/2}), KR-RHO-13bf67
+    hidden_overhead: none claimed; f is a new observable, not an algorithm
+    tradeoff_note: no tradeoff defined
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: low
+  dominated_by: KR-RHO-13bf67 dominates exponent readings; KR-RHO-53c89f dominates the pairing reading.
+    Neither names the derivative of the kernel polynomial of pi - 1 at its roots.
+  sota_delta: Exponent delta 0. New content is one cheap point-dependent division-polynomial observable
+    with a positive G_m control and an O(log N) evaluation route to be verified.
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/generic-rho
+    rows_checked:
+    - KR-RHO-13bf67
+    - KR-RHO-53c89f
+    - KR-RHO-755e35
+    - KR-IC-5a43e5
+    - KR-IC-5931ee
+    - KR-IC-cd159a
+    nearest:
+    - ref: KR-RHO-53c89f
+      provenance: internal
+      relation: adjacent
+      delta: MOV and Frey-Rueck use pairings into mu_N; f is a local product in F_p^* with no pairing
+        structure available.
+    - ref: KR-IC-5a43e5
+      provenance: internal
+      relation: orthogonal
+      delta: No point decomposition and no summation polynomial.
+    searched:
+      corpus_grep:
+      - brief prior waves for kernel polynomial, psi_N factor, EDS periodicity, h_1
+      - brief section 2 for derivative of division polynomial
+      web: []
+      blocked: []
+    lead: LEAD-EXO-quadratic-phase-small-x-leakage
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: For five prime-order toy curves with p <= 2^16, enumerate E(F_p), compute
+        f(iP) for all i by direct product (O(N^2) at this size), then for every character chi of F_p^*
+        of order in {2, 3, 4, 6, (p-1)/2} and all b compute the hybrid sums by FFT over Z/N. On j = 0
+        curves at p <= 2^12 implement the rank-2 net over the dual numbers and compare with the direct
+        product at every P. Also regress f(P+Q) ag'
