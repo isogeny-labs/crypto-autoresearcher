@@ -1,0 +1,26 @@
+# SA-24 REPORT: factor base in Jac(C) of bielliptic genus-2 / genus-3 covers
+
+## Verdict: INCONCLUSIVE (literal reading of the frozen criteria)
+
+Deciding numbers
+- SUCCESS not met. (i) A1 alpha CI is entirely above rho's, not below: A1 0.865 [0.821, 0.923] vs rho 0.344 [0.293, 0.395] (sizes 2^10..2^20, counted E1-addition equivalents; bootstrap 2,000, seed 24). (ii) Splitting-ratio slope against log2 p, pooled per genus: genus 2 -0.0040 [-0.0142, +0.0027]; genus 3 -0.0007 [-0.0096, +0.0076]. Neither CI is above 0; no per-delta slope CI is above 0.
+- KILL, first half met: A1 alpha CI entirely above rho's (also for 2^10..2^24, 2^14..2^24, fixed delta, wall time, raw Jacobian-add counts).
+- KILL, second half NOT met literally: it requires measured/null in [0.5, 2] at EVERY A2 and A3 cell. Two cells are outside, both unmeasurable: A2 p=2^24, delta=0.3 (observed 4, expected 1.05, ratio 3.8; Poisson P(>=4 | 1.05) = 0.02) and A3 p=2^20, delta=0.5 (observed 0, expected 0.35, ratio 0). Reaching 50 expected hits there would need ~3e11 and ~4e10 trials. Also the A2 per-delta slope at delta=0.5 has CI [-0.035, -0.002], which excludes 0 (negative, driven by one cell, p=2^24 delta=0.5, ratio 0.845 [0.721, 0.979]).
+- FLAGGED, NOT RESOLVED: if only the 26 of 28 (A2) and 12 of 15 (A3) cells with at least 50 expected hits are counted, and the pooled slopes are the "slope CIs", every KILL condition holds. The frozen text says "every cell", so the verdict is INCONCLUSIVE. The data point to KILL.
+
+Structural result (found while building the executor, so it is stated outside the frozen criteria). A relation in A1 needs R_j = a pb(P) + b pb(Q) = pb(T) with T in E1, so a relation is a point T of E1 with x(T) = x0^2, |x0| <= B. Each relation constrains only the sum l(Q) + l(sigma Q) of two factor-base logs, and carries a single unknown plus k. The "Jacobian" relation search is therefore a hit-the-small-set search on E1, with probability about B/p per trial; |F|/2 + 10 relations cost about p trials for every B. A2/A3 are identities for uniform elements (see below), so they cannot show an excess.
+
+## What was run (all in /home/user/semaev-runs/SA-24/)
+Facts (step a), `results/facts.jsonl`, `results/facts_g3check.jsonl`:
+- 24 A1 curves (8 sizes x 3), p = largest prime < 2^k with p = 3 mod 4, k = 10,12,...,24. #Jac(C)(F_p) = #E1 * #E2 confirmed against the Frobenius polynomial of the odd quintic at p = 1009, 65537 and every A1 instance with k <= 16. n1 = largest prime factor of #E1, cofactor <= 16, n1 not dividing #E2 and n1 || #Jac; factorisations are in `results/facts.jsonl`.
+- Exact pullback homomorphism, no sign slack, in Sage: pb(P+Q) == pb(P)+pb(Q) on 199/199 (p=1009), 200/200 (65537) and 99-100/100 for each A1 instance with k <= 16. `only_up_to_sign` was 0 in every case. In C: 991/991 (k=10) and 998/998 (k=16), plus u | Fz - v^2 for every pullback.
+- Genus 3: C3: y^2 = g4(x^2), odd degree-7 model via x = r + 1/z. Direct Frobenius polynomial of the odd model equals P_E1 * P_H at p = 211, 307, 1009 (2 curves each); #Jac(C3) = #E1 * #Jac(H) there (and p^2+1-trace(F^2) agrees). 9 curves for A3 (p = 2^12, 2^16, 2^20) use that decomposition.
+Cantor in C (step b): generic Cantor, cross-checked against Sage on 1250 random operations (5 primes up to 1.6e7; 250 doublings, 125 sums that are the identity, weight-1 and weight-0 operands): 0 mismatches (`results/cantor_crosscheck.txt`).
+Splitting law (step c): sampler validated by exhaustive enumeration of every u (g=2: p=1019, 4091; g=3: p=211, 307): the weight sum equals N_g and every split numerator equals the combinatorial null exactly at all delta (`results/exact_*.jsonl`).
+- A2: 4 sizes x 3 curves x 2e9 trials, delta = 0.3..0.9. A3: 3 sizes x 3 curves x 1e8 trials, delta = 0.5..0.9.
+- Fibre control: 2e8 uniform affine E1 points per curve, 12 curves, all deltas; 28 of 28 (p, delta) cells have >= 50 expected hits; ratio observed/null between 0.997 and 1.004, |z| <= 1.9.
+A1 + rho (step d): per size 3 curves x 3 targets; delta scanned 0.30..0.95 in steps of 0.05 for 2^10..2^22, and {0.5,0.6,0.7,0.8,0.9,0.95} at 2^24. 936 A1 runs: all runs that reach their target solve k and pass [k]P = Q (30 runs fail, all at delta <= 0.4 with p <= 2^16, zero relations because no factor-base point lies in the n1-subgroup; logged, and a delta is used in an optimum only if all 9 instances solved). Zero relation-verification failures (every counted relation is checked as Q1 + Q2 == R by a Jacobian addition; walk bookkeeping is checked every 1000th relation). Rho: DP rho with negation map, 8 sizes x 15 solves, all solved.
+Conversion to E1-addition equivalents: ratios measured by in-process micro-benchmarks run before and after each (size, curve) batch, same C code, same host (load 2.6-3.0 at the time; 4 cores shared with 2 other executors). Means: Jacobian add = 22.0 E1 adds (range 16-35), Legendre 1.21, sqrt 1.08, inversion 0.80, mulmod n1 0.071. Linear algebra counted at 1 multiply-add each.
+Bug fixes during the run (superseded results kept, not used): a wrong Horner form in the fibre sampler (null was correct) and a possible identity in the walk table at small n1. Everything affected was re-run. See DEVIATIONS.md (13 items).
+
+## A1 and rho
