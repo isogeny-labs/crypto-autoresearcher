@@ -57,6 +57,7 @@ jobs:
             /tools/artifacts/
             /.artifacts/
       - name: Unlock research vault (AES-256)
+        if: steps.creds.outputs.mode != 'none'
         shell: bash
         env:
           KEY: ${{ secrets.KEY }}
