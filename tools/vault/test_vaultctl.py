@@ -93,6 +93,60 @@ class VaultWorktreeTests(unittest.TestCase):
         self.assertEqual(self.git('write-tree').stdout, before)
         self.assertEqual((self.root / 'a.py').read_text(), 'unstaged version\n')
 
+    def test_modified_ciphertext_is_unlocked_without_staging_it(self):
+        before = self.git('write-tree').stdout
+        changed = b'changed sealed local bytes\n'
+        encrypted = subprocess.run(
+            [sys.executable, str(self.root / 'tools/vault/vaultctl.py'), 'clean'],
+            input=changed, env=self.env, capture_output=True, check=True).stdout
+        (self.root / 'nested/b.bin').write_bytes(encrypted)
+        self.lock('empty')
+        self.run_vault('unlock')
+        self.assertEqual((self.root / 'nested/b.bin').read_bytes(), changed)
+        self.assertEqual(self.git('write-tree').stdout, before)
+        self.assertIn(b'nested/b.bin', self.git('diff', '--name-only').stdout)
+
+    def test_edit_after_unlock_with_restored_timestamp_stays_unstaged(self):
+        from argparse import Namespace
+        from unittest import mock
+        self.lock('nested/b.bin', 'empty')
+        before = self.git('write-tree').stdout
+        target = self.root / 'nested/b.bin'
+        original_run = subprocess.run
+        edited = b'\x01\xffpayload\n'
+        def intervene(*args, **kwargs):
+            result = original_run(*args, **kwargs)
+            command = args[0] if args else ()
+            if len(command) > 1 and command[:2] == ['git', 'check-attr']:
+                info = target.stat()
+                target.write_bytes(edited)
+                os.utime(target, ns=(info.st_atime_ns, info.st_mtime_ns))
+            return result
+        previous = Path.cwd()
+        try:
+            os.chdir(self.root)
+            with mock.patch.dict(os.environ, KEY=self.env['KEY']), \
+                    mock.patch.object(vaultctl, '_CIPHER', None), \
+                    mock.patch.object(subprocess, 'run', side_effect=intervene):
+                vaultctl.cmd_unlock(Namespace(
+                    script=str(self.root / 'tools/vault/vaultctl.py'), quiet=True))
+        finally:
+            os.chdir(previous)
+        self.assertEqual(target.read_bytes(), edited)
+        self.assertEqual(self.git('write-tree').stdout, before)
+
+    def test_unlock_preserves_unmerged_index_entries(self):
+        oid = self.git('rev-parse', ':a.py').stdout.strip()
+        conflict = b'0 ' + b'0' * 40 + b'\ta.py\n'
+        for stage in (b'1', b'2', b'3'):
+            conflict += b'100644 ' + oid + b' ' + stage + b'\ta.py\n'
+        self.git('update-index', '--index-info', input=conflict)
+        before = self.git('ls-files', '--stage').stdout
+        self.lock('empty')
+        self.run_vault('unlock')
+        self.assertEqual(self.git('ls-files', '--stage').stdout, before)
+        self.assertEqual((self.root / 'a.py').read_text(), 'print(42)\n')
+
     def test_empty_ciphertext_is_authenticated(self):
         self.lock('empty')
         p = self.root / 'empty'
