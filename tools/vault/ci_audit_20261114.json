@@ -200,5 +200,14 @@
     ],
     "full_local_suite": "attempt3 still running, observed failures retained; no green claim",
     "merge": "held until applicable current-head checks pass"
+  },
+  "standalone_job_dependencies": {
+    "jobs": [
+      "merge-hygiene",
+      "ledger"
+    ],
+    "dependency": "cryptography>=46 in the selected runtime Python, after actions/setup-python",
+    "reproduction": "clean task-owned venv lacks cryptography; decrypt reports VaultError caused by ModuleNotFoundError",
+    "coordination": "Existing claimed T-5928 epoch1 covers this isolated worktree. Fresh scope/task queries timed out; no conflicting ownership response, settings change, or service restart."
   }
 }
