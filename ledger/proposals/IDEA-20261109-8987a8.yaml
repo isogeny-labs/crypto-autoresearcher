@@ -1,0 +1,132 @@
+idea:
+  id: IDEA-20261109-8987a8
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: Level-p^2 hybrid spectrum of the torsion-lifted discrete-log graph, exhaustive maximum over (alpha,
+    b) at p <= 509 against random-digit and planted controls
+  class: representation
+  claim: Let E/F_p have prime order N, P a generator, P^ its torsion lift to E~(Z/p^2) and R^_k = R^_{k-1}
+    + P^ computed exactly in E~(Z/p^2), so that x^(k) = x_0(k) + p x_1(k) with digits in [0, p). Define
+    F_2(alpha, b) = sum_{k=1}^{N-1} e_{p^2}(alpha x^(k)) e(bk/N) for alpha in Z/p^2 and b in Z/N; alpha
+    = a_0 + p a_1 couples the digit x_1 (degree of order p as a function of x_0, see the companion Teichmueller
+    record) to the Weil-controlled x_0. Let M_2 = max |F_2|/sqrt(N) over alpha not 0 mod p and all b,
+    M_1 the same maximum over alpha = p a_1 (the x_0-only matrix of the barriers-wave record), and M_rand
+    the maximum when x_1(k) is replaced by independent uniform digits. Prediction, M_2 lies in [0.85,
+    1.15] M_rand and M_2 <= 2 sqrt(ln(p^2 N)) at every prime; a persistent excess would be the first additive-character-visible
+    correlation between a p-adic lift datum and k. No theorem covers a degree-p phase, so only measurement
+    decides.
+  mechanism: The torsion lift is exact, so k -> x^(k) is a function of kP and nothing else; the digit
+    x_1 is deterministic but of degree of order p, outside the range where Weil or Deligne bounds certify
+    flatness (the barriers-wave record shows the x_0-only matrix stays within 2 + o(1)). If any linear
+    statistic of the lifted coordinate saw k, it would appear as a spike of F_2 at some (alpha, b) with
+    alpha a unit modulo p. The planted control (x^(k) := k mod p^2) shows that spikes of size about N
+    are detected, since the phases alpha/p^2 + b/N approximate every rational to within 1/(p^2 N).
+  novelty_status: adaptation
+  citations:
+  - ref: KR-RHO-13bf67
+    provenance: internal
+    claim: Generic algorithms need Omega(sqrt N) operations; a spectral lever would have to come from
+      the representation, which is what is tested.
+    verified_by: REPO BRIEF section 3 row text, file not opened in this session
+  - ref: KR-RHO-53c89f
+    provenance: internal
+    claim: The only p-adic ECDLP transfer is the trace-one case; here N is prime to p and the lifted coordinate
+      is tested for residual correlation.
+    verified_by: REPO BRIEF section 3 row text, file not opened in this session
+  assumptions:
+  - N prime and p not dividing N, so the torsion lift exists and the walk R^_k closes exactly at k = N.
+  - Digits are the standard base-p digits of the integer representative of x^, not Witt coordinates.
+  predictions:
+  - metric: M_2 / M_rand
+    direction: different
+    minimum_effect: within [0.85, 1.15] at every tested prime
+  - metric: M_2 / (2 sqrt(ln(p^2 N)))
+    direction: lower
+    minimum_effect: at most 1 at every tested prime
+  - metric: M_planted / sqrt(N)
+    direction: higher
+    minimum_effect: at least 0.3 sqrt(N) at every tested prime
+  minimal_test:
+    design: Prime-order toy curves at p in {127, 251, 383, 509} drawn or generated per crypto/docs/ECDLP_CALIBRATION_PRIMES.md.
+      Build P^ to precision p^2, iterate N - 1 exact additions, store x_0(k), x_1(k). For each alpha in
+      Z/p^2 form s_k = e_{p^2}(alpha x^(k)) and take an FFT of length N over k to obtain all b at once;
+      record M_2, M_1, and the argmax (alpha, b). Repeat with x_1 replaced by uniform random digits (3
+      seeds) and with the planted sequence x^(k) = k mod p^2. Cost about p^2 N log N complex operations,
+      under 2^31 at p = 509.
+    controls:
+    - Random uniform digits in place of x_1, three seeds, gives M_rand.
+    - The alpha = p a_1 slice reproduces the barriers-wave x_0-only matrix and must satisfy M_1 <= 2 +
+      o(1).
+    - Planted sequence x^(k) = k mod p^2 must produce M_planted of order sqrt(N).
+    - Parseval check, sum over (alpha, b) of |F_2|^2 equals p^2 N (N - 1).
+    required_metrics:
+    - p, N, M_2, M_1, M_rand (mean and max over seeds), M_planted
+    - argmax (alpha, b) of |F_2| and whether a_0 = alpha mod p is zero
+    - Parseval residual
+  falsification_conditions:
+  - M_2 > 1.5 M_rand at three or more primes.
+  - A fixed direction (a_0, a_1) with a_0 nonzero exceeds 4 sqrt(N) at three or more primes.
+  - M_planted below 0.3 sqrt(N) at any prime is an invalid run (detector broken), not evidence.
+  confounders:
+  - Extreme-value fluctuation of about 2^30 near-independent sums gives maxima near sqrt(ln(p^2 N)) by
+    chance; the random-digit control calibrates this.
+  - Floating-point FFT error at N about 500 is below 1e-9 and reported.
+  interpretation_limits:
+  - Flatness at p <= 509 is not a proof at 256 bits; it is the only certification available for a degree-p
+    phase.
+  - A spike would show correlation, not an algorithm; its cost in N would have to be charged separately.
+  heuristic_assumptions:
+  - id: H1
+    statement: The lifted digit x_1(k) is spectrally indistinguishable from uniform random digits conditioned
+      on x_0(k).
+    rigorous_support: None; Weil-type bounds stop at degree o(p).
+    validation_plan: The M_2 / M_rand ratio across four primes and three seeds.
+  target_complexity:
+    time_exponent: N^{1/2} unchanged; a lever would require |F_2| >= N^{1/2 + epsilon} on poly(log N)
+      many (alpha, b)
+    memory_exponent: O(N) digits at toy size
+    best_known: Pollard rho at Theta(N^{1/2}) per KR-RHO-13bf67
+    hidden_overhead: The exhaustive spectrum costs p^2 N log N and is a toy-only certification instrument.
+    tradeoff_note: None defined.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  sota_delta: Exponent delta 0 predicted. Counted delta, the first exhaustive spectrum of a lifted (precision
+    p^2) discrete-log coordinate, extending the x_0-only hybrid-sum matrix of the barriers wave to the
+    Witt digit.
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/generic-rho
+    rows_checked:
+    - KR-RHO-13bf67
+    - KR-RHO-53c89f
+    - KR-RHO-755e35
+    - KR-IC-5931ee
+    - KR-IC-cd159a
+    nearest:
+    - ref: KR-RHO-13bf67
+      provenance: internal
+      relation: adjacent
+      delta: The generic bound is silent about representation statistics; this record measures one such
+        statistic on the lifted coordinate.
+    - ref: KR-RHO-53c89f
+      provenance: internal
+      relation: orthogonal
+      delta: The trace-one transfer is a homomorphism; this is a correlation test where no homomorphism
+        exists.
+    searched:
+      corpus_grep:
+      - REPO BRIEF barriers-wave record on hybrid sums of the discrete-log graph
+      - REPO BRIEF quantum-classical wave records on multiplicative-character spectra
+      web: []
+      blocked: []
+    lead: LEAD-ICP-digit-presentation-solving-degree
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: Prime-order toy curves at p in {127, 251, 383, 509} drawn or generated per
+        crypto/docs/ECDLP_CALIBRATION_PRIMES.md. Build P^ to precision p^2, iterate N - 1 exact additions,
+        store x_0(k), x_1(k). For each alpha in Z/p^2 form s_k = e_{p^2}(alpha x^(k)) and take an FFT
+        of length N over k to obtain all b at once; record M_2, M_1, and the argmax (alpha, b). Repeat
+        with x_1 replaced by uniform random d'
