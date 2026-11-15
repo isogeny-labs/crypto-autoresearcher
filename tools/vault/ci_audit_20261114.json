@@ -1,0 +1,122 @@
+{
+  "schema": "engineering.audit/v1",
+  "base_commit": "021964c35d5aca0cd967757555fc914cb784e00a",
+  "scope": [
+    "fresh worktree verification",
+    "CI regression repair",
+    "committed-content I/O audit"
+  ],
+  "fresh_worktree": {
+    "tracked_paths": 181016,
+    "ciphertext_files_on_disk": 0,
+    "cached_attribute_files": 83,
+    "attribute_warning_bytes": 0,
+    "configured_setup": "Research vault",
+    "setup_unlocked_files": 0,
+    "expected_case_collision": "coordination/goals/GOAL-ECDLP-001/batches/BATCH-49720f/final/CHECKPOINT.json",
+    "app_worktree_api": "did not return; created and verified via Git and selected setup script"
+  },
+  "coordination": {
+    "conflict_check": "allow",
+    "task": "T-5928",
+    "claim": "attempted via MCP and CLI; TLS handshake timeout, then loopback connection refused",
+    "existing_work_preserved": true
+  },
+  "baseline": {
+    "targeted_tests": {
+      "passed": 62,
+      "failed": 6,
+      "subtests_passed": 419,
+      "log": "/tmp/car-ci-baseline-targeted-20261114.log"
+    },
+    "ci_runs": [
+      43649778302,
+      43646847846,
+      43649778257
+    ]
+  },
+  "sources": [
+    "VAULT.md",
+    "docs/security/git-vault.md",
+    "docs/agent-contract-extended.md#literature-first",
+    "https://git-scm.com/docs/git-cat-file",
+    "https://git-scm.com/docs/git-grep",
+    "https://raw.githubusercontent.com/pyca/cryptography/main/tests/hazmat/primitives/test_aead.py"
+  ],
+  "changes": {
+    "git_objects": "authenticate committed content before text decoding; constant-memory batch streaming",
+    "decision_search": "replace ciphertext grep with batched authenticated object reads",
+    "ci_backend": "probe empty AES-SIV roundtrip, install cryptography>=46 when unavailable",
+    "instructions": "move full persistent-loop section to binding supplement without relaxing budgets",
+    "lead_atlas": "point moved DREG goal evidence at canonical sharded path",
+    "parity": {
+      "owner_commit": "05b897aa3610e46916ae191987c19cab1afa007c",
+      "owner_repo": "isogeny-labs/crypto",
+      "files": {
+        "tools/pcc/pcc.py": "09bdeb6a07be017ba7990dee01dee15dfdfa615d49c41dc821fe9241f1ded52a",
+        "tools/pcc/test_pcc.py": "6015f12690eeff88412e02d373797fd6497b7016586c085a5cba1b958312dd24"
+      },
+      "scope": "copy owner-locked canonical files and their approved digests; no owner repository edits"
+    },
+    "progress_test_expectations": "Align stale tests with already-enforced synthetic/assumed-input vocabulary; preserve metric values and strengthen no-measurement assertions.",
+    "handoff_schema": {
+      "replacements": 26,
+      "mechanism": "existing hash-pinned schema supersession registry",
+      "originals_changed": false,
+      "new_execution_authority": false
+    }
+  },
+  "validation": {
+    "status": "in progress",
+    "first_targeted_group": "70 passed, 2 subtests passed",
+    "word_budget": {
+      "always_loaded": 5671,
+      "largest_wake": 8677
+    },
+    "shared_code_parity": "19 files pass after sync with owner-locked versions",
+    "ledger_integration": "29 tests pass; 26 missing-budget cards corrected by pinned supersessions; original cards unchanged"
+  },
+  "audit_inventory": {
+    "source_paths_in_selected_roots": 1015,
+    "roots": {
+      "cairn": 11,
+      "cli": 3,
+      "groebner_compare": 17,
+      "harness": 493,
+      "orchestration": 83,
+      "src": 61,
+      "tools": 347
+    }
+  },
+  "coverage_limit": "Repository-wide audit and Pareto-frontier criteria remain unfinished; no performance advantage asserted.",
+  "backend_reproduction": {
+    "version": "cryptography 42.0.8",
+    "openssl": "OpenSSL 3.2.2 4 Jun 2024",
+    "empty_roundtrip": "ValueError",
+    "implication": "import success alone does not establish required AES-SIV support",
+    "upstream_test": "TestAESSIV.test_empty"
+  },
+  "artifact_hydration": {
+    "local_status": "five validation archives restored and SHA-256/size checked",
+    "credentials": "existing ecc-challenges-new profile; no permission changes",
+    "benchrec_gate": "20 records pass; progress report current",
+    "checks_bypassed": false
+  },
+  "existing_repair_branches": [
+    {
+      "pr": 3268,
+      "head": "bdfcedb13364dc1c8864d26d7df974a197cdfd80",
+      "scope": "committed-evidence readers and canonical PCC synchronization"
+    },
+    {
+      "pr": 3270,
+      "head": "22ee589bc227df864f75094a615ea59dd6cd0180",
+      "scope": "immutable progress blob cache"
+    }
+  ],
+  "local_collection": {
+    "initial": "5838 tests, 2 errors: external tests package collision and missing optional psutil",
+    "repair": "isolate repository tests namespace; install declared psutil extra into ignored local venv",
+    "after_namespace_fix": "5847 tests, one legacy absolute helper import corrected"
+  }
+}

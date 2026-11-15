@@ -123,6 +123,17 @@ class VaultWorktreeTests(unittest.TestCase):
         data = tomllib.loads(config.read_text())
         self.assertEqual(data['setup']['script'], 'python3 tools/vault/vaultctl.py unlock')
 
+    def test_old_backend_reports_dependency_error_without_bypassing_authentication(self):
+        from unittest import mock
+        backend = mock.Mock()
+        backend.encrypt.side_effect = ValueError('empty data unsupported')
+        with mock.patch.object(vaultctl, '_CIPHER', None), \
+             mock.patch.object(vaultctl, '_derive_key', return_value=bytes(64)), \
+             mock.patch('cryptography.hazmat.primitives.ciphers.aead.AESSIV', return_value=backend):
+            with self.assertRaisesRegex(vaultctl.VaultError, 'OpenSSL >=3.5'):
+                vaultctl.decrypt(vaultctl.MAGIC + bytes(16))
+        backend.decrypt.assert_not_called()
+
     def test_bootstrap_path_boundaries(self):
         for path in ['.gitattributes', 'nested/.gitattributes',
                      '.codex/environments/environment.toml']:
