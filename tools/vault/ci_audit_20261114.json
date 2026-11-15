@@ -206,9 +206,9 @@
     "syntax_inventory": "tools/vault/repository_inventory_20261114.json",
     "vault_optimization": {
       "change": "Reuse authenticated ciphertext object identity; recheck plaintext digest before normal Git index refresh. Remove redundant parent AES encryption without a stat-only shortcut.",
-      "custody_tests": 19,
+      "custody_tests": 21,
       "scope": "software fixture controls; component wall-time gain unmeasured",
-      "tradeoff": "Retains three per-file digests for unlocked files; memory/time frontier unmeasured.",
+      "tradeoff": "Retains one SHA256 digest and one clean-match flag per unlocked file; memory/time frontier remains unmeasured before the frozen fixture run.",
       "rejected_approach": "Stat-only index refresh failed fresh filtered-worktree status; failure evidence retained locally."
     },
     "path_controls": {
@@ -234,5 +234,48 @@
     "dependency": "cryptography>=46 in the selected runtime Python, after actions/setup-python",
     "reproduction": "clean task-owned venv lacks cryptography; decrypt reports VaultError caused by ModuleNotFoundError",
     "coordination": "Existing claimed T-5928 epoch1 covers this isolated worktree. Fresh scope/task queries timed out; no conflicting ownership response, settings change, or service restart."
+  },
+  "local_full_shards_attempt3": [
+    {
+      "shard": 1,
+      "files": 84,
+      "exit": "timeout",
+      "seconds": 1800.029837,
+      "log": ".venv/tmp/evidence/car-ci-local-shard-1-attempt3-20261114.log"
+    },
+    {
+      "shard": 2,
+      "files": 66,
+      "exit": 1,
+      "seconds": 727.5908770000001,
+      "log": ".venv/tmp/evidence/car-ci-local-shard-2-attempt3-20261114.log"
+    },
+    {
+      "shard": 3,
+      "files": 118,
+      "exit": 1,
+      "seconds": 1258.1651324170002,
+      "log": ".venv/tmp/evidence/car-ci-local-shard-3-attempt3-20261114.log"
+    },
+    {
+      "shard": 4,
+      "files": 72,
+      "exit": "timeout",
+      "seconds": 1800.0126848750006,
+      "log": ".venv/tmp/evidence/car-ci-local-shard-4-attempt3-20261114.log"
+    }
+  ],
+  "local_full_shards_scope": "Diagnostic on an edited worktree and mixed local optional dependencies, not a frozen complete success. Shards1 and4 censored at1800s; raw logs retained. Hosted CI remains the current-head integration gate.",
+  "canonical_benchmark_guard": {
+    "owner": "crypto-autoresearcher",
+    "change": "Read base records through required Git filters and preserve existing-object failures; malformed base JSON cannot disappear from the closed-record guard.",
+    "tests_passed": 49,
+    "subtests_passed": 71,
+    "shared_code_parity_files": 19,
+    "consumer_sync": "Owner-first change; crypto and cryptanalysis copies require synchronization after the owner lands."
+  },
+  "latest_integrated_reader_regression": {
+    "passed": 140,
+    "scope": "overlapping goal-ID, metrics, decision, history, vault and encrypted consumer controls"
   }
 }

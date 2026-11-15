@@ -93,6 +93,21 @@ class VaultWorktreeTests(unittest.TestCase):
         self.assertEqual(self.git('write-tree').stdout, before)
         self.assertEqual((self.root / 'a.py').read_text(), 'unstaged version\n')
 
+    def test_nested_envelope_cannot_change_staged_object_during_unlock(self):
+        from unittest import mock
+        with mock.patch.dict(os.environ, KEY=self.env['KEY']), \
+                mock.patch.object(vaultctl, '_CIPHER', None):
+            inner = vaultctl.encrypt(b'nested public fixture\n')
+            outer = vaultctl.MAGIC + vaultctl._cipher().encrypt(
+                inner, [vaultctl.SALT + b'|' + vaultctl.INFO])
+        oid = self.git('hash-object', '-w', '--stdin', input=outer).stdout.strip().decode()
+        self.git('update-index', '--add', '--cacheinfo', '100644,'+oid+',nested-envelope')
+        (self.root/'nested-envelope').write_bytes(outer)
+        before = self.git('write-tree').stdout
+        self.run_vault('unlock')
+        self.assertEqual((self.root/'nested-envelope').read_bytes(), inner)
+        self.assertEqual(self.git('write-tree').stdout, before)
+
     def test_modified_ciphertext_is_unlocked_without_staging_it(self):
         before = self.git('write-tree').stdout
         changed = b'changed sealed local bytes\n'

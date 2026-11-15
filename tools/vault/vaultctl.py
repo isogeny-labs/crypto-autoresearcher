@@ -526,7 +526,9 @@ def cmd_unlock(args: argparse.Namespace) -> int:
             ):
                 raise VaultError(f"vault: file changed during unlock: {rel}")
             os.replace(temporary, candidate)
-            refresh[rel] = (blob_id(data), blob_id(plain), hashlib.sha256(plain).digest())
+            # Match clean()'s idempotency for a nested envelope as well.
+            filtered = plain if is_ciphertext(plain) else data
+            refresh[rel] = (blob_id(filtered) == entries[rel][1], hashlib.sha256(plain).digest())
         finally:
             if os.path.exists(temporary):
                 os.unlink(temporary)
@@ -548,23 +550,24 @@ def cmd_unlock(args: argparse.Namespace) -> int:
         for rel in written:
             candidate = Path(rel)
             mode, oid = entries[rel]
-            encrypted_oid, plaintext_oid, plaintext_digest = refresh[rel]
+            filtered_matches, plaintext_digest = refresh[rel]
             current = candidate.lstat()
             if not stat.S_ISREG(current.st_mode):
                 continue
             # Recheck actual bytes, not just metadata: another writer can
             # restore timestamps after an edit. Such an edit must stay unstaged.
-            if hashlib.sha256(candidate.read_bytes()).digest() != plaintext_digest:
+            current_data = candidate.read_bytes()
+            if hashlib.sha256(current_data).digest() != plaintext_digest:
                 continue
             selected = filters.get(rel)
             if selected == b"vault":
-                actual = encrypted_oid
+                matches = filtered_matches
             elif selected in (b"unset", b"unspecified"):
-                actual = plaintext_oid
+                matches = blob_id(current_data) == oid
             else:
                 continue
             executable = bool(current.st_mode & 0o111)
-            if actual == oid and executable == (mode == b"100755"):
+            if matches and executable == (mode == b"100755"):
                 unchanged.append(os.fsencode(rel))
         if unchanged:
             with tempfile.TemporaryFile() as request:

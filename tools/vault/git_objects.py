@@ -18,8 +18,15 @@ from .vaultctl import decrypt
 def read_blob(repo: str | Path, spec: str, *, missing_ok: bool = False) -> bytes | None:
     result = subprocess.run(['git', '-C', str(repo), 'cat-file', 'blob', spec], capture_output=True)
     if result.returncode:
-        if missing_ok:
-            return None
+        if missing_ok and "\n" not in spec:
+            # A failed read is not necessarily an absent path: lazy fetching,
+            # repository access and corrupt objects must remain failures.
+            query = spec.encode("utf-8", "surrogateescape")
+            probe = subprocess.run(['git', '-C', str(repo), 'cat-file', '--batch-check'],
+                                   input=query + b'\n', capture_output=True)
+            if (probe.returncode == 0 and not probe.stderr
+                    and probe.stdout == query + b' missing\n'):
+                return None
         raise subprocess.CalledProcessError(result.returncode, result.args, stderr=result.stderr)
     return decrypt(result.stdout)
 
