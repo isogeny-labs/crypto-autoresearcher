@@ -1,0 +1,140 @@
+idea:
+  id: IDEA-20261109-9b7fa3
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: 'Variance of Semaev decomposition counts over targets equals the 2m-th spectral moment of the
+    factor base, and Holder makes Poisson dispersion the floor: no factor base decomposes targets more
+    uniformly than a random one'
+  class: barrier
+  claim: 'Exact statements, with a zero-compute verification on existing outputs. Let F in E(F_p) be symmetric,
+    f = |F|, A the set of logs of F in Z/N, T(xi) the real sum over a in A of e_N(xi a), and r_m(t) the
+    number of ordered m-tuples in A^m summing to t. Then r_m(t) equals N^{-1} times the sum over xi of
+    T(xi)^m e_N(-xi t), the mean over t is f^m/N, and the variance over t is N^{-2} times the sum over
+    xi not 0 of T(xi)^{2m}. By the power-mean inequality and Parseval the variance is at least the mean
+    times (1 - f/N)^m (N/(N-1))^{m-1}, with equality if and only if A is a difference set, and at most
+    the mean times (max_{xi not 0} T(xi)^2 / f)^{m-1}. Consequences: the fraction of targets with no decomposition
+    is at most variance over mean squared, hence controlled by the spectral norm alone; yield boosting
+    on a target set only redistributes counts with both the sum and the sum of squares fixed; and no base
+    is under-dispersed relative to random. Families ruled out: designs that aim at every target decomposing
+    when the mean is below the (max T^2/f)^{m-1} scale, and any claimed uniformity advantage of a structured
+    base over a random one.'
+  mechanism: The Fourier expansion of the m-fold convolution of 1_A over the cyclic group of prime order
+    N gives r_m exactly; the second moment over t is the 2m-th moment of the spectrum by Parseval on Z/N.
+    Parseval also fixes the second spectral moment at f(N - f), so Holder bounds the 2m-th moment below
+    by (f(N-f))^m/(N-1)^{m-1}, attained only by a flat spectrum, which is the definition of a difference
+    set, a log-defined object never realised by a coordinate base. The upper bound replaces all but one
+    factor of T^2 by the spectral norm. Chebyshev converts the variance bound into a bound on the zero-count
+    fraction. All of this is independent of how r_m is realised algebraically and so prices the descent
+    stage for every prime-field index calculus on a symmetric base.
+  novelty_status: adaptation
+  citations:
+  - ref: IDEA-20260805-a25f11
+    provenance: internal
+    claim: The mean decomposition count is independent of the base; this record adds the exact variance
+      and its two-sided bounds.
+    verified_by: brief section 2 index line (file not opened in this session)
+  - ref: IDEA-20260805-a9a95d
+    provenance: internal
+    claim: States an identity for a symmetric factor base and a target; the next agent must open it to
+      decide whether the variance identity is already recorded there.
+    verified_by: brief section 2 index line (file not opened in this session)
+  - ref: KR-IC-5931ee
+    provenance: internal
+    claim: The YYTK statistical assumptions are replaced at the second moment by an exact identity.
+    verified_by: brief section 3 row text (file not opened in this session)
+  assumptions:
+  - F is symmetric so T(xi) is real and signs are absorbed into A.
+  - r_m counts ordered tuples; other conventions rescale by known factors.
+  predictions:
+  - metric: relative error of variance times N^2 against the 2m-th spectral moment
+    direction: lower
+    minimum_effect: at most 1e-9 for m = 2 and m = 3 after convention reconciliation
+  - metric: variance over mean divided by (1 - f/N)^m
+    direction: higher
+    minimum_effect: at least 1 on every base, random and structured
+  - metric: variance over mean for the planted progression base
+    direction: higher
+    minimum_effect: at least 10 times the random-base value
+  minimal_test:
+    design: Take the exact spectrum and the decomposition-count histogram produced by the synthesis-wave
+      record on the small-x base (read its outputs; reconcile ordered versus unordered and sign conventions),
+      compute both sides of the identity and both bounds. If those outputs are unavailable, run one exhaustive
+      table at p near 2^18 with an interval base, a mu_B base and 20 random bases of equal size, m = 2
+      and 3.
+    controls:
+    - Random bases of equal size, 20 seeds, expected variance near mean.
+    - Planted progression base with a large upper spectral moment.
+    - Convention check on a hand-computed N = 31 example.
+    required_metrics:
+    - f, N, m
+    - mean and variance of r_m over all targets
+    - 2m-th spectral moment and spectral norm
+    - lower and upper bound values
+    - zero-count fraction and the Chebyshev bound
+  falsification_conditions:
+  - Identity failing beyond convention factors kills the stated conventions and the record as written.
+  - Variance below the Holder floor is an arithmetic bug; invalid run.
+  - A coordinate base within 1e-3 of the floor would be a difference set; report as anomalous for independent
+    recheck.
+  confounders:
+  - Unordered or sign-reduced histograms differ by m! and 2^m factors.
+  - Targets in F itself contribute degenerate tuples; include them consistently.
+  interpretation_limits:
+  - The identity prices dispersion, not solver cost or exponent.
+  - Chebyshev is loose; the zero-count bound is an upper bound only.
+  heuristic_assumptions:
+  - id: H1
+    statement: Coordinate bases have spectral norm at the random level, so the upper bound is mean times
+      polylog.
+    rigorous_support: Theorem only for f above sqrt(p) (Weil); measured at toy size by the wave-1 spectral
+      record.
+    validation_plan: Read the spectral norm off the same toy outputs.
+  target_complexity:
+    time_exponent: N^{1/2} unchanged, delta 0
+    memory_exponent: O(N) toy table only
+    best_known: Pollard rho, Theta(N^{1/2}) (KR-RHO-13bf67)
+    hidden_overhead: None; no algorithm is proposed.
+    tradeoff_note: Exact identity; no tradeoff defined.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: high
+  dominated_by: If IDEA-20260805-a9a95d already states the variance identity, this record reduces to the
+    Holder floor, the upper bound and the check.
+  sota_delta: Exponent delta 0. Replaces a heuristic second-moment assumption on decomposition counts
+    by an exact identity with a provable floor.
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/index-calculus
+    rows_checked:
+    - KR-IC-5931ee
+    - KR-IC-5a43e5
+    - KR-RHO-46c2c6
+    - KR-RHO-13bf67
+    - KR-IC-46d822
+    nearest:
+    - ref: KR-IC-5931ee
+      provenance: internal
+      relation: adjacent
+      delta: The row's negative result assumes statistics of decomposition counts; this record supplies
+        the exact second moment.
+    - ref: KR-RHO-46c2c6
+      provenance: internal
+      relation: orthogonal
+      delta: Multi-target rho amortises collisions; no decomposition count or spectrum appears there.
+    searched:
+      corpus_grep:
+      - brief for variance, second moment, dispersion, difference set, Holder
+      - IDEA-20260805-a25f11 and IDEA-20260805-a9a95d index lines
+      - synthesis-wave record on exact spectrum and decomposition-count histograms
+      web: []
+      blocked: []
+    lead: LEAD-EXO-holant-decomposition-count-network
+    lead_delta:
+      kind: answers_obstruction
+      statement: 'New test: Take the exact spectrum and the decomposition-count histogram produced by
+        the synthesis-wave record on the small-x base (read its outputs; reconcile ordered versus unordered
+        and sign conventions), compute both sides of the identity and both bounds. If those outputs are
+        unavailable, run one exhaustive table at p near 2^18 with an interval base, a mu_B base and 20
+        random bases of equal size, m = 2 a'

@@ -1,0 +1,130 @@
+idea:
+  id: IDEA-20261109-fe5257
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: 'Translation rigidity: pure Weil cohomology of (E, P, Q) over F_p is scalar-blind, and the Kummer
+    cover of the Miller quotient is E itself for every wrong guess, with the embedding field as the first
+    discriminating Euler factor'
+  class: barrier
+  claim: Let E/F_p have prime order N, P a generator, Q = kP. (i) For every Weil cohomology H (l-adic,
+    crystalline, rigid) translation by P acts as the identity on H^*(E^n), and CH_0(E^n)_0 is isomorphic
+    to E(F_p)^n (Kato-Saito, recalled), so every invariant obtained by applying H to E, to its powers,
+    or to correspondences built from P and Q by the group law equals its value at P = Q = O. (ii) With
+    h_j = f_Q f_P^{-j}, Miller functions of divisor N(P)-N(O) and N(Q)-N(O), the Kummer cover X_j of equation
+    z^N = h_j is, for every j not congruent to k, an elliptic curve isomorphic to E over F_p, the covering
+    map being the isogeny with kernel the Frobenius eigenline on which pi acts as p; for j congruent to
+    k it is E x Spec F_p[z]/(z^N - c), a disjoint union of E and (N-1)/k_N copies of E over F_{p^{k_N}}.
+    (iii) Hence the number of F_{p^r}-points of X_j equals that of E for every j and every r with gcd(N,
+    p^r - 1) = 1, and the first r at which j = k is visible is k_N = ord_N(p). No exponent changes.
+  mechanism: (i) Translations form a connected family containing the identity, so the graph of tau_P is
+    algebraically equivalent to the diagonal and the cycle class map kills algebraic equivalence. Over
+    a finite field the Albanese kernel of CH_0 of an abelian variety vanishes by unramified class field
+    theory. (ii) h_j has divisor N times D_j = (Q) - j(P) + (j-1)(O), so the cover is etale; gcd(N, p-1)
+    = 1 gives it a rational point; its Jacobian is E modulo the Cartier dual of mu_N, which is the constant
+    group E(F_p), and E/E(F_p) is E by Lang. For j = k, D_k is principal and the torsor is trivial. (iii)
+    is the point count of a product. The only scalar-dependent object is the rank-one lattice L_k of principal
+    divisors supported on O, P, Q, which no cohomology functor sees.
+  novelty_status: adaptation
+  citations:
+  - ref: KR-RHO-53c89f
+    provenance: internal
+    claim: Transfers via pairings need small embedding degree; (iii) shows the Kummer-cover zeta function
+      discriminates exactly at r = k_N.
+    verified_by: brief section 3 row text; file knowledge/frontiers/ecdlp/generic-rho/KR-RHO-53c89f.yaml
+      not opened
+  - ref: KR-RHO-755e35
+    provenance: internal
+    claim: Isogenous curves are equally hard; X_j for j not k is E itself, so the cover is not a transfer.
+    verified_by: brief section 3 row text; file not opened
+  assumptions:
+  - gcd(N, p - 1) = 1, automatic for a prime-order curve with N not equal to p - 1.
+  - The Kato-Saito statement CH_0(A)_0 isomorphic to A(F_q) for abelian varieties over finite fields is
+    recalled, not opened; the next agent must confirm it from a source before citing (i) as proven.
+  predictions:
+  - metric: number of j in [0, N) with a point count of X_j over F_{p^r} different from that of E, for
+      r with gcd(N, p^r - 1) = 1
+    direction: equal
+    minimum_effect: exactly 0
+  - metric: ratio of point counts of X_k and E over F_{p^{k_N}} on a toy curve with k_N at most 4
+    direction: equal
+    minimum_effect: exactly N
+  minimal_test:
+    design: 'Written proof audit of (i) and (ii) with the recalled theorems listed and sourced. Then two
+      toy arms in Sage under crypto/sage. Arm G: generic prime-order toy curves from crypto/docs/ECDLP_CALIBRATION_PRIMES.md
+      with p at most 2^10, all j, r = 1 and r = 2 (r = 2 on 64 random j plus j = k), counting points of
+      X_j by pointwise Miller evaluation of h_j. Arm M: constructed toy curves with k_N in {2, 3, 4};
+      count X_j over F_{p^{k_N}} for all j and record which j is singled out.'
+    controls:
+    - 'Arm M is the positive control: exactly one j must be singled out and it must equal the independently
+      computed discrete log.'
+    - A ramified cover z^N = f with f a random function of degree N whose divisor is not N times a degree-zero
+      divisor must give point counts differing from E.
+    required_metrics:
+    - point counts of X_j and E over F_{p^r} for each j, r
+    - k_N and the singled-out j in arm M
+    - the discrete log k computed by exhaustive search
+  falsification_conditions:
+  - Any j not equal to k with a point count of X_j over F_{p^r} different from E for some r with gcd(N,
+    p^r - 1) = 1.
+  - In arm M the singled-out j differs from k, or more than one j is singled out.
+  - The proof audit finds that translation does not act trivially on some Weil cohomology of E.
+  confounders:
+  - Arm G counts are tautological given gcd(N, p^r - 1) = 1; they calibrate the harness and do not by
+    themselves support (ii).
+  interpretation_limits:
+  - The record closes functorial cohomological invariants only. Non-functorial covers that use coordinates
+    (RECORD D) are not covered by (i).
+  heuristic_assumptions:
+  - id: H1
+    statement: The Albanese map CH_0(E^n)_0 to E(F_p)^n is an isomorphism.
+    rigorous_support: Kato-Saito class field theory for varieties over finite fields, recalled without
+      a source open in this session.
+    validation_plan: Source check by the next agent; if unavailable, (i) is stated for cohomology only
+      and the Chow statement is dropped.
+  target_complexity:
+    time_exponent: p^{1/2} unchanged
+    memory_exponent: unchanged
+    best_known: Pollard rho, Theta(p^{1/2}) group operations (KR-RHO-13bf67)
+    hidden_overhead: none claimed
+    tradeoff_note: barrier record, no tradeoff defined
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  dominated_by: KR-RHO-53c89f for the k_N statement; the wave-2 cohomology lead on the Kummer sheaf of
+    f_P for j = 0. The all-j isomorphism and the rigidity statement are the additions.
+  sota_delta: exponent delta 0; closes functorial cohomology as a lane.
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/generic-rho
+    rows_checked:
+    - KR-RHO-53c89f
+    - KR-RHO-755e35
+    - KR-RHO-13bf67
+    - KR-IC-cd159a
+    - KR-IC-5a43e5
+    nearest:
+    - ref: KR-RHO-53c89f
+      provenance: internal
+      relation: adjacent
+      delta: The row states pairing transfers need small k_N; this record shows every Kummer-cover zeta
+        function is E's below r = k_N.
+    - ref: KR-RHO-755e35
+      provenance: internal
+      relation: adjacent
+      delta: The row closes isogeny walks; here the wrong-guess covers are E itself, so no walk even starts.
+    searched:
+      corpus_grep:
+      - brief section 2 for Kummer, Miller, translation, rigidity, Chow
+      - brief prior-waves for cohomology records and leads
+      web: []
+      blocked: []
+    lead: LEAD-TRF-same-field-genus-g-embedding
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: Written proof audit of (i) and (ii) with the recalled theorems listed and
+        sourced. Then two toy arms in Sage under crypto/sage. Arm G: generic prime-order toy curves from
+        crypto/docs/ECDLP_CALIBRATION_PRIMES.md with p at most 2^10, all j, r = 1 and r = 2 (r = 2 on
+        64 random j plus j = k), counting points of X_j by pointwise Miller evaluation of h_j. Arm M:
+        constructed toy curves with k_N in {2, 3,'

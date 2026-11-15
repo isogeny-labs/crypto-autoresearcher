@@ -243,6 +243,7 @@ jobs:
           sparse-checkout: ${{ env.SPARSE_RULES }}
           sparse-checkout-cone-mode: false
       - name: Unlock research vault (AES-256)
+        if: env.RUN_RUNTIME == 'true'
         shell: bash
         env:
           KEY: ${{ secrets.KEY }}
@@ -753,6 +754,7 @@ jobs:
           sparse-checkout: ${{ matrix.shard != 1 && env.SPARSE_RULES || '' }}
           sparse-checkout-cone-mode: false
       - name: Unlock research vault (AES-256)
+        if: env.RUN_TESTS == 'true'
         shell: bash
         env:
           KEY: ${{ secrets.KEY }}

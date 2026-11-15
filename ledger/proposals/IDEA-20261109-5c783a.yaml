@@ -1,0 +1,134 @@
+idea:
+  id: IDEA-20261109-5c783a
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: The discrete log on a j = 0 prime-order curve is a Galois element of the ray class field of conductor
+    (pi - 1); its only analytic shadows are (N-1)/6 Hecke L-functions, inversion costs N^{3/2}, and the
+    required archimedean input is the compatible lift
+  class: barrier
+  claim: 'Let E/F_p be y^2 = x^3 + b with End = Z[omega], K = Q(sqrt(-3)), pi the Frobenius, n = (pi -
+    1), #E(F_p) = N = Nm(n) prime (so N = 1 mod 6). Closed form, no compute: E(F_p) = E~[n] reduced mod
+    a prime P above p, G = Gal(K(n)/K) = (O_K/n)^*/mu_6 of order (N-1)/6, and the discrete log k is the
+    element sigma_k acting on E~[n] as [k]. The analytic objects attached to G are the (N-1)/6 Hecke L-functions
+    L(s, chi) of conductor dividing n, analytic conductor 3N up to a constant, each computable to fixed
+    precision in N^{1/2+o(1)} terms. Kronecker''s limit formula expresses log|u^sigma| for the elliptic
+    unit u as a character sum over G of L''(0, chi); recovering log|u^{sigma_k}| costs (N-1)/6 times N^{1/2+o(1)}
+    = N^{3/2+o(1)}, and matching it against the instance needs log|u_Q|, the archimedean embedding of
+    the unit of the torsion lift Q^, which is the compatible-lift datum unavailable from Q mod P. Direct
+    Chebotarev is no better: the least prime of K in the class sigma_k has norm about N log N unconditionally
+    by the GLV box and is bounded by (log d_{K(n)})^2 = N^2 (log N)^2 under GRH. Exponent 3/2 (or 1) against
+    1/2; delta +1 (or +1/2).'
+  mechanism: 'Main theorem of complex multiplication: for a prime q = (beta) of K prime to 3 n, Frob_q
+    acts on E~[n] by multiplication by beta mod n, and beta mod n acts on E(F_p) as the GLV scalar a +
+    b lambda. So the DL is the Artin symbol of any beta with beta = k mod n up to mu_6. Shimura reciprocity
+    moves elliptic units by the same sigma: u_{kP} = sigma_k(u_P). The L-function side knows the vector
+    (log|u^sigma|)_sigma only through its Fourier transform (L''(0, chi))_chi; reading one coordinate
+    is a full inversion. The instance supplies Q only as a residue class mod P, which fixes sigma_k abstractly
+    but gives no archimedean value; producing one is the complex elliptic logarithm of the compatible
+    lift, filed as known in the automorphic wave.'
+  novelty_status: known
+  citations:
+  - ref: KR-RHO-0528e7
+    provenance: internal
+    claim: The GLV scalar lambda is the only non-scalar endomorphism; beta mod n acts through a + b lambda,
+      which is the GLV decomposition.
+    verified_by: REPO BRIEF section 3 row text, 2026-11-09; file not opened.
+  - ref: KR-RHO-755e35
+    provenance: internal
+    claim: Isogeny-class invariance; the ray class field depends on the class, the Galois element on the
+      point.
+    verified_by: REPO BRIEF section 3 row text, 2026-11-09.
+  - ref: KR-RHO-13bf67
+    provenance: internal
+    claim: Generic sqrt N bound that the priced routes exceed.
+    verified_by: REPO BRIEF section 3 row text, 2026-11-09.
+  assumptions:
+  - Class number 1 for K, so ideals are principal and classes are residues mod n up to units.
+  - The approximate functional equation needs about sqrt(conductor) terms per L-value at fixed precision.
+  predictions:
+  - metric: order of the ray class group mod n at toy N
+    direction: different
+    minimum_effect: exactly (N-1)/6 on every toy instance
+  - metric: terms used by lfun per L'(0, chi) at toy N
+    direction: higher
+    minimum_effect: scaling exponent in N at least 0.45 across N in [60, 4000]
+  minimal_test:
+    design: 'Zero-compute price table as stated, plus a toy calibration: for four j = 0 prime-order curves
+      with N in [60, 4000], in PARI/GP compute bnrinit(K, n) and its class group order, the number of
+      characters, and the term count reported by lfuninit for L(s, chi) at precision 30; fit the exponent
+      of terms versus N. Optionally verify on the smallest instance that Frob_q for q = (beta) permutes
+      the roots of the lifted kernel polynomial of pi - 1 as multiplication by a + b lambda.'
+    controls:
+    - A non-CM prime-order toy curve, where no ray class description exists and bnrinit has no analogue.
+    - The trivial character, whose L-function is the Dedekind zeta of K with conductor 3.
+    required_metrics:
+    - N, p, lambda, order of the ray class group
+    - terms per L-value and fitted exponent
+    - the implied total cost (N-1)/6 times terms
+  falsification_conditions:
+  - A ray class group of order different from (N-1)/6 on a valid instance.
+  - A documented procedure computing any archimedean datum of Q^ in o(N^{1/2}) operations.
+  - A Fourier inversion over G that reads one coordinate from o(N) L-values.
+  confounders:
+  - lfuninit term counts depend on precision and implementation constants; only the scaling exponent is
+    scored.
+  interpretation_limits:
+  - This is a price table for a route already closed by the compatible-lift obstruction; it adds the L-function
+    cost and no mechanism.
+  heuristic_assumptions:
+  - id: H1
+    statement: Each L'(0, chi) costs N^{1/2+o(1)} and no shortcut shares work across the (N-1)/6 characters
+      below N^{3/2}.
+    rigorous_support: Standard approximate functional equation; sharing is not excluded by theorem.
+    validation_plan: The toy term-count fit and a literature check for batched Hecke L-value algorithms.
+  target_complexity:
+    time_exponent: N^{3/2} with an archimedean oracle; N^{1} for direct Chebotarev via the GLV box
+    memory_exponent: N for the character table
+    best_known: Pollard rho, Theta(N^{1/2}), KR-RHO-13bf67
+    hidden_overhead: The oracle itself is the compatible lift, i.e. the problem.
+    tradeoff_note: Delta is +1 against the best exponent; no tradeoff exists.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: low
+  dominated_by: KR-RHO-13bf67 on exponent; the automorphic-wave complex-elliptic-log lead and the torsion-wave
+    ray-class reformulation on mechanism.
+  sota_delta: Exponent difference +1 (worse). New content is the explicit cost of the Hecke-L route and
+    the identification of what must be inverted.
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/generic-rho
+    rows_checked:
+    - KR-RHO-0528e7
+    - KR-RHO-755e35
+    - KR-RHO-13bf67
+    - KR-RHO-53c89f
+    - KR-IC-cd159a
+    nearest:
+    - ref: KR-RHO-0528e7
+      provenance: internal
+      relation: special_case
+      delta: The row's endomorphism scalar is the residue beta mod n; the Chebotarev reading of the DL
+        is the GLV box with primes, exponent 1.
+    - ref: KR-RHO-755e35
+      provenance: internal
+      relation: adjacent
+      delta: The row fixes the curve side; this record prices the point side through the ray class field
+        of the same CM order.
+    searched:
+      corpus_grep:
+      - REPO BRIEF wave-2 torsion leads for ray class, Kummer presentation, Lagrange resolvent
+      - REPO BRIEF automorphic wave for complex elliptic logarithm, Heegner, L-values
+      web: []
+      blocked:
+      - crypto/RESEARCH_SECP256K1_CM.md not opened; next agent checks whether it records (pi - 1) and
+        lambda explicitly
+    lead: LEAD-TRF-kernel-of-reduction-lemma
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: Zero-compute price table as stated, plus a toy calibration: for four j = 0
+        prime-order curves with N in [60, 4000], in PARI/GP compute bnrinit(K, n) and its class group
+        order, the number of characters, and the term count reported by lfuninit for L(s, chi) at precision
+        30; fit the exponent of terms versus N. Optionally verify on the smallest instance that Frob_q
+        for q = (beta) permutes the roots of'
