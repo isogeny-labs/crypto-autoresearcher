@@ -1,0 +1,131 @@
+idea:
+  id: IDEA-20261109-00e2fd
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: Autocorrelation of the quadratic-character orbit sequence at multipliers of small multiplicative
+    order in Z_N^*, the non-Weil regime where an approximate period would give a Pohlig-Hellman shadow
+    on the scalar torsor, exhaustive by FFT at p <= 2^26
+  class: barrier
+  claim: 'For a prime-order toy curve with generator P, define A(lambda) = sum_R chi_2(x(R) x(lambda R))
+    over R in E(F_p)/{+-1}, lambda in Z_N^*/{+-1}, M = (N-1)/2 terms. Weil bounds give |A(lambda)| <=
+    (lambda^2 + 4) sqrt p only for lambda <= p^{1/4} as integers. Multipliers of small multiplicative
+    order q | N-1 are large integers and uncontrolled. Prediction, fixed before any run: for every lambda
+    not in mu_6 (and not 1), |A(lambda)| <= 4 sqrt(M), including all lambda of order q <= 200, at every
+    calibration prime 2^14 <= p <= 2^26. Positive control: on j = 0 curves lambda in mu_6 gives |A(lambda)|
+    = M exactly since x(omega R) = omega x(R). No exponent change is claimed.'
+  mechanism: 'Read ECDLP as a hidden shift on Z_M with hiding sequence g(t) = chi_2(x(gamma^t P)). A(gamma^d)
+    is the autocorrelation of g at shift d; by Wiener-Khinchin one FFT gives all M shifts. If |A(lambda_0)|
+    >= eps M for lambda_0 of order q, then chi_2(x(lambda_0 R)) = chi_2(x(R)) with probability (1+eps)/2,
+    so the sequence is approximately periodic under the order-q subgroup and s mod q is a classical distinguisher
+    costing about eps^{-2} evaluations, after which the shift is found on a quotient of size M/q: a Pohlig-Hellman
+    style split of the scalar torsor without Cheon''s auxiliary input. The exponent moves only if eps
+    >= N^{-1/4}; the random level is eps about M^{-1/2}, so the exact computation covers the whole relevant
+    range.'
+  novelty_status: unverified
+  citations:
+  - ref: KR-RHO-13bf67
+    provenance: internal
+    claim: Generic floor; exponent delta 0 here.
+    verified_by: Mythos ideation 2026-11-09 read the row in the REPO BRIEF frontier map; row file not
+      opened.
+  - ref: KR-RHO-0528e7
+    provenance: internal
+    claim: mu_6 multipliers on j = 0 give exact structure; they are the positive control, not the claim.
+    verified_by: Mythos ideation 2026-11-09 read the row in the REPO BRIEF frontier map; row file not
+      opened.
+  - ref: Weil bound for character sums of polynomials (recalled)
+    provenance: recalled
+    claim: chi_2 sums of a degree-D polynomial over F_p are at most (D-1) sqrt p.
+    verified_by: recalled, not opened in this session.
+  assumptions:
+  - N prime, Z_N^* cyclic with generator gamma; the factorisation of N-1 is computed and the orders q
+    listed.
+  - Both j = 0 curves (positive control) and j != 0 curves (no mu_6) are included.
+  predictions:
+  - metric: max |A(lambda)| / sqrt(M) over lambda not in mu_6
+    direction: lower
+    minimum_effect: at most 4 at every prime
+  - metric: max |A(lambda)| / sqrt(M) over lambda of order q <= 200
+    direction: lower
+    minimum_effect: at most 4
+  - metric: '|A(lambda)| / M for lambda in mu_6 on j = 0 curves'
+    direction: higher
+    minimum_effect: exactly 1
+  minimal_test:
+    design: Enumerate x(gamma^t P), t in Z_M, once per curve; build g(t) in {-1, 0, 1}; one FFT of length
+      M gives A at every shift. Map shifts d to lambda = gamma^d and tag lambda by multiplicative order
+      from the factorisation of N-1. Report the maxima above and the full histogram of |A| / sqrt(M).
+    controls:
+    - Random +-1 sequence of length M, same FFT, same maxima.
+    - Random relabelling of the orbit (permute t), which must destroy the mu_6 peaks.
+    - j = 0 positive control at mu_6.
+    required_metrics:
+    - p, N, M, factorisation of N-1
+    - max |A| / sqrt(M) outside mu_6, and at order q <= 200
+    - '|A| / M at mu_6 for j = 0'
+    - random-control maxima
+  falsification_conditions:
+  - Some lambda outside mu_6 has |A(lambda)| > 4 sqrt(M) at two or more primes, with the random control
+    below 4.
+  - The mu_6 positive control is not exactly M on a j = 0 curve (invalid run).
+  confounders:
+  - Points with x = 0 contribute 0 and are counted.
+  - Extreme-value growth of the random maximum is about sqrt(2 ln M); the threshold 4 covers it up to
+    p = 2^26.
+  interpretation_limits:
+  - Flatness at toy primes is not a theorem at 2^256; the non-Weil regime has no known bound at any size.
+  - Additive-character variants f_b are determined by the already-filed spectrum and are not re-measured.
+  heuristic_assumptions:
+  - id: H1
+    statement: The chi_2 orbit sequence has random-level autocorrelation at every non-mu_6 shift, including
+      small-order multipliers.
+    rigorous_support: Weil for lambda <= p^{1/4} as integers only.
+    validation_plan: The exhaustive FFT at eight primes is the validation; a confirmed peak triggers the
+      eps^{-2} distinguisher test.
+  target_complexity:
+    time_exponent: N^{1/2} unchanged, delta 0
+    memory_exponent: O(M)
+    best_known: Pollard rho, Theta(N^{1/2}), KR-RHO-13bf67
+    hidden_overhead: None; measurement only.
+    tradeoff_note: A confirmed peak eps would give cost eps^{-2} q + sqrt(M/q), stated as the only conditional
+      route.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  sota_delta: 'Exponent delta 0. New observable: autocorrelation at small-order multipliers of the quadratic-character
+    orbit sequence, the one regime Weil does not touch.'
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/generic-rho
+    rows_checked:
+    - KR-RHO-13bf67
+    - KR-RHO-0528e7
+    - KR-RHO-fb88e6
+    - KR-RHO-53c89f
+    - KR-IC-5931ee
+    nearest:
+    - ref: KR-RHO-0528e7
+      provenance: internal
+      relation: adjacent
+      delta: The row records the sqrt 6 orbit gain; this record asks whether any non-automorphism multiplier
+        carries a statistical shadow of it.
+    - ref: KR-RHO-13bf67
+      provenance: internal
+      relation: adjacent
+      delta: Generic bound; the autocorrelation uses the coordinate.
+    searched:
+      corpus_grep:
+      - REPO BRIEF wave-2 quantum-classical record multiplicative-character spectrum M(chi,b)
+      - REPO BRIEF torsion-wave lead Coverings of the scalar torsor are Cheon
+      - REPO BRIEF barriers-wave record hybrid-sum flatness
+      web: []
+      blocked: []
+    lead: LEAD-EXO-torsor-deck-period
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: Enumerate x(gamma^t P), t in Z_M, once per curve; build g(t) in {-1, 0, 1};
+        one FFT of length M gives A at every shift. Map shifts d to lambda = gamma^d and tag lambda by
+        multiplicative order from the factorisation of N-1. Report the maxima above and the full histogram
+        of |A| / sqrt(M).'
