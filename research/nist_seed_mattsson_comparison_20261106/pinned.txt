@@ -1,0 +1,666 @@
+==============================================================================
+NIST P-curve / ANSI X9.62 seed runs: published vs. skipped prime-order curves
+==============================================================================
+Generated 2026-10-18 by Claude. Plain ASCII.
+
+SOURCE AND METHOD
+------------------------------------------------------------------------------
+Seed streams: Anthropic, 'Claude reveals ECDSA curve origins' (2026-10-16),
+  https://www.anthropic.com/research/ecdsa-curve-origins
+  srand48(unix_time); each candidate = 20 bytes, byte_i = lrand48() >> 23.
+Curve from seed: FIPS 186-2 / X9.62 'verifiably random' procedure:
+  L = bitlen(p), v = floor((L-1)/160), w = L - 160v - 1,
+  c = (SHA1(seed) mod 2^w) || SHA1(seed+1) || ... ; require -27/c a square,
+  b^2 * c = -27 (mod p), a = -3, E: y^2 = x^3 - 3x + b.
+Square-root convention: for p = 3 mod 4 the root b that is itself a square
+  mod p (this matches every published curve); for p = 1 mod 4 (P-224) the
+  two roots give isomorphic curves, so the choice does not matter.
+Point counting: PARI/GP 2.17 SEA (ellsea / ellcard).
+Eligibility filter ('chosen the same way'): same root convention as above
+  AND #E = n prime with bitlen(n) = bitlen(p). With this filter the skip
+  counts equal the article's: P-256 1, P-224 3, ANSI X9.62 runs 7.
+Runs fully scanned: up to the last published candidate of each run.
+Not covered: P-384 run (scanned to 1796, no eligible skip; hits 1497 and
+  1626 have 385-bit order) and P-521 run (not scanned).
+
+Field definitions in the property sections:
+  t            trace, n = p + 1 - t
+  twist order  p + 1 + t, factored (small primes < 2^26 shown)
+  n-1, n+1     factored the same way; 'smooth part' = product of small primes
+  emb degree   smallest k <= 100 with p^k = 1 mod n (MOV/Frey-Ruck)
+  CM disc D    t^2 - 4p; 'square part' = largest square of a prime < 2000
+  SEA lmax     largest Elkies prime needed if only Elkies primes are used
+               (product > 2^(L/2+2)); Atkin/Elkies status of l < 300
+
+SUMMARY TABLE
+------------------------------------------------------------------------------
+run (srand48 time, UTC) field  cand  status      t sign n mod 8 SEA lmax
+1997-05-18 14:45:34      p192   139  P-192            +       1      167
+1997-05-18 14:45:34      p192  2198  SKIPPED          +       1      149
+1997-05-18 14:45:34      p192  5228  prime192v3       +       3      191
+1997-05-18 14:45:34      p192  5405  SKIPPED          +       1      157
+1997-05-18 14:45:34      p192  6013  prime192v2       +       1      173
+1998-04-03 12:52:07      p224   777  SKIPPED          +       3      139
+1998-04-03 12:52:07      p224  1485  SKIPPED          +       1      179
+1998-04-03 12:52:07      p224  5736  SKIPPED          +       1      233
+1998-04-03 12:52:07      p224  7026  P-224            +       5      257
+1997-05-15 15:49:03      p239    36  SKIPPED          +       3      179
+1997-05-15 15:49:03      p239  1562  SKIPPED          -       7      149
+1997-05-15 15:49:03      p239  2185  prime239v1       +       3      239
+1997-05-15 15:49:03      p239  2320  prime239v2       -       3      191
+1997-05-15 15:49:03      p239  2491  SKIPPED          -       5      167
+1997-05-15 15:49:03      p239  2682  SKIPPED          -       7      157
+1997-05-15 15:49:03      p239  2863  SKIPPED          +       7      149
+1997-05-15 15:49:03      p239  3048  prime239v3       +       1      191
+1997-08-16 01:52:34      p256   876  SKIPPED          +       7      211
+1997-08-16 01:52:34      p256  1842  P-256            +       1      191
+
+Published: 8   Skipped: 11
+
+==============================================================================
+P-192   --   run 1997-05-18 14:45:34 UTC, candidate #139
+==============================================================================
+  status:                 published
+  p:                      2^192 - 2^64 - 1   (p mod 4 = 3)
+  seed (20 bytes):        3045AE6FC8422F64ED579528D38120EAE12196D5
+  SHA-1(seed):            7F6DA10026C7FF92C5AC2E890BD59B44B099D2BB
+  c:                      0x3099D2BBBFCB2538542DCD5FB078B6EF5F3D6FE2C745DE65
+  a:                      -3
+  b:                      0x64210519E59C80E70FA7E9AB72243049FEB8DEECC146B9B1
+  n = #E (prime):         0xFFFFFFFFFFFFFFFFFFFFFFFF99DEF836146BC9B1B4D22831
+  t (trace):              +0x662107C8EB94364E4B2DD7CF  (95 bits)
+  -- bit-level --
+  seed first/last byte:   0x30 / 0xD5
+  bitlen c / b / n:       190 / 191 / 192   (c max = 191)
+  parity c / b:           1 / 1
+  b square mod p:         yes
+  n vs p:                 n < p
+  n mod 8, v2(n-1):       1, 4
+  -- security properties --
+  embedding degree:       > 100
+  anomalous (n = p):      no
+  n-1:                    2^4 * 5 * 2389 * [175-bit composite]   (smooth part 18 bits)
+  n+1:                    2 * 3 * 41 * [185-bit composite]   (smooth part 8 bits)
+  twist order:            0x1000000000000000000000000662107C7EB94364E4B2DD7CF
+  twist factored:         23 * [188-bit composite]   (smooth part 5 bits)
+  CM disc square part:    1   (D = t^2-4p, 194 bits)
+  -- point-counting (SEA) profile --
+  SEA lmax (Elkies only): 167
+  Elkies primes < 100:    5 11 13 23 31 37 43 73 89
+  Atkin primes < 100:     3 7 17 19 29 41 47 53 59 61 67 71 79 83 97
+
+==============================================================================
+SKIPPED candidate (p192 run)   --   run 1997-05-18 14:45:34 UTC, candidate #2198
+==============================================================================
+  status:                 eligible prime-order curve, NOT published
+  p:                      2^192 - 2^64 - 1   (p mod 4 = 3)
+  seed (20 bytes):        692D90186057951DE011733105BF1B3D3B0FC451
+  SHA-1(seed):            42FA4D563E826DC4ED2243415278571C4D60842D
+  c:                      0x4D60842D35E245E057EC2AE563D0734FC1A635D09687DE41
+  a:                      -3
+  b:                      0xBEAA53DC228857DB38331A9C08DBDCE0E62BAF417A2216E2
+  n = #E (prime):         0xFFFFFFFFFFFFFFFFFFFFFFFE5E830175C7011A77369B8549
+  t (trace):              +0x1A17CFE8938FEE588C9647AB7  (97 bits)
+  -- bit-level --
+  seed first/last byte:   0x69 / 0x51
+  bitlen c / b / n:       191 / 192 / 192   (c max = 191)
+  parity c / b:           1 / 0
+  b square mod p:         yes
+  n vs p:                 n < p
+  n mod 8, v2(n-1):       1, 3
+  -- security properties --
+  embedding degree:       > 100
+  anomalous (n = p):      no
+  n-1:                    2^3 * 3 * 4801 * [176-bit prime]   (smooth part 17 bits)
+  n+1:                    2 * 7 * 89 * 4783 * 1776499 * [149-bit prime]   (smooth part 44 bits)
+  twist order:            0x1000000000000000000000001A17CFE8838FEE588C9647AB7
+  twist factored:         11 * 127 * 5827 * [170-bit prime]   (smooth part 23 bits)
+  CM disc square part:    1   (D = t^2-4p, 193 bits)
+  -- point-counting (SEA) profile --
+  SEA lmax (Elkies only): 149
+  Elkies primes < 100:    7 11 17 23 31 41 59 61 71 73 83
+  Atkin primes < 100:     3 5 13 19 29 37 43 47 53 67 79 89 97
+
+==============================================================================
+prime192v3   --   run 1997-05-18 14:45:34 UTC, candidate #5228
+==============================================================================
+  status:                 published
+  p:                      2^192 - 2^64 - 1   (p mod 4 = 3)
+  seed (20 bytes):        C469684435DEB378C4B65CA9591E2A5763059A2E
+  SHA-1(seed):            BC9372A2AEE0C857E6C697500D52D90925191F95
+  c:                      0x25191F95024D839546D9A3375639A9967D52F1373BC4EE0B
+  a:                      -3
+  b:                      0x22123DC2395A05CAA7423DAECCC94760A7D462256BD56916
+  n = #E (prime):         0xFFFFFFFFFFFFFFFFFFFFFFFF7A62D031C83F4294F640EC13
+  t (trace):              +0x859D2FCD37C0BD6B09BF13ED  (96 bits)
+  -- bit-level --
+  seed first/last byte:   0xC4 / 0x2E
+  bitlen c / b / n:       190 / 190 / 192   (c max = 191)
+  parity c / b:           1 / 0
+  b square mod p:         yes
+  n vs p:                 n < p
+  n mod 8, v2(n-1):       3, 1
+  -- security properties --
+  embedding degree:       > 100
+  anomalous (n = p):      no
+  n-1:                    2 * 3 * [190-bit composite]   (smooth part 3 bits)
+  n+1:                    2^2 * 5 * 73 * 197 * 8419 * [161-bit prime]   (smooth part 32 bits)
+  twist order:            0x1000000000000000000000000859D2FCC37C0BD6B09BF13ED
+  twist factored:         223 * 17187503 * [161-bit prime]   (smooth part 32 bits)
+  CM disc square part:    1   (D = t^2-4p, 194 bits)
+  -- point-counting (SEA) profile --
+  SEA lmax (Elkies only): 191
+  Elkies primes < 100:    5 13 19 31 47 97
+  Atkin primes < 100:     3 7 11 17 23 29 37 41 43 53 59 61 67 71 73 79 83 89
+
+==============================================================================
+SKIPPED candidate (p192 run)   --   run 1997-05-18 14:45:34 UTC, candidate #5405
+==============================================================================
+  status:                 eligible prime-order curve, NOT published
+  p:                      2^192 - 2^64 - 1   (p mod 4 = 3)
+  seed (20 bytes):        3AD10FF61797BC7258480CADD4E59C1AC1FB66D1
+  SHA-1(seed):            AACDFDCB93F5B64F4B225D295577D36CD510702B
+  c:                      0x5510702BABF5E0D141C6227E795825E246B8CBE4909085E5
+  a:                      -3
+  b:                      0x912E4EF68A8DF6948BB8E01D2D6DC8E0AFF224187BBAE807
+  n = #E (prime):         0xFFFFFFFFFFFFFFFFFFFFFFFF0E32EE481F43B57F75F5F9A1
+  t (trace):              +0xF1CD11B6E0BC4A808A0A065F  (96 bits)
+  -- bit-level --
+  seed first/last byte:   0x3A / 0xD1
+  bitlen c / b / n:       191 / 192 / 192   (c max = 191)
+  parity c / b:           1 / 1
+  b square mod p:         yes
+  n vs p:                 n < p
+  n mod 8, v2(n-1):       1, 5
+  -- security properties --
+  embedding degree:       > 100
+  anomalous (n = p):      no
+  n-1:                    2^5 * 3^2 * 23742997 * [160-bit composite]   (smooth part 33 bits)
+  n+1:                    2 * 37 * 521 * [177-bit prime]   (smooth part 16 bits)
+  twist order:            0x1000000000000000000000000F1CD11B5E0BC4A808A0A065F
+  twist factored:         7 * 19^2 * [181-bit prime]   (smooth part 12 bits)
+  CM disc square part:    1   (D = t^2-4p, 194 bits)
+  -- point-counting (SEA) profile --
+  SEA lmax (Elkies only): 157
+  Elkies primes < 100:    7 13 19 31 37 67 73 83 89 97
+  Atkin primes < 100:     3 5 11 17 23 29 41 43 47 53 59 61 71 79
+
+==============================================================================
+prime192v2   --   run 1997-05-18 14:45:34 UTC, candidate #6013
+==============================================================================
+  status:                 published
+  p:                      2^192 - 2^64 - 1   (p mod 4 = 3)
+  seed (20 bytes):        31A92EE2029FD10D901B113E990710F0D21AC6B6
+  SHA-1(seed):            14B48653A116CD3B1E90450A2147DC5895038D1D
+  c:                      0x15038D1D2E1CAFEE0299F3011C1DC75B3C2A86E135DB1E6B
+  a:                      -3
+  b:                      0xCC22D6DFB95C6B25E49C0D6364A4E5980C393AA21668D953
+  n = #E (prime):         0xFFFFFFFFFFFFFFFFFFFFFFFE5FB1A724DC80418648D8DD31
+  t (trace):              +0x1A04E58DA237FBE79B72722CF  (97 bits)
+  -- bit-level --
+  seed first/last byte:   0x31 / 0xB6
+  bitlen c / b / n:       189 / 192 / 192   (c max = 191)
+  parity c / b:           1 / 1
+  b square mod p:         yes
+  n vs p:                 n < p
+  n mod 8, v2(n-1):       1, 4
+  -- security properties --
+  embedding degree:       > 100
+  anomalous (n = p):      no
+  n-1:                    2^4 * 3 * 691 * [177-bit composite]   (smooth part 16 bits)
+  n+1:                    2 * 5^2 * 953 * 56479 * 67531 * [145-bit prime]   (smooth part 48 bits)
+  twist order:            0x1000000000000000000000001A04E58D9237FBE79B72722CF
+  twist factored:         7 * 311 * 4517 * [169-bit composite]   (smooth part 24 bits)
+  CM disc square part:    1   (D = t^2-4p, 193 bits)
+  -- point-counting (SEA) profile --
+  SEA lmax (Elkies only): 173
+  Elkies primes < 100:    5 7 17 23 31 41 43 47 53 59 61 79 83
+  Atkin primes < 100:     3 11 13 19 29 37 67 71 73 89 97
+
+==============================================================================
+SKIPPED candidate (p224 run)   --   run 1998-04-03 12:52:07 UTC, candidate #777
+==============================================================================
+  status:                 eligible prime-order curve, NOT published
+  p:                      2^224 - 2^96 + 1   (p mod 4 = 1)
+  seed (20 bytes):        D00720E7691D403449C0D91BE84BFB2C7501A267
+  SHA-1(seed):            D3E4830E452F0B70A43482B9D5AF3812E2FA6DDA
+  c:                      0x55AF3812E2FA6DDA812014F70925D9966C020CA9C65A16C9D182E189
+  a:                      -3
+  b:                      0x5D66353D8430A14DF0E4668AEC2D6899234A1040BAD2B4077EF9F344
+  n = #E (prime):         0xFFFFFFFFFFFFFFFFFFFFFFFFFFFF3FA279701925749A7DE262AA8CC3
+  t (trace):              +0xC05C868FE6DA8B65821D9D55733F  (112 bits)
+  -- bit-level --
+  seed first/last byte:   0xD0 / 0x67
+  bitlen c / b / n:       223 / 223 / 224   (c max = 223)
+  parity c / b:           1 / 0
+  b square mod p:         yes
+  n vs p:                 n < p
+  n mod 8, v2(n-1):       3, 1
+  -- security properties --
+  embedding degree:       > 100
+  anomalous (n = p):      no
+  n-1:                    2 * 3 * 743 * 54277 * [197-bit composite]   (smooth part 28 bits)
+  n+1:                    2^2 * 5 * 29 * 127 * 463 * 211691 * [182-bit prime]   (smooth part 43 bits)
+  twist order:            0x10000000000000000000000000000C05B868FE6DA8B65821D9D557341
+  twist factored:         3 * 5 * 683 * [211-bit composite]   (smooth part 14 bits)
+  CM disc square part:    1   (D = t^2-4p, 226 bits)
+  -- point-counting (SEA) profile --
+  SEA lmax (Elkies only): 139
+  Elkies primes < 100:    3 5 11 17 23 29 41 53 59 67 79 83 89 97
+  Atkin primes < 100:     7 13 19 31 37 43 47 61 71 73
+
+==============================================================================
+SKIPPED candidate (p224 run)   --   run 1998-04-03 12:52:07 UTC, candidate #1485
+==============================================================================
+  status:                 eligible prime-order curve, NOT published
+  p:                      2^224 - 2^96 + 1   (p mod 4 = 1)
+  seed (20 bytes):        18CFDBCBB825568171212BC1610A5B8A8004E5C4
+  SHA-1(seed):            4ABCB8223EF5D39A7F5F853500E9071F37301366
+  c:                      0x00E9071F373013662A51F8ED7DEFC1A83E656DA6514A808530E47DD1
+  a:                      -3
+  b:                      0x579CD953CF8611029BD2ED436A48E02C4BFE614F9A66511374CF7A8D
+  n = #E (prime):         0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFF819AFA992D9C9222076DB1EF949
+  t (trace):              +0x7E550566D2636DDDF8924E106B9  (107 bits)
+  -- bit-level --
+  seed first/last byte:   0x18 / 0xC4
+  bitlen c / b / n:       216 / 223 / 224   (c max = 223)
+  parity c / b:           1 / 1
+  b square mod p:         no
+  n vs p:                 n < p
+  n mod 8, v2(n-1):       1, 3
+  -- security properties --
+  embedding degree:       > 100
+  anomalous (n = p):      no
+  n-1:                    2^3 * 3 * 5 * 31 * 131 * 211 * 6421 * 7591 * [172-bit composite]   (smooth part 53 bits)
+  n+1:                    2 * 7 * 13671181 * [197-bit composite]   (smooth part 28 bits)
+  twist order:            0x1000000000000000000000000000007E450566D2636DDDF8924E106BB
+  twist factored:         3 * 31 * [218-bit composite]   (smooth part 7 bits)
+  CM disc square part:    1   (D = t^2-4p, 226 bits)
+  -- point-counting (SEA) profile --
+  SEA lmax (Elkies only): 179
+  Elkies primes < 100:    3 11 23 29 31 41 43 47 59 61 71 79 83
+  Atkin primes < 100:     5 7 13 17 19 37 53 67 73 89 97
+
+==============================================================================
+SKIPPED candidate (p224 run)   --   run 1998-04-03 12:52:07 UTC, candidate #5736
+==============================================================================
+  status:                 eligible prime-order curve, NOT published
+  p:                      2^224 - 2^96 + 1   (p mod 4 = 1)
+  seed (20 bytes):        3C170A30EE6709DF9B4C9EA0B6C1E95FCD6200CE
+  SHA-1(seed):            CAB5271467A71928B2E1EA5EFD35027B9CA636A1
+  c:                      0x7D35027B9CA636A1113799DAC7BD9A015AB4D0849F75EAD0BACA6825
+  a:                      -3
+  b:                      0x4D41BDD4F0ADA5E7746A76329E4FD5DD879E04ADBFE7FCD2F5756748
+  n = #E (prime):         0xFFFFFFFFFFFFFFFFFFFFFFFFFFFF610362EB9E61800D49507468B249
+  t (trace):              +0x9EFB9D14619E7FF2B6AF8B974DB9  (112 bits)
+  -- bit-level --
+  seed first/last byte:   0x3C / 0xCE
+  bitlen c / b / n:       223 / 223 / 224   (c max = 223)
+  parity c / b:           1 / 0
+  b square mod p:         no
+  n vs p:                 n < p
+  n mod 8, v2(n-1):       1, 3
+  -- security properties --
+  embedding degree:       > 100
+  anomalous (n = p):      no
+  n-1:                    2^3 * 3 * 19 * 2791 * [204-bit prime]   (smooth part 21 bits)
+  n+1:                    2 * 47 * 73 * 317 * [203-bit composite]   (smooth part 22 bits)
+  twist order:            0x100000000000000000000000000009EFA9D14619E7FF2B6AF8B974DBB
+  twist factored:         3 * 1607 * 3371 * 17539 * 20347 * 1231313 * [152-bit composite]   (smooth part 73 bits)
+  CM disc square part:    1   (D = t^2-4p, 226 bits)
+  -- point-counting (SEA) profile --
+  SEA lmax (Elkies only): 233
+  Elkies primes < 100:    3 11 13 17 19 23 29 43 67 73 97
+  Atkin primes < 100:     5 7 31 37 41 47 53 59 61 71 79 83 89
+
+==============================================================================
+P-224   --   run 1998-04-03 12:52:07 UTC, candidate #7026
+==============================================================================
+  status:                 published
+  p:                      2^224 - 2^96 + 1   (p mod 4 = 1)
+  seed (20 bytes):        BD71344799D5C7FCDC45B59FA3B9AB8F6A948BC5
+  SHA-1(seed):            2F7923F33D5EAB4215C2FC265B056C7E11DD68F4
+  c:                      0x5B056C7E11DD68F40469EE7F3C7A7D74F7D121116506D031218291FB
+  a:                      -3
+  b:                      0x4BFAF57AF3FB4C540ABECDA9AFBB4F4728402745D8F4C6BCDCAA004D
+  n = #E (prime):         0xFFFFFFFFFFFFFFFFFFFFFFFFFFFF16A2E0B8F03E13DD29455C5C2A3D
+  t (trace):              +0xE95C1F470FC1EC22D6BAA3A3D5C5  (112 bits)
+  -- bit-level --
+  seed first/last byte:   0xBD / 0xC5
+  bitlen c / b / n:       223 / 223 / 224   (c max = 223)
+  parity c / b:           1 / 1
+  b square mod p:         no
+  n vs p:                 n < p
+  n mod 8, v2(n-1):       5, 2
+  -- security properties --
+  embedding degree:       > 100
+  anomalous (n = p):      no
+  n-1:                    2^2 * 3^6 * 5 * 17 * 2153 * [196-bit prime]   (smooth part 29 bits)
+  n+1:                    2 * 7 * 19 * [216-bit composite]   (smooth part 9 bits)
+  twist order:            0x10000000000000000000000000000E95B1F470FC1EC22D6BAA3A3D5C7
+  twist factored:         3^2 * 11 * 47 * 3015283 * 40375823 * [166-bit composite]   (smooth part 59 bits)
+  CM disc square part:    3   (D = t^2-4p, 226 bits)
+  -- point-counting (SEA) profile --
+  SEA lmax (Elkies only): 257
+  Elkies primes < 100:    3 11 29 47 59 61 79 97
+  Atkin primes < 100:     5 7 13 17 19 23 31 37 41 43 53 67 71 73 83 89
+
+==============================================================================
+SKIPPED candidate (p239 run)   --   run 1997-05-15 15:49:03 UTC, candidate #36
+==============================================================================
+  status:                 eligible prime-order curve, NOT published
+  p:                      2^239 - 2^143 - 2^95 + 2^47 - 1   (p mod 4 = 3)
+  seed (20 bytes):        25E56088185F8C3207B166CD2E007B88276AFE78
+  SHA-1(seed):            1AA8D898764560362AE1AC5818C45A189B2DF978
+  c:                      0x2C5818C45A189B2DF97866B489CAF669AF7B2D39ECF5958D42149FEB9818
+  a:                      -3
+  b:                      0x0AB450C8BDE1031F5FD172A7F697412567F6A1917F769A10192BD6F3DE2A
+  n = #E (prime):         0x7FFFFFFFFFFFFFFFFFFFFFFF7FFFFEF79ACFCFD38003F45EBED6020532F3
+  t (trace):              +0x108652FB02C7FFC0BA1C129FDFACD0D  (121 bits)
+  -- bit-level --
+  seed first/last byte:   0x25 / 0x78
+  bitlen c / b / n:       238 / 236 / 239   (c max = 238)
+  parity c / b:           0 / 0
+  b square mod p:         yes
+  n vs p:                 n < p
+  n mod 8, v2(n-1):       3, 1
+  -- security properties --
+  embedding degree:       > 100
+  anomalous (n = p):      no
+  n-1:                    2 * 3 * 7 * 31 * 102121 * 1287373 * 21170777 * [168-bit composite]   (smooth part 72 bits)
+  n+1:                    2^2 * 179 * 4153 * 6079 * [205-bit composite]   (smooth part 35 bits)
+  twist order:            0x7FFFFFFFFFFFFFFFFFFFFFFF80000108652F302C7FFC0BA24129FDFACD0D
+  twist factored:         139 * 46633 * [217-bit composite]   (smooth part 23 bits)
+  CM disc square part:    1   (D = t^2-4p, 240 bits)
+  -- point-counting (SEA) profile --
+  SEA lmax (Elkies only): 179
+  Elkies primes < 100:    11 13 23 37 41 47 53 67 79 83 89 97
+  Atkin primes < 100:     3 5 7 17 19 29 31 43 59 61 71 73
+
+==============================================================================
+SKIPPED candidate (p239 run)   --   run 1997-05-15 15:49:03 UTC, candidate #1562
+==============================================================================
+  status:                 eligible prime-order curve, NOT published
+  p:                      2^239 - 2^143 - 2^95 + 2^47 - 1   (p mod 4 = 3)
+  seed (20 bytes):        D09BFB7DB85672DC700269F9189983F25F81958D
+  SHA-1(seed):            52A153FCA4E9D6C30FB207CC7E850007C1F87507
+  c:                      0x07CC7E850007C1F87507FA16E0DEABD4F28F169FC1CB7C1892B74C0459F7
+  a:                      -3
+  b:                      0x639D458D9300D63240E743B4B1D4E7FA6BC78EF2AF145B7B9139668DB5B4
+  n = #E (prime):         0x7FFFFFFFFFFFFFFFFFFFFFFF8000002904ACF44F113527EDA41068F1981F
+  t (trace):              -0x2904AD744F113527ED241068F1981F  (118 bits)
+  -- bit-level --
+  seed first/last byte:   0xD0 / 0x8D
+  bitlen c / b / n:       235 / 239 / 239   (c max = 238)
+  parity c / b:           1 / 0
+  b square mod p:         yes
+  n vs p:                 n > p
+  n mod 8, v2(n-1):       7, 1
+  -- security properties --
+  embedding degree:       > 100
+  anomalous (n = p):      no
+  n-1:                    2 * 3^3 * 7 * 4451 * [219-bit prime]   (smooth part 21 bits)
+  n+1:                    2^5 * 5 * 9511 * 17477 * [205-bit composite]   (smooth part 35 bits)
+  twist order:            0x7FFFFFFFFFFFFFFFFFFFFFFF7FFFFFD6FB520BB0EECAD8135BEF970E67E1
+  twist factored:         41 * [234-bit composite]   (smooth part 6 bits)
+  CM disc square part:    1   (D = t^2-4p, 241 bits)
+  -- point-counting (SEA) profile --
+  SEA lmax (Elkies only): 149
+  Elkies primes < 100:    5 11 13 19 23 29 31 37 41 43 47 53 61 67 71 83 89
+  Atkin primes < 100:     3 7 17 59 73 79 97
+
+==============================================================================
+prime239v1   --   run 1997-05-15 15:49:03 UTC, candidate #2185
+==============================================================================
+  status:                 published
+  p:                      2^239 - 2^143 - 2^95 + 2^47 - 1   (p mod 4 = 3)
+  seed (20 bytes):        E43BB460F0B80CC0C0B075798E948060F8321B7D
+  SHA-1(seed):            F85A843E53EE296351AB28B85EC1ECC19EFE769E
+  c:                      0x28B85EC1ECC19EFE769EB741A6D1BA29476AA5A8F2610957D6EFE78D3783
+  a:                      -3
+  b:                      0x6B016C3BDCF18941D0D654921475CA71A9DB2FB27D1D37796185C2942C0A
+  n = #E (prime):         0x7FFFFFFFFFFFFFFFFFFFFFFF7FFFFF9E5E9A9F5D9071FBD1522688909D0B
+  t (trace):              +0x61A164E0A26F8E042F2DD9776F62F5  (119 bits)
+  -- bit-level --
+  seed first/last byte:   0xE4 / 0x7D
+  bitlen c / b / n:       238 / 239 / 239   (c max = 238)
+  parity c / b:           1 / 0
+  b square mod p:         yes
+  n vs p:                 n < p
+  n mod 8, v2(n-1):       3, 1
+  -- security properties --
+  embedding degree:       > 100
+  anomalous (n = p):      no
+  n-1:                    2 * 3^2 * 31 * 569 * 22621 * 114883 * 40932851 * [165-bit composite]   (smooth part 75 bits)
+  n+1:                    2^2 * 397 * 2879 * 4519 * 20857 * [191-bit composite]   (smooth part 49 bits)
+  twist order:            0x7FFFFFFFFFFFFFFFFFFFFFFF80000061A16460A26F8E042FADD9776F62F5
+  twist factored:         43 * 2207 * 5669 * [210-bit composite]   (smooth part 30 bits)
+  CM disc square part:    1   (D = t^2-4p, 241 bits)
+  -- point-counting (SEA) profile --
+  SEA lmax (Elkies only): 239
+  Elkies primes < 100:    19 23 43 61 67 71 79 97
+  Atkin primes < 100:     3 5 7 11 13 17 29 31 37 41 47 53 59 73 83 89
+
+==============================================================================
+prime239v2   --   run 1997-05-15 15:49:03 UTC, candidate #2320
+==============================================================================
+  status:                 published
+  p:                      2^239 - 2^143 - 2^95 + 2^47 - 1   (p mod 4 = 3)
+  seed (20 bytes):        E8B4011604095303CA3B8099982BE09FCB9AE616
+  SHA-1(seed):            93E2472C1582702118921DF491E44E7CCAF4D1EA
+  c:                      0x1DF491E44E7CCAF4D1EAD8A6B90DAE09E0D33F2C6CFE7A6BA76E86713D52
+  a:                      -3
+  b:                      0x617FAB6832576CBBFED50D99F0249C3FEE58B94BA0038C7AE84C8C832F2C
+  n = #E (prime):         0x7FFFFFFFFFFFFFFFFFFFFFFF800000CFA7E8594377D414C03821BC582063
+  t (trace):              -0xCFA7E8D94377D414BFB821BC582063  (120 bits)
+  -- bit-level --
+  seed first/last byte:   0xE8 / 0x16
+  bitlen c / b / n:       237 / 239 / 239   (c max = 238)
+  parity c / b:           0 / 0
+  b square mod p:         yes
+  n vs p:                 n > p
+  n mod 8, v2(n-1):       3, 1
+  -- security properties --
+  embedding degree:       > 100
+  anomalous (n = p):      no
+  n-1:                    2 * 3^5 * 5 * 7 * 479 * [217-bit composite]   (smooth part 23 bits)
+  n+1:                    2^2 * 17 * 6311953 * [211-bit composite]   (smooth part 29 bits)
+  twist order:            0x7FFFFFFFFFFFFFFFFFFFFFFF7FFFFF305816A6BC882BEB40C7DE43A7DF9D
+  twist factored:         19 * 103 * [229-bit composite]   (smooth part 11 bits)
+  CM disc square part:    5   (D = t^2-4p, 241 bits)
+  -- point-counting (SEA) profile --
+  SEA lmax (Elkies only): 191
+  Elkies primes < 100:    5 11 19 23 37 53 61 71 83 89
+  Atkin primes < 100:     3 7 13 17 29 31 41 43 47 59 67 73 79 97
+
+==============================================================================
+SKIPPED candidate (p239 run)   --   run 1997-05-15 15:49:03 UTC, candidate #2491
+==============================================================================
+  status:                 eligible prime-order curve, NOT published
+  p:                      2^239 - 2^143 - 2^95 + 2^47 - 1   (p mod 4 = 3)
+  seed (20 bytes):        1256FDD46EEB96B7D312DDB1DE99BFF159CF6701
+  SHA-1(seed):            3556CC79331DF6ABC12D94A452622102B6907BB6
+  c:                      0x14A452622102B6907BB6E79A763199ABDD21547597E8F2D84FDA305BC755
+  a:                      -3
+  b:                      0x0999253D12139C2F7BBBFE2D836A41CEAE53CF4D5E70F4B0BCF354ACD2A4
+  n = #E (prime):         0x7FFFFFFFFFFFFFFFFFFFFFFF80000036801F48C320794B8CB53FEC0E008D
+  t (trace):              -0x36801FC8C320794B8C353FEC0E008D  (118 bits)
+  -- bit-level --
+  seed first/last byte:   0x12 / 0x01
+  bitlen c / b / n:       237 / 236 / 239   (c max = 238)
+  parity c / b:           1 / 0
+  b square mod p:         yes
+  n vs p:                 n > p
+  n mod 8, v2(n-1):       5, 2
+  -- security properties --
+  embedding degree:       > 100
+  anomalous (n = p):      no
+  n-1:                    2^2 * 3^2 * 73 * 349 * 6114463 * [197-bit composite]   (smooth part 43 bits)
+  n+1:                    2 * 19 * [234-bit composite]   (smooth part 6 bits)
+  twist order:            0x7FFFFFFFFFFFFFFFFFFFFFFF7FFFFFC97FDFB73CDF86B4744AC013F1FF73
+  twist factored:         43 * 173 * 307 * 953 * [208-bit composite]   (smooth part 32 bits)
+  CM disc square part:    1   (D = t^2-4p, 241 bits)
+  -- point-counting (SEA) profile --
+  SEA lmax (Elkies only): 167
+  Elkies primes < 100:    11 13 19 31 37 43 47 67 71 79 89
+  Atkin primes < 100:     3 5 7 17 23 29 41 53 59 61 73 83 97
+
+==============================================================================
+SKIPPED candidate (p239 run)   --   run 1997-05-15 15:49:03 UTC, candidate #2682
+==============================================================================
+  status:                 eligible prime-order curve, NOT published
+  p:                      2^239 - 2^143 - 2^95 + 2^47 - 1   (p mod 4 = 3)
+  seed (20 bytes):        D2C18E22558203444A2B33EA97C178675B438484
+  SHA-1(seed):            096540DE097E6E9B4806AB70AEFB6D37FCBB980C
+  c:                      0x2B70AEFB6D37FCBB980C86523F7A9C415CC55B1FF478483FC48F96C8FD5F
+  a:                      -3
+  b:                      0x045AF05AF6AAC4DEE0450D4B7794044398CBE9FCCA12C9BCCFB5CBA03EE3
+  n = #E (prime):         0x7FFFFFFFFFFFFFFFFFFFFFFF8000001656326B616E478944DD218EC7FB07
+  t (trace):              -0x165632EB616E4789445D218EC7FB07  (117 bits)
+  -- bit-level --
+  seed first/last byte:   0xD2 / 0x84
+  bitlen c / b / n:       238 / 235 / 239   (c max = 238)
+  parity c / b:           1 / 1
+  b square mod p:         yes
+  n vs p:                 n > p
+  n mod 8, v2(n-1):       7, 1
+  -- security properties --
+  embedding degree:       > 100
+  anomalous (n = p):      no
+  n-1:                    2 * 5 * 7 * 23 * [229-bit composite]   (smooth part 11 bits)
+  n+1:                    2^3 * 3 * 241 * [227-bit prime]   (smooth part 13 bits)
+  twist order:            0x7FFFFFFFFFFFFFFFFFFFFFFF7FFFFFE9A9CC949E91B876BC22DE713804F9
+  twist factored:         29 * [235-bit composite]   (smooth part 5 bits)
+  CM disc square part:    5   (D = t^2-4p, 241 bits)
+  -- point-counting (SEA) profile --
+  SEA lmax (Elkies only): 157
+  Elkies primes < 100:    5 11 13 17 19 23 29 31 37 41 53 61 67 71 73 83 97
+  Atkin primes < 100:     3 7 43 47 59 79 89
+
+==============================================================================
+SKIPPED candidate (p239 run)   --   run 1997-05-15 15:49:03 UTC, candidate #2863
+==============================================================================
+  status:                 eligible prime-order curve, NOT published
+  p:                      2^239 - 2^143 - 2^95 + 2^47 - 1   (p mod 4 = 3)
+  seed (20 bytes):        3A700D3E6BF03255949804BA2A8677550C19EE11
+  SHA-1(seed):            BCB33CAE49AD32D04A442296D101B48B2F699FE7
+  c:                      0x2296D101B48B2F699FE7AFBD77BF55BE0D832184E9543F597B46FA0935D4
+  a:                      -3
+  b:                      0x5E37D25CA9EF3D6A8CA8A95D08837A44B5C7DE5C577AD2ADBB5A4F6C782D
+  n = #E (prime):         0x7FFFFFFFFFFFFFFFFFFFFFFF7FFFFF5E463B503EE96E521BF4194845D967
+  t (trace):              +0xA1B9C42FC11691ADE48BE6B7BA2699  (120 bits)
+  -- bit-level --
+  seed first/last byte:   0x3A / 0x11
+  bitlen c / b / n:       238 / 239 / 239   (c max = 238)
+  parity c / b:           0 / 1
+  b square mod p:         yes
+  n vs p:                 n < p
+  n mod 8, v2(n-1):       7, 1
+  -- security properties --
+  embedding degree:       > 100
+  anomalous (n = p):      no
+  n-1:                    2 * 3 * 5 * 6334723 * [212-bit composite]   (smooth part 28 bits)
+  n+1:                    2^3 * 17 * 97 * 3191 * 9397 * [201-bit composite]   (smooth part 39 bits)
+  twist order:            0x7FFFFFFFFFFFFFFFFFFFFFFF800000A1B9C3AFC11691ADE50BE6B7BA2699
+  twist factored:         17937911 * [215-bit composite]   (smooth part 25 bits)
+  CM disc square part:    1   (D = t^2-4p, 241 bits)
+  -- point-counting (SEA) profile --
+  SEA lmax (Elkies only): 149
+  Elkies primes < 100:    5 11 13 31 37 47 53 59 67 71 79 83 89
+  Atkin primes < 100:     3 7 17 19 23 29 41 43 61 73 97
+
+==============================================================================
+prime239v3   --   run 1997-05-15 15:49:03 UTC, candidate #3048
+==============================================================================
+  status:                 published
+  p:                      2^239 - 2^143 - 2^95 + 2^47 - 1   (p mod 4 = 3)
+  seed (20 bytes):        7D7374168FFE3471B60A857686A19475D3BFA2FF
+  SHA-1(seed):            84DDB4D3D73C11BD193E3A4F9DC9A6CEFD5F9D11
+  c:                      0x3A4F9DC9A6CEFD5F9D1193B9C9968C202430003C2819C2E498618DC58330
+  a:                      -3
+  b:                      0x255705FA2A306654B1F4CB03D6A750A30C250102D4988717D9BA15AB6D3E
+  n = #E (prime):         0x7FFFFFFFFFFFFFFFFFFFFFFF7FFFFF975DEB41B3A6057C3C432146526551
+  t (trace):              +0x68A2143E4C59FA83C43CDEB9AD9AAF  (119 bits)
+  -- bit-level --
+  seed first/last byte:   0x7D / 0xFF
+  bitlen c / b / n:       238 / 238 / 239   (c max = 238)
+  parity c / b:           0 / 0
+  b square mod p:         yes
+  n vs p:                 n < p
+  n mod 8, v2(n-1):       1, 4
+  -- security properties --
+  embedding degree:       > 100
+  anomalous (n = p):      no
+  n-1:                    2^4 * 5^3 * 4903 * [216-bit composite]   (smooth part 24 bits)
+  n+1:                    2 * 3 * 7 * 19 * 1523 * 10847 * 13553 * [192-bit composite]   (smooth part 48 bits)
+  twist order:            0x7FFFFFFFFFFFFFFFFFFFFFFF80000068A213BE4C59FA83C4BCDEB9AD9AAF
+  twist factored:         23 * 547 * [226-bit composite]   (smooth part 14 bits)
+  CM disc square part:    1   (D = t^2-4p, 241 bits)
+  -- point-counting (SEA) profile --
+  SEA lmax (Elkies only): 191
+  Elkies primes < 100:    5 17 19 23 41 43 59 61 67 79 83 89
+  Atkin primes < 100:     3 7 11 13 29 31 37 47 53 71 73 97
+
+==============================================================================
+SKIPPED candidate (p256 run)   --   run 1997-08-16 01:52:34 UTC, candidate #876
+==============================================================================
+  status:                 eligible prime-order curve, NOT published
+  p:                      2^256 - 2^224 + 2^192 + 2^96 - 1   (p mod 4 = 3)
+  seed (20 bytes):        50C71A63F911DB7B2F31618ECF609D37154437F9
+  SHA-1(seed):            F2C90E4F562D92A4276E46B26A6E09FBA8200CDD
+  c:                      0x276E46B26A6E09FBA8200CDD418D6DC3738C6B169131927838EC8E71DE4E8548
+  a:                      -3
+  b:                      0xA84FCA4BE639727675CCEA4A9CECDA4B900C32DD7E86192AB71B355FDE8255BD
+  n = #E (prime):         0xFFFFFFFF00000000FFFFFFFFFFFFFFFFB05AB64A7F5B43FA0A2D70FED440950F
+  t (trace):              +0x4FA549B680A4BC05F5D28F012BBF6AF1  (127 bits)
+  -- bit-level --
+  seed first/last byte:   0x50 / 0xF9
+  bitlen c / b / n:       254 / 256 / 256   (c max = 255)
+  parity c / b:           0 / 1
+  b square mod p:         yes
+  n vs p:                 n < p
+  n mod 8, v2(n-1):       7, 1
+  -- security properties --
+  embedding degree:       > 100
+  anomalous (n = p):      no
+  n-1:                    2 * 3 * 7 * 11 * 43 * [242-bit prime]   (smooth part 15 bits)
+  n+1:                    2^4 * 37 * 33461 * [232-bit prime]   (smooth part 25 bits)
+  twist order:            0xFFFFFFFF0000000100000000000000004FA549B780A4BC05F5D28F012BBF6AF1
+  twist factored:         3 * 11 * 37 * 8081 * [233-bit composite]   (smooth part 24 bits)
+  CM disc square part:    1   (D = t^2-4p, 258 bits)
+  -- point-counting (SEA) profile --
+  SEA lmax (Elkies only): 211
+  Elkies primes < 100:    3 11 17 19 29 31 37 43 59 73
+  Atkin primes < 100:     5 7 13 23 41 47 53 61 67 71 79 83 89 97
+
+==============================================================================
+P-256   --   run 1997-08-16 01:52:34 UTC, candidate #1842
+==============================================================================
+  status:                 published
+  p:                      2^256 - 2^224 + 2^192 + 2^96 - 1   (p mod 4 = 3)
+  seed (20 bytes):        C49D360886E704936A6678E1139D26B7819F7E90
+  SHA-1(seed):            3F07C5EAC96ECC0BFEFBA1662985BE9403CB055C
+  c:                      0x7EFBA1662985BE9403CB055C75D4F7E0CE8D84A9C5114ABCAF3177680104FA0D
+  a:                      -3
+  b:                      0x5AC635D8AA3A93E7B3EBBD55769886BC651D06B0CC53B0F63BCE3C3E27D2604B
+  n = #E (prime):         0xFFFFFFFF00000000FFFFFFFFFFFFFFFFBCE6FAADA7179E84F3B9CAC2FC632551
+  t (trace):              +0x4319055358E8617B0C46353D039CDAAF  (127 bits)
+  -- bit-level --
+  seed first/last byte:   0xC4 / 0x90
+  bitlen c / b / n:       255 / 255 / 256   (c max = 255)
+  parity c / b:           1 / 1
+  b square mod p:         yes
+  n vs p:                 n < p
+  n mod 8, v2(n-1):       1, 4
+  -- security properties --
+  embedding degree:       > 100
+  anomalous (n = p):      no
+  n-1:                    2^4 * 3 * 71 * 131 * 373 * 3407 * 17449 * 38189 * [188-bit composite]   (smooth part 69 bits)
+  n+1:                    2 * 5 * 1879 * [242-bit composite]   (smooth part 15 bits)
+  twist order:            0xFFFFFFFF0000000100000000000000004319055458E8617B0C46353D039CDAAF
+  twist factored:         3 * 5 * 13 * 179 * [241-bit prime]   (smooth part 16 bits)
+  CM disc square part:    1   (D = t^2-4p, 258 bits)
+  -- point-counting (SEA) profile --
+  SEA lmax (Elkies only): 191
+  Elkies primes < 100:    3 5 11 13 17 23 29 37 41 43 47 59 97
+  Atkin primes < 100:     7 19 31 53 61 67 71 73 79 83 89
