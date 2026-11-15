@@ -126,12 +126,14 @@ def _cipher():
             from cryptography.hazmat.primitives.ciphers.aead import AESSIV
         except ImportError as exc:
             raise VaultError("vault: install cryptography>=46 with AES-SIV support") from exc
-        candidate = AESSIV(_derive_key())
         try:
+            candidate = AESSIV(_derive_key())
             # Older OpenSSL backends can import AESSIV yet reject empty data.
             # Never replace authentication with an empty-file length shortcut.
             if candidate.decrypt(candidate.encrypt(b"", None), None) != b"":
                 raise ValueError("empty roundtrip")
+        except VaultError:
+            raise
         except Exception as exc:
             raise VaultError(
                 "vault: AES-SIV empty payload support is unavailable; install a "

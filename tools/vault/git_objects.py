@@ -54,3 +54,9 @@ def read_blobs(repo: str | Path, oids: Iterable[str]) -> Iterator[bytes]:
             if code:
                 errors.seek(0)
                 raise subprocess.CalledProcessError(code, proc.args, stderr=errors.read())
+
+
+def read_text(repo: str | Path, ref: str, path: str) -> str | None:
+    """UTF-8 committed content; a missing path contributes no invented data."""
+    data = read_blob(repo, f"{ref}:{path}", missing_ok=True)
+    return None if data is None else data.decode("utf-8")
