@@ -1,0 +1,45 @@
+{
+  "schema": "software.vault-unlock-paired/v1",
+  "baseline_commit": "595857e2d75a269e29363d4b628ddcd8549d71c0",
+  "baseline_controller_sha256": "3bf2934cd2659cc6ef03affd2bcb9835dfbacf12b4565a7f3fd099e5616f9d8d",
+  "candidate_controller_sha256": "c65350e0e537a9c53f08a81eef3d4f65d80ebb5b6ab1d36544484a7f93ae1908",
+  "controller_path": "tools/vault/vaultctl.py",
+  "harness_path": "tools/vault/bench_unlock.py",
+  "protocol_path": "tools/vault/unlock_benchmark_protocol_20261114.json",
+  "files": 256,
+  "bytes_per_file": 262144,
+  "seed": "vault-unlock-engineering-20261114-v1",
+  "warmup_order": [
+    "baseline",
+    "candidate"
+  ],
+  "measured_order": [
+    "baseline",
+    "candidate",
+    "candidate",
+    "baseline",
+    "baseline",
+    "candidate",
+    "candidate",
+    "baseline",
+    "baseline",
+    "candidate"
+  ],
+  "trial_timeout_seconds": 60,
+  "campaign_timeout_seconds": 480,
+  "rss_sample_period_seconds": 0.01,
+  "key_policy": "fixed public software-fixture key in harness; never use the research KEY",
+  "isolation": "L0 shared local host; interleaved order, no CPU isolation",
+  "workload_scope": "complete unlock command on deterministic 64 MiB fixture plus an authenticated empty file; fixture construction and relocking are outside the timed operation",
+  "metrics": [
+    "wall_seconds per complete unlock",
+    "sampled sum of RSS across child process tree, not unique physical memory or a guaranteed peak"
+  ],
+  "correctness": [
+    "all plaintext SHA256 digests match deterministic input manifest",
+    "Git index tree unchanged",
+    "Git status clean after unlock"
+  ],
+  "stopping_rule": "Stop on first failed correctness check or exceeded time limit; retain raw outcomes and use invalid/censored status. All warmups are retained.",
+  "analysis": "Five observations per arm after two preset warmups; report median, observed range and paired baseline/candidate ratios. No broader speedup or frontier inference."
+}

@@ -492,6 +492,12 @@ def cmd_unlock(args: argparse.Namespace) -> int:
             entries[os.fsdecode(rel)] = (mode, oid)
     paths = sorted(entries, key=lambda p: (Path(p).name != ".gitattributes", p))
     written = []
+    # Reuse authenticated ciphertext already in memory instead of encrypting
+    # every unlocked file again before Git runs its required clean filter.
+    algorithm = _git("rev-parse", "--show-object-format", capture=True).stdout.decode().strip()
+    refresh = {}
+    def blob_id(data):
+        return hashlib.new(algorithm, b"blob " + str(len(data)).encode() + b"\0" + data).hexdigest().encode()
     seen = set()
     for rel in paths:
         candidate = Path(rel)
@@ -520,6 +526,9 @@ def cmd_unlock(args: argparse.Namespace) -> int:
             ):
                 raise VaultError(f"vault: file changed during unlock: {rel}")
             os.replace(temporary, candidate)
+            # Match clean()'s idempotency for a nested envelope as well.
+            filtered = plain if is_ciphertext(plain) else data
+            refresh[rel] = (blob_id(filtered) == entries[rel][1], hashlib.sha256(plain).digest())
         finally:
             if os.path.exists(temporary):
                 os.unlink(temporary)
@@ -537,20 +546,28 @@ def cmd_unlock(args: argparse.Namespace) -> int:
         fields = result.stdout.split(b"\0")
         filters = {os.fsdecode(fields[i]): fields[i + 2]
                    for i in range(0, len(fields) - 1, 3)}
-        algorithm = _git("rev-parse", "--show-object-format", capture=True).stdout.decode().strip()
         unchanged = []
         for rel in written:
             candidate = Path(rel)
             mode, oid = entries[rel]
-            data = candidate.read_bytes()
+            filtered_matches, plaintext_digest = refresh[rel]
+            current = candidate.lstat()
+            if not stat.S_ISREG(current.st_mode):
+                continue
+            # Recheck actual bytes, not just metadata: another writer can
+            # restore timestamps after an edit. Such an edit must stay unstaged.
+            current_data = candidate.read_bytes()
+            if hashlib.sha256(current_data).digest() != plaintext_digest:
+                continue
             selected = filters.get(rel)
             if selected == b"vault":
-                data = encrypt(data)
-            elif selected not in (b"unset", b"unspecified"):
+                matches = filtered_matches
+            elif selected in (b"unset", b"unspecified"):
+                matches = blob_id(current_data) == oid
+            else:
                 continue
-            actual = hashlib.new(algorithm, b"blob " + str(len(data)).encode() + b"\0" + data).hexdigest().encode()
-            executable = bool(candidate.stat().st_mode & 0o111)
-            if actual == oid and executable == (mode == b"100755"):
+            executable = bool(current.st_mode & 0o111)
+            if matches and executable == (mode == b"100755"):
                 unchanged.append(os.fsencode(rel))
         if unchanged:
             with tempfile.TemporaryFile() as request:
