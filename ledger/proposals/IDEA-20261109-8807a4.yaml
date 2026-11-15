@@ -1,0 +1,100 @@
+idea:
+  id: IDEA-20261109-8807a4
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECC-c52b0d
+  title: 'Constant-time Ed25519 scalar multiplication by running the existing Montgomery ladder on (Z+Y
+    : Z-Y) and recovering the full point with Okeya-Sakurai v-recovery and the RFC 7748 birational map'
+  class: composition
+  claim: 'For an Edwards25519 point P = (X:Y:Z:T) not in {O, T2} and any scalar 0 <= k < 2^255 with [k]P
+    not in {O, -P}, the following computes [k]P in extended coordinates with no secret-dependent branch:
+    u_P = (Z+Y)/(Z-Y) = (1+y)/(1-y), v_P = c u_P / x with c^2 = -486664; the RFC 7748 ladder on u_P returns
+    (X2:Z2) = [k]P and (X3:Z3) = [k+1]P on the Montgomery curve; N = [(u_P X2 + Z2)(u_P Z2 + X2) + 2*486662
+    X2 Z2] Z3 - X3 (X2 - u_P Z2)^2, D'' = 2 v_P Z2 Z3, (X_Q:Y_Q:Z_Q) = (X2 D'' : N : Z2 D''); then y =
+    (X_Q - Z_Q)/(X_Q + Z_Q), x = c X_Q / Y_Q, T = xy. Cost 255(5M+4S+1c) + 10M+1S+1c + 5M+1c+1I. The sign
+    of c cancels. The repository''s EdPoint::scalar_mul is variable-time double-and-add at 255(5M+4S)
+    + about 127(11M+1I).'
+  mechanism: 'The projective map (X:Y:Z:T) -> (Z+Y : Z-Y) is the Edwards-to-Montgomery u-map u = (1+y)/(1-y)
+    at zero multiplications, so the x-only ladder is the Edwards y-line ladder. The y-recovery formula
+    is obtained by eliminating v_Q^2 between v_Q^2 = u_Q^3 + A u_Q^2 + u_Q (B = 1) and the chord relation
+    (v_Q - v_P)^2 = (u_{Q+P} + A + u_P + u_Q)(u_Q - u_P)^2, giving v_Q = [(u_P u_Q + 1)(u_P + u_Q) + 2A
+    u_P u_Q - u_{Q+P} (u_Q - u_P)^2] / (2 v_P), which is linear in v_Q and so branch-free. Sanity: k =
+    1 gives N = 2 v_P^2 Z3 and v_Q = v_P. Exceptions: x = 0 (P in {O,T2}) breaks v_P; Z2 = 0 ([k]P = O)
+    and Z3 = 0 ([k]P = -P) give 0/0 and are resolved by a final constant-time select to O or to (-x, y).
+    The ladder with start (1:0),(u_P:1) handles leading zero bits, so unclamped scalars reduced modulo
+    L are admissible.'
+  novelty_status: unverified
+  citations:
+  - ref: Okeya, Sakurai 2001, y-coordinate recovery for the Montgomery ladder
+    provenance: recalled
+    claim: v-recovery from x([k]P), x([k+1]P) and P
+    verified_by: null
+  - ref: RFC 7748 section 4.1
+    provenance: recalled
+    claim: (u,v) = ((1+y)/(1-y), sqrt(-486664) u/x), (x,y) = (sqrt(-486664) u/v, (u-1)/(u+1))
+    verified_by: null
+  - ref: BRIEF section 1, src/ecc/ed25519.rs EdPoint::scalar_mul
+    provenance: internal
+    claim: variable-time double-and-add seeded at identity, scalar.bits() loop bound
+    verified_by: this session read of the BRIEF excerpt
+  assumptions:
+  - B = 1 on the Montgomery side; A = 486662.
+  - u = -1 has no F_p-rational point (486660 non-square, asserted), so the y-map never divides by zero
+    on rational points.
+  - The repository ladder is modified to return both registers.
+  predictions:
+  - metric: same(ed_mul(k,P), ed_via_ladder(k,P)) over random P and k
+    direction: equal
+    minimum_effect: 20 of 20 in the script; 10^4 of 10^4 in Rust
+  - metric: field multiplications per 255-bit scalar
+    direction: lower
+    minimum_effect: about 1290M+1021S+257c+1I versus about 2672M+1020S+127I now
+  minimal_test:
+    design: Section 9 of tools/ansatz_edwards25519.sage, then a Rust scalar_mul_ladder in ed25519.rs built
+      on a ladder_pair export from x25519.rs; compare encode() against the current scalar_mul on random
+      scalars, on RFC 8032 public-key derivations, and on the exceptional k in {0, L-1}.
+    controls:
+    - both signs of c give identical outputs
+    - k = 1 returns P; k = 2 matches EdPoint::double
+    - exceptional cases k = 0 and k = L-1 return O and -P after the final select
+    required_metrics:
+    - mismatch count
+    - instrumented M, S, c, I totals for both paths
+    - presence of any scalar-dependent branch in the new path (expected none)
+  falsification_conditions:
+  - Any mismatch with the double-and-add oracle off the stated exceptional set.
+  - Instrumented cost exceeding 255(5M+4S+1c)+20M+2S+2c+1I.
+  confounders:
+  - Points outside the prime-order subgroup are admissible; torsion components are handled by the ladder
+    but k must be the full scalar, not k mod L.
+  interpretation_limits:
+  - Constant time is at formula level; BigUint arithmetic is not.
+  - No signature-verification speedup is claimed; this targets key generation and R = rB.
+  heuristic_assumptions:
+  - id: H1
+    statement: one recovery plus one inversion is negligible against 255 ladder steps
+    rigorous_support: direct count above
+    validation_plan: instrumented counts
+  target_complexity:
+    time_exponent: not applicable
+    memory_exponent: 4 field elements of ladder state plus the affine input
+    best_known: windowed fixed-base tables in production Ed25519 implementations
+    hidden_overhead: one field inversion at the end; one more if y and x are not batched
+    tradeoff_note: trades the 7M mixed additions of a windowed method for a ladder that the repository
+      already has and that reads scalar bits uniformly
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: high
+  dominated_by: Production fixed-base windowed methods dominate on speed; the current repository scalar_mul
+    is dominated by this record on both cost and timing uniformity.
+  sota_delta: 'Against the repository: about 1380 fewer M and 126 fewer inversions per scalar multiplication
+    and removal of the scalar-dependent branch and bit-length leak. Against the literature: delta 0, this
+    is a composition of known maps.'
+  prior_art:
+    frontier_map: not_applicable
+    not_applicable_reason: Curve25519 implementation composition; no ECDLP mechanism is claimed.
+    none_found_after:
+    - BRIEF section 2 searched for y-recovery, Okeya, birational map, constant-time Ed25519
+    - BRIEF section 1 read for an existing ladder-to-Edwards path (none)

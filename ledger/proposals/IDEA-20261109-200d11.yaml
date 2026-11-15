@@ -1,0 +1,140 @@
+idea:
+  id: IDEA-20261109-200d11
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: Chebotarev density of cover-defined factor bases over F_p equals the fixed-point proportion of
+    the monodromy group, so sparse Hurwitz-space predicates need degree p^{1-beta} and collapse to the
+    abelian algebraic-subgroup bases
+  class: barrier
+  claim: 'Let f: C -> P^1 be a geometrically irreducible separable cover of degree d over F_p with monodromy
+    group G <= S_d (arithmetic equal to geometric; otherwise use the Frobenius coset), and define the
+    factor base F_f = {P in E(F_p) : the fibre of f over x(P) has an F_p-point}. Then |F_f|/N = phi(G)/|G|
+    + O(d^2 g(C) p^{-1/2}) where phi(G) counts elements of G with a fixed point. By Burnside, phi(G)/|G|
+    >= 1/d with equality iff G acts regularly (|G| = d). Consequently a base of density p^{beta-1} needs
+    d >= p^{1-beta} approx 2^{170} at beta = 1/3, and a fibre test of a degree-p^{1-beta} cover is polylog
+    only for structured covers: Kummer x^d = c (d | p-1), Dickson/norm-one (d | p+1), Artin-Schreier.
+    These are the mu_B and X_B bases already filed with exponent 1 for the relation stage. The Hurwitz
+    space of predicates on the x-line therefore contains no sparse, cheaply decidable factor base beyond
+    the algebraic-subgroup ones, and for bounded d every cover-defined base has density >= 1/d, useless
+    for index calculus at B = N^{1/m}.'
+  mechanism: 'Chebotarev for the function field F_p(x) with the Weil bound as error term: the proportion
+    of x in F_p whose Frobenius class meets a given conjugacy class C is |C|/|G| up to O(|C| g p^{-1/2});
+    a fibre has an F_p-point iff the Frobenius class has a fixed point. Burnside''s lemma gives average
+    fixed points 1, so the set of elements with a fixed point has proportion at least 1/d, with equality
+    iff only the identity has fixed points. Relation supply over F_f is then a statistical property of
+    a set of fixed density, not of its definition.'
+  novelty_status: adaptation
+  citations:
+  - ref: KR-IC-73db3f
+    provenance: internal
+    claim: Factor-base choice as a vector space V in characteristic 2. This record classifies the prime-field
+      analogue defined by covers.
+    verified_by: brief section 3 index-calculus table, row KR-IC-73db3f
+  - ref: KR-IC-49c882
+    provenance: internal
+    claim: Quasi-subfield polynomials are covers whose fibres are fully rational often; the opposite extreme
+      of the density range here.
+    verified_by: brief section 3 index-calculus table, row KR-IC-49c882
+  - ref: KR-IC-5931ee
+    provenance: internal
+    claim: Algebraic factor bases over F_p work only at small parameters; this record explains why no
+      cover-defined one can be sparse.
+    verified_by: brief section 3 index-calculus table, row KR-IC-5931ee
+  assumptions:
+  - Covers are separable and geometrically irreducible; inseparable ones are excluded.
+  - The error term is used with the explicit Weil constant; ramified x are finitely many and reported.
+  predictions:
+  - metric: density |F_f|/N for a random degree-3 cover with G = S_3
+    direction: equal
+    minimum_effect: 2/3 within 3 d^2 p^{-1/2}
+  - metric: density for random degree-4 and degree-5 covers with G = S_4, S_5
+    direction: equal
+    minimum_effect: 5/8 and 19/30 within 3 d^2 p^{-1/2}
+  - metric: density for the Kummer cover y^3 = x at p = 1 mod 3
+    direction: equal
+    minimum_effect: 1/3 plus at most 1/p, the Burnside floor
+  - metric: arity-3 relation count C_3(F_f) divided by B^3/N
+    direction: equal
+    minimum_effect: 1 within 3 sigma of the random-set control
+  minimal_test:
+    design: p in {65521, 2^20 - 3}; prime-order toy curves from docs/ECDLP_CALIBRATION_PRIMES.md. Covers
+      f(x, Y) = Y^d + a_1(x) Y^{d-1} + ... + a_d(x) with random a_i of degree <= 2, d = 3, 4, 5, five
+      seeds each; for every x count F_p-roots by gcd(f(x, Y), Y^p - Y). Compute density, cycle-type census
+      (a second Chebotarev check), and the exact arity-3 relation count from one exhaustive log table.
+    controls:
+    - A random subset of E(F_p) of the same size for the relation count.
+    - The Kummer cover y^d = x as the regular-action positive control at density 1/d.
+    - Ramified and inseparable fibres excluded and counted.
+    required_metrics:
+    - d, seed, measured density, predicted phi(G)/|G|
+    - cycle-type frequencies versus class proportions of G
+    - C_3(F_f), B^3/N, control C_3 and its standard deviation
+    - number of ramified x
+  falsification_conditions:
+  - Any cover with measured density below 1/d - 5 d^2 p^{-1/2}; this would mean the Burnside bound was
+    misapplied.
+  - C_3(F_f) exceeding the random control by a factor of 2 for the same cover across all five seeds.
+  - A timeout is infrastructure, not evidence.
+  confounders:
+  - Arithmetic monodromy larger than geometric changes the proportion to a coset average; detect via the
+    cycle-type census.
+  - x is 2-to-1 on affine points; density is computed on x-values and on points separately.
+  interpretation_limits:
+  - A density theorem about predicates; the relation-supply statement is a null measurement at toy p and
+    does not bound structured algebraic-subgroup bases, which have their own filed records.
+  heuristic_assumptions:
+  - id: H1
+    statement: Relation counts over F_f match the random-set count for the same density.
+    rigorous_support: None; the Weil bound certifies only densities, not m-fold coincidences (wave-1 Fourier
+      certification barrier).
+    validation_plan: Exhaustive C_3 counts at both primes, five seeds, against control.
+  target_complexity:
+    time_exponent: N^{1/2} unchanged, delta 0
+    memory_exponent: O(1)
+    best_known: Pollard rho, KR-RHO-13bf67; relation stage of mu_B bases at exponent 1 (wave-2 records)
+    hidden_overhead: None claimed.
+    tradeoff_note: Not a tradeoff; a classification of predicate densities.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  dominated_by: Wave-1 scheme-degree record for 0-dimensional loci; this record adds the positive-dimensional
+    case. KR-IC-73db3f and KR-IC-49c882 are siblings in characteristic 2.
+  sota_delta: Exponent delta 0. New content is the 1/d floor for cover-defined bases and the reduction
+    of sparse decidable covers to abelian ones.
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/index-calculus
+    rows_checked:
+    - KR-IC-73db3f
+    - KR-IC-49c882
+    - KR-IC-5931ee
+    - KR-IC-5a43e5
+    - KR-IC-5ea2f8
+    - KR-IC-a4dd54
+    nearest:
+    - ref: KR-IC-73db3f
+      provenance: internal
+      relation: adjacent
+      delta: Vector-space factor bases are linear predicates on F_2^n; this record treats covers of P^1
+        over F_p and bounds their density.
+    - ref: KR-IC-49c882
+      provenance: internal
+      relation: adjacent
+      delta: Quasi-subfield polynomials seek fibres that are always rational; this record bounds how rarely
+        a fibre can be rational.
+    searched:
+      corpus_grep:
+      - brief section 2 for Chebotarev, cover factor base, Hurwitz, fixed-point proportion
+      - wave-1 sweep and wave-2 relations, drinfeld records (mu_B, X_B bases)
+      web: []
+      blocked: []
+    lead: LEAD-ICE-semaev-cover-monodromy
+    lead_delta:
+      kind: answers_obstruction
+      statement: 'New test: p in {65521, 2^20 - 3}; prime-order toy curves from docs/ECDLP_CALIBRATION_PRIMES.md.
+        Covers f(x, Y) = Y^d + a_1(x) Y^{d-1} + ... + a_d(x) with random a_i of degree <= 2, d = 3, 4,
+        5, five seeds each; for every x count F_p-roots by gcd(f(x, Y), Y^p - Y). Compute density, cycle-type
+        census (a second Chebotarev check), and the exact arity-3 relation count from one exhaustive log
+        table.'

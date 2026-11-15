@@ -1,0 +1,113 @@
+idea:
+  id: IDEA-20261109-e1bc34
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECC-5038da
+  title: Dual Edwards addition on Edwards25519 costs 8M with no d-multiply, and its exceptional pairs
+    are exactly P1 - P2 in E(F_p)[4] = {xy = 0}
+  class: algorithm
+  claim: 'On E: -x^2 + y^2 = 1 + d x^2 y^2 over F_p, p = 2^255 - 19, the dual addition law x_3 = (x_1
+    y_1 + x_2 y_2)/(y_1 y_2 - x_1 x_2), y_3 = (x_1 y_1 - x_2 y_2)/(x_1 y_2 - y_1 x_2) in extended coordinates
+    (X:Y:Z:T), x = X/Z, y = Y/Z, T = XY/Z, is A = (Y_1 - X_1)(Y_2 + X_2), B = (Y_1 + X_1)(Y_2 - X_2),
+    C = 2 Z_1 T_2, D = 2 T_1 Z_2, E = D + C, F = B - A, G = B + A, H = D - C, X_3 = E F, Y_3 = G H, T_3
+    = E H, Z_3 = F G, costing 8M + 0S + 0c + 10a (7M when Z_2 = 1), against 8M + 1c_{2d} for the standard
+    HCD law, where c_{2d} is a full-size multiply on this curve. The law is undefined exactly when F G
+    = 0, and on this curve F = 0 iff P_2 - P_1 in {O, T_2} and G = 0 iff P_2 - P_1 in {T_4, -T_4}, T_2
+    = (0,-1), T_4 = (i,0), i^2 = -1. Hence the exceptional pairs are exactly those with P_1 - P_2 in E(F_p)[4],
+    the four points with x y = 0, and the failure is detected branch-free by Z_3 = 0. The law cannot double
+    (P_1 = P_2 is exceptional). For P_1, P_2 both in the prime-order subgroup it fails only when P_1 =
+    P_2.'
+  mechanism: 'F = 0 means x_1 y_2 = y_1 x_2, i.e. (x_2,y_2) = lambda (x_1,y_1); the curve equation forces
+    (lambda^2 - 1)(1 - d lambda^2 x_1^2 y_1^2) = 0 and the second factor needs d x_2^2 y_2^2 = 1, impossible
+    because d is a non-square, so lambda = +-1 and P_2 in {P_1, P_1 + T_2}. G = 0 means y_1 y_2 = x_1
+    x_2; substituting y_2 = x_1 x_2 / y_1 into the curve equation gives d x_1^2 u^2 + (1 + d x_1^2 y_1^2)
+    u + y_1^2 = 0 in u = x_2^2, with roots u = -y_1^2 and u = -1/(d x_1^2); the second needs -1/d to be
+    a square, false since -1 is a square and d is not, so x_2 = +- i y_1, y_2 = +- i x_1, which is P_1
+    +- T_4 because P + T_4 = (i y, i x). The symmetry used is translation by the rational 4-torsion: the
+    dual law is the Edwards law conjugated by P -> P + T_4, so its exceptional set is the translate of
+    the standard law''s (empty) exceptional set by E(F_p)[4]. What it buys is one full multiply per uncached
+    projective-projective addition; with a Niels-cached operand (Y+X, Y-X, 2dT) both laws cost 7M/8M,
+    so the saving applies to live-live additions such as the single s B + (-h) A combination in verification
+    and Straus table construction, not to fixed-base tables.'
+  novelty_status: unverified
+  citations:
+  - ref: Hisil-Wong-Carter-Dawson 2008, Twisted Edwards curves revisited, section 3.2 dual addition
+    provenance: recalled
+    claim: 8M dedicated addition independent of d for a = -1
+    verified_by: null
+  - ref: Bernstein-Lange 2011, A complete set of addition laws for incomplete Edwards curves
+    provenance: recalled
+    claim: standard and dual laws have no common exceptional pair
+    verified_by: null
+  - ref: BRIEF section 1, src/ecc/ed25519.rs EdPoint::add
+    provenance: internal
+    claim: current addition costs 11M plus one fe_inv per call
+    verified_by: idea-generator session 2026-11-09 read the BRIEF excerpt
+  assumptions:
+  - d is a non-square and -1 is a square in F_p (BRIEF section 0); both are rechecked by the script.
+  - E(F_p)[4] has exactly four elements, i.e. E(F_p) is Z/8 x Z/l.
+  - Inputs are valid extended points with Z != 0 and T Z = X Y.
+  proof_search_map:
+    not_applicable_reason: Finite algebraic statement over one curve, verified by enumeration of the four
+      torsion translates and random sampling; no exponent claim.
+    bottleneck: not_applicable
+    proof_obligations: []
+  predictions:
+  - metric: number of T in E(F_p)[4] with Z_3(P, P + T) = 0, per random P
+    direction: equal
+    minimum_effect: exactly 4 of 4
+  - metric: number of random pairs with difference outside E(F_p)[4] and Z_3 = 0
+    direction: equal
+    minimum_effect: exactly 0 of 10^4
+  - metric: field multiplications per dual addition in a counting field
+    direction: equal
+    minimum_effect: exactly 8M, 0 constant multiplies, 0 inversions
+  minimal_test:
+    design: 'scripts/check_dual_law_e4_locus.sage: build E over F_p, take 10^3 random points P (cofactor
+      cleared and not cleared), form Q = P + T for each T in E(F_p)[4] and assert F*G == 0; for 10^4 random
+      pairs with Q - P outside E(F_p)[4] assert F*G != 0 and that (X_3:Y_3:Z_3:T_3) equals the standard
+      HCD output projectively. tests/ed25519_dual_law.rs repeats on RFC 8032 vectors through a counting
+      field.'
+    controls:
+    - The standard HCD law on the same pairs must report zero failures.
+    - 'Proves-too-much control: a toy twisted Edwards curve over a small prime with square d; the dual
+      law''s exceptional set must then exceed the E[4]-difference set, showing the non-square hypothesis
+      is load-bearing.'
+    required_metrics:
+    - failures on torsion translates (expected 4 per P)
+    - failures on non-torsion pairs (expected 0)
+    - M, S, c, I counts per addition
+  falsification_conditions:
+  - Any pair with P_1 - P_2 outside E(F_p)[4] and Z_3 = 0.
+  - Any T in E(F_p)[4] with Z_3(P, P+T) != 0.
+  - Counting field reports more than 8M or any constant multiply.
+  confounders:
+  - Points not satisfying T Z = X Y make F, G meaningless; the test validates inputs.
+  - A Niels-cached comparison hides the 1c saving; report both cached and uncached baselines.
+  interpretation_limits:
+  - Saves 1M only on live-live additions; no change to doublings or fixed-base tables.
+  - Not constant-time complete; a cmov fallback to the standard law costs 8M + 1c extra.
+  heuristic_assumptions: []
+  target_complexity:
+    time_exponent: not an exponent claim; per-operation field count
+    memory_exponent: unchanged, 4 field elements per point
+    best_known: HCD 2008 extended addition 8M + 1c_{2d}, complete
+    hidden_overhead: Z_3 = 0 check (one comparison) when used outside the prime-order subgroup
+    tradeoff_note: trades completeness on E(F_p)[4]-differences for one multiply
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  dominated_by: HCD 2008 extended addition dominates on completeness; Niels-cached standard addition matches
+    the 7M/8M count where an operand is cached.
+  sota_delta: 'Count delta -1M (-1 full-size constant multiply) per uncached addition; completeness delta:
+    exceptional set is the explicit four-element group E(F_p)[4], certified by Z_3 = 0.'
+  prior_art:
+    frontier_map: not_applicable
+    not_applicable_reason: Curve25519 explicit-formula campaign (alternative coordinate systems); no ECDLP
+      mechanism is claimed.
+    none_found_after:
+    - 'BRIEF section 2 ledger index: no record files an Edwards addition law, exceptional locus or operation
+      count'
+    - 'BRIEF section 1: src/ecc/ed25519.rs implements only the HCD standard law'

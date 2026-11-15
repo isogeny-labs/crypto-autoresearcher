@@ -1,0 +1,133 @@
+idea:
+  id: IDEA-20261109-0b5d6a
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: Arity-m point decomposition is m-point hyperplane degeneracy for the degree-m elliptic normal
+    curve obtained by projecting from the target, and projective duality re-derives enumeration
+  class: representation
+  claim: 'Embed E by L((m+1)O) in P^m. Hyperplane sections are the divisors linearly equivalent to (m+1)O,
+    so m+1 points lie on a hyperplane iff they sum to O (the incidence determinant of the relations wave).
+    Claim 1 (per-target re-embedding). Projecting from the target image R~ maps E to the elliptic normal
+    curve of degree m in P^{m-1} embedded by |(m+1)O - R|; m base images lie on a hyperplane iff their
+    sum is -R. Hence the whole decomposition problem is the classical affine-degeneracy problem (m points
+    on a hyperplane in P^{m-1}) for B points on a fixed degree-m curve, with the point set a linear transform
+    of one fixed set. Claim 2 (duality recursion). For an (m-1)-subset J, the dual point l_J meets R~^*
+    in the point dual to the hyperplane through P~_J and R~, whose last intersection with E is -(sum_J
+    P_j + R); so arrangement-based degeneracy algorithms are enumeration of (m-1)-subsets with a dictionary
+    lookup, cost B^{m-1}, the same as the e_k = k - 1 floor. Claim 3 (constants). At m = 3 the O(n^2)
+    slope-hashing collinearity algorithm charged in field operations costs between 0.7x and 1.3x of point-addition
+    enumeration per target. The missing lemma is a finite-field analogue of Erickson-Seidel: no degeneracy
+    detector for points on a degree-m elliptic normal curve over F_p runs below B^{m-1-delta} (equivalently,
+    an incidence algorithm, not only a Bourgain-Katz-Tao bound, would be needed to go below).'
+  mechanism: The reduction is exact and target-dependent only through a linear projection. The import
+    fails algorithmically because every sub-n^d geometric method (cuttings, Szemeredi-Trotter) uses an
+    order on the field, and the dual point of a candidate hyperplane is itself the point whose membership
+    in the base decides the relation.
+  novelty_status: unverified
+  citations:
+  - ref: KR-IC-5a43e5
+    provenance: internal
+    claim: Summation polynomials are the eliminated form of this incidence condition.
+    verified_by: Mythos brief section 3, row KR-IC-5a43e5
+  - ref: KR-RHO-5b1c0a
+    provenance: internal
+    claim: Representation techniques do not beat rho over F_{p^2}; exponent delta here is 0.
+    verified_by: Mythos brief section 3, row KR-RHO-5b1c0a
+  - ref: KR-RHO-13bf67
+    provenance: internal
+    claim: Generic lower bound; this reformulation is not generic but changes no exponent.
+    verified_by: Mythos brief section 3, row KR-RHO-13bf67
+  - ref: 'relations-wave record: incidence-determinant presentation over L((m+1)O)'
+    provenance: internal
+    claim: Supplies the determinant presentation; this record adds the projection and duality reading.
+    verified_by: Mythos brief, Wave 1 relations records list
+  - ref: Erickson-Seidel lower bounds for affine degeneracy
+    provenance: recalled
+    claim: Omega(n^d) in restricted linear decision trees over the reals.
+    verified_by: not verified in this session; the next agent reads the paper
+  assumptions:
+  - A basis of L((m+1)O) in x and y monomials with 2i + 3j <= m + 1 is used; the test recomputes it.
+  - R is not among the base points.
+  predictions:
+  - metric: number of random m-subsets whose projected images are coplanar yet do not sum to -R, m = 3,4
+    direction: zero
+    minimum_effect: 0 of 10^4, and conversely 0 relations missed
+  - metric: charged field-operation ratio slope-hash collinearity / addition enumeration, m = 3, B = 2^8..2^12
+    direction: different
+    minimum_effect: within [0.7, 1.3]
+  - metric: fitted exponent in B of the dual arrangement solver, m = 3,4
+    direction: different
+    minimum_effect: within [m - 1.1, m - 0.9]
+  minimal_test:
+    design: 'Toy prime-order curves at p <= 2^26. Implement the L((m+1)O) embedding, the projection from
+      R, and three solvers for target relations: addition enumeration, slope-hash collinearity (m = 3),
+      and the dual arrangement recursion of Claim 2. Count field multiplications and inversions; verify
+      Claims 1 and 2 exactly on random subsets.'
+    controls:
+    - Random points of P^{m-1} not on the curve; degeneracies there must be chance-level and unrelated
+      to the group law.
+    - Interval base and random base of equal size; relation counts match the B^m / N mean.
+    required_metrics:
+    - coplanarity versus sum mismatches
+    - operation counts per solver per B
+    - fitted exponents
+  falsification_conditions:
+  - Any mismatch between hyperplane incidence and the group relation.
+  - A degeneracy solver with fitted exponent below m - 1.3 at m = 4 (positive outcome).
+  - Slope-hash ratio outside [0.5, 2.0] indicates a miscount, not a result.
+  confounders:
+  - Hash-table constants at small B; report operation counts, not time.
+  - Points at infinity in projective coordinates need separate handling.
+  interpretation_limits:
+  - A verified reduction is exact but moves no exponent.
+  - Real-field lower bounds do not transfer; the lemma is open in both directions over F_p.
+  heuristic_assumptions:
+  - id: H1
+    statement: Every arrangement or duality-based degeneracy algorithm over F_p reduces to enumeration
+      of (m-1)-subsets.
+    rigorous_support: Claim 2 proves it for the natural duality; not for all algorithms.
+    validation_plan: Implement the dual recursion and fit its exponent in the test.
+  target_complexity:
+    time_exponent: B^{m-1} per target, unchanged; overall above N^{1/2}
+    memory_exponent: B
+    best_known: Pollard rho Theta(N^{1/2}); for the inner search, enumeration B^{m-1}
+    hidden_overhead: re-embedding costs (m+1) B multiplications per target
+    tradeoff_note: None.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: low
+  sota_delta: 'Exponent delta 0. Delta: exact identification of prime-field PDP with classical hyperplane
+    degeneracy for a degree-m elliptic normal curve, and a proof that duality gives back enumeration.'
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/index-calculus
+    rows_checked:
+    - KR-IC-5a43e5
+    - KR-IC-5931ee
+    - KR-IC-8b9daa
+    - KR-RHO-5b1c0a
+    - KR-RHO-13bf67
+    nearest:
+    - ref: KR-IC-8b9daa
+      provenance: internal
+      relation: adjacent
+      delta: Karabina reformulates PDP by symmetric functions; this uses the projective embedding and
+        duality.
+    - ref: KR-RHO-5b1c0a
+      provenance: internal
+      relation: orthogonal
+      delta: Different representation, same exponent verdict.
+    searched:
+      corpus_grep:
+      - waves 1-2 for collinear, hyperplane, incidence determinant, degeneracy, 3SUM
+      web: []
+      blocked: []
+    lead: LEAD-EXO-holant-decomposition-count-network
+    lead_delta:
+      kind: answers_obstruction
+      statement: 'New test: Toy prime-order curves at p <= 2^26. Implement the L((m+1)O) embedding, the
+        projection from R, and three solvers for target relations: addition enumeration, slope-hash collinearity
+        (m = 3), and the dual arrangement recursion of Claim 2. Count field multiplications and inversions;
+        verify Claims 1 and 2 exactly on random subsets.'
