@@ -270,7 +270,7 @@
   "canonical_benchmark_guard": {
     "owner": "crypto-autoresearcher",
     "change": "Read base records through required Git filters and preserve existing-object failures; malformed base JSON cannot disappear from the closed-record guard.",
-    "tests_passed": 52,
+    "tests_passed": 54,
     "subtests_passed": 76,
     "shared_code_parity_files": 19,
     "consumer_sync": "Owner-first change; crypto and cryptanalysis copies require synchronization after the owner lands.",
@@ -291,6 +291,12 @@
       ],
       "final_control_log": ".venv/tmp/evidence/benchmark-custody-final-include-empty-base-20261115.log",
       "diagnostic_log_note": "Early unit runs overlapped one diagnostic log; partial diagnostics preserved, distinct serialized final run used."
+    },
+    "single_observation_comparison": {
+      "diagnosis": "First-only directional metrics were assigned synthetic zero gain and rendered as comparison panels. Two new lifecycle controls fail before repair.",
+      "repair": "Only multi-record series receive first-record gain anchors; actual single-record reference ratios remain. Empty-chart rendering uses an explicit fixed fixture.",
+      "regression_controls": "75 tests and76 subtests across benchmark, renderer and metric exporter modules pass",
+      "generated_reports": "regenerated all4 progress files; source observations unchanged; exactly3 synthetic self-comparisons removed"
     }
   },
   "latest_integrated_reader_regression": {
@@ -349,18 +355,25 @@
     "observed_utc": "2026-11-15T10:03Z",
     "observed_checks": "one successful prose gate and one skipped migration only; full validation did not start on a base edit",
     "workflow_evidence": ".github/workflows/validate.yml excludes edited events; full CI must run on the published completed audit record revision",
-    "status": "awaiting full current-head main validation; not merged"
+    "status": "Source repair and owner artifact copy prepared for a new current-head CI run; not merged",
+    "latest_failed_head": "e874faaccded57d53377b6d8315c3e7903a45a30",
+    "failure": "One shard3 renderer integration assertion; aggregate correctly failed. Twenty latest checks succeeded, one skipped, two failed including aggregate;22 started."
   },
   "shared_artifact_owner_followup": {
     "owner": "crypto",
     "pr": 4296,
-    "head": "c624cb7017a0818ad27e51c5133fe8b2c8430aa4",
+    "head": "886d984437c83d38d73ef13d9673e9b53099fa73",
     "source": "tools/artifacts/artifacts.py",
     "fix": "required filters for sparse index data and metadata, explicit absence vs failure, plaintext size and temporary cleanup",
     "owner_unit_tests_passed": 35,
     "owner_parity_files": 21,
-    "status": "owner PR open with normal auto-merge; consumers wait for verified landing",
-    "archive_input_readback": "Original registry bytes match Git, storage and recorded digest. Existing guarded archival verifier plus exact offline cache resolves the lookup; three existing archive controls pass. CI records job reports only the unrelated ongoing open record, which is preserved."
+    "status": "owner merged; exact source copied into this audit revision",
+    "archive_input_readback": "Original registry bytes match Git, storage and recorded digest. Existing guarded archival verifier plus exact offline cache resolves the lookup; three existing archive controls pass. CI records job reports only the unrelated ongoing open record, which is preserved.",
+    "merge_commit": "c0e8723ff0780900958374eceb96c123e33c4f00",
+    "merged_utc": "2026-11-15T11:19:23Z",
+    "owner_merge_policy": "gate,size,artifacts; unrelated ongoing records failure was preserved and nongating",
+    "consumer_unit_tests_passed": 29,
+    "consumer_tests": "Preserved every existing consumer method and added the exact four owner filter helper/control methods; test files have distinct consumer-only coverage."
   },
   "consumer_native_diagnostics": {
     "cryptanalysis": {
@@ -371,7 +384,40 @@
       "static_analyzer_translation_units": 23,
       "static_analyzer_diagnostics": 0,
       "analyzer_positive_control": "deliberate null dereference detected",
-      "scope_limit": "default AppleClang21 analyzer and CPU controls, not complete semantic or GPU validation"
+      "scope_limit": "default AppleClang21 analyzer and CPU controls, not complete semantic or GPU validation",
+      "native_followup": {
+        "pr": 1543,
+        "head": "d3f1876ad7945a381f065d4a152132290c23b1eb",
+        "changes": "Pre-allocation launch-dimension/walk-ID bounds and optional PTX output early-clobber constraints",
+        "before": "4invalid-launch assertions failed on original source; exact legal-allocation PTX counterexample retained",
+        "local": "19ASan/UBSan Ctests pass;8extracted PTX before/after compiler comparisons identical",
+        "device_execution": false,
+        "bounded_fuzz": {
+          "replays_passed": 7,
+          "runs_passed": 7,
+          "max_seconds_per_harness": 60,
+          "hard_timeout_seconds": 100,
+          "rss_limit_mib": 1024,
+          "seed": 12345,
+          "compiler": "LLVM23.1.1, fully instrumented static C library and harnesses",
+          "source_corpus": "private copies; originals unchanged",
+          "limitations": "No LeakSanitizer or device execution; hosted fuzz workflow was manually disabled and remains so; toolchain setup failures retained",
+          "source_head": "d3f1876ad7945a381f065d4a152132290c23b1eb"
+        }
+      },
+      "optional_tls_followup": {
+        "pr": 1544,
+        "head": "ed99e2c8d7857f3e32ecd643be5314eedacc2e2a",
+        "change": "Only Rustls lock version/checksum0.23.45 to0.23.46, plus audit receipt",
+        "upstream_advisories": [
+          "GHSA-vp88-798v-h67f",
+          "GHSA-w44r-93j7-qv28",
+          "GHSA-c8m5-c952-6cm4",
+          "GHSA-h2v8-394m-p7vv"
+        ],
+        "local": "locked redis-cache feature check passes;10cache controls pass;1existing dedicated-server test ignored",
+        "limitations": "No live TLS/Redis or local Rust1.87 run; installed Rust1.99.1; source/host setup diagnostics retained"
+      }
     },
     "crypto": {
       "base": "719ece9f04e68f3c0fff199ff103675aa16922dc",
