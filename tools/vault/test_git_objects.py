@@ -62,6 +62,14 @@ class GitObjectsTests(unittest.TestCase):
         with self.assertRaises(vaultctl.VaultError):
             list(read_blobs(self.root, [oid]))
 
+    def test_optional_reads_do_not_hide_repository_or_object_type_failures(self):
+        with self.assertRaises(subprocess.CalledProcessError):
+            read_blob(self.root / 'absent-repository', 'HEAD:file', missing_ok=True)
+        tree = subprocess.check_output(['git', '-C', str(self.root), 'mktree'],
+                                       input=b'').decode().strip()
+        with self.assertRaises(subprocess.CalledProcessError):
+            read_blob(self.root, tree, missing_ok=True)
+
     def test_absent_and_non_blob_requests_are_rejected(self):
         missing = '0' * 40
         self.assertIsNone(read_blob(self.root, missing, missing_ok=True))
