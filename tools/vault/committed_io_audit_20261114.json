@@ -709,5 +709,17 @@
     "sheriff_and_encrypted_consumers": 39,
     "continuation_and_encrypted_consumers": 25,
     "scope": "Overlapping software controls. Continuation policy gate is a fixture stub; this is byte-binding coverage, not real execution authorization."
+  },
+  "proposal_backlog_continuation": {
+    "path": "tools/audit_proposal_backlog.py",
+    "failure": "Raw git grep over sealed branch-tip records misses conversions; Git errors previously collapsed to empty output.",
+    "repair": "Pinned fetched tips, deduplicated record subtree and blob identities, authenticated streamed content; scan errors remain failures.",
+    "controls_passed": 12,
+    "control_scope": "six new backlog controls plus six existing Git-object controls; encrypted/plain records, duplicate refs, local edits, corruption, wrong key, unavailable Git and invalid root type",
+    "live_inventory": {
+      "fetched_tip_count": 1835,
+      "referenced_ids": 2497
+    },
+    "first_fixture_failure": "Package/script imports initially loaded different vault modules; package-relative import now keeps cipher and exception identity consistent; failed log retained."
   }
 }
