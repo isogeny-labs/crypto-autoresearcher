@@ -721,5 +721,29 @@
       "referenced_ids": 2497
     },
     "first_fixture_failure": "Package/script imports initially loaded different vault modules; package-relative import now keeps cipher and exception identity consistent; failed log retained."
+  },
+  "formal_navigation_continuation": {
+    "paths": [
+      "tools/formal_pointer_inventory.py",
+      "tools/formal_target_source_inventory.py"
+    ],
+    "repair": "Authenticate committed target/source/module bytes before YAML parsing, lexical matching and plaintext SHA256 binding. Historical plaintext blobs pass unchanged.",
+    "controls": {
+      "passed": 14,
+      "subtests": 2,
+      "scope": "two formal inventory controls plus overlapping backlog and Git-object tests; both script CLIs also replayed"
+    },
+    "historical_replay": {
+      "pointer_revision": "351c9c021c7be044ade54dc7e352b33d3a772244",
+      "source_revision": "e03417ca2831c6000f100e55b5cb4185b0421072",
+      "result": "Both replay JSON objects equal the committed archived inventories; archived producers/reports not edited."
+    },
+    "sealed_replay": {
+      "revision": "e7c9eb9f8ee19ebfa157f1312be765772f033acb",
+      "targets": 126,
+      "pointer_skipped_sources": 0,
+      "declared_sources": 47
+    },
+    "limit": "Navigation and byte-binding controls only; no Lean proof, receipt or experiment validation."
   }
 }
