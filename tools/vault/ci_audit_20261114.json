@@ -270,10 +270,28 @@
   "canonical_benchmark_guard": {
     "owner": "crypto-autoresearcher",
     "change": "Read base records through required Git filters and preserve existing-object failures; malformed base JSON cannot disappear from the closed-record guard.",
-    "tests_passed": 49,
-    "subtests_passed": 71,
+    "tests_passed": 52,
+    "subtests_passed": 76,
     "shared_code_parity_files": 19,
-    "consumer_sync": "Owner-first change; crypto and cryptanalysis copies require synchronization after the owner lands."
+    "consumer_sync": "Owner-first change; crypto and cryptanalysis copies require synchronization after the owner lands.",
+    "initial_content_controls": {
+      "passed": 49,
+      "subtests": 71
+    },
+    "comparison_snapshot_hardening": {
+      "change": "Pin head/requested commits and their merge base once; failed comparisons never become empty diffs. Disable rename folding and include deletion/type changes in closed-record custody checks while preserving new-entry add/modify selection.",
+      "negative_cases_reproduced_on_prior_source": 6,
+      "cases": [
+        "missing base",
+        "explicit empty base",
+        "unrelated history",
+        "deleted closed record",
+        "renamed closed record",
+        "closed record replaced by same-ID symlink"
+      ],
+      "final_control_log": ".venv/tmp/evidence/benchmark-custody-final-include-empty-base-20261115.log",
+      "diagnostic_log_note": "Early unit runs overlapped one diagnostic log; partial diagnostics preserved, distinct serialized final run used."
+    }
   },
   "latest_integrated_reader_regression": {
     "passed": 140,
@@ -342,7 +360,7 @@
     "owner_unit_tests_passed": 35,
     "owner_parity_files": 21,
     "status": "owner PR open with normal auto-merge; consumers wait for verified landing",
-    "archive_input_readback": "one historical registry source recovered byte-identically from Git and storage, with receipt in owner problem record; benchmark semantics and original records unchanged"
+    "archive_input_readback": "Original registry bytes match Git, storage and recorded digest. Existing guarded archival verifier plus exact offline cache resolves the lookup; three existing archive controls pass. CI records job reports only the unrelated ongoing open record, which is preserved."
   },
   "consumer_native_diagnostics": {
     "cryptanalysis": {
