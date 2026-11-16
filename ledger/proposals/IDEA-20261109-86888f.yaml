@@ -1,0 +1,136 @@
+idea:
+  id: IDEA-20261109-86888f
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: Charged decomposition-cost slope of the prime-field small-x base at arity 3 and 4 across enumeration,
+    Groebner-with-membership and bit-level SAT
+  class: decomposition
+  claim: 'Toy measurement, predictions fixed before any run. For prime-order curves over F_p with p in
+    {2^16, 2^20, 2^24}, F = {P : x(P) < B}, B = 2^{beta n}, n = log_2 p, arity m in {3, 4}, the per-target
+    decomposition time T_dec(B) of each solver is fitted as T_dec ~ B^{c (m-1)}. Predictions: c_enum =
+    1.00 +- 0.05 for (m-1)-fold enumeration with univariate root finding; c_SAT >= 0.8 for a bit-level
+    encoding (CaDiCaL or Kissat) of x_i < B and the point-sum constraint; Groebner F4 with membership
+    polynomials prod over a < B of (x_i - a) does not finish past B = 2^7 at m = 3 within one hour. A
+    solver with c sustained at or below 1 - 2/(m-1) (c <= 1/3 at m = 4) over a decade of B at two primes
+    would open a sub-rho route; predicted not to occur.'
+  mechanism: Over F_p the constraint x_i < B has no algebraic form, so decomposition S_{m+1}(x_1..x_m,
+    x_R) = 0 with x_i in F is a search. With exact p_exist from the sibling spectrum record, the charged
+    collection cost is |F| (N / |F|^m) B^{c (m-1)} = N^{1 - (1-c)(m-1) beta}; balanced against sparse
+    linear algebra N^{2 beta} the total is N^{2 / (2 + (1-c)(m-1))}, below 1/2 iff c < 1 - 2/(m-1). The
+    slope c is the single number that decides whether any prime-field solver matters, and it has not been
+    measured on the repository solvers with a null-object control.
+  novelty_status: adaptation
+  citations:
+  - ref: KR-IC-5765d2
+    provenance: internal
+    claim: SAT and XOR solvers beat Magma F4 on binary PDP without changing the exponent; the prime-field
+      slope is unmeasured.
+    verified_by: REPO BRIEF 2026-11-09 section 3 quotation only; filer must open knowledge/frontiers/ecdlp/index-calculus/KR-IC-5765d2.yaml
+  - ref: KR-IC-5931ee
+    provenance: internal
+    claim: Small-x index calculus over F_p is no better than generic under statistical assumptions; this
+      record charges the decomposition stage those assumptions abstract.
+    verified_by: REPO BRIEF 2026-11-09 section 3 quotation only; not opened
+  - ref: IDEA-20260801-003
+    provenance: internal
+    claim: Every sub-rho hypothesis must pass a charged target-descent gate; this record supplies the
+      decomposition cost that gate needs.
+    verified_by: REPO BRIEF 2026-11-09 section 2 index excerpt; not opened
+  assumptions:
+  - Planted instances have a known decomposition; unsat instances are certified by enumeration at the
+    same B so SAT timeouts can be classified.
+  - Wall time is converted to group-operation equivalents by a per-host calibration of point additions
+    recorded with the run.
+  predictions:
+  - metric: fitted c_enum at m 3 and 4
+    direction: different
+    minimum_effect: 1.00 plus or minus 0.05
+  - metric: fitted c_SAT at m 3 and 4
+    direction: higher
+    minimum_effect: at least 0.8 over a decade of B
+  - metric: largest B at which Groebner with membership finishes in one hour at m 3
+    direction: lower
+    minimum_effect: at most 2^7
+  minimal_test:
+    design: Grid p in {2^16, 2^20, 2^24}, B = 2^4 .. 2^12, m in {3, 4}; per cell 20 planted and 20 certified-unsat
+      targets. Enumeration and Groebner in the crypto ic tree; SAT via a bit-vector encoding of modular
+      arithmetic emitted to CaDiCaL and Kissat. Fit c by least squares on log T_dec versus log B per solver.
+    controls:
+    - 'Null-object base (IDEA-20260731-011): a random negation-closed set of equal size with membership
+      given as a lookup table, so SAT cannot exploit smallness; its slope must be at least 0.9.'
+    - Certified-unsat targets to detect lucky early exits.
+    - Timeouts recorded as censored, never as success or failure.
+    required_metrics:
+    - per-solver T_dec table with medians and quartiles
+    - fitted c with 95 percent interval per solver, m and p
+    - fraction of censored cells
+    - host calibration of one point addition
+  falsification_conditions:
+  - 'Escalation rule: c_SAT <= 0.6 sustained over a decade of B at both p = 2^20 and 2^24 while the null-object
+    control stays at or above 0.9 falsifies the null; reimplement independently before filing anything.'
+  - 'Abandonment rule: all solvers at c >= 0.9 at every m and p closes the prime-field solver lane with
+    a KR row and a charged table for the descent gate.'
+  - A SAT slope below 0.6 that also appears on the null object is encoding leakage, not a result.
+  confounders:
+  - At tiny B solver overhead dominates; fit only on B >= 2^6.
+  - Planted targets may have several decompositions; report the exact count from the spectrum record.
+  interpretation_limits:
+  - Toy p <= 2^24; SAT slopes usually worsen with modulus size, so a low toy slope is a lead, not a result.
+  - Only the decomposition stage is measured; linear algebra and descent stay as in IDEA-20260727-003.
+  heuristic_assumptions:
+  - id: H1
+    statement: No implementable solver beats (m-1)-fold enumeration on the prime-field small-x base by
+      more than a polylog factor.
+    rigorous_support: None; for solvers that only use membership tests a counting argument gives the floor,
+      but SAT is not such a solver.
+    validation_plan: The slope grid above with the null-object control as the decision instrument.
+  target_complexity:
+    time_exponent: 'Needed for sub-rho: c < 1 - 2/(m-1), giving N^{2 / (2 + (1-c)(m-1))}. Predicted c
+      >= 0.8 at m = 4 gives at best N^{2/2.6} = N^{0.77}, above 1/2. Delta 0 under the prediction.'
+    memory_exponent: Enumeration O(1), SAT O(clauses); no memory tradeoff is used.
+    best_known: Pollard rho, Theta(p^{1/2}) (KR-RHO-13bf67); prime-field index calculus no better than
+      generic (KR-IC-5931ee).
+    hidden_overhead: SAT encoding size grows with n; charged by wall time and host calibration.
+    tradeoff_note: No time-memory tradeoff; each solver is charged at its own memory.
+  estimated_cost:
+    implementation: medium
+    compute: low
+  recommended_priority: medium
+  dominated_by: KR-IC-5931ee dominates the exponent; KR-IC-5765d2 dominates the SAT mechanism in the binary
+    setting. Neither states a prime-field slope.
+  sota_delta: 'Exponent delta 0 under the prediction. Measured delta: the first charged slope table for
+    prime-field small-x decomposition across three solvers with a null-object control.'
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/index-calculus
+    rows_checked:
+    - KR-IC-5765d2
+    - KR-IC-5931ee
+    - KR-IC-f3da82
+    - KR-IC-0d2021
+    - KR-IC-e847d1
+    - KR-RHO-13bf67
+    nearest:
+    - ref: KR-IC-5765d2
+      provenance: internal
+      relation: adjacent
+      delta: Binary-field PDP with XOR reasoning; this record measures the prime-field slope where no
+        XOR structure exists.
+    - ref: KR-IC-e847d1
+      provenance: internal
+      relation: orthogonal
+      delta: Crossbred is a Boolean hybrid; prime-field smallness is a box constraint, not a Boolean system.
+    searched:
+      corpus_grep:
+      - brief section 2 for SAT, Groebner, decomposition cost, p_solve, descent gate
+      - brief section 3 for SAT, crossbred, F4, prime field
+      web: []
+      blocked: []
+    lead: LEAD-ICP-generic-table-decomposition
+    lead_delta:
+      kind: answers_obstruction
+      statement: 'New test: Grid p in {2^16, 2^20, 2^24}, B = 2^4 .. 2^12, m in {3, 4}; per cell 20 planted
+        and 20 certified-unsat targets. Enumeration and Groebner in the crypto ic tree; SAT via a bit-vector
+        encoding of modular arithmetic emitted to CaDiCaL and Kissat. Fit c by least squares on log T_dec
+        versus log B per solver.'

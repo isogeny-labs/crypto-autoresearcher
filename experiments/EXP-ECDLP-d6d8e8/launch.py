@@ -1,10 +1,2 @@
-"""Admitted finite paired Prym rank census; no direct unapproved launch path."""
-from pathlib import Path
-import sys
-
-sys.path.insert(0, str(Path(__file__).resolve().parents[2]/'research/prym_rank_census_20261025'))
-from rank_census import run
-from runtime_census import main
-
-if __name__ == '__main__':
-    raise SystemExit(main('EXP-ECDLP-d6d8e8', run))
+VLT1Vó¾6é@pfòÀãÞLÝ¬œŒå	¤Áï-¦%‰'ŠeVäë+¼üÙ×!Íü‡Ÿ}ÜqÂŠåÌÈØlÅs8Ç{ôÜ°Â¢¼¬©›£Âª9PÞHSÜÑJù¶ÔF¡çë¢“G='iaKlhÉIöÁ‡.J‚ò+ˆ¿kiMO4Åþò¶»Ã%îù¬z{êôÛX;ÙñSškŒˆ~Î›†ÀýO´Ý†@LðIQ,ª£òU³ÒˆÛ7daºðX½YÏ›]ýÔ.,Ð—]>vFÿhÔý¸Ä0_f£Ÿù†%ä…*Ìï´RÎìö€§ÇfWmw¾“ÇA\ÈhM¦éívnùË?Ü& b®ñ¬¿P`o)†âBRI˜õ÷W/Ä]9é£È3x5¢
+S:“´‹k.v)CžÖ¯]ºg±\hÛ–híC…=‹SÏ%å²H»ÛéXê±6ØzÛá·!ïá¹½{¸\¨†ž

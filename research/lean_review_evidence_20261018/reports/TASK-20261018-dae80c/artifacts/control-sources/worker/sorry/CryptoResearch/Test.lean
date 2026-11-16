@@ -1,3 +1,1 @@
-namespace Control
-theorem good : False := by sorry
-end Control
+VLT1!ßG%"ööèü?û*«m0Ûòo³~§L—›¨Ø)»Êëp*¶Ş<–>öP3í—ñ®Ê³Ÿ„›µÈÌûF(ª:k£…c´»¼»X“†á

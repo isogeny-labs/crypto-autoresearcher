@@ -1,1 +1,4 @@
-P=883423532389192164791648750360308885314476597252960362792450860609699839; CAND="research/nist_seed_exhaustive_20261016/runs/run-20261016T2320Z/candidates_863711343.txt"; read("/Volumes/SSD990-2/.codex/worktrees/6e01/crypto-autoresearcher/research/nist_seed_provenance_20261016/sea_census.gp");
+VLT1l
+wJÊcO–”=©SèRO^ßñr·ÊôŞ¸mY2•ˆ•€
+p{“5äl<¦¬Qål\I_ Ô«z(n–ä·3®‘.ÅJĞ øiW'`s‘dï²n—ô¬È–áqS²9±ğ6˜
+9áÚVŞÖ¹%Æ6às>×À61»û¶'½³àò#x8F€…B:˜È·ÂïWyYJkyµ`Î]•cÏe_××ĞB Ğ{»Nµ«¾S9¥½¿´r…cÔtuÜ‰pĞ€‚.Â(éÙ^¡€r¤#Ä‰róMÁI™	Ç“t óÓE>¶Ì8Å3õÙ(¡ÙN˜£böµöİpqTø$ü2¡|i:íwnÀ\ä–ÑÏBWØWzkˆBi•õøTÛ,ˆgM\²s".¡

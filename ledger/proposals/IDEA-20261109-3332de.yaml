@@ -1,0 +1,137 @@
+idea:
+  id: IDEA-20261109-3332de
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: 'Hensel-digit coboundary f_H on E(F_p): exact cocycle law, hybrid Fourier spectrum against (k,
+    x(kP)), and a digit-box factor base null test'
+  class: representation
+  claim: 'Toy prime-order curves y^2 = x^3 + a x + b over F_p, p <= 2^14, N = #E prime, taken from crypto/docs/ECDLP_CALIBRATION_PRIMES.md.
+    Lift the same integers a, b to Z/p^2. For affine R = (x, y) with x, y in [0, p), the Hensel lift is
+    L(R) = (x, y + p*eta), eta = ((x^3 + a x + b - y^2)/p) * (2y)^{-1} mod p. Define f_H(R) = N^{-1} *
+    ( t([N] L(R)) / p ) mod p, where t = -x/y is the formal parameter on E_1(Z/p^2). Claim (exact): f_H(R
+    + S) - f_H(R) - f_H(S) equals the E_1-coordinate of L(R) + L(S) - L(R + S) for every pair, and f_H(-R)
+    = -f_H(R). Claim (predicted null): the hybrid sum H(a, b) = sum_{0<k<N} e_p(a f_H(kP)) e(bk/N) satisfies
+    max_{a != 0, b} |H(a,b)| <= 3 sqrt(N ln N) on every prime, and the digit-box base {x(R) < p^beta,
+    f_H(R) < p^gamma} has an m = 3 internal relation count within 3 sigma of a random symmetric set of
+    the same size. No ECDLP exponent changes under either outcome.'
+  mechanism: 0 -> F_p -> E(Z/p^2) -> E(F_p) -> 0 splits because p does not divide N, so the carry cocycle
+    of any fixed lift rule is a coboundary; f_H is the trivialising cochain, i.e. the E_1-coordinate of
+    L(R) - s(R) with s the torsion section. It costs O(log N) additions mod p^2 and is the one free, non-algebraic
+    F_p-valued function of a point in the p-adic lane (wave-1 lead 11 asked only for its algebraic degree).
+    A factor base cut by both x and f_H would be the first prime-field base not defined by one coordinate;
+    its relation supply is governed by the joint spectrum of (x, f_H) along the discrete-log line, which
+    this record measures.
+  novelty_status: speculative
+  citations:
+  - ref: KR-IC-cd159a
+    provenance: internal
+    claim: Lifting to characteristic zero fails for rank reasons. This record lifts one digit, to Z/p^2,
+      and asks a spectral question instead.
+    verified_by: REPO BRIEF section 3, index-calculus table
+  - ref: KR-IC-5931ee
+    provenance: internal
+    claim: Small-x factor bases over F_p do not beat generic methods. The digit-box base is a sub-base
+      of a small-x base.
+    verified_by: REPO BRIEF section 3, index-calculus table
+  - ref: KR-RHO-13bf67
+    provenance: internal
+    claim: Generic lower bound Omega(sqrt N); exponent delta here is 0.
+    verified_by: REPO BRIEF section 3, generic-rho table
+  assumptions:
+  - 'N is odd and prime, so no affine point has y = 0 and L is defined everywhere; the run recomputes
+    #E and aborts otherwise.'
+  - Integer representatives are fixed in [0, p); the carry depends on this.
+  predictions:
+  - metric: number of pairs (R, S) violating the cocycle identity
+    direction: lower
+    minimum_effect: exactly 0 on every prime
+  - metric: max_{a != 0, b} |H(a,b)| / sqrt(N ln N)
+    direction: lower
+    minimum_effect: below 3 on every prime (the null); above 3 on >= 3 primes is the positive signal
+  - metric: C_3(F_box) / E_rand[C_3] for beta = gamma = 1/2
+    direction: different
+    minimum_effect: within 3 sigma of 1 (the null); above 1 + 3 sigma on >= 3 primes is the positive signal
+  minimal_test:
+    design: 'For each of 20 calibration primes p <= 2^14 with prime N: enumerate k -> kP once; compute
+      f_H for all points mod p^2; verify the cocycle identity on 10^6 random pairs and f_H(-R) = -f_H(R)
+      on all points; compute H(a,b) exhaustively by one FFT over k per a (p <= 2^12 full matrix, 2^10
+      sampled a above that); build F_box at beta = gamma = 1/2 and count C_3 = #{(R,S) in F_box^2 : R
+      + S in F_box}.'
+    controls:
+    - Same matrix for x(kP) (the barriers-wave hybrid-sum instrument), same code path.
+    - 'Same matrix for a uniformly random odd function u: Z/N -> F_p.'
+    - Second lift rule (Teichmueller x, x^p = x mod p^2) to show f depends on the rule.
+    - C_3 for 200 random symmetric subsets of size |F_box|, mean and sigma.
+    required_metrics:
+    - p, N, |F_box|
+    - cocycle violations
+    - max |H| / sqrt(N ln N) for f_H, x, and u
+    - C_3(F_box), E_rand[C_3], sigma
+  falsification_conditions:
+  - 'Any cocycle violation: implementation is wrong, run invalid.'
+  - 'max |H| for f_H exceeds the random control by a factor > 2 on >= 3 primes: the null dies and the
+    lead escalates.'
+  - 'C_3 ratio above 1 + 3 sigma on >= 3 primes: the null dies.'
+  - A timeout is infrastructure, not evidence.
+  confounders:
+  - Small N inflates sqrt(N ln N) fluctuations; the random control calibrates this.
+  - The low-frequency rows (a small) of H are the only ones a factor base can use; report them separately.
+  interpretation_limits:
+  - A null at p <= 2^14 is scoped to these primes and this lift rule.
+  - A positive signal is a count, not an algorithm; the exponent stays 1/2 until a charged descent exists
+    (IDEA-20260801-003).
+  heuristic_assumptions:
+  - id: H1
+    statement: 'f_H behaves like a random odd F_p-valued function along the discrete-log line: its hybrid
+      sums are O(sqrt(N ln N)).'
+    rigorous_support: f_H is a carry of integer cubes; Weyl equidistribution of fractional parts of x^3/p
+      is the heuristic basis. No Weil bound applies because f_H is not an algebraic function on E.
+    validation_plan: The exhaustive matrix above, with the random control.
+  target_complexity:
+    time_exponent: p^{1/2} unchanged
+    memory_exponent: O(N) for the toy log table only
+    best_known: Pollard rho, Theta(p^{1/2}) group operations (KR-RHO-13bf67).
+    hidden_overhead: f_H costs O(log N) additions mod p^2 per point; charged in any later base.
+    tradeoff_note: Delta 0; this is a discriminating measurement.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  dominated_by: KR-RHO-13bf67 dominates any exponent reading. KR-IC-5931ee dominates the small-x base;
+    neither row measures a second-digit coordinate.
+  sota_delta: 'Exponent delta 0. New object: the exact cocycle law of a p-adic digit and its spectrum
+    along the discrete-log line.'
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/index-calculus
+    rows_checked:
+    - KR-IC-cd159a
+    - KR-IC-5931ee
+    - KR-IC-5a43e5
+    - KR-IC-73db3f
+    - KR-RHO-13bf67
+    - KR-RHO-53c89f
+    nearest:
+    - ref: KR-IC-cd159a
+      provenance: internal
+      relation: adjacent
+      delta: Xedni lifts to Q and needs rank; this lifts one digit and needs spectrum.
+    - ref: KR-IC-5931ee
+      provenance: internal
+      relation: adjacent
+      delta: Small-x bases are closed; a base cut by (x, f_H) is not in the row.
+    searched:
+      corpus_grep:
+      - REPO BRIEF wave-1 p-adic leads (Witt digit lead 11) and barriers hybrid-sum record
+      - REPO BRIEF ledger index for Hensel, Witt, carry, digit
+      web: []
+      blocked: []
+    lead: LEAD-ICB-cofactor-projected-ladder-base
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: For each of 20 calibration primes p <= 2^14 with prime N: enumerate k -> kP
+        once; compute f_H for all points mod p^2; verify the cocycle identity on 10^6 random pairs and
+        f_H(-R) = -f_H(R) on all points; compute H(a,b) exhaustively by one FFT over k per a (p <= 2^12
+        full matrix, 2^10 sampled a above that); build F_box at beta = gamma = 1/2 and count C_3 = #{(R,S)
+        in F_box^2 : R + S in F_box}.'
