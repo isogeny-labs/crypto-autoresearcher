@@ -1,0 +1,156 @@
+idea:
+  id: IDEA-20261109-1f0581
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: Cross-characteristic CM mirrors of E(F_p) through the global module E~[n] are F_N^*-torsors,
+    and fixing one identification is ECDLP-complete
+  class: barrier
+  claim: 'Let E/F_p be a prime-order j = 0 curve with p = 1 mod 3, End(E) = Z[w] = O_K, K = Q(w), Frobenius
+    pi in O_K, N = Nm(pi - 1), n = (pi - 1), and let E~/K be the CM lift y^2 = x^3 + b_0 (b_0 = 7 for
+    secp256k1). (i) E~[n] is a free O_K/n = F_N module of rank 1; L = K(E~[n]) is abelian over K with
+    Gal(L/K) = F_N^* acting by scalars, so [L:K] = N-1 and the Weber-function subfield K_n has degree
+    (N-1)/6. (ii) The prime p_K = (pi) splits completely in L because pi = 1 mod n; reduction at each
+    of the N-1 primes above it is an O_K-module isomorphism E~[n] -> E(F_p), and the N-1 choices differ
+    by F_N^*. (iii) For every prime element alpha in 1 + n with q = Nm(alpha), the reduction E~_alpha/F_q
+    has N | #E~_alpha(F_q) = Nm(alpha - 1), Frobenius eigenvalues (1, q) on E~_alpha[N], and embedding
+    degree ord_N(q), which is 1 exactly when alpha = 1 mod N (then q >= N^2). (iv) Every composite identification
+    E(F_p) -> E~_alpha(F_q)[N] is a group isomorphism determined by a pair of primes (P_L, Q_L) of L only
+    up to F_N^*; the (N-1)^2 pairs induce each scalar exactly N-1 times. Hence the identification set
+    is an F_N^*-torsor on which nothing computable from (p, q, E~) is distinguished; choosing one is choosing
+    a Frobenius lift of p_K in a degree N-1 field, and is equivalent to the ECDLP on E. The mirror moves
+    no exponent.'
+  mechanism: 'Main theorem of complex multiplication: Frob at a degree-one prime (beta) of K acts on E~[n]
+    as multiplication by the Groessencharacter value, a generator of (beta) with fixed residue; for (pi)
+    that value is pi = 1 mod n, so p splits completely in L and the eigenline L_1 = E(F_p) is the reduction
+    of E~[n]. Galois conjugate primes give conjugate reductions, which differ by the F_N^* action. The
+    same argument at an inert q (supersingular reduction) lands in E~_q(F_{q^2}) with the same torsor.
+    If an identification phi were computable, k = log_{phi(P)} phi(Q) in E~_alpha(F_q)[N], solvable by
+    Tate pairing into F_q^* when q = 1 mod N; conversely k fixes phi up to the Aut ambiguity, so the two
+    problems are equivalent.'
+  novelty_status: adaptation
+  citations:
+  - ref: KR-RHO-53c89f
+    provenance: internal
+    claim: Transfers apply only to special curves. Here the mirror curve is special by construction and
+      the transfer is the obstruction.
+    verified_by: brief section 3 generic-rho table, row KR-RHO-53c89f
+  - ref: KR-RHO-755e35
+    provenance: internal
+    claim: Isogenous curves over one field are equally hard. This record crosses characteristic through
+      the global CM module instead.
+    verified_by: brief section 3 generic-rho table, row KR-RHO-755e35
+  - ref: KR-IC-cd159a
+    provenance: internal
+    claim: Lifting to characteristic zero fails for xedni. The torsion lift here is exact but its reduction
+      choice is the discrete log.
+    verified_by: brief section 3 index-calculus table, row KR-IC-cd159a
+  assumptions:
+  - p is a prime of good reduction of E~ (p not in {2, 3, 7} for b_0 = 7).
+  - E(F_p) has prime order N, so p does not divide N and p is not 1 mod N.
+  - Statement (i) uses class number one of K; for non-CM curves the same torsor argument holds with a
+    GL_2-type Galois group and is not filed.
+  predictions:
+  - metric: number of times each scalar u in F_N^* is induced by the (N-1)^2 pairs of primes above p and
+      q in L
+    direction: equal
+    minimum_effect: exactly N-1 for every u, zero deviation
+  - metric: degree of L over K
+    direction: equal
+    minimum_effect: N-1 exactly, with the Weber subfield of degree (N-1)/6
+  - metric: number of primes of L above p_K
+    direction: equal
+    minimum_effect: N-1 primes of residue degree 1
+  minimal_test:
+    design: 'Sage or PARI at p <= 400, p = 1 mod 3. Pick b with #E_b(F_p) = N prime among the six sextic
+      twists. Compute pi from t by Cornacchia, n = (pi - 1). Factor the N-division polynomial of y^2 =
+      x^3 + b over K, keep the factor of degree (N-1)/2 whose roots are x of n-torsion points, build its
+      splitting field L, check Gal(L/K) = F_N^*. Factor p_K and a mirror prime alpha = 1 + (pi - 1) gamma
+      with small gamma in L; reduce one fixed n-torsion point modulo every prime above each and tabulate
+      the induced scalars. Separately find one alpha = 1 mod N, verify q = 1 mod N, and solve the mirror
+      DLP by Tate pairing plus ca_indexcalc in F_q^* for q < 2^63.'
+    controls:
+    - 'A random curve E''/F_q with N | #E''(F_q) unrelated to E~; its identification set with E(F_p) is
+      also a full torsor, so the mirror must show no extra structure beyond this control.'
+    - The scalar table for the Weber subfield K_n must collapse to F_N^*/mu_6 classes, each hit 6(N-1)
+      times.
+    required_metrics:
+    - degree of L and of K_n
+    - splitting type of p_K and of each alpha in L
+    - histogram of induced scalars over all prime pairs
+    - embedding degree ord_N(q) for each mirror prime found
+    - wall time of the mirror DLP once an identification is fixed
+  falsification_conditions:
+  - Some quantity computable from (p, q, E~) without L singles out one identification, i.e. the scalar
+    histogram is not uniform.
+  - L has degree smaller than N-1 for a toy satisfying the assumptions.
+  - A mirror prime alpha in 1 + n with N not dividing
+  - A timeout of the splitting-field computation is infrastructure, not evidence.
+  confounders:
+  - The mu_6 automorphism ambiguity merges scalars into classes of six; report both the full and the Weber-level
+    tables.
+  - Toy N is small enough that L is computable; the theorem does not depend on N.
+  interpretation_limits:
+  - This certifies a theorem at toy size; it says nothing about non-CM curves and nothing about the cost
+    of the mirror DLP itself, which is irrelevant once the torsor is shown.
+  heuristic_assumptions:
+  - id: H1
+    statement: The induced identifications form a full F_N^*-torsor with no distinguished element.
+    rigorous_support: Main theorem of CM plus Chebotarev on L; the Galois action on the primes above p_K
+      is simply transitive.
+    validation_plan: Exhaustive scalar table at p <= 400 as in minimal_test.
+  - id: H2
+    statement: No algorithm computes a Frobenius lift of p_K in L below N^{1/2} operations.
+    rigorous_support: Equivalent to ECDLP by claim (iv); inherits KR-RHO-13bf67 only in the generic model.
+    validation_plan: None beyond the reduction; any such algorithm is itself a claimed break and must
+      enter through the descent gate IDEA-20260801-003.
+  target_complexity:
+    time_exponent: N^{1/2} unchanged, delta 0
+    memory_exponent: O(1) beyond the toy field computations
+    best_known: Pollard rho at 0.79 sqrt(6) sqrt(N) on j = 0 curves, KR-RHO-0528e7 and KR-RHO-13bf67
+    hidden_overhead: The identification step costs exactly one ECDLP; the mirror DLP is polynomial when
+      q = 1 mod N and irrelevant otherwise.
+    tradeoff_note: No time-memory tradeoff is defined by this record.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  dominated_by: KR-RHO-53c89f dominates the transfer reading; KR-RHO-755e35 the isogeny reading. Neither
+    states the cross-characteristic torsor or its ECDLP-completeness.
+  sota_delta: Exponent delta 0. New content is the exact torsor statement with the mirror-prime census
+    and the embedding-degree-1 subfamily at q >= N^2.
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/generic-rho
+    rows_checked:
+    - KR-RHO-53c89f
+    - KR-RHO-755e35
+    - KR-RHO-13bf67
+    - KR-IC-cd159a
+    - KR-IC-64659b
+    nearest:
+    - ref: KR-RHO-53c89f
+      provenance: internal
+      relation: adjacent
+      delta: The row lists transfers for special curves; this record shows every CM mirror is such a transfer
+        whose identification is the discrete log.
+    - ref: KR-IC-cd159a
+      provenance: internal
+      relation: adjacent
+      delta: Xedni lifts points to Q and fails on rank; the torsion lift here is exact and fails on the
+        choice of reduction prime.
+    searched:
+      corpus_grep:
+      - brief section 2 for CM transfer, mirror, ray class, Groessencharacter
+      - wave-2 torsion leads (Cross-field CM transfer, filed as lead only)
+      - wave-1 p-adic leads (canonical lift, torsion-section lift)
+      web: []
+      blocked: []
+    lead: LEAD-EXO-global-lift-height
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: Sage or PARI at p <= 400, p = 1 mod 3. Pick b with #E_b(F_p) = N prime among
+        the six sextic twists. Compute pi from t by Cornacchia, n = (pi - 1). Factor the N-division polynomial
+        of y^2 = x^3 + b over K, keep the factor of degree (N-1)/2 whose roots are x of n-torsion points,
+        build its splitting field L, check Gal(L/K) = F_N^*. Factor p_K and a mirror prime alpha = 1 +
+        (pi - 1) gamma with small g'

@@ -1,0 +1,175 @@
+{
+  "audit_inventory": {
+    "cell_records": 73236,
+    "claim_outcomes": {
+      "valid": 1380
+    },
+    "optional_transformation_id_presence": {
+      "transform_id:absent": 73236,
+      "transformation_id:absent": 73236,
+      "transformed_base_id:absent": 73236,
+      "transformed_target_id:absent": 73236
+    },
+    "scans": {
+      "experiments/EXP-ECDLP-356403/runs/RUN-ECDLP-52de64/execution/candidate/result/raw/decoder-cells.jsonl": {
+        "bytes": 864461632,
+        "malformed": 0,
+        "records": 73236,
+        "sha256": "26a9140433a31015c1dfbd608d4f6b92dfcb9cab367434158dce5d6a283f678d",
+        "status_census": {
+          "\"CAPPED_ERASURES\"": 88,
+          "\"EMPTY_INTERVAL\"": 15417,
+          "\"RECOVERED\"": 460,
+          "\"REJECTED_FINAL_VERIFICATION\"": 57227,
+          "\"UNDEFINED\"": 44
+        },
+        "tail": 0
+      },
+      "experiments/EXP-ECDLP-356403/runs/RUN-ECDLP-52de64/execution/candidate/result/raw/traces.jsonl": {
+        "bytes": 475561923,
+        "malformed": 0,
+        "nested_status_census": {
+          "draw.point_sampling.proposals.[].status": {
+            "ACCEPTED": 24576,
+            "REJECTED": 24536
+          },
+          "draw.point_sampling.status": {
+            "ACCEPTED": 24576
+          },
+          "incremental.predicate_trace.[].answer.status": {
+            "BIT": 170592,
+            "UNDEFINED": 46
+          },
+          "incremental.status": {
+            "EMPTY_INTERVAL": 7688,
+            "RECOVERED": 7,
+            "REJECTED_FINAL_VERIFICATION": 4467,
+            "UNDEFINED": 44
+          },
+          "original.predicate_trace.[].answer.status": {
+            "BIT": 514567,
+            "UNDEFINED": 135
+          },
+          "original.status": {
+            "EMPTY_INTERVAL": 22613,
+            "RECOVERED": 15,
+            "REJECTED_FINAL_VERIFICATION": 14021,
+            "UNDEFINED": 133
+          }
+        },
+        "records": 36782,
+        "sha256": "7906898e9eb0f7f3a7b407f5a301250ee3c4822ac61beabe1198be1147b62110",
+        "status_census": {
+          "<MISSING_OPTIONAL_STATUS>": 36782
+        },
+        "tail": 0
+      }
+    },
+    "scope": "All explicit claims in the exact retained R52 prefix, post hoc; dependent fields are not independent samples; no recovery denominator/rate or timing comparison.",
+    "word_records": 3042690,
+    "word_status_census": {
+      "\"EMPTY_INTERVAL\"": 1918389,
+      "\"RECOVERED\"": 460,
+      "\"REJECTED_FINAL_VERIFICATION\"": 1123841
+    }
+  },
+  "counts": [
+    [
+      "Native parent trials",
+      "1 requested; 1 output_validated; 0 failed; 0 timed out"
+    ],
+    [
+      "Reference certificates",
+      "1536 per pass; 1,536 distinct public targets"
+    ],
+    [
+      "Domains",
+      "48 checked; 24 target-bearing; 64 targets each"
+    ],
+    [
+      "Original equation checks",
+      "3072; same targets checked in both passes"
+    ],
+    [
+      "Known-scalar positive checks",
+      "384"
+    ],
+    [
+      "Reference mutation rejections",
+      "3072"
+    ],
+    [
+      "Status guard controls",
+      "23 registered enum positives; 54 malformed/unknown negatives; all passed"
+    ],
+    [
+      "Frozen candidate coverage",
+      "36782 traces; 73236 cells; 3042690 words"
+    ],
+    [
+      "Accepted candidate claim events",
+      "1380 dependent field events; 460 claimed cells"
+    ],
+    [
+      "Distinct candidate witnesses",
+      "160 curve-target-scalar tuples; 0 field disagreements"
+    ]
+  ],
+  "derived_inventory_lengths": {
+    "all_cell_contexts": 73236,
+    "all_trace_contexts": 36782,
+    "claimed_cells": 460,
+    "distinct_curve_target_scalar": 160,
+    "field_disagreements": 0
+  },
+  "editable_typst_source": "#set page(paper: \"a4\", margin: 15mm)\n#set text(font: \"DejaVu Sans\", size: 9pt)\n#set par(leading: .45em)\n#text(size: 17pt, weight: \"bold\")[Complete classical reference validation]\n#linebreak()\nEXP-ECDLP-ca93ac / RUN-ECDLP-fc6e86 / GOAL-ECDLP-e70832\n#image(\"diagram.svg\", width: 100%)\n#table(columns: (1.2fr,2.4fr), inset: 4pt, stroke: .4pt + luma(190),\n[Native parent trials], [1 requested; 1 output_validated; 0 failed; 0 timed out],\n[Reference certificates], [1536 per pass; 1,536 distinct public targets],\n[Domains], [48 checked; 24 target-bearing; 64 targets each],\n[Original equation checks], [3072; same targets checked in both passes],\n[Known-scalar positive checks], [384],\n[Reference mutation rejections], [3072],\n[Status guard controls], [23 registered enum positives; 54 malformed/unknown negatives; all passed],\n[Frozen candidate coverage], [36782 traces; 73236 cells; 3042690 words],\n[Accepted candidate claim events], [1380 dependent field events; 460 claimed cells],\n[Distinct candidate witnesses], [160 curve-target-scalar tuples; 0 field disagreements])\n\nBoth 1,536-target passes have identical certificate bytes. Independent original-equation, known-scalar, mutation and status-schema controls passed. The complete frozen prefix was scanned with exact full-payload hashes, no malformed records or partial tails. The reference proof was sealed before candidate files were opened.\n\nThe 1,380 claim events are dependent word/scalar/array views; 160 distinct tuples are an inventory, not independent samples. The candidate production prefix is incomplete. No recovery-rate denominator, performance advantage or scaling estimate follows. Classical reference: HAC 3.56; independent Jacobian checker from SEC 1 formulas.\n\nNative driver/checker/outer exits 0; actual outer elapsed 41.013711seconds is unqualified operational telemetry. Same allocated shared workspace, 2 CPU / 4 GiB, no clock or counter comparison. Source fe720d01; launch 51bae157. Full hashes/commands, input bindings and limitations are in report.md and observations.json. Native receipt 54265d5e...1381cb; audit logical SHA 4a62c16f...34f3e6. Data stored with uncached fullGET verification, native receipt unchanged.\n\nThe initial sparse-profile entry refusal preceded any trial. Prescribed materialization and checkpointgate succeeded before this one physical parent. All adverse source reviews remain preserved. Trusted PCC execution standing remains unverified. Next: independent result review, then a separately frozen matched comparison and independently sampled cohort. [pcc:unverified]\n",
+  "experiment_id": "EXP-ECDLP-ca93ac",
+  "graph_data": "passes exact canonical_public_certificates, one shared cohort; no uncertainty sampling",
+  "native_receipt_sha256": "54265d5e19190556f94a3e72d1f23cec5cceff56fd64a32b3a5577d5db1381cb",
+  "operational_outer_elapsed_seconds": 41.0137111869999,
+  "passes": [
+    {
+      "canonical_public_certificates": 1536,
+      "domains": 48,
+      "label": "A"
+    },
+    {
+      "canonical_public_certificates": 1536,
+      "domains": 48,
+      "label": "B"
+    }
+  ],
+  "pcc": "unverified",
+  "performance_measurements_admitted": false,
+  "renderer_python_source": "from pathlib import Path\nimport json,hashlib,subprocess,sys,os,html\nR=Path('/tmp/classical-ecdlp-validation-20261106');sys.path.insert(0,str(R))\nfrom tools.experiment_protocol import export_skeleton,run_row,compute_flow,schema_errors,lint_export\nimport typst\nE=R/'experiments/EXP-ECDLP-ca93ac';D=E/'runs/RUN-ECDLP-fc6e86';O=E/'reports/run-RUN-ECDLP-fc6e86';O.mkdir(parents=True,exist_ok=False)\nx=json.loads(Path('/tmp/ecd-next-science-20261106/actual-postrun-metadata.json').read_text());p=json.loads((E/'protocol.json').read_text());a=json.loads((E/'analysis/export-adapter.json').read_text());n=x['native_receipt'];s=x['summary'];proof=x['proof_inventory'];workers=x['worker_processes']['processes'];assert n['status']=='output_validated' and n['returncode']==n['check_returncode']==0\nsha=lambda raw:hashlib.sha256(raw).hexdigest()\ndef entry(path,kind='raw'):\n data=path.read_bytes();return {'path':os.path.relpath(path,E),'sha256':sha(data),'bytes':len(data),'kind':kind}\ne=export_skeleton(p,'protocol.json','local','EXPORT-ECDLP-ca93ac-fc6e86');e['producer'].update(runtime='codex',model=None,session='root_20261106',role='executor');e['source'].update(commit=n['authority']['commit'],dirty=False)\ne['host']['path']='runs/RUN-ECDLP-fc6e86/environment.json';e['host']['sha256']=sha((D/'environment.json').read_bytes());h=x['worker_processes']['host'];e['host']['summary'].update(logical_cpus=h['logical_cpus'],kernel=h['kernel'])\nfor arm in e['arms']:\n instrument=next(v for v in p['arms'] if v['id']==arm['id'])['instrument'];arm['commit']=instrument['commit'];arm['binary_sha256']=instrument['binary_sha256']\nfor mapping,counts in zip(a['row_map'],x['passes']):\n w=next(v for v in workers if v['label']==mapping['worker_label']);assert w['wait_returned'] and w['returncode']==0 and counts['label']==w['label']\n cert=D/mapping['certificate_file'];assert sha(cert.read_bytes())==n['artifact_sha256'][cert.name]\n row=run_row(run_id=mapping['logical_export_run_id'],arm=mapping['arm'],instance_id=mapping['instance_id'],replicate=mapping['replicate'],seed=mapping['seed'],status='succeeded',measurements={'counted':{'canonical_public_certificates':counts['canonical_public_certificates'],'aa_integrity':int(s['AA_equal'] and s['all_controls_passed'])},'wall_valid':False},verification={'status':'verified','verifier':'independent Jacobian verifier; exact reference-verification.json; PCC standing unverified'},worker=str(w['pid']),backend_ref='RUN-ECDLP-fc6e86/'+w['label'],started_at=w['started_at'],finished_at=w['finished_at'],artifacts=[entry(cert)])\n e['runs'].append(row)\ne['flow']=compute_flow(e['runs']);e['analysis']['script']=entry(R/'harness/classical_ecdlp_public_reference_audit_v4/verify.py','analysis');e['analysis']['outputs']=[entry(D/f,'analysis') for f in ('reference-verification.json','candidate-audit.json.gz.blob.json','verification-summary.json')];e['files']=[entry(f,'receipt' if f.name=='execution-receipt.json' else 'raw') for f in sorted(D.iterdir()) if f.is_file() and f.name!='candidate-audit.json.gz'];e['notes']=[{'kind':'observation','by':'root_20261106','text':'One native parent; two logical export rows identify actual A/B solver children, not extra native trials. Both read the same1536 targets. Shared candidate-audit classification is linked once through analysis outputs, not duplicated as independent row counts. All clocks/counters/performance fields are unqualified/null.'},{'kind':'observation','by':'root_20261106','text':'Independent checker classified1380 retained dependent claim events as valid, representing160 distinct curve-target-scalar tuples;0field disagreements. This is the frozen partial R52 candidate prefix, not a completed candidate cohort or recovery-rate denominator. Formal PCC standing remains unverified.'}]\nf=schema_errors(e,'experiment.export/v1')+lint_export(e,p,E,True);assert not f,f\n(E/'export.json').write_text(json.dumps(e,indent=2,sort_keys=True)+'\\n')\ncmd=[sys.executable,'-B',str(R/'tools/experiment_protocol.py'),'check-export',str(E/'export.json'),'--protocol',str(E/'protocol.json'),'--verify-files'];c=subprocess.run(cmd,cwd=R,capture_output=True,text=True);(E/'export.validation.json').write_text(json.dumps({'schema':'actual.experiment.export.check/v1','argv':cmd,'returncode':c.returncode,'stdout':c.stdout,'stderr':c.stderr,'export_sha256':sha((E/'export.json').read_bytes()),'logical_native_binding':'native receipt + existing gzip bytes/SHA + identity pointer and uncached full S3 GET proof; no sealed member modified'},indent=2)+'\\n');assert c.returncode==0,c.stdout+c.stderr\nmetrics=[('Native parent trials','1 requested;1 output_validated;0 failed;0 timed out'),('Reference certificates','1536 per pass;1536 distinct public targets'),('Domains','48 checked;24 target-bearing;64 targets each'),('Original equation checks',str(proof['original_equations_checked'])+';same targets checked in both passes'),('Known-scalar positive checks',str(proof['known_scalar_positive_checks'])),('Reference mutation rejections',str(proof['mutation_rejections'])),('Status guard controls','23 registered enum positives;54 malformed/unknown negatives;all passed'),('Frozen candidate coverage','36782 traces;73236 cells;3042690 words'),('Accepted candidate claim events','1380 dependent field events;460 claimed cells'),('Distinct candidate witnesses','160 curve-target-scalar tuples;0 field disagreements')]\nbars=''.join(f'<rect x=\"{160+i*360}\" y=\"85\" width=\"230\" height=\"150\" fill=\"{color}\"/><text x=\"{275+i*360}\" y=\"70\" text-anchor=\"middle\" font-size=\"25\">{row[\"canonical_public_certificates\"]}</text><text x=\"{275+i*360}\" y=\"263\" text-anchor=\"middle\" font-size=\"20\">Fresh pass {row[\"label\"]}</text>' for i,(row,color) in enumerate(zip(x['passes'],('#286eaa','#278274'))))\nsvg='<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"1000\" height=\"340\"><rect width=\"1000\" height=\"340\" fill=\"#f4f7fa\"/><g font-family=\"DejaVu Sans,sans-serif\" fill=\"#203047\"><text x=\"28\" y=\"30\" font-size=\"23\" font-weight=\"bold\">Canonical public certificates accepted by the independent checker</text>'+bars+'<text x=\"28\" y=\"300\" font-size=\"17\">RUN-ECDLP-fc6e86; one fixed1536-target cohort, repeated A/A. Unit: certificates.</text><text x=\"28\" y=\"325\" font-size=\"17\">Deterministic exact inventories; these passes are not independent population samples.</text></g></svg>'\n(O/'diagram.svg').write_text(svg)\nouter=json.loads(Path('/tmp/ecd-next-science-20261106/scientific-outer-after-materialization.json').read_text());notes='''The independent Jacobian checker accepted both complete public reference inventories before opening either candidate JSONL file. All retained claim fields were classified; all unclaimed/negative cells remain represented. The1380 accepted events are dependent word/scalar/array views and reduce to160 distinct tuples. Repeated fields and A/A passes are not independent scientific samples. The R52 prefix is incomplete candidate production: missing future work is not a failure or success measurement. No candidate recovery rate is inferred.\n\nThis finite classical BSGS reference search follows HAC Algorithm3.56 and SEC1v2 prime-field laws. It establishes a correctness reference for the existing candidate lead. Source corrections and all adverse reviews are preserved; none is a mathematical verdict on that lead. Matched isolated performance comparison, larger independently sampled cohorts, and trusted PCC execution standing remain separate requirements. The native receipt is output_validated; formal PCC standing is unverified.\n\nThe initial entry was refused before any run directory existed because the sparse checkout excluded this experiment's run paths. The prescribed sparse_checkout add --experiment command resolved that administrative condition, and checkpoint gate passed before the sole physical trial. No scientific retry, new nonce, new cohort or resumed clock occurred.\n'''\nreport='# Complete classical reference and frozen candidate-claim validation\\n\\nEXP-ECDLP-ca93ac / RUN-ECDLP-fc6e86 / H-ECDLP-6674c9 / GOAL-ECDLP-e70832\\n\\n'+ '\\n'.join('- '+k+': '+v for k,v in metrics)+'\\n\\n'+notes+'\\nSource commitfe720d01b9ded5cd8325b08afa80a4d444ccbf76; launch commit'+n['authority']['commit']+'; clean launch. Native driver/checker/outer exit0. Exact command: '+(D/'command.txt').read_text().strip()+'\\n\\nOperational outer elapsed '+str(outer['elapsed_seconds'])+'seconds; checker CPU '+str(s['operational_cpu_ledger']['checker_and_reaped_helpers_cpu_seconds'])+'seconds; prior driver charge '+str(s['operational_cpu_ledger']['prior_driver_charge_seconds'])+'seconds. These are unqualified operational telemetry, not performance measurements. Memory4GiB and CPU2 limits; shared provided workspace, no host isolation claim. Exact OS/version/source identity: runs/RUN-ECDLP-fc6e86/environment.json and worker-processes.json.\\n\\nEvidence: runs/RUN-ECDLP-fc6e86/execution-receipt.json, reference-verification.json, candidate-audit.json.gz.blob.json, verification-summary.json; export.json and export.validation.json. Native receiptSHA '+x['native_receipt_sha256']+'. Candidate logicalcontentSHA4a62c16fbcd0dee1b7f71b707b41a00d1aaa56a7da4cd3579a705222e334f3e6; stored gzipSHA3a202beeb0342f727060958013974118f3e10db8e388b483092916cbc2ae709c. Full uncached S3GET publication proof retained by root; hydrated gzip unchanged. No canonical research graph changes from this descriptive run report. [pcc:unverified]\\n'\n(O/'report.md').write_text(report)\ntable=',\\n'.join('['+k+'], ['+v+']' for k,v in metrics)\ntyp='''#set page(paper: \"a4\", margin: 15mm)\n#set text(font: \"DejaVu Sans\", size: 9pt)\n#set par(leading: .45em)\n#text(size: 17pt, weight: \"bold\")[Complete classical reference validation]\n#linebreak()\nEXP-ECDLP-ca93ac / RUN-ECDLP-fc6e86 / GOAL-ECDLP-e70832\n#image(\"diagram.svg\", width: 100%)\n#table(columns: (1.2fr,2.4fr), inset: 4pt, stroke: .4pt + luma(190),\n'''+table+''')\n\nBoth1536-target passes have identical certificate bytes. Independent original-equation, known-scalar, mutation and status-schema controls passed. The complete frozen prefix was scanned with exact full-payload hashes, no malformed records or partial tails. The reference proof was sealed before candidate files were opened.\n\nThe1380 claim events are dependent word/scalar/array views;160 distinct tuples are an inventory, not independent samples. The candidate production prefix is incomplete. No recovery-rate denominator, performance advantage or scaling estimate follows. Classical reference: HAC3.56; independent Jacobian checker from SEC1 formulas.\n\nNative driver/checker/outer exits0; actual outer elapsed '''+str(round(outer['elapsed_seconds'],6))+'''seconds is unqualified operational telemetry. Same allocated shared workspace,2CPU/4GiB, no clock or counter comparison. Sourcefe720d01; launch51bae157. Full hashes/commands, input bindings and limitations are in report.md and observations.json. Native receipt54265d5e...1381cb; audit logicalSHA4a62c16f...34f3e6. Data stored with uncached fullGET verification, native receipt unchanged.\n\nThe initial sparse-profile entry refusal preceded any trial. Prescribed materialization and checkpointgate succeeded before this one physical parent. All adverse source reviews remain preserved. Trusted PCC execution standing remains unverified. Next: independent result review, then a separately frozen matched comparison and independently sampled cohort. [pcc:unverified]\n'''\nobs={'schema':'classical.ecdlp.descriptive-run-observations/v1','experiment_id':'EXP-ECDLP-ca93ac','run_id':'RUN-ECDLP-fc6e86','source':'Exact native outputs and postrun metadata, no rerun or new scientific calculation','native_receipt_sha256':x['native_receipt_sha256'],'counts':metrics,'passes':x['passes'],'audit_inventory':x['audit_inventory'],'derived_inventory_lengths':x['derived_inventory_lengths'],'status_controls':x['status_guard_controls'],'operational_outer_elapsed_seconds':outer['elapsed_seconds'],'performance_measurements_admitted':False,'pcc':'unverified','editable_typst_source':typ,'renderer_python_source':Path(__file__).read_text(),'graph_data':'passes exact canonical_public_certificates, one shared cohort; no uncertainty sampling'}\n(O/'observations.json').write_text(json.dumps(obs,indent=2,sort_keys=True)+'\\n');t=Path('/tmp/ecd-next-science-20261106/run-report.typ');t.write_text(typ);typst.compile(typ.encode(),output=str(O/'report.pdf'),root=str(O));subprocess.run(['pdftoppm','-scale-to','1400','-png',str(O/'report.pdf'),'/tmp/ecd-next-science-20261106/report-view'],check=True)\nprint(json.dumps({'export_check':c.stdout,'report':str(O),'views':[str(z) for z in Path('/tmp/ecd-next-science-20261106').glob('report-view-*.png')]}))\n",
+  "rendering_text_corrections": {
+    "replacements": {
+      " fixed1536": " fixed 1,536",
+      "0field": "0 field",
+      "1370": "1370",
+      ";1536": "; 1,536",
+      "Both1536": "Both 1,536",
+      "HAC3.56": "HAC 3.56",
+      "SEC1 formulas": "SEC 1 formulas",
+      "Sourcefe720d01": "Source fe720d01",
+      "The1380": "The 1,380",
+      "currentcandidate": "current candidate",
+      "exit0": "exit 0",
+      "exits0": "exits 0",
+      "launch51bae157": "launch 51bae157",
+      "logicalSHA4a62": "logical SHA 4a62",
+      "receipt54265": "receipt 54265",
+      "sourcefe720": "source fe720",
+      "workspace,2CPU/4GiB": "workspace, 2 CPU / 4 GiB"
+    },
+    "semicolon_spacing": "Insert space after semicolon before ASCII letters/digits; presentation only"
+  },
+  "run_id": "RUN-ECDLP-fc6e86",
+  "schema": "classical.ecdlp.descriptive-run-observations/v1",
+  "source": "Exact native outputs and postrun metadata, no rerun or new scientific calculation",
+  "status_controls": {
+    "all_passed": true,
+    "negative_cases": 54,
+    "positive_enum_cases": 23
+  }
+}

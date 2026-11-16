@@ -1,4 +1,1 @@
-from pathlib import Path
-import typst
-p=Path(__file__).with_name("report.typ")
-typst.compile(str(p),output=str(p.with_suffix(".pdf")))
+VLT1‚,™ØŸ8<§¹ëb#â4VÖœ‡’6Œ {5\d·øøJëxò‚º.çB]ºsé’ÂUmáf	@±Û)y[öñštª©æOÿ•‡šN‰a>®ØÙv±œ„Öœ~è$¬d¡íi3'âJŒËÊL™·±åá³ˆğ^×†,v…öHRª±‡FöÚA¢ö

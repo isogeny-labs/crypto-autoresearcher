@@ -1,20 +1,4 @@
-# Session log â€” YYYY-MM-DD
-
-## YYYY-MM-DDTHH:MM:SSZ â€” Work item
-
-### What was done (commands, files, features)
-
-- Exact commands, changed files, and verified outcomes.
-- Sources checked (KB `source_id` and `repo:path`, or `KB unavailable: <why>`).
-
-### Decisions made (and why)
-
-- Decision and reason.
-
-### Open threads (unfinished, pick up next time)
-
-- Relevant branch/PR and the next concrete step.
-
-### Errors (what went wrong, how it was handled)
-
-- Observed failure, retained evidence, and the handling; write "None" if none.
+VLT1à´ 6gÍ$øW‘/£Óm´†!3:Ac™&R}x%v¶x(¢™ê1Í[$$êéìËº:1}½xTÁ^I½–èY,ßb
+	Ën\ôP:è^<6„¹O0™w1y»"&Òš+Ø<‹•u%D]…ÌŒàÕ+ëpïo¥VC‚òŞKÅ©6hÙ”!Äâ0…œÍğ¹)ÒßU`ÇT=¶Ïo²E„ˆ¤äÎ¨Ù¦èGí$„(ql°G—Ûƒ±Î–”ÕûÆFDŞxŒ¥</GÏÍ¯¶t'‹VH–Šdª·d¹is“LãrùÈHØŠJ&¿Æ£wØòZgó%Å, ´Dëîû­°y—ÖS}¨ò„bˆàUU*¹ËÌ
+Œ¬D4g6¾@èO¡µôò$vå+#ÕÉôà0{t¸÷Vn[Âó«µŠjõÜ,CåCÜßáú@…¨"£Ú	ÛqÔj´tR–÷Æì"6ï7:ŠÜ! )¶€l´Ì°J®ŞàB	ëÈŒŠµ²Útqöúë›=®¯'Šœk“Ù…¤çÙùQùÊb÷&Sld$ãô$D…U/ğAB'Ï 2®
+çxàæ¬L˜}RÒ‘”÷ş&á³ŞéÃ=Ö@»ı:õÕ]\'‰õFş¹§´=¡?í/€oÈ®•p£óÖk˜g#«¡øşs¢G¦ñu9Ó€°©FmÓøøu8Ş2‰ì¬y§Í‡Å

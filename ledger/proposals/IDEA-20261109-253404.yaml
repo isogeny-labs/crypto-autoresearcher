@@ -1,0 +1,108 @@
+idea:
+  id: IDEA-20261109-253404
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECC-5038da
+  title: Measured operation budget of the X25519 ladder, use of fe_sq, and specialisation of the four
+    public clamped bits and the fixed base u = 9
+  class: measurement
+  claim: 'The current ladder executes exactly 255 iterations of 10 fe_mul and 8 fe_add/fe_sub, then 1
+    fe_inv: 2550 fe_mul per scalar, of which 1020 are squarings and 255 are the a24 product, with one
+    secret-dependent branch per iteration. The comment "A24 = (486662 + 2)/4 = 121665" has a wrong quotient:
+    (A+2)/4 = 121666; the constant 121665 = (A-2)/4 is correct for the form Z_4 = E*(AA + 121665*E), and
+    121666 would pair with Z_4 = E*(BB + 121666*E). Proposed changes with exact counts. (i) fe_sq for
+    AA = (X_2+Z_2)^2, BB = (X_2-Z_2)^2, (DA+CB)^2, (DA-CB)^2: per bit 5M + 4S + 1c + 8a. (ii) Clamping
+    fixes b_254 = 1 and b_2 = b_1 = b_0 = 0; these are public. Initialise (R_0, R_1) = ((u:1), 2(u:1))
+    with AA = (u+1)^2, BB = (u-1)^2, E = AA - BB, X = AA*BB, Z = E*(AA + 121665*E) (2M + 2S + 1c); run
+    251 full steps for bits 253..3; apply the pending swap or select determined by b_3 once; then three
+    pure doublings X_4 = AA*BB, Z_4 = E*(AA + 121665*E) of R_0 (2M + 2S + 1c each). Total 251(5M+4S+1c)
+    + 4(2M+2S+1c) = 1263M + 1012S + 255c versus 1275M + 1020S + 255c, with 4 fewer secret-dependent swaps.
+    (iii) For x25519_base, u = 9: Z_5 = 9*(DA-CB)^2 computed as 8t + t (three field doublings and one
+    addition), so a full step is 4M + 4S + 2c and the scalar costs 1012M + 1012S + 251 c_9 + 255c. Exceptional
+    inputs are unchanged from RFC 7748: u = 0 drives the state to (0:0) and the output to 0 through fe_inv(0)
+    = 0; (X:0) is the point at infinity and doubles to itself; the twist is handled identically.'
+  mechanism: 'The counts follow by reading the loop body: fe_mul calls at aa, bb, da, cb, x3, dm_sq, z3,
+    x2, a24e, z2. Squarings are a different primitive in a fixed-radix layer and must be counted separately;
+    the campaign''s comparisons are stated in M, S, c and the repository currently hides 4S + 1c inside
+    5M-equivalents. Specialising public bits leaks nothing because the control flow depends only on the
+    clamping rule, not on the secret bits; the last three steps need only R_0 because the sum point is
+    never read again, and the first step from (O, P) to (P, 2P) is a doubling of the affine input. The
+    fixed-base constant replaces a generic multiply by a chain of additions, which is the same mechanism
+    that makes a24 cheap.'
+  novelty_status: unverified
+  citations:
+  - ref: src/ecc/x25519.rs ladder, a24, x25519_base (BRIEF excerpt)
+    provenance: internal
+    claim: Ten fe_mul per iteration, 255 iterations, branchy swap, comment arithmetic as quoted.
+    verified_by: this session, read from the BRIEF excerpt
+  - ref: src/ecc/curve25519.rs fe_sq (imported by ed25519.rs in the BRIEF excerpt)
+    provenance: internal
+    claim: A squaring primitive exists and is unused by x25519.rs.
+    verified_by: this session, read from the BRIEF excerpt import list
+  - ref: RFC 7748 section 5
+    provenance: recalled
+    claim: Pointer only; the clamping rule and the a24 = 121665 form.
+    verified_by: none; recalled pointer, not support
+  assumptions:
+  - Scalars reaching the specialised ladder are clamped; the generic path stays for anything else.
+  - fe_inv(0) = 0 (exponentiation inverse), which is what makes u = 0 return the all-zero string.
+  predictions:
+  - metric: fe_mul calls per x25519 (generic)
+    direction: lower
+    minimum_effect: from 2550 to 1263, with 1012 fe_sq and 255 constant multiplies reported separately
+  - metric: fe_mul calls per x25519_base
+    direction: lower
+    minimum_effect: to 1012
+  - metric: mismatches against the unspecialised ladder on 10^4 random clamped scalars and RFC vectors
+    direction: different
+    minimum_effect: exactly 0
+  minimal_test:
+    design: Wrap fe_mul, fe_sq and the constant multiply with counters; run the RFC 7748 section 5.2 vectors
+      and the 1 and 1000 iteration vectors through both ladders; run 10^4 random clamped scalars and u
+      in {0, 1, p-1, both order-8 values} and compare outputs; expose the specialised ladder to ecbench
+      and record the per-call counts.
+    controls:
+    - The unmodified ladder on identical inputs.
+    - 'Negative control: an unclamped scalar with b_0 = 1 fed to the specialised path must be rejected
+      or must mismatch, proving the specialisation is scoped.'
+    required_metrics:
+    - fe_mul, fe_sq, constant-multiply, fe_add counts per call
+    - mismatch count
+    - number of secret-dependent swaps per call
+  falsification_conditions:
+  - Any mismatch on a clamped scalar or an RFC vector.
+  - Counts differing from 1263M, 1012S, 255c for the generic path or 1012M for the base path.
+  - Infrastructure failures are not evidence.
+  confounders:
+  - BigUint timing is value-dependent; only counts are claimed, not wall time.
+  - The pending swap at bit 3 is secret-dependent and must remain masked.
+  interpretation_limits:
+  - A 1 percent saving in M and S; the value is the exact budget and the separated S and c counts the
+    campaign compares against.
+  - No ECDLP relevance.
+  heuristic_assumptions:
+  - id: H1
+    statement: Multiplication by 9 as 8t + t is cheaper than a generic M in the eventual field layer.
+    rigorous_support: Four additions versus a schoolbook product; holds in any limb representation.
+    validation_plan: Count operations in the fixed-radix layer.
+  target_complexity:
+    time_exponent: not an ECDLP claim
+    memory_exponent: O(1)
+    best_known: 255*(5M+4S+1c) + 1I
+    hidden_overhead: none; one extra code path for clamped scalars
+    tradeoff_note: specialisation applies to X25519 only, not to Ed25519 verification scalars
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  dominated_by: RFC 7748 on the per-bit formula (identical). Not dominated on the whole-scalar count for
+    clamped scalars (12M + 8S fewer) or for the fixed base (251 M replaced by additions).
+  sota_delta: 'Generic: 1275M+1020S+255c to 1263M+1012S+255c and four fewer masked swaps. Base: 1275M
+    to 1012M. Repository: 2550 fe_mul to 1263 fe_mul + 1012 fe_sq + 255 c, and a corrected constant comment.'
+  prior_art:
+    frontier_map: not_applicable
+    not_applicable_reason: Curve25519 explicit-formula campaign; no ECDLP mechanism is claimed.
+    none_found_after:
+    - 'BRIEF section 2 ledger records: none measure the x25519.rs ladder budget.'
+    - 'BRIEF section 1 code: counts read directly from the loop body.'

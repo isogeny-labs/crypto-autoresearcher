@@ -1,3 +1,2 @@
-# BATCH-032
-
-Mid-band LPF superseding freeze per DEC-20260803-14957d. Contract-gate only.
+VLT1ÍÉ+oañr´óm’_š~€«2ùx,fÁ#p•ˆTáÓúTÛ
+Õ‚?ífM¿ØŽ+ÑXÌ€Žùî¯îà©b67¨”¨ÞhŠæ_¤¶™ú¥ÔLðÁ¦ñ>g˜º(ÙÂ{Sc‘?H—]?l$ú{

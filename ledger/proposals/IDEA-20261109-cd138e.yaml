@@ -1,0 +1,126 @@
+idea:
+  id: IDEA-20261109-cd138e
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECC-5038da
+  title: Uniform Ed25519 scalar multiplication by a Montgomery ladder in Edwards (Y:Z) Hadamard coordinates
+    with inversion-free x-recovery into extended coordinates
+  class: algorithm
+  claim: 'Let P_1 = (x_1, y_1) be an affine Edwards25519 point with y_1 not in {1, -1}, u_1 = (1+y_1)/(1-y_1),
+    a24 = 121665, d = -121665/121666. Hold (Y_2:Z_2) = y(R_0), (Y_3:Z_3) = y(R_1), R_1 - R_0 = P_1, initialised
+    to (1:1), (y_1:1). Ladder step (after the bit-dependent select or swap of the two pairs): AA = Z_2^2,
+    BB = Y_2^2, E = AA - BB, U_4 = AA*BB, W_4 = E*(AA + a24*E), DA = Y_3*Z_2, CB = Z_3*Y_2, U_5 = (DA
+    + CB)^2, W_5 = u_1*(DA - CB)^2, (Y_4:Z_4) = (U_4 - W_4 : U_4 + W_4), (Y_5:Z_5) = (U_5 - W_5 : U_5
+    + W_5). Cost 5M + 4S + 1c + 8a per bit, identical to RFC 7748, with the Edwards y as state and no
+    conversion at entry or exit because (X_M : Z_M) = (Z_E + Y_E : Z_E - Y_E) makes the RFC Hadamard pair
+    (X_M + Z_M, X_M - Z_M) equal to (2Z_E, 2Y_E). After the last step, with (Y_2:Z_2) = y(kP_1), (Y_3:Z_3)
+    = y((k+1)P_1), N = Y_3*Z_2 - y_1*Y_2*Z_3, D_0 = Z_2*Z_3 + (d*y_1)*Y_2*Y_3, D = x_1*D_0, and kP_1 =
+    (N*Z_2 : Y_2*D : Z_2*D : N*Y_2) in extended coordinates: 11M + 2a, no inversion, no square root. D_0
+    is nonzero for every pair of curve points, so the composite is correct for every P_1 outside E[2]
+    and every k, including kP_1 = O and (k+1)P_1 = O. Whole-scalar cost for a 253-bit scalar is 253*(5M+4S+1c)
+    + 11M plus one inversion for u_1 (or +253M with the projective difference (1+y_1 : 1-y_1)), with an
+    operation sequence independent of k.'
+  mechanism: 'The recovery is the a = -1 addition law y_3 = (y_1 y_2 + x_1 x_2)/(1 - d x_1 x_2 y_1 y_2)
+    solved for the summand coordinate x_2 = (y_3 - y_1 y_2)/(x_1 (1 + d y_1 y_2 y_3)). Substituting the
+    law gives 1 + d y_1 y_2 y_3 = (1 + d y_1^2 y_2^2)/(1 - d x_1 x_2 y_1 y_2). The numerator vanishes
+    only if (y_1 y_2)^2 = -1/d, a non-residue because d is a non-square and -1 is a square mod p; the
+    denominator is the complete-law denominator, nonzero by BBJLP for a square and d non-square. So the
+    only exceptional input is x_1 = 0, i.e. P_1 in E[2], which the ladder already excludes (u_1 in {0,
+    infinity}). Edge cases: kP_1 = O gives y_3 = y_1 and N = 0; (k+1)P_1 = O gives y_2 = y_1, y_3 = 1
+    and x_2 = (1 - y_1^2)/(x_1 (1 + d y_1^2)) = -x_1 by the curve equation. The T-translation symmetry
+    acts as Y -> -Y on the ladder state; the step depends on Y_2 only through Y_2^2 and on (Y_2, Y_3)
+    through (Y_3 Z_2 +- Z_3 Y_2)^2, so it is invariant, which is why the Edwards y-line carries the ladder
+    without loss. No point at infinity exists in this chart for curve points (Z_E = 0 iff u = -1, a twist
+    value).'
+  novelty_status: unverified
+  citations:
+  - ref: src/ecc/ed25519.rs EdPoint::scalar_mul and EdPoint::add (BRIEF excerpt)
+    provenance: internal
+    claim: Current scalar multiplication is variable-time double-and-add, about 2650 fe_mul plus 1008
+      fe_sq for a 253-bit scalar, with scalar-dependent operation count.
+    verified_by: this session, read from the BRIEF excerpt
+  - ref: RFC 7748 section 5 ladder; Castryck-Galbraith-Farashahi 2008 mixed Edwards-Montgomery
+    provenance: recalled
+    claim: Pointer only. The y-only Edwards ladder direction is attributed to CGF 2008; the x-recovery
+      formula here is derived in this record.
+    verified_by: none; recalled pointer, not support
+  - ref: Bernstein-Birkner-Joye-Lange-Peters 2008, completeness of twisted Edwards addition
+    provenance: recalled
+    claim: Denominators never vanish when a is a square and d a non-square.
+    verified_by: none; recalled pointer, not support
+  assumptions:
+  - a = -1 is a square mod p and d = -121665/121666 is a non-square; checked by the script.
+  - P_1 is a decoded curve point with y_1 not in {1, -1}; the caller already rejects identity and small-order
+    points.
+  - Constant-time claims are algorithmic; the BigUint field layer is value-dependent and must be replaced
+    by a fixed-radix layer for a timing claim.
+  predictions:
+  - metric: number of fe_mul + fe_sq calls per 253-bit scalar multiplication
+    direction: lower
+    minimum_effect: from about 3650 to 2541 (253*10 + 11), and constant across scalars
+  - metric: mismatches against EdPoint::scalar_mul on 1000 random (k, P_1)
+    direction: different
+    minimum_effect: exactly 0
+  - metric: count of pairs with D_0 = 0 over all torsion and random pairs
+    direction: different
+    minimum_effect: exactly 0
+  minimal_test:
+    design: Implement ladder_edwards_y and recover_extended in ed25519.rs behind a counting wrapper for
+      fe_mul/fe_sq. Compare the extended output, after normalisation, with EdPoint::scalar_mul on 1000
+      random scalars in [0, L), on the clamped SHA-512 scalars of the RFC 8032 vectors, and on P_1 of
+      order 4, 8, L, 2L, 4L, 8L. Run scripts/sage/x25519_forms.sage edwards_recovery, which checks k*P_1
+      on the Weierstrass model.
+    controls:
+    - RFC 8032 section 7.1 signatures must still verify and reproduce.
+    - 'Negative control: P_1 with y_1 = -1 must produce the degenerate (0:0) Montgomery state, recorded,
+      not silently passed.'
+    - 'Hadamard identity: (Z_4 + Y_4 : Z_4 - Y_4) equals the RFC step output projectively on 1000 random
+      states.'
+    required_metrics:
+    - fe_mul count per scalar multiplication, min and max over scalars
+    - fe_sq count per scalar multiplication
+    - mismatch count against scalar_mul
+    - count of D_0 = 0 events
+    - exceptional inputs observed
+  falsification_conditions:
+  - Any mismatch with scalar_mul for y_1 not in {1, -1}.
+  - Any pair of curve points with D_0 = 0, or is_square(-1/d) true.
+  - Operation count varying with the scalar.
+  - A timeout or panic is infrastructure, not evidence.
+  confounders:
+  - 'Slot order: if the final state is (R_1, R_0) the recovery returns -x_2; the final select must restore
+    (R_0, R_1).'
+  - Normalisation when comparing extended coordinates must use one inversion on both sides.
+  interpretation_limits:
+  - An operation-count result on BigUint is not a timing result.
+  - This changes no ECDLP cost; it is implementation arithmetic only.
+  heuristic_assumptions:
+  - id: H1
+    statement: Squarings and the a24 product cost less than a generic multiply in the eventual field layer.
+    rigorous_support: None needed for correctness; only for the speed reading of the count.
+    validation_plan: Measure S/M ratio in the fixed-radix layer once it exists.
+  target_complexity:
+    time_exponent: not an ECDLP claim
+    memory_exponent: O(1) field elements
+    best_known: 5M + 4S + 1c per bit (RFC 7748 and HCD 2008 are the baselines)
+    hidden_overhead: one inversion for u_1, or +1M per bit with a projective difference
+    tradeoff_note: recovery to extended coordinates costs 11M once and removes an inversion and a square
+      root
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: high
+  dominated_by: RFC 7748 and HCD 2008 on per-bit count (equal, 5M+4S+1c). Not dominated on completeness
+    of the recovery (Okeya-Sakurai fails at Z_2 = 0 and Z_3 = 0; this fails only at x_1 = 0) or on inversion
+    count (0 vs 1).
+  sota_delta: 'Per-bit count unchanged at 5M+4S+1c. Recovery 11M + 0S + 0I versus 10M + 1S + 1c + 1I shared
+    for Okeya-Sakurai. Versus the repository: about 3650 to 2541 fe_mul+fe_sq calls and scalar-independent
+    operation sequence.'
+  prior_art:
+    frontier_map: not_applicable
+    not_applicable_reason: Curve25519 explicit-formula campaign; no ECDLP mechanism is claimed.
+    none_found_after:
+    - 'BRIEF section 2 ledger records: none state a y-only Edwards ladder or an x-recovery formula.'
+    - 'BRIEF section 1 code: ed25519.rs has no ladder; x25519.rs has no recovery.'
+    - 'BRIEF schema example IDEA-20261007-fd7c23: unrelated chord-slope record.'
