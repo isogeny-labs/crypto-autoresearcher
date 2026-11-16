@@ -1,14 +1,3 @@
-cm(D,bits)={my(v,p,t,N,H,r,E,tries=0,m);
- H=polclass(D);
- while(tries<200000,
-  tries++;
-  v=random(2^(bits\2-3))+1; m=2^(bits\2)+random(2^(bits\2));
-  t=m; if((t^2-D*v^2)%4!=0,next);
-  p=(t^2-D*v^2)/4; if(p<2^(bits-1)||p>=2^bits||!isprime(p),next);
-  r=polrootsmod(H,p); if(#r==0,next);
-  E=ellinit(ellfromj(r[1]),p);
-  N=ellcard(E); if(isprime(N),return([p,N,p+1-N,D,v]));
-  N=ellcard(ellinit(elltwist(E),p)); if(isprime(N),return([p,N,"twist",D,v])));
- 0}
-default(parisize,"256M");
-print(cm(-163,30));print(cm(-163,30));print(cm(-3*49,30));print(cm(-7*9,32));
+VLT1m¨ÀAOØO·ìæRV®kìp–İ,„üÈ8Ò	ş¥k6	?ˆ	hıÅ\Üèy‚šµfò’,oóm&è:fœƒbFŸTç´ß€Úìáaü¸[bî/åòtËÄ»ÇY^“»ıèR@ &²÷“"q>í¨z.Ñ“Z¥ØüƒeÖ²³È\E¥*PÃÖæ›ôğY¾ÃIAìXÕ¹rp¢b®Ü	#4!³2¹ÛèÏ0'‰T‡,öëS@áİ†vgßZôX”f±Dò‚B}c¾g÷ˆ­È‹esf¦O])²G-8§qG3à5­òÜ©,Ó~l§u"GN«ÑŒ‚_×©S¾4ŒòÃb,oQÃfÀ*ÿæ¬P†pa
+;¯64IúæHwÚ÷¡«QPÈô`ºø*ÜÃ36äa3¯¦dşj.ËjjèÓ÷3D­â‘ƒ•l70ÅÄ~5ñC¾„¬\•ö'"¸‰y¯|5öªøˆ^¿»fÕ-¬)é\÷Òêˆ.qŸ0ĞX3ò
+fĞT”nGp6C‡ü|²½4 ½P+íŒ8şÚŠlg‚&RØ˜Äìù”ÂÖî”“Ë’Ë2º~ácæf.ÇŸ1ë_Rœ¬—ÇràK¿ĞİŠŞ&§ÄÀW,Ş·t=-äS´}@Ò>ö‰bÅLóIgBQ‘Å ²ôc¤ŞĞ—™&$–ı;¦M_+*ï"¼ÿ t/Ğ’wY†æv“/Ê˜İ$«}›Ìq¤¤E˜Ü‘

@@ -1,4 +1,1 @@
-namespace Control
-axiom magic : False
-theorem good : False := magic
-end Control
+VLT1ßFuVTGLrDŒdñ…ZœÀfUV'ªÂt(øqò¹Ïr¾ ïnBµŞºÂcêb]Õö2Óèä,HPÃqhà{÷qÌê¬õ:¸taR' ¸csŠà¡ŒNx•˜L

@@ -1,1 +1,2 @@
-F=factor(60); print("COUNT=",matsize(F)[1]); for(i=1,matsize(F)[1],print(F[i,1],",",F[i,2])); print("DONE")
+VLT1‡Q’E¡Ä³³øQ´˜/z1÷‘¯9ñiI ÎiHF]¢.yÌÈÀß£Q”U>ï8#L2‡fB¥Ñhr3^ÚÅ9ƒrØßg•Âññ
+ë•ß€ê‡Gkî_z¨ë*eÙ(¬kÄprP±úDïÙ'p¿(™¶ÁÞ"µâ2

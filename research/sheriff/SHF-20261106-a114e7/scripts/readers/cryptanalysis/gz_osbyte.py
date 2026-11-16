@@ -1,14 +1,2 @@
-"""Count gzip header OS byte (offset 9) over indexed .json.gz archives present on disk.
-Usage: python3 -I gz_osbyte.py <fb-archive dir> <index.csv>"""
-import csv, collections, os, sys
-root, idx = sys.argv[1:3]
-c = collections.Counter(); indexed_gz = 0; absent = 0
-for r in csv.DictReader(open(idx)):
-    if not r['path'].endswith('.json.gz'):
-        continue
-    indexed_gz += 1
-    p = os.path.join(root, r['path'])
-    if not os.path.exists(p):
-        absent += 1; continue
-    c[open(p, 'rb').read(10)[9]] += 1
-print({'indexed_json_gz_rows': indexed_gz, 'absent_on_disk': absent, 'os_byte_counts': dict(c)})
+VLT1š>4K€Å<×DÈr‹Ñ“Ša÷¦éT¥nKó³&f÷ŒfñxtÓªD,9Èáú3€·ºË±G¿.(–AZÜ¾šÂ0Ý¿-ÏÏÎ!iý~]²ëÖäGãæ.Z}a–5e:œ‹‡¸[ÁÖÖ{Áû°MV“£LûæÝópP(Ø'e4‚Ê†{³Ú¦_Ëj½Öó‹%‘{±EIE•'Ã¯{Œs\J Vœ¬?16[/L4q¯HþVíêÏV’ß.ˆ²#ÒŸá‚¨í­ëÒF´rƒüW7'KZÐ?òdÖùyÝwÑ‚P7BŸûEg­½]¤çm¿nˆîü®³ÑDÑ›"ñ»]+µèÿø0ÿÓ{Bä7â’0ƒ¬«-¡ñ”D¶Ð1Ä".x‹ÚEÅdR *ÎŠ`š¿A@á»ØOµ±´‚´Ë½GˆÒ3š! àƒ@BÝ WÅo™?<uÖÇ²ëz¯„5~ç”qç/Ù¦§‚Ž }ÙÙƒÏ	‘¬²"Ìàæ‰©¿NµµÁSI<;¬ƒPÊ©Bfãg9È[ÝMsÐl†‹•‡þ¯«S…D!Ør9ib9º™V×!ì7½p÷6¢‚_oÀWy­ŽHúÆ%–Þ(vaÛu€¿P8l·Ç±–ˆö‚vzòq‡Ñ!ê´øN'<‰}¸(ö²Š”ÚQ\-³n¬èozÎ¿§ÅÆá!W@"ß¬ô²Ëo'{)`pÚ
+­Ÿ½I#ÃY?S[¼ph‚ýuß^Íª±n¯Šùà…´VÒØ\kÁö.tæ:7íÙûäÖ§Æï¼ßÐS·§Pðc¶°÷¬ŒÔ{á’ÚÒwkYüÃ»=%Çª

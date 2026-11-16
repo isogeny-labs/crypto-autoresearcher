@@ -1,0 +1,143 @@
+idea:
+  id: IDEA-20261109-876571
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: Classical readout of one Kuperberg label chi(k) by correlation against the multiplicative spectrum,
+    with a planted-correlation calibration and the N^{3/4} spectral lever stated as the exponent
+  class: algorithm
+  claim: 'Algorithm skeleton plus calibration; no break claimed. Given (P_0, Q = kP_0), a generator gamma
+    of Z_N^*, an even character chi of order l and b in F_p^*, the estimator Z_S = S^{-1} sum_{i<=S} chi(gamma^{t_i})
+    e_p(b x(gamma^{t_i} Q)) over uniform t_i has E[Z_S] = chi(k)^{-1} M(chi,b)/(N-1) and E|Z_S - E Z_S|^2
+    <= 1/S, so rounding (N-1) Z_S/M(chi,b) to the nearest l-th root of unity returns chi(k) once S >=
+    10 (N-1)^2/|M|^2. Predictions: (A) on planted symmetric labellings with |M| = rho (N-1), rho in {2^-2,
+    2^-4, 2^-6}, l in {2,3}, success over 200 targets is >= 0.98 at S = 10/rho^2 and <= 0.78 at S = 1/(10
+    rho^2); (B) on real prime-order curves with p <= 2^14, N = 1 mod 4, l = 2, S = ceil(sqrt N), success
+    over 200 targets is <= 0.60 (chance 0.5). The full-attack exponent is 2(1 - log_N |M|) + o(1): 1 at
+    the random value |M| about sqrt N, below 1/2 only if |M| >= N^{3/4} on a set of characters generating
+    the dual of Z_{N-1}.'
+  mechanism: 'This is Kuperberg''s label readout with the coherent phase replaced by a classical correlation.
+    Each sample costs one exponentiation in Z_N^* (to form gamma^{t_i}, so chi is known without a Z_N^*
+    log) and one scalar multiplication (about 1.5 log_2 N additions). Labels on a generating set of characters
+    give log_gamma k modulo every prime-power divisor of N-1, hence k by CRT; for secp256k1 the 108-bit
+    prime factor of N-1 (recalled) sets the requirement, and the low-order labels chi_2, chi_3, chi_149,
+    chi_631 are the Cheon- type characters already filed in the wave-1 port record ''Pohlig-Hellman on
+    the scalar torsor''. No sieve is run and no label propagates: the record exists because the only exponent
+    lever is |M(chi,b)|, measured in the companion spectrum record, and because the harness turns any
+    future spectral finding into a same-day test. Hastad-Naslund-type hard-core results (recalled) make
+    even chi_2(k) with advantage eps yield k in poly(1/eps), consistent with the all-or-nothing lever.'
+  novelty_status: unverified
+  citations:
+  - ref: KR-RHO-13bf67
+    provenance: internal
+    claim: Generic bound; the estimator reads x-coordinates and is the only shape in which a Kuperberg
+      shadow may evade it.
+    verified_by: REPO BRIEF 2026-11-09 section 3 row; file not opened
+  - ref: KR-RHO-fb88e6
+    provenance: internal
+    claim: Odd characters vanish by negation, so only even chi are estimable.
+    verified_by: REPO BRIEF 2026-11-09 section 3 row; file not opened
+  - ref: Hastad-Naslund, JACM 2004, security of all bits of discrete logarithms
+    provenance: recalled
+    claim: A label with advantage eps gives k in poly(1/eps); used only to state all-or-nothing.
+    verified_by: not verified this session
+  assumptions:
+  - N = 1 mod 4 so chi_2 is even; curves failing this use l = 3 or 4 when available.
+  - M(chi,b) for normalisation is taken from the spectrum record or computed exhaustively on the toy curve.
+  predictions:
+  - metric: planted success rate at S = 10/rho^2
+    direction: higher
+    minimum_effect: at least 0.98
+  - metric: planted success rate at S = 1/(10 rho^2)
+    direction: lower
+    minimum_effect: at most 0.78
+  - metric: real-curve success rate for l = 2 at S = ceil(sqrt N)
+    direction: lower
+    minimum_effect: at most 0.60
+  minimal_test:
+    design: 'Implement the estimator in Rust beside the ic executable in crypto/src or in Sage. Arm A
+      (planted): for a toy N, build a random symmetric labelling x~ on Z_N^*/{+-1}; on a fraction rho
+      of classes set x~(a) = round(p arg(chi_0(a))/(2 pi b_0)) mod p so that M(chi_0,b_0) is about rho
+      (N-1); run 200 random k at the two sample sizes. Arm B (real): five prime-order curves p <= 2^14,
+      l = 2 and l = 3 when 3 | N-1, b = 1 and b = argmax of the spectrum record, S = ceil(sqrt N) and
+      S = 16 sqrt N. Arm C (null): Arm B with k replaced by a fresh random k'' between estimation and
+      check. Report success with Wilson intervals and cost in scalar multiplications. Deliver as cryptanalysis/experiments/qshadow-label-estimator-<date>.'
+    controls:
+    - Arm C must sit at chance.
+    - Planted rho = 1 must give success 1.0.
+    - '|M| used for normalisation is logged and cross-checked against Parseval.'
+    required_metrics:
+    - rho, l, b, S
+    - success rate with 95 percent interval per arm
+    - '|M(chi,b)|/(N-1) used'
+    - scalar multiplications per decision
+  falsification_conditions:
+  - Planted success below 0.9 at S = 10/rho^2 marks the estimator wrong.
+  - 'Real-curve success >= 0.8 for l = 2 at S <= sqrt N on 3 of 5 curves with Arm C at chance: a sub-rho
+    classical label readout, to be rerun before anything is filed.'
+  - Arm C above 0.6 marks an invalid run.
+  confounders:
+  - The argmax b is post-selected; b = 1 is the pre-registered arm.
+  - On j = 0 curves chi(lambda) mixes with the omega action; use one non-CM curve per arm.
+  - At S near N the estimator becomes exhaustive enumeration; sample sizes stay <= 16 sqrt N.
+  interpretation_limits:
+  - Toy only; the lever formula assumes |M| is the only structure.
+  - Combining many weakly correlated characters by list decoding lowers cost by polynomial factors only.
+  heuristic_assumptions:
+  - id: H1
+    statement: Real-curve |M(chi,b)| is about sqrt N for every even nontrivial chi and b != 0.
+    rigorous_support: None; this is the spectrum record's prediction.
+    validation_plan: Read |M| from that record's output before running Arm B.
+  - id: H2
+    statement: Samples are independent and bounded, so the variance bound 1/S holds.
+    rigorous_support: Hoeffding for bounded independent complex terms.
+    validation_plan: Arm A at the two sample sizes brackets the predicted transition.
+  target_complexity:
+    time_exponent: 2(1 - log_N |M|) + o(1), equal to 1 at the random spectral value; reaches 1/2 - eps
+      only if |M| >= N^{3/4}. Delta against 1/2 is +1/2 at the predicted value.
+    memory_exponent: O(1)
+    best_known: Pollard rho, Theta(sqrt N), KR-RHO-13bf67
+    hidden_overhead: log_2 N additions plus one Z_N^* exponentiation per sample.
+    tradeoff_note: None.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: low
+  dominated_by: KR-RHO-13bf67 at the predicted spectrum. The wave-1 port record for low-order labels;
+    this record adds the estimator, the lever and the calibration.
+  sota_delta: Exponent delta 0 claimed; the record prices exactly what spectral mass a classical Kuperberg
+    shadow would need and ships the harness.
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/generic-rho
+    rows_checked:
+    - KR-RHO-13bf67
+    - KR-RHO-fb88e6
+    - KR-RHO-0528e7
+    - KR-RHO-53c89f
+    - KR-RHO-5b1c0a
+    - KR-RHO-46c2c6
+    nearest:
+    - ref: KR-RHO-13bf67
+      provenance: internal
+      relation: adjacent
+      delta: Non-generic estimator; priced at N^{2(1 - log_N |M|)} rather than sqrt N.
+    - ref: KR-RHO-fb88e6
+      provenance: internal
+      relation: adjacent
+      delta: Negation restricts the estimable labels to even characters.
+    searched:
+      corpus_grep:
+      - 'REPO BRIEF section 2 for: hard-core, Legendre, power residue, Cheon, label, correlation'
+      - wave-1 port record 'Pohlig-Hellman on the scalar torsor' title
+      web: []
+      blocked:
+      - Port-wave record id unresolved from the brief; resolve in ledger/proposals before filing.
+    lead: LEAD-EXO-quadratic-phase-small-x-leakage
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: Implement the estimator in Rust beside the ic executable in crypto/src or
+        in Sage. Arm A (planted): for a toy N, build a random symmetric labelling x~ on Z_N^*/{+-1}; on
+        a fraction rho of classes set x~(a) = round(p arg(chi_0(a))/(2 pi b_0)) mod p so that M(chi_0,b_0)
+        is about rho (N-1); run 200 random k at the two sample sizes. Arm B (real): five prime-order curves
+        p <= 2^14, l = 2 and l = 3 when'

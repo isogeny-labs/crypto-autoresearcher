@@ -1,0 +1,57 @@
+idea:
+  id: IDEA-20261109-9f21f9
+  question_id: RQ-ISO-68bbac
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  class: tooling
+  novelty_status: unverified
+  title: Formalise the scalar-only Frobenius action and commutant lemma underpinning torsion-masking repairs
+  record_kind: formalisation_target
+  claim: 'Every post-SIDH masking repair (scalar alpha with alpha^2 = 1, diagonal, circulant) rests on
+    two algebraic facts that are nowhere named as theorems in the BRIEF: (a) on a supersingular E/F_{p^2},
+    Frobenius pi_{p^2} acts on E[N] as the scalar -p for gcd(N,p)=1, so no free non-scalar lever exists;
+    (b) a pairing-preserving matrix M commuting with a matrix Theta that is non-scalar modulo every prime
+    dividing N lies in (Z/N)[Theta]. The crypto-lean commit subject names SplitPrime.Obstruction with
+    a scalar-only action lemma, but no theorem is quoted; this record proposes stating (a) and (b) so
+    that the LEAN lines of the masking, commutant, and adaptive-torsion leads become citable. Clears H-SSIQ-d724f2
+    (finite-group census side) and H-ALISO-014 (instances of Theta).'
+  mechanism: 'State (b) over an abstract free rank-2 (Z/N)-module with chosen basis, by CRT reduction
+    to prime powers and the standard double-centraliser fact for a non-scalar 2x2 matrix. State (a) as
+    a property of the Frobenius endomorphism on torsion: pi_{p^2} satisfies the characteristic polynomial
+    X^2 - t X + p^2 with trace t = -2p for supersingular curves over F_{p^2} of this form, hence (pi +
+    p)^2 = 0 on E[N]; scalar action follows when pi + p is zero on E[N], which needs the stronger trace/structure
+    hypothesis to be stated explicitly in the lemma.'
+  assumptions_marked:
+    proved: the double-centraliser statement (b) is elementary
+    heuristic: none
+    analogy_only: none
+  falsification_test: The record is discharged (and the proposal dies) if a library search finds (b) under
+    another name or if (a) cannot be stated without an elliptic-curve torsion module not present in the
+    library; in the latter case the fallback is to file (b) alone.
+  cost_estimate:
+    lemma_b: small (CRT + 2x2 linear algebra)
+    lemma_a: depends on availability of torsion-as-module infrastructure
+  cleared:
+    checked:
+    - H-SSIQ-d724f2
+    - H-ALISO-014
+    disproven: none in the brief
+    lean: no Lean coverage (BRIEF names only module SplitPrime.Obstruction via commit subject); would
+      need the statements (a) and (b) above
+    exp: none; nearest surface is aburan28/crypto-lean at head 8187529, module SplitPrime.Obstruction
+  prior_art:
+    frontier_map: not_applicable
+    frontier_map_reason: no frontier map in the BRIEF; this is a formalisation target.
+    searched:
+      corpus_grep:
+      - H-SSIQ-d724f2
+      - H-ALISO-014
+    none_found_after:
+    - 'BRIEF query: scalar-only action'
+    - 'BRIEF query: commutant OR centraliser'
+    - 'BRIEF query: Frobenius torsion action Lean'
+    nearest_record: H-SSIQ-d724f2
+    relation: formalises
+    not_applicable_reason: This campaign is isogeny/formula engineering, not an ECDLP-mechanism claim;
+      the ECDLP frontier map does not cover the relevant literature.

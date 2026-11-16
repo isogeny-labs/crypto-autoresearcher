@@ -1,0 +1,269 @@
+{
+  "schema": "classical.ecdlp.independent-static-source-review/v1",
+  "task_id": "TASK-20261106-2ff273",
+  "session": "/root/independent_reference_source_review_20261106",
+  "source_snapshot_commit": "da0c590a872102f5c91d37d37a96753054065954",
+  "published_head_supplied_by_dispatcher": "d00ec1f7bc7da046fd37afa71642d760497d7bf7",
+  "published_head_independently_git_checked": false,
+  "externally_pinned_plan": {
+    "path": "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/archives/TASK-20261106-924f2e/receipt.json",
+    "sha256": "382af9469b4711867c77e22d4cb1eb79d0d9713848b5ddd2fcf5abb468a2da86",
+    "expected_sha256": "382af9469b4711867c77e22d4cb1eb79d0d9713848b5ddd2fcf5abb468a2da86",
+    "actual_bytes_match": true
+  },
+  "source_sha256": {
+    "harness/classical_ecdlp_public_reference_audit/solver.py": "d462b17ffb10772852d6024a92be71eb768b27d3d4b619cd582c868f88953031",
+    "harness/classical_ecdlp_public_reference_audit/driver.py": "e0d7e4c2690f707a26edf0552e25c59327fe9b5637ee7d512c6dafdc06438124",
+    "harness/classical_ecdlp_public_reference_audit/verify.py": "a19cfc02c5f95726466eb6fdef9506eb569b04e6a0ffdeb1d322bf9ff4049c8d"
+  },
+  "scientific_execution": {
+    "solver_runs": 0,
+    "control_runs": 0,
+    "unit_or_fixture_runs": 0,
+    "candidate_runs": 0,
+    "code_imports": 0,
+    "syntax_compiles": 0,
+    "empirical_result_claims": false
+  },
+  "review_budget": {
+    "start_epoch_seconds": 1793982438,
+    "fixed_stop_epoch_seconds": 1793982738,
+    "maximum_wall_seconds": 300,
+    "maximum_memory_gib": 4,
+    "extensions": 0,
+    "resets": 0,
+    "retries": 0,
+    "memory_cap_instrumented_for_reviewer": false,
+    "memory_compliance": "No RSS measurement collected; no claim of measured memory compliance.",
+    "completed_artifact_accounting_at_epoch_seconds": 1793982743.1355922,
+    "elapsed_seconds_at_accounting": 305.13559222221375,
+    "whole_wall_cap_met_at_accounting": false,
+    "memory_cap_met": "unverified; not instrumented"
+  },
+  "static_checks": [
+    {
+      "check": "affine_domain_and_group_law",
+      "scope": "solver.py:33-103; SEC1 2.2.1",
+      "assessment": "holds on static inspection",
+      "reason": "Bounded deterministic primality, p>3, nonsingular curve, canonical coordinates, nonidentity G, unreduced rG; identity/inverse/y0 handled before inversion; extended Euclid and ordinary add/double match SEC1."
+    },
+    {
+      "check": "complete_BSGS",
+      "scope": "solver.py:106-131,164-205; HAC3.56",
+      "assessment": "holds on static inspection",
+      "reason": "m=isqrt(r-1)+1=ceil(sqrt(r)); babies j in[0,m), giants i in[0,m). For x in[0,r), x=im+j with i,j<m; direct equation and scalar<r guard returned witness. Every domain constructs same-path controls, targets use same table."
+    },
+    {
+      "check": "independent_checker",
+      "scope": "verify.py:8-16,55-138,180-279",
+      "assessment": "holds on static inspection",
+      "reason": "No solver/candidate arithmetic imports; independent Jacobian double/mixed-add, Fermat conversion; order checks unreduced. Rechecks certificate vectors/equations/mutations rather than trusting producer booleans."
+    },
+    {
+      "check": "known_false_frozen_objects",
+      "assessment": "static branches reject their mathematical assertions",
+      "reason": "F17 k=1 vs Q=2G fails verify225; r+2 fails verify223/412-415; offcurve and identity/noncanonical base fail constructors; scalar+1 mutation rejection is fatal. Omitted/duplicate/changed-ID/scalar certificate vectors fail207/216-234/261-262. This is analysis, not a control outcome."
+    },
+    {
+      "check": "fresh_AA_and_reference_seal",
+      "scope": "driver.py:95-149,171-178; verify.py:201-279,288",
+      "assessment": "holds for ordinary fixed-worker control flow",
+      "reason": "Two sequential Popen calls with waits; exact A/B bytes compared and sealed. Direct worker equations precede producer verified:true. Independent reference-verification is written before candidate files are opened."
+    },
+    {
+      "check": "candidate_scalar_fields",
+      "scope": "verify.py:318-398",
+      "assessment": "partial; F1 and F2 break complete declared fit",
+      "reason": "RECOVERED words, any nonnull cell scalar (including zero), and every recovered_scalars array element are independently classified. Undefined values are retained within events; invalid equations retained; normalization algebra is correct for canonical multipliers. Status-only RECOVERED and multiplier canonicality gaps remain."
+    }
+  ],
+  "findings": [
+    {
+      "id": "F1",
+      "severity": "material source-contract break",
+      "locations": [
+        "verify.py:369-388",
+        "verify.py:400-408"
+      ],
+      "contract": "DESIGN.md:34-36; every retained RECOVERED claim and incomplete field inventory",
+      "counterexample_shape": {
+        "schema": "classical.ecdlp.controlled-followup.decoder-cell/v1",
+        "cell_id": "fresh-unique-id",
+        "trace_id": "an-existing-valid-trace",
+        "status": "RECOVERED",
+        "words": [],
+        "scalar": null,
+        "recovered_scalars": []
+      },
+      "derivation": "Given an otherwise valid joined trace, the word loop and array loop add no events; the scalar guard excludes null. The status is copied only into a local context. if events is false, so neither claimed_cells nor claim_outcomes nor field_disagreements retain this explicit RECOVERED row. The verifier can reach status complete. No raw claim of this shape was searched for or observed.",
+      "next_action": "Retain and classify status-only RECOVERED/incomplete claims explicitly, with status census and provenance; any future source correction needs a new snapshot/review."
+    },
+    {
+      "id": "F2",
+      "severity": "material canonical-domain break",
+      "locations": [
+        "verify.py:335-345"
+      ],
+      "contract": "DESIGN.md:34 requires canonical nonzero a,b",
+      "counterexample_shape": {
+        "curve": "E/F17: y^2=x^3+2x+2",
+        "G": [
+          5,
+          1
+        ],
+        "r": 19,
+        "Q": [
+          6,
+          3
+        ],
+        "candidate_scalar": 2,
+        "candidate_scalar_prime": 2,
+        "base_multiplier": 20,
+        "target_multiplier": 1
+      },
+      "derivation": "The guard asks only integer type and a%r,b%r nonzero. Here 20 mod19=1. Normalization gives 20*2/1 mod19=2, and transformed sides both equal 2G. Thus an otherwise valid joined RECOVERED word can be classified valid although a=20 is not canonical in [1,18]. Pure symbolic reasoning; not executed.",
+      "next_action": "Require 1<=a,b<r before normalization, or prospectively change the declared contract with explicit provenance; do not silently reinterpret it."
+    }
+  ],
+  "additional_scoped_gaps": [
+    {
+      "id": "G1",
+      "locations": [
+        "driver.py:44-46,110-127",
+        "verify.py:155-165"
+      ],
+      "finding": "RLIMIT_CPU=1800 is independently set for each A/B child and checker. It does not implement DESIGN40 cumulative1800 CPU seconds across the whole pipeline. Native parent enforcement is outside reviewed source scope and has not been established here.",
+      "assessment": "source-level cumulative-cap gap; no actual overrun claimed"
+    },
+    {
+      "id": "G2",
+      "locations": [
+        "verify.py:283-315,358-398"
+      ],
+      "finding": "Outputs count total lines/cells/words and malformed/tail counters, but do not census all status values, retain every unclaimed cell context, or preserve byte offsets. Trace context retains only curve/target/multipliers/target plus line/hash; arm/transformation-ID joins are not explicitly validated.",
+      "assessment": "inventory/join coverage incomplete against DESIGN34-36; raw fixed-prefix applicability untested"
+    },
+    {
+      "id": "G3",
+      "locations": [
+        "driver.py:120-132,154-158",
+        "verify.py:163-165,399-408"
+      ],
+      "finding": "Termination addresses direct children, not process groups; current solver has no subprocess spawning. Grace waits can extend beyond stop, checker guard is cooperative and not polled during final serialization/writes. Hard whole-pipeline descendant/wall guarantees therefore depend on unreviewed native parent controls.",
+      "assessment": "external enforcement dependency, not an observed failure"
+    },
+    {
+      "id": "G4",
+      "locations": [
+        "verify.py:201-234,405"
+      ],
+      "finding": "Checker validates certificate seals, public SHA and complete identity sets, but does not compare current input-manifest SHA/source hashes to seal metadata or enforce original row order. Driver records source/manifest hashes and producer emits original order; native immutable publication/custody checks remain required.",
+      "assessment": "limited checker-level custody assurance, no tampering observation"
+    }
+  ],
+  "literature": [
+    {
+      "path": "/workspace/classical-ecdlp-endpoint-reuse/host-reference-cost-audit-20261030/root-literature/hac-chapter3.txt",
+      "passage": "3.6.2 Algorithm3.56/Fact3.57, lines1000-1040",
+      "provenance": "retrieved local primary text",
+      "verified_by": "/root/independent_reference_source_review_20261106",
+      "use": "Complete decomposition and search schedule; asymptotic theorem is not a measured performance result."
+    },
+    {
+      "path": "/workspace/classical-ecdlp-endpoint-reuse/fresh48-20261105-witness-primary-sources/sec1-v2.txt",
+      "passage": "SEC1v2 2.2.1, lines442-494",
+      "provenance": "retrieved local primary text",
+      "verified_by": "/root/independent_reference_source_review_20261106",
+      "use": "Prime-field nonsingularity, identity/inverse/add/double and scalar multiplication."
+    }
+  ],
+  "procedure_deviations": [
+    "Initial source display occurred before primary passages were displayed. Primary passages were read before report writing, recommendations, and all final analyses; no source implementation or scientific execution occurred.",
+    "No empirical verification, Git history, raw candidate scan, sibling review, or canonical graph scan was performed because scope is static and restricted."
+  ],
+  "read_accounting": {
+    "sources_read": [
+      "AGENTS.md",
+      "agents/validator.md",
+      ".claude/skills/research-visuals/SKILL.md",
+      "docs/agent-contract-extended.md",
+      "ledger/handoffs/TASK-20261106-2ff273.yaml",
+      "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/DESIGN.md",
+      "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/input-manifest.json",
+      "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/source-contract.json",
+      "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/source-materialization.json",
+      "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/archives/TASK-20261106-924f2e/receipt.json",
+      "harness/classical_ecdlp_public_reference_audit/solver.py",
+      "harness/classical_ecdlp_public_reference_audit/driver.py",
+      "harness/classical_ecdlp_public_reference_audit/verify.py",
+      "/workspace/classical-ecdlp-endpoint-reuse/host-reference-cost-audit-20261030/root-literature/hac-chapter3.txt",
+      "/workspace/classical-ecdlp-endpoint-reuse/fresh48-20261105-witness-primary-sources/sec1-v2.txt"
+    ],
+    "raw_public_or_candidate_payloads_read": false,
+    "producer_actual_scalar_reports_read": false,
+    "sibling_review_reports_read": false,
+    "git_log_or_history_read": false,
+    "historical_counts_in_design": "Context only; not used as expected outcomes or thresholds.",
+    "truncated_displays": "Initial combined contract and combined source displays were truncated; source sections and applicable contracts were re-read in targeted displays."
+  },
+  "canonical_graphs": {
+    "modified": false,
+    "checked": "No canonical graph files read: outside read scope. This source-only finding changes no scientific graph claim; Coordinator owns any new pointer."
+  },
+  "review_attestation": {
+    "task_id": "TASK-20261106-2ff273",
+    "joints_owned": [
+      "J1"
+    ],
+    "sources_read": [
+      "AGENTS.md",
+      "agents/validator.md",
+      ".claude/skills/research-visuals/SKILL.md",
+      "docs/agent-contract-extended.md",
+      "ledger/handoffs/TASK-20261106-2ff273.yaml",
+      "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/DESIGN.md",
+      "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/input-manifest.json",
+      "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/source-contract.json",
+      "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/source-materialization.json",
+      "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/archives/TASK-20261106-924f2e/receipt.json",
+      "harness/classical_ecdlp_public_reference_audit/solver.py",
+      "harness/classical_ecdlp_public_reference_audit/driver.py",
+      "harness/classical_ecdlp_public_reference_audit/verify.py",
+      "/workspace/classical-ecdlp-endpoint-reuse/host-reference-cost-audit-20261030/root-literature/hac-chapter3.txt",
+      "/workspace/classical-ecdlp-endpoint-reuse/fresh48-20261105-witness-primary-sources/sec1-v2.txt"
+    ],
+    "read_sibling_reports": false,
+    "blind_from_respected": true,
+    "verdicts": {
+      "J1": "breaks"
+    },
+    "independent_session": "/root/independent_reference_source_review_20261106",
+    "independence_statement": "Independent of producer and Coordinator; no inherited producer session. Source-fit review is explicitly post hoc; no outcome-blind empirical assertion."
+  },
+  "render_and_inspection": {
+    "compile_command": "/workspace/classical-ecdlp-endpoint-reuse/runtime-20261028/bin/python -c \"import typst; typst.compile('/tmp/independent-reference-source-review-render-20261106/report.typ', output='/tmp/independent-reference-source-review-20261106/report.pdf', root='/')\"",
+    "raster_command": "pdftoppm -r 65 -png /tmp/independent-reference-source-review-20261106/report.pdf /tmp/independent-reference-source-review-render-20261106/page",
+    "pdfinfo_command": "pdfinfo /tmp/independent-reference-source-review-20261106/report.pdf",
+    "attempts": [
+      {
+        "result": "TypstError: unclosed label",
+        "exit_code": 1
+      },
+      {
+        "result": "TypstError: file not found (searched at /tmp/tmp/independent-reference-source-review-20261106/diagram.svg)",
+        "exit_code": 1
+      },
+      {
+        "result": "success; Creator Typst0.15.0; PDF1.7; A4;3pages;55833bytes",
+        "exit_code": 0
+      }
+    ],
+    "corrections": "Escaped literal < signs in editable Typst source and used filesystem root=/ for the embedded absolute SVG path. No scientific retry occurred.",
+    "page_view_tool": "tools.view_image via functions.exec",
+    "pages_viewed": [
+      1,
+      2,
+      3
+    ]
+  }
+}

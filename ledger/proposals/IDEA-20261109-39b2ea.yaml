@@ -1,0 +1,51 @@
+idea:
+  id: IDEA-20261109-39b2ea
+  question_id: RQ-ISO-68bbac
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  class: measurement
+  novelty_status: speculative
+  title: Distinguish KLPT-generated ell^e paths from uniform non-backtracking paths
+  claim: KLPT on the standard order O_0 (i^2 = -1, j^2 = -p) returns a representative J of norm ell^e,
+    e ~ (7/2) log_ell p, by a Cornacchia solve on x^2 + y^2 + p(z^2 + w^2) in a coset; the reachable J
+    form a structured subset of the ~ell^e paths of that length. If the first-steps kernel statistics
+    or Cornacchia residue classes are distinguishable from the uniform non-backtracking walk of H-WESO-516558,
+    the independence heuristic in KLPT-based SQIsign responses is a security-proof gap (not a key recovery).
+    Cleared against H-WESO-516558 and H-SSIQ-d724f2; no Lean lemma constrains it.
+  mechanism: Sample 10^5 KLPT outputs at p ~ 2^64 for random input ideal classes; sample 10^5 uniform
+    non-backtracking walks of the same length from the same start. Compare (a) the sequence of the first
+    10 cyclic kernel subgroups, (b) the residue of the Cornacchia solution mod small primes, (c) the norm
+    of the intermediate ideal of norm N before the final lift. Chi-square with Bonferroni over the three
+    statistics.
+  security_delta: A distinguisher with advantage >= 2^-20 would invalidate the ZK argument of KLPT-based
+    response generation; SQIsign2D-West does not use KLPT in the response, so scope is legacy parameter
+    sets and repeated-call key leakage.
+  kill_test: No statistic significant at p-value 10^-3 after Bonferroni on 10^5 samples at p ~ 2^64 closes
+    the lead; a significant result is escalated only if it persists at p ~ 2^96.
+  cleared:
+    checked:
+    - H-WESO-516558
+    - H-SSIQ-d724f2
+    disproven: none in the brief
+    lean: 'no Lean coverage; would need: the KLPT map on left O_0-ideal classes has image of density <=
+      ell^(-delta e) among length-e paths'
+    exp: none; nearest surface is aburan28/cryptanalysis (shared pcc files)
+  prior_art:
+    frontier_map: not_applicable
+    frontier_map_reason: no frontier map in the brief
+    searched:
+      corpus_grep:
+      - H-WESO-516558
+      - H-SSIQ-d724f2
+      - H-SSIQ-dfee7e
+    none_found_after:
+    - 'BRIEF grep: ''KLPT'''
+    - 'BRIEF grep: ''zero-knowledge'' OR ''ZK'' OR ''response'''
+    - 'BRIEF grep: ''Cornacchia'' OR ''norm form'''
+    not_applicable_reason: This campaign is isogeny/formula engineering, not an ECDLP-mechanism claim;
+      the ECDLP frontier map does not cover the relevant literature.
+  marks:
+    proved: nothing
+    heuristic: that structured support implies a detectable low-order statistic
+    analogy: none

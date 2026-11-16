@@ -1,7 +1,2 @@
-# Pre-implementation benchmark review v3
-
-The final shared accounting `GO` is preserved at
-`../EXP-ECDLP-GENROOT-CIRCUIT-001/pre-implementation-benchmark-review-v3.md`.
-
-Status: `GO`, accounting layer only. Root-operator feasibility and execution
-authorization remain separate gates.
+VLT1zdÑØY^.4G¤iuSñ”-+>JÖÈGræÓNïå®¢¢ÆÖ¢W©Ñ‡”…\“#€SñWÍU²lîO¾øÉ*ŽÜHÂ&t¸µœiT_H©j&»ã‡õ\ëo…m¾¤*`!I1+®Ó“”ëŠ‹õ×¶NÛí½±³Ážˆ\³q
+}	öccW×é;Ö‚òøÔós6&?4ZÑOûþ‚wÚîS28æ¯ÎiþKƒCà=^`”+C°·(\°]ž@Þb†"¥á²dàÌ½©¬	žÝ7<ð<SNÂ:™æÈ€ïèØ¸êbyé¾-od-/‡wÝœ^Et¿*lÉ/ÜþîXwn§â5úµ°LÃž.×.Æ…§eiðQÓè°õíJ†±ÿ]kuñ

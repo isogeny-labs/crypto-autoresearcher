@@ -1,12 +1,1 @@
-# RESULTS EXP-ECDLP-065bf1
-
-outcome: O-MIXED
-
-Public known-scalar forward presentations only. No ECDLP solve.
-No exponent claim. Amazon Bedrock NOT SELECTED.
-
-**O-MIXED**
-
-Cells:
-- toy_f17_k2: rep_diff=True incidence_rank_diff=True twin_ok=True perm_iso=True
-- toy_f17_k3: rep_diff=True incidence_rank_diff=True twin_ok=True perm_iso=True
+VLT1“Î$¨ººe›çŽÒçÈ×.;ÃçÊw›e­jÍ©BC`ñgUðp¯Eµ¸x3Ä1E€h;ðÖ–gl]Õã|?¨ØDQÙDæ¤ ê^c¯V>UèC¬S£Ä~NCr^ÂÅA°ëŠ¸ÃXÝ<êÍò“Ù^ó•Çz¥þÖ8¶=r+©ŠyvýØ—ú6Žúý»ògîQÃ„¿&ÎîÔnÝSjí.ê×&U7öÉú‘vmˆ-æc®„Èøï@RAjbé¹lÛ¶d‚mõj´e¹~ÁùÆ¿r!KKÎÆ#dfÞnã\¶¥µsèàÖr^ÃÅSVa|_×¡àùä¼t£ÈÄQHõYó4Í_%6[:Û2Ä™¸™P€jó[{	Ë„{—M“˜õ˜5‰x´EÎ~¨ÿþk%<h;},Ò-ª®Ú,ž«÷}Ü u^?KçfÅc>–m®¤koœ÷4·

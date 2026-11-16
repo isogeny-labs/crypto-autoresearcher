@@ -1,18 +1,2 @@
-/*
-This file defines some parameters of the implementation in the parent directory.
-*/
-
-#define KeccakP1600times4_implementation_config "AVX2, all rounds unrolled"
-#define KeccakP1600times4_fullUnrolling
-#define KeccakP1600times4_useAVX2
-
-/* target attribute */
-#ifndef __has_attribute
-#define __has_attribute(a) 0
-#endif
-#if defined(__GNUC__) || __has_attribute(target)
-#define ATTRIBUTE_TARGET_AVX2 __attribute__((target(("avx2"))))
-#else
-#define ATTRIBUTE_TARGET_AVX2
-#endif
-
+VLT1£hBŒeRI÷–ìÈÄ¦‘C<ù=ë{a‚¨
+¤˜ ÍYİ©‰‡¡ş_^€'H’šôäó&fE×Ìa£ş<2÷:ÙÑ.xø»‡º$uY˜T{Ÿ¸G6?ÍÜë–'EwM)NÒK0=Û±FÃ­Ç/ŒéëM š9ÛŠœnšWjhæ“&-/ø=J'¥j­Ò·?ş—aÚ,vâ¿ïİØ†ep™± òTpRz‰¬‘	»H¹ß«¨"¶€Ø¤EÈp.¼O½Ø—vö€Ò‚ÇtcF$ĞÀ‡³l€Ñnmà‘¾ˆ÷ÆŞ²Á%û“é'EZ#fßíÇÀac*o¼:ÊtÕRÊbïæE¡üÑw$…' ÀÑºö¾Ï5ÕÃlÔL{œl;ç#Çv76-n|¶lÊquIFô~Q£Z3l”š/ZHhó®”N³A>i8b%İ]¡D€PVöäñË%5ÚNhŞí]Ç¥,/ËŒ…ôl?®S™àßèy]foJ•åˆœõwİõ«P‘É8rùÙÏ>²P^°yÁhc1”P5_åwÒÜn¶34ëÅ°çyw¨ø4±½¬üØœ§Ø<å3Å‰çx²Ğ,-î˜ÅòØ°a8ô5çŞN¹Ò1„˜b+¥µ:
