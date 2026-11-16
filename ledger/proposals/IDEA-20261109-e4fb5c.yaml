@@ -1,0 +1,128 @@
+idea:
+  id: IDEA-20261109-e4fb5c
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: Walsh low-degree concentration of bit_i(x(kP)) as a Boolean function of the bits of k, the Linial-Mansour-Nisan
+    / Kushilevitz-Mansour shadow of Bernstein-Vazirani, exact at n = 20 bits against random-function and
+    planted-parity controls
+  class: barrier
+  claim: 'For a prime-order toy curve with N > 2^n and n <= 20, define F_i(k) = (-1)^{bit_i(x(kP))} on
+    k in [1, 2^n). Compute the full Walsh spectrum hat F_i(S), S subset of [n], and W_{<=d} = sum_{|S|
+    <= d} hat F_i(S)^2. Prediction, fixed before any run: for i in {0, floor(log2 p / 2), floor(log2 p)
+    - 1} and every d <= n/2, W_{<=d} is within 3 standard deviations of the random-function value 2^{-n}
+    sum_{j <= d} C(n, j), and max_{|S| >= 2} |hat F_i(S)| <= 2^{-n/2} sqrt(2 n ln 2) + 3 sigma. Degree-1
+    coefficients are hybrid additive-character sums already covered by the barriers-wave record and are
+    reported but not predicted anew. No exponent change is claimed.'
+  mechanism: 'The classical dequantization of Bernstein-Vazirani and Goldreich-Levin is Fourier learning
+    over Z_2^n: Kushilevitz-Mansour finds all coefficients of size at least theta in poly(n, 1/theta)
+    queries, and Linial-Mansour-Nisan learn functions whose weight concentrates at low degree. A heavy
+    coefficient hat F_i(S) with |S| >= 2 is a correlation between one bit of x(kP) and a parity of two
+    or more bits of k, a statistic no additive-character bound reaches. It would give a theta-advantage
+    predictor of a parity of the discrete log per evaluation; exponent movement needs theta >= N^{-1/4},
+    while the random level is 2^{-n/2}. Degree-1 coefficients are additive characters of Z_N up to interval
+    truncation and are provably flat.'
+  novelty_status: unverified
+  citations:
+  - ref: KR-RHO-13bf67
+    provenance: internal
+    claim: Generic floor; exponent delta 0.
+    verified_by: Mythos ideation 2026-11-09 read the row in the REPO BRIEF frontier map; row file not
+      opened.
+  - ref: KR-RHO-898783
+    provenance: internal
+    claim: Interval structure of k is exploited only by kangaroo-type generic methods, which this record
+      does not use.
+    verified_by: Mythos ideation 2026-11-09 read the row in the REPO BRIEF frontier map; row file not
+      opened.
+  - ref: Linial-Mansour-Nisan 1993; Kushilevitz-Mansour 1993 (recalled)
+    provenance: recalled
+    claim: Low-degree Fourier concentration implies classical learnability; heavy coefficients are findable.
+    verified_by: recalled, not opened in this session.
+  assumptions:
+  - N > 2^n so k ranges over distinct scalars; p near 2^21 from the calibration primes file.
+  - Bit i of x(kP) is taken on the canonical representative in [0, p).
+  predictions:
+  - metric: max over d <= n/2 of |W_{<=d} - random value| in sigma units, for each i
+    direction: lower
+    minimum_effect: at most 3
+  - metric: max_{|S| >= 2} |hat F_i(S)| * 2^{n/2}
+    direction: lower
+    minimum_effect: at most sqrt(2 n ln 2) + 3 sigma
+  - metric: planted parity of weight 3 at amplitude theta = 2^{-n/4}
+    direction: higher
+    minimum_effect: recovered as the top coefficient at every seed
+  minimal_test:
+    design: Compute x(kP) for all k < 2^20 by one addition chain (2^20 group additions), extract bits
+      i, run a fast Walsh-Hadamard transform per i, and tabulate W_{<=d} and the maximum coefficient by
+      degree. Repeat on three curves.
+    controls:
+    - Random Boolean function of n bits, same transform, 50 seeds, for the sigma bands.
+    - Label control: replace x(kP) by x of a random permutation of the scalars, which must be random-level.
+    - Planted control: F XOR a weight-3 parity on a 2^{-n/4} fraction of inputs.
+    required_metrics:
+    - n, p, N, curve coefficients
+    - W_{<=d} for all d and the random mean and sigma
+    - max |hat F_i(S)| for |S| = 1, |S| = 2, |S| >= 3
+    - planted-control recovery indicator
+  falsification_conditions:
+  - Some F_i has W_{<=d} more than 3 sigma above random at some d <= n/2 on two curves, with the label
+    control flat.
+  - Some |S| >= 2 coefficient exceeds the stated bound on two curves.
+  - Planted parity not recovered (instrument invalid, not a result).
+  confounders:
+  - Degree-1 coefficients may show small provable excess from interval truncation; they are excluded from
+    the headline metric.
+  - The top bit i near log2 p is biased because x < p; the bias is subtracted before the transform.
+  interpretation_limits:
+  - A flat spectrum at n = 20 is not a proof at n = 256 and does not touch the generic floor.
+  - Concentration at degree above n/2 is not a learning route and is not interpreted.
+  heuristic_assumptions:
+  - id: H1
+    statement: Bits of x(kP) have random-level Walsh spectra at degrees 2 and above as functions of the
+      bits of k.
+    rigorous_support: None for degree 2 and above; degree 1 follows from additive-character bounds.
+    validation_plan: Exhaustive transform at n = 20 on three curves with the stated controls.
+  target_complexity:
+    time_exponent: N^{1/2} unchanged, delta 0
+    memory_exponent: O(2^n) for one bit table
+    best_known: Pollard rho, Theta(N^{1/2}), KR-RHO-13bf67
+    hidden_overhead: None; measurement only.
+    tradeoff_note: A coefficient theta would give a predictor at cost theta^{-2}; nothing else is defined.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  sota_delta: 'Exponent delta 0. New observable: Walsh coefficients of degree at least 2 of the discrete-log
+    graph, outside every additive-character bound in the ledger.'
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/generic-rho
+    rows_checked:
+    - KR-RHO-13bf67
+    - KR-RHO-898783
+    - KR-RHO-ea34b8
+    - KR-RHO-5b1c0a
+    - KR-IC-5931ee
+    nearest:
+    - ref: KR-RHO-13bf67
+      provenance: internal
+      relation: adjacent
+      delta: Generic bound is bit-blind; the Walsh spectrum is a bit-level statistic of the representation.
+    - ref: KR-RHO-898783
+      provenance: internal
+      relation: orthogonal
+      delta: Interval methods use the size of k, not parities of its bits.
+    searched:
+      corpus_grep:
+      - REPO BRIEF wave-1 sweep lead Learned predictor of k-bits from x(kP)
+      - REPO BRIEF complexity-wave record Algebraic-immunity and interpolation-degree profile
+      - REPO BRIEF barriers-wave record Exhaustive hybrid-sum matrix of the discrete-log graph
+      web: []
+      blocked: []
+    lead: LEAD-ICE-chained-semaev-dreg-vs-semiregular
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: Compute x(kP) for all k < 2^20 by one addition chain (2^20 group additions),
+        extract bits i, run a fast Walsh-Hadamard transform per i, and tabulate W_{<=d} and the maximum
+        coefficient by degree. Repeat on three curves.'

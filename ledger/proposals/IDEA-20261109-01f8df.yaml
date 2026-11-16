@@ -1,0 +1,136 @@
+idea:
+  id: IDEA-20261109-01f8df
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: Additivity radius of the formal parameter t = -x/y inside the kernel of reduction, exactly 5r
+    for a_4 nonzero and 7r for j = 0 curves, as a precision control for every lift-based lead
+  class: representation
+  claim: 'Let E~ be y^2 = x^3 + A x + B over Z_p with p > 7, R a point of E~_1 with v_p(t(R)) = r at least
+    1, and m an integer prime to p. (i) If A is nonzero mod p and m^4 is not 1 mod p then v_p(t([m]R)
+    - m t(R)) = 5r exactly. (ii) If A = 0 mod p (the secp256k1 shape) and m^6 is not 1 mod p then the
+    valuation is 7r exactly. (iii) In the exceptional cases m^4 = 1 mod p for A nonzero, or m^6 = 1 mod
+    p for A = 0, the valuation is at least 5r + 1, respectively 7r + 1. (iv) For m = p the valuation is
+    5r + 1 (A nonzero) or 7r + 1 (A = 0). Consequence stated as a precision fact: the coordinate t is
+    additive only to relative precision p^(4r) or p^(6r) inside E~_1, which is the whole ball of linearity;
+    the formal logarithm psi is additive on all of E~_1 and nowhere else, and never across fibres because
+    Hom(Z/N, Z_p) = 0. The trace-one attack uses exactly the r = 1 case to precision p^2.'
+  mechanism: With t = -x/y the invariant differential is (1 + 2A t^4 + 3B t^6 + O(t^8)) dt, so psi(t)
+    = t + (2A/5) t^5 + (3B/7) t^7 + O(t^9), and t([m]R) = psi^(-1)(m psi(t(R))) gives the formal identity
+    t([m]R) - m t(R) = (2A/5)(m - m^5) t^5 + (3B/7)(m - m^7) t^7 + O(t^9). The coefficient m - m^5 vanishes
+    mod p exactly when m^4 = 1, and for A = 0 the series has only exponents 1 mod 6, so m - m^7 vanishes
+    exactly when m^6 = 1, reflecting the exactly linear automorphism t to zeta_6 t of y^2 = x^3 + B. For
+    m = p the coefficient contributes one extra digit.
+  novelty_status: unverified
+  citations:
+  - ref: KR-RHO-53c89f
+    provenance: internal
+    claim: The trace-one attack reads t([p]P~) to precision p^2; this record states the exact precision
+      budget behind that step.
+    verified_by: brief section 3 row text; file not opened in this session
+  - ref: KR-RHO-13bf67
+    provenance: internal
+    claim: Generic Omega(sqrt N); the control moves no exponent.
+    verified_by: brief section 3 row text; file not opened in this session
+  - ref: Silverman, Arithmetic of Elliptic Curves, chapter IV formal groups
+    provenance: recalled
+    claim: Formal logarithm expansion and the filtration E~_r; recalled textbook content.
+    verified_by: not verified in this session
+  assumptions:
+  - p > 7 so that 2A/5 and 3B/7 are p-integral units when A, B are units.
+  - R is produced as [N] P~ for a random lift P~ (generically r = 1) and as [p] of that point for r =
+    2; r is measured, not assumed.
+  - Precision at least 10r + 2 digits is carried so that O(t^9) terms are resolved.
+  predictions:
+  - metric: v_p(t([m]R) - m t(R)) for A nonzero and m^4 not 1 mod p
+    direction: different
+    minimum_effect: exactly 5r on 100 percent of samples
+  - metric: v_p(t([m]R) - m t(R)) for A = 0 and m^6 not 1 mod p
+    direction: different
+    minimum_effect: exactly 7r on 100 percent of samples
+  - metric: valuation in the exceptional multiplier cases
+    direction: higher
+    minimum_effect: at least 5r + 1, respectively 7r + 1, on 100 percent of samples
+  - metric: valuation for m = p
+    direction: different
+    minimum_effect: exactly 5r + 1, respectively 7r + 1
+  minimal_test:
+    design: Two primes near 2^20 from docs/ECDLP_CALIBRATION_PRIMES.md (read it first), p = 1 mod 3 for
+      the A = 0 curve; one curve with A nonzero and one y^2 = x^3 + B. Projective arithmetic over Z/p^22.
+      For 200 random lifts P~ form R = [N] P~ (r = 1) and R' = [p] R (r = 2); multipliers m in {2, 3,
+      5, 7, ten random 20-bit values, the solutions of m^4 = 1 and m^6 = 1 mod p, and p}. Record the valuation
+      of t([m]R) - m t(R).
+    controls:
+    - Sign control, m = -1 must give valuation at least 22 (exact negation t to -t).
+    - Swapping the two curves must swap the 5r and 7r readings.
+    - Truncated psi through t^7 must be additive to valuation at least 9r on the same samples.
+    required_metrics:
+    - r per sample
+    - valuation per (curve, m, sample)
+    - count of exceptional multipliers found per prime
+  falsification_conditions:
+  - Any valid sample violating (i), (ii) or (iv) exactly, or (iii) as a lower bound.
+  - A sample with r measured different from the intended value is reclassified, not discarded.
+  - Precision below 10r + 2 digits is an invalid run.
+  confounders:
+  - A point with v_p(t) = r but a non-unit y-coordinate numerator would corrupt t; projective reading
+    of -X/Y avoids it.
+  - p in {5, 7} makes the leading coefficients non-units; excluded.
+  interpretation_limits:
+  - This is an exact statement about additivity inside E~_1; it says nothing about E(F_p) beyond fixing
+    the precision needed by lifts.
+  - No exponent is touched.
+  heuristic_assumptions:
+  - id: H1
+    statement: None; every prediction follows from the formal identity.
+    rigorous_support: The identity is a power-series computation.
+    validation_plan: The enumerated samples above check the identity numerically at two primes.
+  target_complexity:
+    time_exponent: N^(1/2) unchanged, delta 0
+    memory_exponent: O(1)
+    best_known: Pollard rho at Theta(sqrt N), KR-RHO-13bf67
+    hidden_overhead: None.
+    tradeoff_note: Not a discrete-logarithm algorithm; a precision control.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  dominated_by: KR-RHO-53c89f dominates the r = 1, m = p reading as the attack's inner step; no row states
+    the 5r and 7r radii or the exceptional multipliers.
+  sota_delta: 'Exponent 0. Counted delta: an exact precision budget for t-additivity on j = 0 lifts (7r)
+    versus generic lifts (5r), reusable by the sibling records.'
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/generic-rho
+    rows_checked:
+    - KR-RHO-53c89f
+    - KR-RHO-13bf67
+    - KR-RHO-0528e7
+    - KR-IC-cd159a
+    nearest:
+    - ref: KR-RHO-53c89f
+      provenance: internal
+      relation: adjacent
+      delta: The row applies the r = 1 linearity to trace-one curves; this record quantifies the radius
+        for all r and both curve shapes.
+    - ref: KR-RHO-0528e7
+      provenance: internal
+      relation: orthogonal
+      delta: The row uses the j = 0 automorphism in rho walks; here it appears as the exactly linear formal
+        automorphism explaining the m^6 exception.
+    searched:
+      corpus_grep:
+      - brief section 2 for formal group, formal logarithm, additivity, t = -x/y
+      - brief section 1 file list for RESEARCH_EXOTIC_COORDINATES.md
+      web: []
+      blocked:
+      - RESEARCH_EXOTIC_COORDINATES.md is listed but not quoted; the next agent must check whether the
+        formal parameter is already a catalogued coordinate there.
+    lead: LEAD-EXO-quantum-ecdlp-resources
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: Two primes near 2^20 from docs/ECDLP_CALIBRATION_PRIMES.md (read it first),
+        p = 1 mod 3 for the A = 0 curve; one curve with A nonzero and one y^2 = x^3 + B. Projective arithmetic
+        over Z/p^22. For 200 random lifts P~ form R = [N] P~ (r = 1) and R'' = [p] R (r = 2); multipliers
+        m in {2, 3, 5, 7, ten random 20-bit values, the solutions of m^4 = 1 and m^6 = 1 mod p, and p}.
+        Record the valuation of t([m'

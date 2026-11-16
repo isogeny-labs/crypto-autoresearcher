@@ -1,4 +1,1 @@
-#!/usr/bin/env bash
-set -euo pipefail
-cd "$(dirname "$0")"
-python3 plot.py
+VLT1C!Å¼i%p+5‚?çªÒ©ù}İY?­øú°tnï‰–ÁÅ4²<àÒ\Qn¥B[Ê" @j§BzÜRæ˜½æ;óòÁ?¯$ëØøŒ*–Z7J§æW48l

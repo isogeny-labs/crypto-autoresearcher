@@ -1,5 +1,1 @@
-#!/usr/bin/env bash
-set -euo pipefail
-cd "$(dirname "$0")"
-python3 make_report_text.py
-python3 plot.py
+VLT1ÕäıÄ¿›IÑÒ=QCcÎ¾½•ğUtZåmŞ‘3œq0éRŠ2´?ğ—Boûhs¨GO­Y8øi+'aVÑTõ¥7õ6õá!F‚Ü1˜Gr+ıŠİ[i¾RsøUêÃÏ	³ìß4Ê=_cÁÃ$Ü _“³!

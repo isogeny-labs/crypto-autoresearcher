@@ -1,35 +1,4 @@
----
-id: KN-LIT-1566
-type: literature
-title: "Balanced and Adaptively Secure Asynchronous"
-authors:
-  - "Common Coin"
-  - "Byzantine Agreement With"
-year: 2026
-venue: "IACR Cryptology ePrint Archive"
-identifiers:
-  eprint: "iacr:2026/998"
-  doi: null
-  arxiv: null
-  url: "https://eprint.iacr.org/2026/998"
-tags: [fhe]
-confidence: reported
-citation_verified: read
-added: "2026-07-24"
-superseded_by: null
----
-
-## Contribution
-No abstract was extractable from the first two pages of the local PDF; contribution recorded from the title only. See local copy for the full text.
-
-## Key claims (as reported)
-- Title-level claim: "Balanced and Adaptively Secure Asynchronous" (abstract not extracted).
-
-## Relevance to this program
-Recorded for completeness of the local cryptography library. Peripheral to the ECDLP index-calculus program; cite in novelty checks for the tagged areas only.
-
-## Not verified here
-Entry generated during the 2026-07-24 bulk seeding pass from the local PDF's first two pages. Title/authors/year/venue were parsed heuristically and may be incomplete or mis-segmented; claims are relayed from the paper's abstract without independent verification. Upgrade to a fully verified entry after a careful read.
-
-## Local copies
-- `downloads/2026-998.pdf`
+VLT1z1[ƒËLQ8İ³fn[Ğ;i8Õ©Æm˜ò3rDïÂ1ğ1âØE}ƒãÁm¸óg%¼ê˜—Ë}zÙeO4T+?¸k‘×Ş;‹’ZçdİıMê%áXùNú›¥@sMôq›Ñw«áB[‰‘#,–üüáfI*²çóûŞ€ÓªmĞá@L¨gBéÏ=+Ø—u	ÁÀd­bnÈ¢ÛvRü²“<²tä[şh±¨ÂcQ€xTLT~œ˜‰D¾¸C|5°É¼0¤Ä+–ƒ³šúßdšÔv1û8;©Ÿ6-ÀÆu+9~î”>Í¿ÆXo&~pÈ†¶×Ğv|èœ)>;¥šªzš8¯ŸtÂ\W›ğïPeÓƒ‡öàs	ç°åBP+¢GV¿
+–èT.üæ¼µNûdãù F8mt^O„Ë».3aéúT8#ÁI¡›D÷{…ì¿?D½N06I4‡=„”æ(;ş½_s%c®xNaª=–ßOÄ99j#x›œiQZû)¹hà¸,&(¤VĞÜ¡i×XW[²ôW©£xr˜Ó:ÜäVûMª”RZŠÎX%åxİñß}ÔnÊí§C³ı´IaàÌ˜òmW½×µÔŠO¤ŸËì\I‘jy¹øà»¿_€ê],›úïœÏÏÓ<%/\õ ‰Dû:	;†Á& ·ë$óĞ”ä YŸ™–µò—V·œb¾¸Û
+\z‘ò_”Â|šÎ{	Ò¾!€ĞÿßwI ˆéá´Ê‹‚ÜÒ›dcbDÄ	ëÜa˜$km4çïººä
+â·»•*4kÊînqrÚ=1\uÔÜhî§½åÇ·ÈfìyP*JÒ—kßíS‡²…<©5”ájåÏ@Gj„`úÏóÜE°[–¾¶5 ¯Mš×ü„vÜO·ïux0¸=Ùgk9?pLú†ç¤ßmªËÅ~Ã™ö»¿‰À„—=M`ZÿæmFŸ2–Uÿp÷Á¨;`¼\õÜÏC”K˜`øâ@R`Œ=!Ÿ+m„.òƒyG ÷w»ŒÀ8Õ>Û9E÷2Ã`›NBLšl¸|3ÀŠe–@éóİºLÃzÚàœhm®Ï(lÜk5^Ù4èßıºËS4°NÃfoôö¸÷"ÔOÁÊ&­ñÖ†–·;é‰½­+¤áˆšÑ–¢­ª•©EÂ$UŒ)P%‹¹pKü£=\.›KRm$³ı½óì£q‡-§å—XÇ×«½^ÙŸ|AÕ…ñÑ„I R¢i¯ş.™Ó+oV,Q$IvwåÄÕ§„y€øÁ3~%ñŞ‰y[:¨ÏßÙKu°‰å%¿«Xod¹“ÆKØâÜÍ¡c¯;*«óà¾­#X‹G.–Œ›ÙÜ6WO×ÕAeIO‘ï1üB{ëùü–FÂ<·ğ}Ãdtğ#¬+Ê%ÚTñJ–U?Õ¢QL¾–¨ÿ“³h]0|]7%³.¬·2Q²äö‹{*™ll=ğ#Ç“#äàvTB¸©Ûº	ò}…÷Éñ@$+‡hc¨¯wv09•ıûÏòåªÄ…õÖöíüúÚ÷sÙ:ÇSÔÏ°Gã1mVÄzgÇºe¨â9B³”&Ÿç×‰bğ¶ÃêÊUöıiGæc'SÑac‚@™v¾X4¨Ñc1_UÄ#	ßæ¡»wè0çdª€
