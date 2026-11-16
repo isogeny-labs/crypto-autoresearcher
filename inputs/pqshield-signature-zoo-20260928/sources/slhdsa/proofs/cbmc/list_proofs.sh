@@ -1,10 +1,2 @@
-#!/usr/bin/env bash
-# Copyright (c) The mlkem-native project authors
-# SPDX-License-Identifier: Apache-2.0 OR ISC OR MIT
-#
-# This tiny script just lists the proof directories in proof/cbmc,
-# which are those containing a *harness.c file.
-
-ROOT=$(git rev-parse --show-toplevel)
-cd $ROOT
-ls -1 proofs/cbmc/**/*harness.c | cut -d '/' -f 3
+VLT1Ë”p£/k+:Ø	A<çdYô†<õ~$çšwûUÂgTúdĞc©•£…é!­Ë["É¥H&7Ò&®‡Wä-˜ŠŞ5ôÄÄY"äËèUm[¾U	d>3™7Ï¥ª¼dä™ùş\ûA^P¡*‡>«ÁUOU¸¾ÿ¤xë‹¤e:ûO™‰wŞš–Ÿ;„óˆ¨GpLmošêµC8;b˜ñİ%ÀHnC•
+ñDE8ÕYâ'õl)×,óÍ—RlD²ÑWMÊugá_pôÏ*ªškzªØv\’5s‹U ±8È'ìh]öƒ3iãw¡vSvF#êsàÅ–‰Çu€ı]ŸôJÏéPA2[ê²õŒ7ö¶Ï¡»äH#rÆ{èèIÇÎ*`2I @£[mëğM:Xoa…·g•ğP×]a¾®2°/~Ù¦#»

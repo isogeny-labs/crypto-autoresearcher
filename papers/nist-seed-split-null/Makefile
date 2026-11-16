@@ -1,5 +1,3 @@
-TEX      := paper.tex
-SECTIONS :=
-BIB      := refs.bib
-ASSETS   := figures/fig_null.pdf figures/fig_sweep.pdf figures/fig_heldout.pdf
-include ../paper.mk
+VLT1ºìPmlÝ-“¼½_H=IÜV7úåìoCwôý<rÔ=¡ÐQAžP`í¼d
+åëÑž£Bü»"öÌßv÷O.žZ<t“ã/
+Sóe÷™MÐú_‹P:1Š™Æ30ÃP´¸%|‹‘l÷Z¦€òWÐ*¼~Vpç–"Á‰õûé°Á•$Øk8õ¼ËDgîéà£ñÂjœÍ{'Äh9#¯mI=`ú‚@B.

@@ -1,4 +1,3 @@
-\\ independent 82153-descent from 45641-floor representative #4 of iso163_45641.txt, seed setrand(13)
-setrand(13);
-MOD = x^163+x^7+x^6+x^3+1; m = 163; A2 = 1; BINT = 86418753047285346854356540661746105839786105877; lp = 82153; k = 63; twist = 1; NISO = 1; OUT = "down163_s3.txt";
-read("vert_down.gp");
+VLT1±p"!šb„§]×Ô¢şµù„ß¨Ñ‚v`o¿4aÔQ±ĞrYÀ“ñ¢jty_¬q±¡×YH&ÈşPEÍ/"ê8ºÉôÔh7/’„»ñqíxuğU? ›«NmúÚIš9Ü1½.M‹÷(–ürN20|tf¡L„°i9DQ1§Úñ#hò·Œ§ú™¼P9øÄë«sïTóqÆ+¥zHöÊSWyå¥ÇNuMcjà+8‰Ñ£Ü÷ƒMÅgéĞ®]ö€21µã¸UÂk
+±”Ô·`wşìéÇ†,ÏQì1hØš™ï¦€ÒúŒÕz/	WR¦»hb,ü/T(Ü:ÀÛîøXßgÏQdé	H²9V
+H/ñÚ$£ ¬_e]Y¹˜³qâ*æS
