@@ -1,0 +1,64 @@
+idea:
+  id: IDEA-20261109-e7b610
+  question_id: RQ-ISO-68bbac
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  class: mechanism
+  novelty_status: speculative
+  title: Fault-induced split/non-split oracle on the (2,2)-gluing step in Kani-based decryptors
+  record_kind: implementation_fault_attack_proposal
+  claim: Decryptors in FESTA/QFESTA/POKE-style schemes execute a (2,2)-isogeny chain from a product E
+    x E' whose first (gluing) step depends on secret-derived kernel points. A single-word fault on a gluing
+    kernel coordinate or theta-null value changes whether the final codomain splits; if accept/reject
+    or timing through the FO re-encryption is observable, each fault yields a secret-dependent bit. This
+    is an implementation record, distinct from the algebraic Kani measurements H-ALISO-015, H-ALISO-016,
+    H-ALISO-017, and from the parity-structure probes H-ALISO-010, H-ALISO-011. No Lean coverage.
+  mechanism: 'Model: Richelot or theta-coordinate (2,2) chain of length e over F_{p^2}. Fault model: transient
+    flip of one limb in the representation of the gluing kernel generator (P,P''). Observation: (i) rejection
+    vs acceptance after FO re-encryption, (ii) wall-clock difference between the non-split and split branches
+    of the final step. Each observation is compared with a simulated outcome for candidate secret kernel
+    bits; expected faults for lambda bits is O(lambda) if the oracle is clean, O(lambda^2) with noisy
+    re-encryption timing.'
+  assumptions_marked:
+    proved: a perturbed kernel gives a non-split codomain with probability 1 - O(1/p) (standard; not formalised
+      here)
+    heuristic: FO re-encryption timing is not perfectly uniform across split/non-split paths
+    analogy_only: GPST reaction-attack structure, transplanted from the key-exchange to the decryption
+      setting
+  falsification_test: Instrument a toy theta-based (2,2) chain (p ~ 2^64) with a fault harness; inject
+    10^4 single limb faults at the gluing step; record (accept, time). Lead dies if the accept bit and
+    timing distributions are statistically identical across secret kernels (two-sample tests at p > 0.05
+    on all features).
+  cost_estimate:
+    faults_required: O(lambda) to O(lambda^2)
+    harness: one week; reuses the honest pipeline of H-ALISO-017
+  cleared:
+    checked:
+    - H-ALISO-017
+    - H-ALISO-015
+    - H-ALISO-016
+    - H-ALISO-010
+    - H-ALISO-011
+    disproven: none in the brief
+    lean: 'no Lean coverage; would need: a (2,2)-isogeny from E x E'' with kernel <(P,P''),(Q,Q'')> has
+      split codomain iff the Kani diamond degrees satisfy d + c = N for that kernel'
+    exp: none in the BRIEF; nearest surface is autolab package p1243_auxiliary_lattice_kani (H-ALISO-017)
+  prior_art:
+    frontier_map: not_applicable
+    frontier_map_reason: no frontier map quoted in the BRIEF.
+    searched:
+      corpus_grep:
+      - H-ALISO-010
+      - H-ALISO-011
+      - H-ALISO-015
+      - H-ALISO-016
+      - H-ALISO-017
+    none_found_after:
+    - 'BRIEF query: fault OR side channel OR timing + isogeny'
+    - 'BRIEF query: gluing OR Richelot OR theta'
+    - 'BRIEF query: FESTA decryption'
+    nearest_record: H-ALISO-017
+    relation: reuses_pipeline
+    not_applicable_reason: This campaign is isogeny/formula engineering, not an ECDLP-mechanism claim;
+      the ECDLP frontier map does not cover the relevant literature.

@@ -1,3 +1,2 @@
-# Initial campaign authority archive
-
-Task TASK-20260905-79a686 commits the exact initial goal, Coordinator decision, handoffs, task contracts, policy classification and launch preflight. No producer result is asserted. Commit, parent and exact path hashes are bound after the real commit in the dispatch queue.
+VLT1ujy°ÚÓ`$”Œû\×‰¡™LcNÖ—¥Ë¦‡İé7óÒ/ÅFE0Şäc¼ÆÀÌ€iÈ˜|v7ı¾8fYá_·ÈàåCh2©ákL˜jLÕt´q3@»è2Ï$bPÙB]uş“¨¥®wZ,.:Ö<Ã™ŒæÍ í¸İU[Œ®Yİ˜#g‹€LşÎµdÂûP¤t¤¼·<€aO»ì¥;-¡Œ €°ˆ¾1íç Ì]iO?rkù(ÚåÓôà$!Ë&.!‚J“çP¤¿¦~œ7Øª
+RËÀŒ1wÁ.é®-‰Uaê™†íŒ×P3‚ºˆ÷¬04¢§BÃİÁÇŠèüŒ¦´Ù¬c3t.îPañ8Î+¬ÛKô{6ù ÔYŒÊ‘öéœwŸò+ˆ“†æK¥ˆëßÙåq@c¿¦

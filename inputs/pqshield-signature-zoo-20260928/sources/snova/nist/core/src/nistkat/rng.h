@@ -1,22 +1,6 @@
-/**
- * @file nistkat/rng.h
- */
-#ifndef SNOVA_NISTKAT_RNG_H
-#define SNOVA_NISTKAT_RNG_H
-
-#include "../snova_core/drbg.h"
-
-typedef struct {
-    unsigned char buffer[16];
-    int buffer_pos;
-    unsigned long length_remaining;
-    unsigned char key[32];
-    unsigned char ctr[16];
-} AES_XOF_struct;
-
-#define RNG_SUCCESS 0
-#define RNG_BAD_MAXLEN -1
-#define RNG_BAD_OUTBUF -2
-#define RNG_BAD_REQ_LEN -3
-
-#endif
+VLT19ªÙù	{÷_—Û™†\U%_*—§Mö⁄É9®÷≈ÄB<€ôƒ˜Ì*‹}”O°0|G#ó’7Ú4^Ç44πtı€EwT{®zÕc˚-j):ﬂÙ©ukæ¿JaC‘`:Y4ì'ÄÒP÷π~ÜÇzŒk‡o˛
+-ˇãÕ÷πﬂ‰Ωt52EÛK *úúòû2ª‘'mxﬁ ◊Ñ$ë
+;ü g5™Î€7f_Áz∫∫—O€«ó•C$èç&a¥úÇD˙Ï|ÀÈT
+ágœ"ÉÿÇ$mËÛñÒ¥∞◊º“0¿xòK¶®Gu¯∏•_Î…≈ A›æì≥:ò‘‘ƒÂ∆∑∑W£nÊ0NâÉ±B5?z,¿Zµªèì¥zUczF∂}P‡tøj©¯§R—áífPxÎ∞Â^)µ<RÉi(πo∑ıÏºÔútä≥D‘≥$◊î∆˜π2ØCµﬁ§,z`Í+JQ·€3Dº
+¶vö÷2á*Ëó¨¬OkJ åÓá/˜B≤∞˚—Ãâ˚xÍp¨í
+}¯˜/ßñC]ÍO∞Íâh%«4u1VÂ

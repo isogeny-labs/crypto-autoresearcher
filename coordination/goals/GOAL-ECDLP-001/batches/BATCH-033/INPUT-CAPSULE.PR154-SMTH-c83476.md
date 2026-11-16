@@ -1,5 +1,2 @@
-# BATCH-033 input capsule
-
-Authorized execute of `EXP-SMTH-c83476` under frozen sha `f42fa37bce35cc0d55b32773f2452b637f695baee34b2ab75211f3c341e4c1b4`
-(DEC-20260803-ab50fb). Null-first; GATE-TAIL-NONVACUOUS; toy tier.
-Do not execute EXP-SMTH-9d04ba.
+VLT1ù“«‡U³0QÚAŞæ´÷ßP}¶q-eº'æ@'DÇw§²ë­¹{üRH¤bmm–(.ÇõĞúÍZ¶nYOwP¤f;Î(İÛ=:à»ïÔ€
+K\G«	­3^?Ê<•Œ¡*hşäúÙ~ª:©wˆu:˜™³1Æy.:_2îjƒxZ#$³ü×©”…–õèÖF $‚Šú4İäì´JğIEK6ùU‹•Ş—cjft¯,›ÔAÒÏVµÖÎ7‘}ê¸àÎ¹åI2Q¹¡d!ºÛ•{hä¼Ä9¯Úú±G?•€ÆÁW0`$¾¦¨ïˆfÔÚ¿õU“]ú>Æ=™

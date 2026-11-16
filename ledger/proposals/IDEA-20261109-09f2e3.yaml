@@ -1,0 +1,48 @@
+idea:
+  id: IDEA-20261109-09f2e3
+  question_id: RQ-ISO-68bbac
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  class: measurement
+  novelty_status: adaptation
+  title: Gate and depth accounting for Grover-over-walk-seeds spine search at SQIsign sizes
+  claim: Grover over seeds of non-backtracking 2-walks of length k ~ log2 p from E_A with predicate 'endpoint
+    j-invariant in F_p' needs ~ (pi/4) p^{1/4} iterations (success ~ 12|spine|/p); each iteration costs
+    k 2-isogeny steps of ~3 F_p multiplications (~n^2 Toffoli, n = log2 p) plus a reversible F_p-membership
+    test. At p ~ 2^248 this is ~2^92 Toffoli but sequential depth ~2^92, far above MAXDEPTH 2^64, so the
+    parallelism penalty must be charged. Cleared against H-ALISO-012 and H-ALISO-013; no Lean lemma constrains
+    it. This is a parameter audit, not an attack.
+  mechanism: 'Build the circuit cost model: walk step (2-isogeny over F_{p^2}, x-only), membership test,
+    uncomputation, diffusion. Charge depth under MAXDEPTH in {2^40, 2^64, 2^96} with the standard sqrt-parallelization
+    penalty. Compare to the NIST-I AES-128 Grover figure.'
+  security_delta: None if the total under MAXDEPTH exceeds the AES-128 benchmark; a misfiled parameter
+    set if it does not.
+  kill_test: Full accounting at p ~ 2^248; if the cost under every MAXDEPTH exceeds the AES-128 Grover
+    benchmark, record 'parameters hold' and close.
+  cleared:
+    checked:
+    - H-ALISO-012
+    - H-ALISO-013
+    disproven: none in the brief
+    lean: 'no Lean coverage; would need: Grover with success probability q needs Theta(q^(-1/2)) oracle
+      queries'
+    exp: none; nearest surface is aburan28/crypto-autoresearcher autolab package p1486_quantum_cost_accounting_verify
+  prior_art:
+    frontier_map: not_applicable
+    frontier_map_reason: no frontier map in the brief
+    searched:
+      corpus_grep:
+      - H-ALISO-012
+      - H-ALISO-013
+      - H-WESO-516558
+    none_found_after:
+    - 'BRIEF grep: ''Grover'' OR ''MAXDEPTH'''
+    - 'BRIEF grep: ''quantum'' outside H-ALISO-012/013'
+    - 'BRIEF grep: ''Toffoli'' OR ''depth'''
+    not_applicable_reason: This campaign is isogeny/formula engineering, not an ECDLP-mechanism claim;
+      the ECDLP frontier map does not cover the relevant literature.
+  marks:
+    proved: Grover query count
+    heuristic: per-step gate constants; mixing to uniform before the membership test
+    analogy: none

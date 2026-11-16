@@ -1,0 +1,147 @@
+idea:
+  id: IDEA-20261109-42f439
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: Coppersmith small-root region versus decomposition-existence region for interval factor bases
+    over F_p (closed-form gamma for S_4, S_5)
+  class: solver
+  claim: 'Let F_X = {P in E(F_p) with 0 <= x(P) < X}, |F_X| ~ X, arity m, target R. Decomposition of R
+    over F_X is exactly one m-variate modular equation S_{m+1}(x_1,...,x_m,x_R) = 0 mod p with roots in
+    [0,X)^m, degree delta = 2^{m-1} per variable and full-box Newton polytope (IDEA-20260723-006). Let
+    gamma(m) be the largest gamma such that a Coppersmith-type lattice recovers the root whenever X^m
+    <= p^gamma. (A) The Jochemsz-May basic strategy gives gamma_basic = 2/((m+1)delta), i.e. 1/3, 1/8,
+    1/20, 1/48 for m = 2,3,4,5. (B) A fully charged index calculus using the lattice as decomposition
+    oracle, re-randomising R + aP until a root lies in the box, has exponent E(m,gamma) = max(1 - gamma(m-1)/m,
+    2gamma/m) in log_p units, so it beats 1/2 only if gamma > m/(2(m-1)), impossible at m = 2 and requiring
+    3/4, 2/3, 5/8 at m = 3,4,5 against 1/8, 1/20, 1/48. Prediction: no construction for the specialised
+    S_4 reaches gamma > 1/4, so E(3) >= 5/6 and the lattice lane closes with a number. Missing lemma L1,
+    stated to be refuted: a Coppersmith lattice for S_4(x_1,x_2,x_3; x_R) exists with gamma > 3/4.'
+  mechanism: Rows g_alpha = x^{alpha - k(alpha) delta 1} S^{k(alpha)} p^{t-k(alpha)} for alpha in [0,
+    t delta]^m with k(alpha) = floor(min_i alpha_i / delta), so leading monomials are distinct and det(L)
+    = X^{sum|alpha|} p^{sum(t-k)}. Here sum|alpha| ~ m (t delta)^{m+1}/2 and sum k ~ (t delta)^{m+1}/((m+1)delta)
+    because the mean minimum of m uniforms is 1/(m+1). The condition det(L) < p^{t dim} reduces to X^m
+    < p^{2/((m+1)delta)}. A root exists with probability X^m/p, so p^{1-gamma} re-randomisations per relation,
+    B = X = p^{gamma/m} relations and sparse linear algebra B^2 give the two terms of E. The same count
+    over F_2[z] with exact module reduction is the binary analogue for the degree-< l factor base of KR-IC-73db3f.
+  novelty_status: adaptation
+  citations:
+  - ref: KR-IC-5931ee
+    provenance: internal
+    claim: Naive Semaev index calculus over F_p with small-x factor bases does not beat generic methods;
+      this record swaps the decomposition oracle for a lattice and gives the exponent in closed form.
+    verified_by: REPO BRIEF 2026-11-09 section 3 row text; frontier YAML not opened.
+  - ref: IDEA-20260723-006
+    provenance: internal
+    claim: The target-sectioned Semaev Newton polytope is the full box outside an O(m) exceptional set,
+      which fixes the monomial count above.
+    verified_by: REPO BRIEF 2026-11-09 section 2 index line; record not opened.
+  assumptions:
+  - The root is unique in the box when X^m < p (fails with probability O(X^m/p)); multiple roots invalidate
+    the run.
+  - One LLL per re-randomisation, dimension (t delta + 1)^m, no sharing across targets.
+  predictions:
+  - metric: gamma_basic(S_4) from exact exponent sums at t = 1..6
+    direction: lower
+    minimum_effect: converges to 0.125 within 0.02 and never exceeds 0.25
+  - metric: fpylll root recovery rate for S_3, p ~ 2^40, X^2 = p^{0.30}
+    direction: higher
+    minimum_effect: at least 0.9 over 50 instances
+  - metric: fpylll root recovery rate for S_3, p ~ 2^40, X^2 = p^{0.45}
+    direction: lower
+    minimum_effect: at most 0.1 over 50 instances
+  minimal_test:
+    design: 'No lattice: enumerate alpha in [0, t delta]^m for m = 2,3,4 and t = 1..6, sum |alpha| and
+      k(alpha) exactly, report gamma_t and its limit. Lattice: build the basic-strategy lattice for S_3
+      at t = 2,3 over random (a,b,x_R), p ~ 2^40, planted root in the box, run fpylll LLL then BKZ-20,
+      recover the root by resultant of the two shortest vectors, at X^2 = p^{0.30} and p^{0.45}; 50 instances
+      each.'
+    controls:
+    - Random polynomial with the same monomial support and random coefficients mod p; the same gamma is
+      expected.
+    - Linear bivariate a + b x + c y = 0 mod p; the pipeline must reach product bound near p^{0.9}, proving
+      it works.
+    - Symmetrised variables x_1 + x_2, x_1 x_2 with bounds 2X, X^2 (KR-IC-955fd6), to separate symmetry-induced
+      dependence from the bound.
+    required_metrics:
+    - gamma_t for each (m, t) and its extrapolated limit
+    - lattice dimension and reduction wall time per instance
+    - root recovery rate at each box size
+    - fraction of runs whose short vectors are algebraically dependent
+  falsification_conditions:
+  - Any lattice recovers S_4 roots reliably at X^3 >= p^{0.75} for p ~ 2^30; L1 survives and this record
+    is wrong.
+  - S_3 recovery rate >= 0.5 at X^2 = p^{0.60}; claim (A) misjudges the method even though rho is still
+    not beaten.
+  - A timeout or numerical failure in LLL is infrastructure, not evidence.
+  confounders:
+  - LLL approximation loss is visible at p ~ 2^40 and small t.
+  - Symmetric inputs often give algebraically dependent Coppersmith outputs; the symmetrised control isolates
+    this failure mode.
+  interpretation_limits:
+  - A confirmed gamma_basic closes only the single-equation lattice route for interval factor bases; Groebner,
+    SAT and non-interval factor bases are untouched.
+  heuristic_assumptions:
+  - id: H1
+    statement: The reduced short vectors give m algebraically independent polynomials over Z.
+    rigorous_support: None; the standard multivariate Coppersmith heuristic, known to fail for symmetric
+      inputs.
+    validation_plan: Record the independence fraction in the fpylll runs.
+  - id: H2
+    statement: Extended strategies improve gamma by at most a factor 2 for balanced bounds on a full-box
+      polynomial.
+    rigorous_support: Consistent with published extended-strategy gains; no proof.
+    validation_plan: Add one-variable extra shifts for S_3 and recompute gamma_t.
+  target_complexity:
+    time_exponent: p^{E(m,gamma)}; E(3,1/8) = 11/12, E(3,1/4) = 5/6; any gamma <= 1 gives E(2) >= 1/2
+    memory_exponent: (t delta + 1)^m lattice rows of polylog(p) bits
+    best_known: Pollard rho Theta(p^{1/2}) (KR-RHO-13bf67); interval factor bases not below generic (KR-IC-5931ee).
+    hidden_overhead: One reduction of dimension up to 10^3 per re-randomisation; the p^{1-gamma} count
+      is charged explicitly.
+    tradeoff_note: No tradeoff claimed; exponent delta against rho is +5/12 at m = 3 under (A).
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  dominated_by: KR-IC-5931ee dominates the conclusion; neither it nor KR-IC-cd159a states gamma(S_{m+1})
+    or E(m,gamma).
+  sota_delta: 'Exponent delta against rho is positive (worse): +5/12 at m = 3 if gamma = 1/8, +1/3 if
+    gamma = 1/4. Deliverable is a closed-form closure of the lattice lane with one measured constant.'
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/index-calculus
+    rows_checked:
+    - KR-IC-5931ee
+    - KR-IC-cd159a
+    - KR-IC-5a43e5
+    - KR-IC-955fd6
+    - KR-IC-73db3f
+    - KR-RHO-13bf67
+    - KR-RHO-5b1c0a
+    nearest:
+    - ref: KR-IC-5931ee
+      provenance: internal
+      relation: adjacent
+      delta: Same factor-base family; the oracle is a Coppersmith lattice rather than root finding or
+        Groebner, and the exponent is a function of gamma.
+    - ref: KR-IC-cd159a
+      provenance: internal
+      relation: orthogonal
+      delta: Xedni lifts points to Q and needs rank deficiency; here the equation stays mod p and the
+        lattice encodes only box size.
+    searched:
+      corpus_grep:
+      - REPO BRIEF section 2 for Coppersmith, lattice, small root, interval factor base, LLL
+      - REPO BRIEF section 3 index-calculus rows for lattice or Coppersmith (none found)
+      - REPO BRIEF section 1 file list for RESEARCH_LLL_GS_ANALYSIS.md and RESEARCH_HNP_LANDSCAPE.md (present,
+        not opened)
+      web: []
+      blocked: []
+    lead: LEAD-ICP-coppersmith-smallroot-semaev
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: No lattice: enumerate alpha in [0, t delta]^m for m = 2,3,4 and t = 1..6,
+        sum |alpha| and k(alpha) exactly, report gamma_t and its limit. Lattice: build the basic-strategy
+        lattice for S_3 at t = 2,3 over random (a,b,x_R), p ~ 2^40, planted root in the box, run fpylll
+        LLL then BKZ-20, recover the root by resultant of the two shortest vectors, at X^2 = p^{0.30}
+        and p^{0.45}; 50 instances each.'

@@ -1,0 +1,150 @@
+{
+  "schema": "classical.ecdlp.reference-source-materialization/v1",
+  "task_id": "TASK-20261106-ddc97d",
+  "recorded_at": "2026-11-06T16:20:36.840416+00:00",
+  "actual_source_claim": {
+    "acquired_at": "2026-11-06T16:11:21Z",
+    "branch": "experiment/classical-ecdlp-endpoint-reuse-20261026",
+    "epoch": 1,
+    "expires_at": "2026-11-06T16:26:21Z",
+    "forced": false,
+    "owner": "executor-public-reference-source",
+    "schema": "crypto.autoresearch.task_claim.v1",
+    "session": "/root",
+    "supersedes": null,
+    "supersedes_lost_completion": null,
+    "task_id": "TASK-20261106-ddc97d",
+    "worktree": "/tmp/classical-ecdlp-validation-20261106",
+    "write_scope": [
+      "harness/classical_ecdlp_public_reference_audit/solver.py",
+      "harness/classical_ecdlp_public_reference_audit/driver.py",
+      "harness/classical_ecdlp_public_reference_audit/verify.py",
+      "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/source-materialization.json"
+    ]
+  },
+  "source_claim_age_seconds": 555.840426,
+  "source_budget_seconds": 900,
+  "source_budget_met_at_materialization": true,
+  "source_files": {
+    "harness/classical_ecdlp_public_reference_audit/solver.py": {
+      "sha256": "d462b17ffb10772852d6024a92be71eb768b27d3d4b619cd582c868f88953031",
+      "bytes": 9158,
+      "imports": [
+        "argparse",
+        "hashlib",
+        "json",
+        "math",
+        "os",
+        "pathlib",
+        "time"
+      ]
+    },
+    "harness/classical_ecdlp_public_reference_audit/driver.py": {
+      "sha256": "e0d7e4c2690f707a26edf0552e25c59327fe9b5637ee7d512c6dafdc06438124",
+      "bytes": 9276,
+      "imports": [
+        "argparse",
+        "datetime",
+        "hashlib",
+        "json",
+        "os",
+        "pathlib",
+        "resource",
+        "signal",
+        "subprocess",
+        "sys",
+        "time",
+        "traceback"
+      ]
+    },
+    "harness/classical_ecdlp_public_reference_audit/verify.py": {
+      "sha256": "a19cfc02c5f95726466eb6fdef9506eb569b04e6a0ffdeb1d322bf9ff4049c8d",
+      "bytes": 20485,
+      "imports": [
+        "argparse",
+        "hashlib",
+        "json",
+        "math",
+        "os",
+        "pathlib",
+        "resource",
+        "time",
+        "traceback"
+      ]
+    }
+  },
+  "static_checks": [
+    {
+      "path": "harness/classical_ecdlp_public_reference_audit/solver.py",
+      "syntax_compile_only": true,
+      "module_imported_or_executed": false,
+      "no_candidate_or_peer_arithmetic_import": true
+    },
+    {
+      "path": "harness/classical_ecdlp_public_reference_audit/driver.py",
+      "syntax_compile_only": true,
+      "module_imported_or_executed": false,
+      "no_candidate_or_peer_arithmetic_import": true
+    },
+    {
+      "path": "harness/classical_ecdlp_public_reference_audit/verify.py",
+      "syntax_compile_only": true,
+      "module_imported_or_executed": false,
+      "no_candidate_or_peer_arithmetic_import": true
+    }
+  ],
+  "scientific_runs": 0,
+  "source_fixture_unit_control_runs": 0,
+  "runtime": {
+    "executable": "/workspace/classical-ecdlp-endpoint-reuse/runtime-20261028/bin/python",
+    "python": "3.12.14",
+    "third_party_worker_dependencies": []
+  },
+  "driver_argv": [
+    "python",
+    "-B",
+    "harness/classical_ecdlp_public_reference_audit/driver.py",
+    "--repo-root",
+    "{repo_root}",
+    "--out",
+    "{run_dir}",
+    "--input-manifest",
+    "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/input-manifest.json",
+    "--time-limit",
+    "1200"
+  ],
+  "check_argv": [
+    "python",
+    "-B",
+    "harness/classical_ecdlp_public_reference_audit/verify.py",
+    "--repo-root",
+    "{repo_root}",
+    "--out",
+    "{run_dir}",
+    "--input-manifest",
+    "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/input-manifest.json"
+  ],
+  "success_artifacts": [
+    "manifest.yaml",
+    "raw-result.json",
+    "certificates-A.json",
+    "certificates-B.json",
+    "certificate-seal.json",
+    "worker-processes.json",
+    "runtime-guard.json",
+    "reference-verification.json",
+    "candidate-audit.json",
+    "verification-summary.json"
+  ],
+  "representation": "Native supervisor compacts large outputs only after checker; logical digests remain bound. JSON is not DATA_EXT and may remain inGit up to1MiB per unmodified artifact policy. No postseal mutation/privateoffload.",
+  "resource_contract": "Two sequential fresh solver processes, each2CPU affinity/4GiB addressspace/1800CPU; checker same bounds; original1200s driver-through-checker monotonic watchdog plus native parent controls. Operational telemetry is unqualified for performance.",
+  "scientific_contract": "Public-onlyHACBSGS48domains/1536targets,192known-scalar controls perpass plusF17/y0/negativefixtures; freshA/A; independentJacobian completeequation/mutation/canonical/domain checks; sealreferenceverification beforeopeningexactR52candidateprefix. Candidateinvalid/undefined and fielddisagreements retained as observations, never coerced into success.",
+  "remaining_before_scientific_launch": [
+    "Source snapshot/nativearchive/publication",
+    "Independent static source review and source-fit decision",
+    "Frozen scientific spec/protocol/plan/preapproval approvalarchive/READY/currentclaim/checkpoint"
+  ],
+  "knowledge_or_algorithm_status_changes": false,
+  "static_control_flow_correction": "Candidate mutation acceptance is a fatal RuntimeError, not a classified undefined claim; proves-too-much failure cannot leave all_controls_passed true. No control executed.",
+  "earlier_unpublished_materialization_sha256": "f200bfc72b9e188a89877504cd15ff785daec74a8b2aa404a6663de64a582a3c"
+}
