@@ -1,0 +1,163 @@
+idea:
+  id: IDEA-20261109-36f649
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: Torsion-section lift of E(F_p) into E~(Q_p) through the lifted CM Frobenius of y^2 = x^3 + B,
+    with a zero-information prediction for the extra p-adic digits
+  class: representation
+  claim: 'Let E be y^2 = x^3 + B over F_p, p = 1 mod 3, p > 7, N the prime order of E(F_p), p not dividing
+    N (secp256k1 shape). The same equation over Z_p is the canonical lift E~ because (x, y) to (beta x,
+    y), beta a cube root of unity in Z_p, is an endomorphism. Write the Frobenius as pi = a + b omega
+    with a^2 - a b + b^2 = p and a + b beta = 0 mod p, and let Phi = [a] + [b] omega on E~. (C1) E~(Q_p)
+    is Z_p plus Z/N, reduction has a unique homomorphic section s onto E~(Q_p)[N], and for every lift
+    P~ of P, s(P) = Phi^(j-1)(P~) mod p^j: one Phi step (two 129-bit scalar multiplications and one multiplication
+    by beta, about 400 group operations modulo p^j) gains exactly one digit. (C2) s(kP) = [k] s(P) exactly,
+    so the ECDLP is the DLP in E~(Q_p)[N]. (C3) Every continuous homomorphism from E~(Q_p) to a Z_p-module
+    vanishes on s(E(F_p)) since Hom(Z/N, Z_p) = 0, so the digits of s(kP) beyond the first have no additive
+    relation to k; the record predicts they are indistinguishable from uniform. No exponent change is
+    claimed; this fixes the object tested by the sibling records.'
+  mechanism: 'Phi reduces to the p-power Frobenius, which fixes every F_p-point, so Phi is the identity
+    on E~(Q_p)[N]. On the kernel of reduction, with t = -x/y and formal logarithm psi, omega acts by t
+    to beta t exactly, hence psi(Phi R) = (a + b beta) psi(R) with v_p(a + b beta) = 1: Phi contracts
+    the Z_p factor by one digit per step and fixes the Z/N factor, so its iterates converge to the torsion
+    section. Without CM the same section is [e_j] P~ with e_j = 1 mod N and e_j = 0 mod p^j at about 384
+    (j+1) group operations; the canonical lift only accelerates, so losing the canonical lift for non-CM
+    curves is not an obstruction. (C3) is the exact reason the trace-one attack stops when N is not p.'
+  novelty_status: unverified
+  citations:
+  - ref: KR-RHO-53c89f
+    provenance: internal
+    claim: p-adic lifting solves trace-one curves only; this record is the complementary case and names
+      the gate.
+    verified_by: brief section 3 row text; file not opened in this session
+  - ref: KR-IC-cd159a
+    provenance: internal
+    claim: Lifting to characteristic zero fails by heights; Z_p lifts have no heights and linear precision
+      cost.
+    verified_by: brief section 3 row text; file not opened in this session
+  - ref: KR-RHO-13bf67
+    provenance: internal
+    claim: Generic lower bound Omega(sqrt N); exponent delta here is 0.
+    verified_by: brief section 3 row text; file not opened in this session
+  - ref: KN-FIND-002
+    provenance: internal
+    claim: Jet and endomorphism oracles are GGM-simulable; the digits of s are such a jet and (C3) agrees.
+    verified_by: quoted inside IDEA-20260806-530fdd in brief section 2; file not opened
+  - ref: Satoh 2000 canonical lift and Smart 1999 trace-one attack
+    provenance: recalled
+    claim: Fixed points of a Frobenius lift on a canonical lift are the Teichmueller-type point lifts;
+      confirm against the KN-LIT index before approval.
+    verified_by: not verified in this session
+  assumptions:
+  - p = 1 mod 3, p > 7, B nonzero mod p, N prime and coprime to p.
+  - beta is Hensel-lifted to Z/p^j and (a, b) is selected by the test [a]P + [b] omega(P) = P on E(F_p).
+  - Z/p^j arithmetic is projective so no non-unit is inverted; t is read as -X/Y.
+  predictions:
+  - metric: fraction of (P, P~, P~') with v_p(t(Phi(P~) - Phi(P~'))) at least 2
+    direction: higher
+    minimum_effect: 1.0 over 10^4 samples
+  - metric: fraction of P with [N] Phi(P~) = O mod p^2
+    direction: higher
+    minimum_effect: 1.0
+  - metric: fraction of (P, k) with Phi(Q~) = [k] Phi(P~) mod p^2, Q = kP
+    direction: higher
+    minimum_effect: 1.0
+  - metric: chi-square p-value of the second digit d_1(P) over all P in E(F_p) against uniform
+    direction: different
+    minimum_effect: above 0.01 on every tested curve, null retained
+  - metric: digits of agreement between Phi^m(P~) and [e_j] P~
+    direction: higher
+    minimum_effect: exactly m + 1 for m < j
+  minimal_test:
+    design: Three primes p = 1 mod 3 of 20 to 28 bits taken from docs/ECDLP_CALIBRATION_PRIMES.md (read
+      it first), one B each with N prime; (a, b) by Cornacchia from 4p = t^2 + 3 b^2, t = p + 1 - N; E~(Z/p^j)
+      for j up to 4; the five metrics on 10^4 random points and multipliers with full enumeration for
+      the chi-square; then the secp256k1 instance at j = 2 (512-bit modulus) on 100 points for the first
+      three metrics, recording group operations per digit for both routes.
+    controls:
+    - Wrong-unit pair (a', b') with a' + b' beta a unit must not fix E(F_p) and Phi'(P~) must stay lift-dependent
+      mod p^2.
+    - The idempotent route [e_2] P~ must agree with Phi(P~) mod p^2 on every point.
+    - A non-CM toy curve with A nonzero, where only the e_j route exists, must show the same (C1)-(C3)
+      behaviour.
+    required_metrics:
+    - lift-independence rate mod p^2
+    - N-torsion rate mod p^2
+    - homomorphism rate mod p^2
+    - chi-square statistic and p-value of d_1
+    - group operations per gained digit, Phi route and e_j route
+  falsification_conditions:
+  - A failure of (C1) or (C2) on a valid run is an implementation error (wrong beta branch or unit) and
+    voids the run.
+  - The uniformity prediction is falsified if the chi-square p-value is below 10^-4 on two independent
+    curves, or if d_1(kP) is predicted from (k, d_1(P)) with success above 10/p.
+  - A timeout is infrastructure, not falsification.
+  confounders:
+  - beta^2 in place of beta selects the lifted Verschiebung, which does not fix E(F_p); the unit test
+    must run first.
+  - Small p inflates chi-square noise; use full enumeration at p at least 2^20.
+  interpretation_limits:
+  - Confirmed (C1)-(C3) move no exponent; they certify an object and a barrier.
+  - Structure found in d_1 is not an attack without a decomposition cost model (lead 11 of the PR).
+  heuristic_assumptions:
+  - id: H1
+    statement: The second-digit map d_1 on E(F_p) has no exploitable structure beyond chance.
+    rigorous_support: Hom(Z/N, Z_p) = 0 excludes additive structure only; non-additive structure is unproven
+      either way.
+    validation_plan: Chi-square and mutual information at p up to 2^28 with full enumeration; interpolation-degree
+      test of lead 11.
+  target_complexity:
+    time_exponent: N^(1/2) unchanged, delta 0
+    memory_exponent: O(j log p) bits per lifted point
+    best_known: Pollard rho at Theta(sqrt N) group operations, KR-RHO-13bf67
+    hidden_overhead: Arithmetic modulo p^j costs about j^2 field multiplications per group operation.
+    tradeoff_note: No time-memory tradeoff is defined; precision j is a free parameter with linear cost.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  dominated_by: KR-RHO-13bf67 dominates any exponent reading; KR-RHO-53c89f dominates the trace-one case;
+    this record is the case p not dividing N.
+  sota_delta: 'Exponent 0 against sqrt N. Counted delta: a canonical p-adic lift of secp256k1 points at
+    about 400 group operations per digit and a stated barrier for every homomorphic p-adic extraction.'
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/generic-rho
+    rows_checked:
+    - KR-RHO-53c89f
+    - KR-RHO-755e35
+    - KR-RHO-13bf67
+    - KR-RHO-0528e7
+    - KR-IC-cd159a
+    - KR-IC-5931ee
+    nearest:
+    - ref: KR-RHO-53c89f
+      provenance: internal
+      relation: adjacent
+      delta: The row covers trace one; this record is the generic case where the same lift carries no
+        homomorphic signal.
+    - ref: KR-RHO-0528e7
+      provenance: internal
+      relation: adjacent
+      delta: The row uses omega to shrink rho orbits; here omega lifts Frobenius and no walk is run.
+    - ref: KR-IC-cd159a
+      provenance: internal
+      relation: orthogonal
+      delta: The row concerns global lifts and heights; Z_p lifts have no height growth.
+    searched:
+      corpus_grep:
+      - brief section 2 for canonical lift, Teichmueller, torsion section, p-adic, Serre-Tate
+      - brief section 1 file list for RESEARCH_SECP256K1_CM.md and secp256k1_cm_audit
+      web: []
+      blocked:
+      - RESEARCH_SECP256K1_CM.md and secp256k1_cm_audit are listed but not quoted; their (a, b, beta)
+        constants must be read before the secp256k1 arm runs.
+    lead: LEAD-TRF-padic-canonical-section
+    lead_delta:
+      kind: answers_obstruction
+      statement: 'New test: Three primes p = 1 mod 3 of 20 to 28 bits taken from docs/ECDLP_CALIBRATION_PRIMES.md
+        (read it first), one B each with N prime; (a, b) by Cornacchia from 4p = t^2 + 3 b^2, t = p +
+        1 - N; E~(Z/p^j) for j up to 4; the five metrics on 10^4 random points and multipliers with full
+        enumeration for the chi-square; then the secp256k1 instance at j = 2 (512-bit modulus) on 100
+        points for the first three me'

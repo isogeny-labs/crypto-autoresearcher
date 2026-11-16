@@ -1,21 +1,2 @@
-"""Monomial-order helpers for Closure (from CERTBIN macaulay)."""
-from itertools import combinations
-
-
-def mu_order(dmax, nv):
-    out = []
-    for d in range(dmax + 1):
-        out.extend(combinations(range(nv), d))
-    return out
-
-
-def mono_mask(m):
-    s = 0
-    for i in m:
-        s |= 1 << i
-    return s
-
-
-def column_order(D, nv):
-    mons = mu_order(D, nv)
-    return sorted(mons, key=lambda m: (-len(m), mono_mask(m)))
+VLT1à9E¾Y)à¶çâ>Ø…´dgG­7@8ytƒi'Mjö9u°à1‹ø	Ø;Ko£ÅZÊ”"4c Y‡áıxRe„Ï¨®$‰³3ß‹İ‡-™İ\6ç61Ûo”]ë@'>_ÌèPà—\\Çõ‘1òÆü­	›˜¼±Uœ‰›ØŠVU)õı¶TıÀj¢&4V”Ã:S/ÌpÕÑÎÒ#×’ÎÚ"¦uÆ«²ÉıÇ­
+±Ñ4bÏşù7<š`· ¹Ô“¥<ºÚ,lf¦”¥|æØóòéE?c%è´è[v=–jŸáæòvhÂ0¬­H”û'*s$Ôìû×ª`fòe€¥¾°#ëç-ÀØÍf³"È³T=`£lï7{YŸ]æ¼¨ò£ Â¬ùuJík[%¶ÛƒêÆ˜œz7œ;èİäò?¶käÃ`İ—ÿ¨(’e8w‹eù¡bmv	\ãYD >g@:ˆ¥ïm˜Æùï­æÀh^óÆÊ‚BnªÒ•¢‚t`!¡·ÎqD­bj¦á\ôSk‚(LïÏ£Oûãª#æŞHÉ?v

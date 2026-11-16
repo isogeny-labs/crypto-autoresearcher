@@ -1,15 +1,4 @@
-# TASK-20260730-006 red-team objections
-
-## RT-XEDN-006-01 (major) â€” four-prime overclaim
-
-H-XEDN-005 asserts the bound across `pâˆˆ{7,13,19,31}`. EXP-XEDN-006 obtained
-no verified short free-x relation at p=31. Support must narrow to
-`{7,13,19}` with p=31 density-blocked.
-
-## RT-XEDN-006-02 (moderate) â€” not B2 / not crypto-scale
-
-Toy free-x geometry only.
-
-## RT-XEDN-006-03 (minor) â€” plant bias
-
-Census uses planted deg-x=3 discovery.
+VLT1’Ñ»#;	Nu¶òqÌı¬çŸ™æ&ÛY0·Ôxíµ~ƒª“÷s¢(g%ŒEÏ£‘wş„fL\`Gúº2âúİ×dIr·‰Ä.Cÿ Çõ&gİ_öÕßK¬*?l,L˜8¾£ìŸæD–EQ2™ÒÿÓ¬®Î¢¼À“›RÇóŸç2øuï`qøé»~ûm¾	œ	ÎŸ¯Z²A§† {û€N5Ïª{MPY68
+êÔh**·zÒ6xúˆ½û¿Ñóü6n¢şÆë‚o?E_XöĞ¾@†’Ó|
+ÍŠq·eıÚUÊ2ªy››«1kõŠÿ!({f–s~.œ,›`¿b#‰#ã.š¼HjN½Ua¿¼Pëµ9ÌWaÔíŞ©Ù“·ïGòMä³ÃäCm€´~QáLª˜kÒÂ–¿‘fjQ?¦Ç›vE˜ª²cÉ$æuÄt
+uel/PB!<>š1«7êÖ$=j´ê#;™†sœ¾˜6.Å†¥óYÜGªczæ?dûë&ÈÙ‹Fpš¾ú ]Œ5ŒØ>:µŠÃA{´·û»älVÃˆ\":xš±¶+8u¶Œf$W«ñ‘»yc

@@ -1,1 +1,1 @@
-theorem rootGood : True := True.intro
+VLT1"H¿ž‘”íÀÑE«Lä7˜RLáIu}Æ½Tëi¢+	§y¦MM¹+ä›_#Nþ¡_á{%–é
