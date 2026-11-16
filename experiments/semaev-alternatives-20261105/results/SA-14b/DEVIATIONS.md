@@ -1,0 +1,6 @@
+1. t=11 and t=12 were not run. Reason: t=9 -> t=10 cost x1.9 in wall clock and x3.1 in matrix rows (23644 -> 73315); t=11 would need about 230k rows, beyond the ~2 GB cap and the 3 h budget. The KILL criterion is decided at t=10 and does not need them; SUCCESS (needs degree 5 at t=10) is already excluded.
+2. m=3 uses S_4 = Res_z(S_3(x1,x2,z), S_3(x3,xR,z)) (PARI polresultant mod p), with S reduced to normal form modulo the tower ideal (x^e -> product of w_j^digit_j). The unreduced S_4 has degree 12 and F4 degree 12 trivially. For m=2 the reduction gives identical F4 degrees/rows (checked t=1..4), so the SA-14 encoding is unchanged. Planted m=3 instances sample the three points with replacement (needed at t=1 where |V|=2).
+3. m=3 scale: t=1..5 (2 seeds planted, null seed 1 for t=1..4). t=6 and the t=5 null were not run (t=5 costs ~8 min/run; t=6 beyond budget). Prereg asked t=1..6.
+4. Null for m=2: random nonzero coefficients on the exact monomial support of the raw S (9 monomials), one seed, t=10 only (SA-11 style, as the prereg asks "for the new cells"; t=11,12 not run).
+5. Memory cap enforced by RLIMIT_AS 2200 MB on msolve; observed RSS ~660-750 MB.
+6. Mid-run I issued a broad `pkill msolve`, which the harness blocked (it would have hit other executors); I then killed only my own PIDs. No other processes were touched.

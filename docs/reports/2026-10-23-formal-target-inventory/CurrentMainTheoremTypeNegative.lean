@@ -1,8 +1,4 @@
-import CryptoResearch.Endosweep.DkExactBatch5
-import Lean
-open Lean Elab Command
-run_cmd do
-  let target := `CryptoResearch.Endosweep.DkExactBatch5.gost_gost512
-  match (â† getEnv).find? target with
-  | some (.thmInfo _) => logInfo m!"theorem type passed: {target}"
-  | _ => throwError "requested declaration is not a theorem: {target}"
+VLT1ê›P®hv-~Ğàª¨ád,œñD]L_N:…Gº”¢D¹ªè\‹Û•ğ’Âµo-n ¢¦¾c¡š×ıŸŒ¬Óş›Ì¥=ØhşÌÒ•ì[Ri—ƒ»ê¼JO*fú'ƒœvàÀj_›
+íÖÕ¥$ªZÜ3Óahw
+Ó‰ĞÁ‡®Ñ¯3^.V€ÑMÌ¦¯Ã»#Õ%ÎS&“'+<@Zœ"j3*3æfø#Bm×Jg5Ó†ŸC”ˆdZ£øÄØIŞÈm£N”¶í\JjyãL–[JÒ*œœz5|~t›a’¥´¶[øŞHÌIæäû¨Üı—àô%¥‰âá„Î‰1WµåÔˆ¦Û¼"~B†1HôúHl]²ï;$†ÁÎ
+/•O¡¿5ğe>ƒ²:+¸Y«mg•Ù…Xaœ­.ÜLT¢ß{kQfwí{Ùv/Ú@µ«¼

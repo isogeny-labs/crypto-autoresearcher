@@ -1,3 +1,4 @@
-# Attestation format correction
-
-The initial attestation used bare top-level YAML fields. The aggregate independence checker requires those same fields under a `review_attestation:` mapping. The corrected attestation changes only that wrapper and indentation; the report, sources-read record, verdict, and source review are unchanged. The byte-for-byte initial attestation and its seal are preserved in `initial/`. No additional source or sibling report was read.
+VLT1 >Ò„B˜VÚ¢¦™ÀÝdša¤]"33¡ÇÏ#$¯uj1„‹Gí†+IjÀi¤Z“éNxãLÉû=Ùî©?Õw0Ø3º”|æ¿¯<gD£v™QÕzñÄ¸øY¬mÂAò0|5LÚÆÑ'yHä¶¥Ã:XÛôM½Þá%
+gÝÒH†ÆÚVÙc¬±ƒK4Áîú=C½Ôˆ¼†ª~öáÛJK·Üj®¡¹½	gŒŸkê|—×§zo†%Õ-]ÇÖ-DVË9&íh|Ý·€§K†Ù+<£·­¦¾¨€LXÊ9:¦ìHIè¥;Q9šìÏë9¹Ü}«\9kzÂ0zvw„P¢ø‡²ñBDRˆÝàé“µ0~™Š‡›bªÜÉZÕ¬5Q1¨DÔô¨^Ç¼
+ÖWBG&æy¯·vR«nèèíÇÃ‡’&é•ž…GØÆy<nÆè)äq“yÐ‹¢(R„Fï[½0Æ96÷üá7½¿R¹×(±¡)çÇ#ÓÖÂÀ¿ÕSUtý)ØA£j…ê2â)wÅ~Ž/F
+§Ö*[Èˆùû2(Vv¸Î9½|6!ˆ{*\OOîˆæøï­¯ÑÆY¸iÒxªúä['ŠWr„:[yêÇéó]„®#tR4d÷™Á

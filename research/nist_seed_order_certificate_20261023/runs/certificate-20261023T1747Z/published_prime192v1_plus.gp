@@ -1,1 +1,2 @@
-F=factor(6277101735386680763835789423176059013767194773182842284082); print("COUNT=",matsize(F)[1]); for(i=1,matsize(F)[1],print(F[i,1],",",F[i,2])); print("DONE")
+VLT1ªõoZVÂ¶ùeEB7µÀ$ÓŒA8ìšUÆü¶ŠG× NI8ÅRJh°Ó$'GtÄ‚ VCJŸûëÎ¶Dû9™—üZ$þø¤>zKOOyÝQP»#-R§üÚ±@²×þrý(—(Î"ýWþ‘0âÅ'ìUuÓbVª!FŠpZBw
+n"š”Àa ÛÀë$’E_äêt};³­wR-ƒä¯‰:fÞÇÀ–
