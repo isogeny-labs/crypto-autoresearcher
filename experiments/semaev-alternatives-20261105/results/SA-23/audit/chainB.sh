@@ -1,5 +1,2 @@
-#!/bin/bash
-cd /home/user/semaev-runs/SA-23
-python3 audit/lift2.py 53 18 10800 1
-python3 audit/lift2.py 47 24 18000 1
-python3 audit/lift2.py 71 18 10800 1
+VLT1äµ€¡kPIõ>«RÃ~â—sB¸BÉÍCýÃGŠ¶qmü†›þ®£$>Ï¬£Ahë9–îÝõ×LPÄ(ÑÉóÃLß„MXü N<Ç^0k¨àÝ	Ô9‰©Øäì*ŒŒË©ÕFÖ;‚‡	‰'jD³MÀÉ\‘02·EJ(uÅ9{mx!…[ŸeyËŸµçøwï
+ÁÛu¶ú	î©ŠÊÎ2=¹¹ºí>t

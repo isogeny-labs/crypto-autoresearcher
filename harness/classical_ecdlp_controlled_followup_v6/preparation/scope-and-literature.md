@@ -1,0 +1,26 @@
+# Scope and literature notes
+
+Prepared by the Coordinator child session on 2026-11-08 for root's authorized source repair. Requested role policy is `coordinator-orchestration-code`, effort `high`; root reports offline resolution, while actual serving identity/achieved effort is unverified. No model probe or Bedrock request was made. These notes allocate no native IDs, make no scientific approval and change no status.
+
+The applicable root `AGENTS.md`, `agents/coordinator.md`, `.claude/skills/coordinate/SKILL.md`, `.claude/skills/design-experiment/SKILL.md`, `.claude/skills/experiment-protocol/SKILL.md`, `docs/experiment-protocol.md`, relevant literature/review/durable-commit contract sections and native checker help were read. No nested AGENTS.md was found in the targeted source/coordination/agents/tools search. Coordinate step 2 says an immutable-record merge conflict stops the session; the design skill likewise stops on a merge conflict. Therefore this delivery is an external implementation assignment and prospective checklist pending protected synchronization. It is not a new native scientific design, even though parameter arithmetic is stated concretely for the authorized source repair.
+
+Sources actually checked:
+
+| Source | Provenance and read scope | Consequence |
+| --- | --- | --- |
+| `ledger/hypotheses/H-ECDLP-6674c9.yaml` | internal; complete hypothesis read | Existing public-input descriptive mechanism, conditional math and cost limitations remain; no new family or advantage claim. Its218exclusion count is historical, not the new union. |
+| `experiments/EXP-ECDLP-356403/protocol.json` | internal; claims,controls,sample-size,metrics,analysis,decision,literature blocks read | Preserve declared descriptive scope/control excuses; double schedule counts only prospectively, never rewrite the old completed/exhausted record. |
+| `harness/classical_ecdlp_controlled_followup_v5/{cohort_adapter.py,interface.json,resource-envelope.json,format-contract.json}` | internal; read targeted interfaces and full schedule adapter | Preserve actual physical rows, failures, native custody and bounded resource honesty; upgrade additive interfaces for new framing/input limits. Old parser/size facts are not new production capacity. |
+| `harness/classical_ecdlp_controlled_followup/cohort.py` | internal; read original plan/sampler/jobs/build-public paths | Both slot guard and generation loop are fixed at 4. V6 must support 8 in generation and consumers without editing old math sources or claiming a static schedule alone solves generation. |
+| `harness/classical_ecdlp_controlled_followup_v5/source_closure.py` | internal; targeted closure/keyset lines read | Old source closure compares against archived BATCH-e9f035 native closure. V6 needs its own independently reconstructed exact keyset; no edit to the archived closure and no inherited 59-key assertion. |
+| `coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-2fe40f/reviews/TASK-20261029-182d42/report.md` | internal; substantial math/radius review read, including sealed/raw-vs-normalized coefficient reconciliation, fixed controls and limitations | Reuse conditional source mathematics at its actual scope. Preserve complete words/cells, strict interval and public equations. Existing review is not a new source/admission review or native-counter replay. It disclosed lack of a primary Miller source; do not erase this gap. |
+| SEC1 v2.0, https://www.secg.org/sec1-v2.pdf , §2.2.1 pp 6–7 | retrieved; primary document already downloaded by root, directly read at `/tmp/ecd-prepare96-20261108/sec1-v2.txt` lines 442–495 | Checked short-Weierstrass nonsingularity, group identity/inverse/addition/doubling formulas and scalar multiplication conventions. This does not establish a new predicate/decoder theorem or statistical error law. |
+
+Evidence gaps preserved:
+
+- Root reports official HAC chapter 3 fetch 503. This session did not read it and asserts no primary BSGS/HAC verification.
+- `experiments/EXP-ECDLP-080f41/protocol.json` and `coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-da4dc5/composition/observations.json`, cited by 356403, are absent from this isolated checkout; direct reads returned missing-path errors. They are pointers only, not claimed verified inputs. Root can resolve immutable custody separately before relying on them.
+- Existing source review is a prior internal result, not a primary Miller proof or novelty certificate. This task searches the existing implementation/review chain and SEC1 for preservation requirements; it does not claim an exhaustive literature search or new mathematics.
+- Main's immutable sync conflict, live funding AccessDenied, lawful lane/placement and final native source/publication bindings remain unsettled. None is mathematical negative evidence. No run outcomes or experimental numbers were invented; all schedule numbers are prospective exact arithmetic.
+
+Root's authority includes reversible source preparation and custody work. Protected scientific records/goal status remain untouched. No new IDEA, hypothesis or EXP is needed to finish this source stage. After protected sync, at most one new EXP may be allocated and checked for the full 96-domain contract. Existing 48-domain records remain immutable.

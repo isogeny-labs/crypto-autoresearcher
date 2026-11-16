@@ -1,0 +1,146 @@
+idea:
+  id: IDEA-20261109-ef6f93
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: Bit-vector SMT scaling exponent c_m for interval-factor-base point decomposition over F_p
+  class: solver
+  claim: 'Interval membership x in [0,X) is a bit pattern, not low-degree algebra over F_p (the polynomial
+    vanishing exactly on [0,X) has degree X), while S_{m+1}(x_1,...,x_m,x_R) = 0 mod p is arithmetic.
+    QF_BV reads both natively, so interval decomposition over F_p reduces exactly to one QF_BV formula.
+    Define c_m as the slope of log2(median solve time) against log2 p over n = log2 p in {16,20,24,28,32},
+    30 planted-root instances per size, X^m = 4p, bit-blasted to CaDiCaL with Kissat as second solver.
+    Claim: c_2 >= 0.45 and c_3 >= 0.55, so CDCL does not beat box enumeration (exponent (m-1)/m), and
+    the unsat family X^m = p/4, the common case in index calculus, is not faster. A charged index calculus
+    with this oracle has exponent 1/m + c_m, alive only if c_m < 1/2 - 1/m, i.e. c_3 < 1/6. Missing lemma
+    L2: CDCL refutations of size 2^{o(log2 X)} exist for the bit-blasted modular Semaev constraint on
+    non-decomposable targets. Expected false; the slope measures it.'
+  mechanism: 'Variables x_i are n-bit vectors with the top n - ceil(log2 X) bits fixed to zero. S_{m+1}(x;x_R)
+    is evaluated by nested Horner, degree delta = 2^{m-1} per variable, about m (delta+1)^{m-1} modular
+    multiplications, each bit-blasted (schoolbook plus Barrett, about 3 n^2 gates). At 256 bits and m
+    = 3 this is about 125 modmuls and 2^{25} gates per instance; at 32 bits below 2^{19} gates, so the
+    toy range is solvable and the slope is the object. Index calculus charge: B = X = p^{1/m} relations,
+    each needing O(m!) targets at X^m = 4p, total p^{1/m + c_m} plus sparse linear algebra p^{2/m}.'
+  novelty_status: adaptation
+  citations:
+  - ref: KR-IC-5765d2
+    provenance: internal
+    claim: SAT and XOR reasoning solve binary-curve PDP faster than F4 without moving the exponent; that
+      setting is Weil descent over F_2, this one is bit-vector arithmetic over F_p with interval membership.
+    verified_by: REPO BRIEF 2026-11-09 section 3 row text; frontier YAML not opened.
+  - ref: KR-IC-5931ee
+    provenance: internal
+    claim: Small-x factor bases over F_p do not beat generic methods under the algebraic-solver model;
+      this record swaps the solver class.
+    verified_by: REPO BRIEF 2026-11-09 section 3 row text; frontier YAML not opened.
+  - ref: IDEA-20260731-011
+    provenance: internal
+    claim: A sub-rho claim must also run on a null object that preserves everything but the group structure;
+      the random-coefficient control below is that object.
+    verified_by: REPO BRIEF 2026-11-09 section 2 index line; record not opened.
+  assumptions:
+  - Median over 30 instances per size is stable for CDCL time; quartiles are reported too.
+  - Only the sign of c_3 - 1/6 is read from the 16..32 bit range, not an extrapolated value.
+  - RESEARCH_SAT_SEMAEV.md and research/sat_factor_base_review_20260908 are read first; if a bit-vector
+    or QF_BV encoding over F_p with a measured slope exists there, this record is withdrawn as duplicate.
+  predictions:
+  - metric: c_2 (slope of log2 median time vs log2 p, m = 2)
+    direction: higher
+    minimum_effect: at least 0.45
+  - metric: c_3 (same, m = 3)
+    direction: higher
+    minimum_effect: at least 0.55
+  - metric: unsat refutation slope at m = 3, X^3 = p/4
+    direction: higher
+    minimum_effect: at least c_3 - 0.05
+  - metric: c_3 on the random-coefficient null object minus c_3 on S_4
+    direction: different
+    minimum_effect: absolute value at most 0.05
+  minimal_test:
+    design: Random curves y^2 = x^3 + a x + b over p of 16..32 bits; for sat instances plant a decomposition
+      inside the box, for unsat choose random x_R with X^m = p/4 and verify by scan. Emit SMT-LIB QF_BV,
+      bit-blast with bitwuzla or boolector, solve with CaDiCaL and Kissat, 4 h timeout, record time and
+      result. Fit slopes by least squares on log2 median time. Run the box-enumeration scan on the same
+      instances for the baseline exponent (m-1)/m.
+    controls:
+    - 'Null object: S_{m+1} replaced by a random polynomial with the same monomial support and random
+      coefficients mod p, same encoding.'
+    - Box-enumeration scan on identical instances.
+    - Solver swap CaDiCaL vs Kissat; slopes must agree within 0.05.
+    required_metrics:
+    - median and quartile solve time per (m, n, sat or unsat, solver)
+    - fitted slopes c_2, c_3, unsat slopes, null-object slopes
+    - gate count and CNF size per instance
+    - timeouts per cell
+  falsification_conditions:
+  - c_3 < 0.55 with non-overlapping quartile bands across the five sizes kills the quantitative claim;
+    c_3 < 1/6 on both solvers means the lane is alive and must be escalated.
+  - Null-object slope differs from the S_4 slope by more than 0.15; the encoding then leaks curve structure
+    and the claim as stated is wrong.
+  - Timeouts in more than half of a cell make that cell invalid, not evidence.
+  confounders:
+  - Bit-blasting choices (Barrett vs Montgomery) move constants, not slopes.
+  - Planted roots may be easier than natural ones; natural sat instances found by scan are also reported.
+  interpretation_limits:
+  - A confirmed c_3 >= 0.55 closes the bit-vector SMT route for interval factor bases over F_p at toy
+    sizes; binary curves and XOR-aware solvers (KR-IC-5765d2) are not addressed.
+  heuristic_assumptions:
+  - id: H1
+    statement: CDCL time on bit-blasted modular polynomial constraints grows as p^c with c near the enumeration
+      exponent.
+    rigorous_support: None; resolution lower bounds for multiplier encodings are conjectural, which is
+      why L2 is named.
+    validation_plan: The slope fit above with the null object as control.
+  target_complexity:
+    time_exponent: p^{1/m + c_m}; predicted at least p^{0.88} at m = 3
+    memory_exponent: about 2^{25} clauses per instance at 256 bits, plus p^{1/m} for relations
+    best_known: Pollard rho Theta(p^{1/2}) (KR-RHO-13bf67); scan-based interval index calculus p^{1/m
+      + (m-1)/m} = p (KR-IC-5931ee).
+    hidden_overhead: CNF generation and preprocessing per target, charged inside the measured wall time.
+    tradeoff_note: No tradeoff; exponent delta against rho predicted positive by at least 0.38 at m =
+      3.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: low
+  dominated_by: KR-IC-5931ee dominates the expected conclusion; KR-IC-5765d2 covers SAT for PDP only over
+    F_2 with Weil descent.
+  sota_delta: Expected exponent delta against rho +0.38 or worse at m = 3. The measured c_3 is the deliverable;
+    it closes or escalates the SMT route.
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/index-calculus
+    rows_checked:
+    - KR-IC-5765d2
+    - KR-IC-5931ee
+    - KR-IC-e847d1
+    - KR-IC-1fcdbc
+    - KR-IC-5a43e5
+    - KR-RHO-13bf67
+    nearest:
+    - ref: KR-IC-5765d2
+      provenance: internal
+      relation: adjacent
+      delta: Same solver family (CDCL), different field (F_p not F_2) and different membership encoding
+        (bit interval, not linear subspace).
+    - ref: KR-IC-5931ee
+      provenance: internal
+      relation: adjacent
+      delta: Same factor base; the negative there assumes algebraic solvers, this record measures a non-algebraic
+        one.
+    searched:
+      corpus_grep:
+      - REPO BRIEF section 2 for SMT, bit-vector, QF_BV, bit-blast, interval factor base
+      - REPO BRIEF section 3 for SAT, XOR, CryptoMiniSat, WDSat (KR-IC-5765d2 only)
+      - REPO BRIEF section 1 for RESEARCH_SAT_SEMAEV.md and sat_factor_base_review_20260908 (present,
+        not opened)
+      web: []
+      blocked: []
+    lead: LEAD-EXO-low-degree-query-lower-bound
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: Random curves y^2 = x^3 + a x + b over p of 16..32 bits; for sat instances
+        plant a decomposition inside the box, for unsat choose random x_R with X^m = p/4 and verify by
+        scan. Emit SMT-LIB QF_BV, bit-blast with bitwuzla or boolector, solve with CaDiCaL and Kissat,
+        4 h timeout, record time and result. Fit slopes by least squares on log2 median time. Run the
+        box-enumeration scan on the same instance'

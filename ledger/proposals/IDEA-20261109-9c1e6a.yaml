@@ -1,0 +1,81 @@
+idea:
+  id: IDEA-20261109-9c1e6a
+  question_id: RQ-ISO-68bbac
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  title: Verify packages for H-ALISO-008/009/012 and a random-discriminant control for H-ALISO-014..017
+  class: tooling
+  novelty_status: adaptation
+  repairs:
+    record:
+    - H-ALISO-008
+    - H-ALISO-009
+    - H-ALISO-012
+    - H-ALISO-014
+    - H-ALISO-015
+    - H-ALISO-016
+    - H-ALISO-017
+    recorded_status: analyzed (probes with no verify; p1243 series with no control arm)
+    assertion_that_flips: (a) Each new _verify reproduces its probe statistic within tolerance using an
+      independent implementation and exact arithmetic; failure downgrades the probe to "analyzed, unreplicated".
+      (b) For p1243, descent success rate and length on auxiliary discriminants equal those on uniformly
+      random fundamental discriminants of matched size and class-group 2-rank (ratio within 3 sigma of
+      1); if so, H-ALISO-014 is marked "no selection effect".
+  claim: Seven archivable measurements lack the program's own convention of a verify or control; adding
+    them is the cheapest way to convert maybes into certificates.
+  mechanism: Follow the 001/002, 003-005, 006/007, 010/011 pairing. For 012 the verify must also emit
+    a classical-baseline oracle count so the quantum aggregate is a ratio. For p1243 add a matched random-discriminant
+    arm (|D| <= 2^40, same parity of h(D), same 2-rank). These packages are Kani-lemma tooling, not a
+    protocol; no SIDH-style torsion repair is proposed or needed.
+  lean:
+    covered_by: null
+    needed_statement: "theorem krylov_dim_le (A : Matrix n n Q) (v : n -> Q) :\n  finrank (Submodule.span\
+      \ Q (Set.range fun i => (A^i).mulVec v)) <= Fintype.card n\n(only formalizable sliver; the rest\
+      \ is measurement)"
+  experiment:
+    nearest_surface: aburan28/crypto-autoresearcher Autolab packages p1486_hecke_krylov_probe, p1486_hecke_support_cost_probe,
+      p1486_quantum_aggregate_oracle_probe, p1243_auxiliary_discriminant_search, p1243_auxiliary_four_line_descent,
+      p1243_auxiliary_geometric_principalization, p1243_auxiliary_lattice_kani
+    design: three _verify packages; one two-arm control run for p1243
+    control: random-discriminant arm; classical oracle baseline
+    kill_criterion: verify disagreement or ratio within 3 sigma of 1 for p1243
+    cost: days of harness work; compute comparable to the original probes
+  prior_art:
+    frontier_map: not_applicable
+    searched:
+      corpus_grep:
+      - H-ALISO-001
+      - H-ALISO-002
+      - H-ALISO-003
+      - H-ALISO-004
+      - H-ALISO-005
+      - H-ALISO-006
+      - H-ALISO-007
+      - H-ALISO-008
+      - H-ALISO-009
+      - H-ALISO-010
+      - H-ALISO-011
+      - H-ALISO-012
+      - H-ALISO-013
+      - H-ALISO-014
+      - H-ALISO-015
+      - H-ALISO-016
+      - H-ALISO-017
+      none_found_after:
+      - BRIEF grep for "krylov_verify"
+      - BRIEF grep for "aggregate_oracle_verify"
+      - BRIEF grep for "p1243_*_verify"
+    nearest_record:
+      id: H-ALISO-013
+      relation: extends_convention
+    not_applicable_reason: This campaign is isogeny/formula engineering, not an ECDLP-mechanism claim;
+      the ECDLP frontier map does not cover the relevant literature.
+    none_found_after:
+    - repository search of crypto, cryptanalysis, crypto-autoresearcher and ecbench
+  tags:
+  - autolab
+  - replication
+  - control-arm
+  - Kani
+  - tooling
