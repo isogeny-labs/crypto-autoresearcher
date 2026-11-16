@@ -1,0 +1,143 @@
+idea:
+  id: IDEA-20261109-14bb0c
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: 'Ratio lattice L(P,Q) of Eisenstein pairs with [c]P = [a]Q is the Hermitian class of the (1,N)-polarised
+    surface E^2/<(P,Q)>: minima scale as N^{1/2} and the moduli point is a claw, exponent delta 0'
+  class: representation
+  claim: 'Let E/F_p have j = 0, End(E) = Z[omega], prime order N, Frobenius pi, n = (pi - 1) the prime
+    of norm N, and Q = kP. Put L_k = {(a,c) in Z[omega]^2 with c = k a mod n}, form Nm a + Nm c. (i) L_k
+    is the Hermitian lattice of A = E^2/<(P,Q)> with the polarisation descended from N times the product
+    polarisation; it has determinant N and type (1,N), and A is isomorphic to E^2 through (R,S) -> ((pi-1)R,
+    S - theta R) for any theta = k mod n. (ii) The map k -> isometry class of L_k is at most 24-to-1:
+    the unitary group of O_K^2 (order 72) acts on P^1(F_N) by k -> zeta k and k -> zeta/k, and a second
+    unimodular overlattice, if it exists, at most doubles the fibre; so the number of classes lies in
+    [(N+1)/24, (N+1)/12] and the class determines k up to that fibre. (iii) The first minimum m_1(k) obeys
+    m_1 <= 1.56 N^{1/2} for every k (Minkowski in dimension 4, covolume 3N/4) and its median over k lies
+    in [0.25, 0.90] N^{1/2}. (iv) The class invariants reachable from (P,Q) are the representation numbers
+    r_k(m); each representation is a coincidence [c]P = [a]Q, and finding one with Nm a, Nm c <= T is
+    a claw between two lists of about 3.6T elements, nonempty only when T is about m_1. The record claims
+    no exponent change.'
+  mechanism: Gamma = <(P,Q)> is the only cyclic order-N subgroup of (E x E)(F_p) computable from the instance;
+    it is isotropic for e_N, so N lambda_prod descends. The pullback computation M^* H_A M = N I with
+    M = [[pi-1, 0], [-theta, 1]] gives H_A = adj(M M^*), whose lattice is M^{-1}(O_K^2) = (1/(pi-1)) L_k
+    up to scaling. The GLV reading is that the shortest vector of L_k is the smallest Eisenstein ratio
+    c/a = k mod n, a two-dimensional-over-Z[omega] analogue of the GLV decomposition; RESEARCH_GLV_HNP.md
+    holds the repo lattice conventions. Nothing here evaluates an isogeny or a pairing.
+  novelty_status: adaptation
+  citations:
+  - ref: KR-RHO-0528e7
+    provenance: internal
+    claim: The CM endomorphism gives a constant factor sqrt(6); L_k is the same endomorphism ring read
+      as a lattice, so no exponent moves.
+    verified_by: brief section 3 row KR-RHO-0528e7; next agent opens knowledge/frontiers/ecdlp/generic-rho/KR-RHO-0528e7.yaml
+  - ref: KR-RHO-5b1c0a
+    provenance: internal
+    claim: Representation and list-collision reformulations do not beat rho; the claw in (iv) is of that
+      family.
+    verified_by: brief section 3 row KR-RHO-5b1c0a
+  - ref: RESEARCH_GLV_HNP.md
+    provenance: internal
+    claim: Repo artifact for GLV lattice reduction; the next agent reads it for the (pi-1) basis and reduction
+      code to reuse.
+    verified_by: path listed in brief section 1; content not read
+  assumptions:
+  - p = 1 mod 3, N =
+  - The unitary group of the standard rank-2 Hermitian form over Z[omega] is the monomial group of order
+    72; the test recounts it.
+  predictions:
+  - metric: median over k of m_1(k) divided by N^{1/2}
+    direction: inside interval
+    minimum_effect: between 0.25 and 0.90 at every toy N tested
+  - metric: maximum over k of m_1(k) divided by N^{1/2}
+    direction: lower
+    minimum_effect: at most 1.56
+  - metric: number of isometry classes among {L_k} divided by (N+1)
+    direction: inside interval
+    minimum_effect: between 1/24 and 1/12
+  minimal_test:
+    design: For j = 0 prime-order curves with N in [10^3, 10^5] (sage), compute pi = a + b omega from
+      t and p. For every k build L_k as a rank-4 Z-lattice, LLL-reduce, record m_1(k) and a canonical
+      reduced Hermitian Gram form; count distinct classes. Then, for 200 random k, measure the smallest
+      T at which exhaustive search over Nm a, Nm c <= T finds [c]P = [a]Q and compare with m_1(k).
+    controls:
+    - Random rank-4 Z-lattices of covolume 3N/4 for the Gaussian-heuristic median.
+    - Random lines in F_N^2 pulled back to Z^4 without the Z[omega] structure.
+    required_metrics:
+    - m_1(k) for all k
+    - median and maximum of m_1 / sqrt(N)
+    - class count and fibre sizes of k -> class
+    - first detecting T versus m_1 on the 200 sampled k
+  falsification_conditions:
+  - Median m_1 / sqrt(N) below 0.25 or above 0.90 at any tested N.
+  - Some k with m_1 > 1.56 sqrt(N) (would indicate an error in (i)).
+  - Class count outside [(N+1)/24, (N+1)/12].
+  - An invariant of the class computable in o(sqrt(N)) group operations is exhibited (would be a result,
+    not this record).
+  confounders:
+  - Reduced-form canonicalisation over Z[omega] may merge classes if units are mishandled; use a Z-canonical
+    form as cross-check.
+  interpretation_limits:
+  - A confirmed scaling is a constant at toy N; the exponent 1/2 is untouched.
+  - The 24-fold fibre bound depends on the unimodular overlattice count, checked only at toy N.
+  heuristic_assumptions:
+  - id: H1
+    statement: Across k the lattices L_k behave as random determinant-N Hermitian lattices for the first
+      minimum (Gaussian heuristic).
+    rigorous_support: Minkowski gives the upper bound only; the Siegel-Weil average of representation
+      numbers (lead 4) would make the mean rigorous.
+    validation_plan: Compare the empirical distribution of m_1 with the random-lattice control at three
+      sizes of N.
+  target_complexity:
+    time_exponent: N^{1/2} unchanged (delta 0)
+    memory_exponent: N^{1/2} for the claw, O(1) for the lattice statement
+    best_known: Pollard rho at Theta(N^{1/2}) with the sqrt(6) CM constant (KR-RHO-13bf67, KR-RHO-0528e7)
+    hidden_overhead: none claimed; no algorithm is proposed
+    tradeoff_note: The claw of (iv) is a time-memory balanced search and is not proposed as an algorithm;
+      it prices the moduli point.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  dominated_by: KR-RHO-13bf67 dominates any exponent reading. KR-RHO-0528e7 states the constant. Neither
+    identifies the moduli point of E^2/<(P,Q)> with the ratio lattice.
+  sota_delta: Exponent delta 0. New content is the identification of the natural two-dimensional moduli
+    presentation of an ECDLP instance with a determinant-N Eisenstein Hermitian lattice and its pre-registered
+    minimum statistics.
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/generic-rho
+    rows_checked:
+    - KR-RHO-13bf67
+    - KR-RHO-0528e7
+    - KR-RHO-5b1c0a
+    - KR-RHO-755e35
+    - KR-RHO-53c89f
+    - KR-IC-5a43e5
+    nearest:
+    - ref: KR-RHO-0528e7
+      provenance: internal
+      relation: adjacent
+      delta: The row uses the endomorphism as a walk symmetry; this record uses it to build a lattice
+        whose class is the instance.
+    - ref: KR-RHO-5b1c0a
+      provenance: internal
+      relation: adjacent
+      delta: Representation technique over F_{p^2} costs p^{1.314}; the claw here is costed at N^{1/2}
+        and not proposed as an algorithm.
+    searched:
+      corpus_grep:
+      - brief section 2 for Hermitian, polarised surface, ratio lattice, GLV
+      - wave-1 wildcards lead GLV lattice / HNP without leakage
+      - wave-1 transfer lead Kani gluing
+      web: []
+      blocked: []
+    lead: LEAD-ICE-quadratised-chain-representation
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: For j = 0 prime-order curves with N in [10^3, 10^5] (sage), compute pi = a
+        + b omega from t and p. For every k build L_k as a rank-4 Z-lattice, LLL-reduce, record m_1(k)
+        and a canonical reduced Hermitian Gram form; count distinct classes. Then, for 200 random k, measure
+        the smallest T at which exhaustive search over Nm a, Nm c <= T finds [c]P = [a]Q and compare with
+        m_1(k).'
