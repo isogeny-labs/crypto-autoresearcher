@@ -1,0 +1,141 @@
+idea:
+  id: IDEA-20261109-2debfa
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: Joint solve of S_{m+1} on mu_B^k is point finding of a low-bidegree curve on a subgroup grid,
+    iterated norms and factor-and-hash give e_k <= k - 1 constructively, and e_2 < 1 is a sub-linear subgroup-root
+    problem
+  class: solver
+  claim: 'Fix the mu_B factor base F_B = {P : x(P)^B = 1}, B | p - 1, and the relations-wave exponent
+    e_k with C(k) proportional to B^{e_k} for finding all zeros of S_{m+1}(fixed; X_1..X_k) on mu_B^k.
+    Claim 1 (factorisation). If x_3..x_m, x_R are x-coordinates of E(F_p)-points then S_{m+1}(X,Y;x_3..x_m,x_R)
+    = const times the product over epsilon in {+1,-1}^{m-2} of S_3(X,Y,x(T_eps)), T_eps = R + sum eps_i
+    P_i, each factor of bidegree (2,2), all over F_p. Claim 2 (constructive bound). Hence the k = 2 solve
+    costs 2^{m-2} B group additions plus a hash of F_B (factor-and-hash), or O~(B 4^{m-1} log B) by Res_X
+    with X^B - 1 then gcd with Y^B - 1 (norm method); enumerating k - 2 variables gives e_k <= k - 1.
+    Claim 3 (F4 is worse). On {S, X^B - 1, Y^B - 1} F4 performs no reduction below step degree B - 2,
+    because below degree B the ideal is the principal ideal (S); its fitted exponent in B is at least
+    1.8. Claim 4 (the lemma). e_2 < 1 is equivalent to deciding, in B^{1-delta}, whether some x in mu_B
+    has x(T - P_x) in mu_B, i.e. evaluating the character of order (p-1)/B on the translated set {x(T
+    - P) : x(P) in mu_B} faster than pointwise. Lacunary root finding over F_p (Bi-Cheng-Rojas, recalled:
+    sub-linear only for trinomials) and sum-product theory supply bounds, not algorithms; the statement
+    is filed as the missing lemma.'
+  mechanism: The grid mu_B^2 is a finite subgroup of G_m^2 and S(X,Y) reduced mod (X^B - 1, Y^B - 1) is
+    a sparse element of F_p[(Z/B)^2] with at most (2^{m-1}+1)^2 terms; zeros are zeros of a sparse exponential
+    sum on (Z/B)^2. Claim 1 reduces this to 2^{m-2} independent arity-2 problems, exposing that the only
+    lever is the arity-2 character test.
+  novelty_status: adaptation
+  citations:
+  - ref: KR-IC-5931ee
+    provenance: internal
+    claim: Prime-field Semaev index calculus does not beat generic methods; this record quantifies the
+      inner floor.
+    verified_by: Mythos brief section 3, row KR-IC-5931ee
+  - ref: KR-IC-49c882
+    provenance: internal
+    claim: Factor bases from complete splitters; X^B - 1 is the degenerate splitter.
+    verified_by: Mythos brief section 3, row KR-IC-49c882
+  - ref: KR-IC-5a43e5
+    provenance: internal
+    claim: Resultant recursion for S_m underlies the factorisation.
+    verified_by: Mythos brief section 3, row KR-IC-5a43e5
+  - ref: 'relations-wave record: joint-solve exponent e_k'
+    provenance: internal
+    claim: Defines e_k; this record bounds it constructively and names the lemma for e_2 < 1.
+    verified_by: Mythos brief, Wave 1 relations records list
+  assumptions:
+  - B | p - 1 and mu_B is a subset of F_p; otherwise the run is invalid.
+  - All specialised x's are coordinates of rational points, as the factor base guarantees.
+  predictions:
+  - metric: fitted exponent in B of factor-and-hash time for k = 2, m = 4, B = 2^8..2^14
+    direction: different
+    minimum_effect: within [0.9, 1.15]
+  - metric: fitted exponent in B of norm-method time, same instances
+    direction: different
+    minimum_effect: within [0.9, 1.25]
+  - metric: fitted exponent in B of F4 time and first step degree with a rank drop
+    direction: higher
+    minimum_effect: exponent at least 1.8 and step degree at least B - 2
+  - metric: number of specialisations where the claimed factorisation fails
+    direction: zero
+    minimum_effect: 0 of 10^4
+  minimal_test:
+    design: Choose p = 1 mod B for B in 2^8..2^14 from the calibration list, build a prime-order curve,
+      sample x_3, x_4, x_R from rational points, verify Claim 1 by exact factorisation over F_p, then
+      time the three solvers for the k = 2 solve on mu_B^2, with the F4 arm on the RESEARCH_GROEBNER_F4.md
+      pipeline logging step degrees. Fit log-time against log B.
+    controls:
+    - Random bivariate polynomial of bidegree (8,8), no factorisation expected; norm method must keep
+      exponent about 1.
+    - B not dividing p - 1 is an invalid run.
+    - Count group additions and field multiplications, not only wall clock.
+    required_metrics:
+    - factorisation success count
+    - time and operation counts per solver per B
+    - F4 step-degree profile and first rank-drop degree
+    - fitted exponents with confidence intervals
+  falsification_conditions:
+  - Claim 1 fails at any rational specialisation.
+  - Any solver fits exponent below 0.8 for k = 2 (the positive outcome, then the lemma is true).
+  - F4 drops rank at step degree below B - 4.
+  confounders:
+  - Small B makes polylog factors look like exponent; report B >= 2^10 separately.
+  - F4 implementation constants dominate at small B; use the step degree, not time, for Claim 3.
+  interpretation_limits:
+  - mu_B bases are not deployable on secp256k1 (p - 1 has no divisor near 2^{53}, to be re-verified).
+  - A confirmed e_2 = 1 is consistent with the known floor; it moves no exponent.
+  heuristic_assumptions:
+  - id: H1
+    statement: Claim 1 holds with all 2^{m-2} factors rational for rational-point specialisations.
+    rigorous_support: Follows from the resultant definition and root structure of S_{m+1}; a two-line
+      proof to be written.
+    validation_plan: Exact factorisation at 10^4 specialisations in the test.
+  - id: H2
+    statement: No algorithm evaluates the order-(p-1)/B character on {x(T - P)} in B^{1-delta} total.
+    rigorous_support: None; sum-product theory gives bounds, not lower bounds on algorithms.
+    validation_plan: Record the measured exponents and file the lemma as open.
+  target_complexity:
+    time_exponent: relation stage unchanged; e_2 = 1 keeps the mu_B index calculus above N^{1/2}
+    memory_exponent: B for the hash, B^2 for F4 columns at degree B
+    best_known: Pollard rho Theta(N^{1/2}); for the inner solve, enumeration B^{k-1}
+    hidden_overhead: 2^{m-2} factor in the hash solver, 4^{m-1} in the norm solver
+    tradeoff_note: None claimed.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  sota_delta: 'Exponent delta 0. New: exact factorisation of the specialised S_{m+1}, constructive e_k
+    <= k - 1, and the single named lemma equivalent to e_2 < 1.'
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/index-calculus
+    rows_checked:
+    - KR-IC-5931ee
+    - KR-IC-49c882
+    - KR-IC-5a43e5
+    - KR-IC-0d2021
+    - KR-IC-fbdb61
+    - KR-IC-f3da82
+    nearest:
+    - ref: KR-IC-49c882
+      provenance: internal
+      relation: adjacent
+      delta: Quasi-subfield splitters aim at binary fields; X^B - 1 over F_p is the exact splitter and
+        its grid is the object here.
+    - ref: KR-IC-5931ee
+      provenance: internal
+      relation: special_case
+      delta: YYTK bound the whole algorithm; this record isolates the inner solve exponent.
+    searched:
+      corpus_grep:
+      - waves 1-2 for e_k, joint solve, subgroup grid, lacunary, Bi-Cheng-Rojas
+      web: []
+      blocked: []
+    lead: LEAD-ICB-cofactor-projected-ladder-base
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: Choose p = 1 mod B for B in 2^8..2^14 from the calibration list, build a prime-order
+        curve, sample x_3, x_4, x_R from rational points, verify Claim 1 by exact factorisation over F_p,
+        then time the three solvers for the k = 2 solve on mu_B^2, with the F4 arm on the RESEARCH_GROEBNER_F4.md
+        pipeline logging step degrees. Fit log-time against log B.'

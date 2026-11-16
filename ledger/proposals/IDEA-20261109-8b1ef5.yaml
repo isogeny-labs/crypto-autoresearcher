@@ -1,0 +1,144 @@
+idea:
+  id: IDEA-20261109-8b1ef5
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: 'Lefschetz trace of the diamond operator on X_1(N): the discrete-log operator has constant trace
+    except on the GLV and j = 1728 classes, so its spectrum knows ord_N(k) and nothing else'
+  class: barrier
+  claim: 'Let N >= 5 be prime and H the cuspidal weight-2 modular symbols of Gamma_1(N) with sign 0, dimension
+    2g. For k in (Z/N)^* with k not congruent to +-1, prediction fixed before any run: tr(<k> | H) = 2
+    - F(k) with F(k) = (N-1)/3 if k^2 + k + 1 = 0 mod N, F(k) = (N-1)/2 if k^2 = -1 mod N, and F(k) =
+    0 otherwise; on either sign-eigenspace the trace is 1 - F(k)/2; for k = +-1 it is 2g. Consequently
+    tr(<k>^j) = tr(<k^j>) is 1 on S_2 unless k^j lands in {+-1} or the special classes, so the spectral
+    measure of <k> is uniform on the ord(+-k)-th roots of unity up to O(1) corrections. The spectrum of
+    the DL operator determines ord_N(k) and whether k is a GLV eigenvalue, and no finer datum. This record
+    moves no exponent.'
+  mechanism: '<k> is a finite-order automorphism of X_1(N), so holomorphic Lefschetz gives tr(<k> | H^1)
+    = 2 - #Fix with simple fixed points. A point (E, P) is fixed iff kP = alpha(P) for alpha in Aut(E).
+    For k not +-1 this needs alpha of order 3 (j = 0) with P on an omega-eigenline, which exists iff k^2
+    + k + 1 = 0; both eigenlines contribute and mu_6 acts freely, giving 2(N-1)/6 = (N-1)/3; or alpha
+    of order 4 (j = 1728), giving 2(N-1)/4. Cusps are permuted freely by <k> for k not +-1. Consistency
+    check at N = 13: S_2(Gamma_1(13)) is a conjugate pair with nebentypus of order 6; for k = 2 the trace
+    is zeta_6 + zeta_6^{-1} = 1, for k = 3 (a cube root of unity) it is zeta_3 + zeta_3^{-1} = -1 = 1
+    - 4/2, for k = 5 (k^2 = -1) it is -2 = 1 - 6/2. The special classes are exactly the GLV eigenvalues
+    of KR-RHO-0528e7; everything else about k is spectrally invisible.'
+  novelty_status: adaptation
+  citations:
+  - ref: KR-RHO-0528e7
+    provenance: internal
+    claim: Automorphisms of order m give a sqrt(m) constant in rho and never change the exponent. The
+      trace anomaly here lives on the same six residues and is the same constant-level phenomenon.
+    verified_by: REPO BRIEF section 3 row text, 2026-11-09; file not opened.
+  - ref: KR-RHO-13bf67
+    provenance: internal
+    claim: Computing ord_N(k) from (P, kP) requires deciding k^d P = +-P, a CDH-type task that is generic-hard
+      at sqrt N.
+    verified_by: REPO BRIEF section 3 row text, 2026-11-09.
+  - ref: KR-RHO-755e35
+    provenance: internal
+    claim: Isogeny-class invariance; the diamond operator fixes the curve and moves only the point.
+    verified_by: REPO BRIEF section 3 row text, 2026-11-09.
+  assumptions:
+  - N >= 5 prime so X_1(N) has genus g = (N-5)(N-7)/24 and no extra automorphisms interfere.
+  - Modular symbols are computed over Q with the standard star involution.
+  predictions:
+  - metric: tr(<k> | H) for generic k at each tested N
+    direction: different
+    minimum_effect: exactly 2 at every tested N and k
+  - metric: tr(<k> | H) at k with k^2 + k + 1 = 0 (N = 1 mod 3)
+    direction: different
+    minimum_effect: exactly 2 - (N-1)/3
+  - metric: tr(<k> | H) at k with k^2 = -1 (N = 1 mod 4)
+    direction: different
+    minimum_effect: exactly 2 - (N-1)/2
+  - metric: number of distinct values of tr(<k^j>) over j, k generic
+    direction: different
+    minimum_effect: at most 3
+  minimal_test:
+    design: In Sage, for N in {13, 23, 29, 31, 37, 41, 43, 47, 61}, build ModularSymbols(Gamma1(N), 2,
+      sign=0).cuspidal_submodule(), take the diamond bracket operator for every k in (Z/N)^*, record its
+      trace and characteristic polynomial, and repeat on sign +1 and -1. Tabulate against F(k). Record
+      the eigenvalue multiset and verify it is the multiset of chi(k) over nebentypus chi with multiplicity
+      dim S_2(N, chi).
+    controls:
+    - k = +-1 returns 2g (identity on H).
+    - N = 23 and 47 (neither 1 mod 3 nor 1 mod 4) show no anomaly at any k.
+    - Direct count of fixed points of <k> on Y_1(N)(C) via the eigenline argument, compared to 2 - trace.
+    required_metrics:
+    - N, g, k, F(k), trace on H, trace on sign +1 and -1
+    - characteristic polynomial of <k> on H
+    - ord(k) in (Z/N)^* / +-1 and the set of j with tr(<k^j>) != 2
+  falsification_conditions:
+  - Any generic k with tr(<k> | H) != 2.
+  - A special-class trace differing from 2 - F(k).
+  - A trace of the sign +1 space that is not half the sign-0 trace.
+  - A Sage timeout is infrastructure, not evidence.
+  confounders:
+  - For N = 1 mod 12 both special classes exist; they are disjoint residues.
+  - Sage's diamond_bracket_operator convention may act by k or k^{-1}; traces are invariant, eigenvalue
+    labels are not.
+  interpretation_limits:
+  - This is a theorem check on a curve of genus about N^2 / 24; it certifies that spectral data of <k>
+    is coarse, not that any algorithm exists.
+  - ord_N(k) is the Pohlig-Hellman class of the index; its extraction is priced by the port-wave scalar-torsor
+    record, not here.
+  heuristic_assumptions:
+  - id: H1
+    statement: Fixed points of <k> on X_1(N) are exactly the j = 0 and j = 1728 points with P on an eigenline,
+      each counted once.
+    rigorous_support: Standard moduli interpretation of X_1(N) and Lefschetz for finite-order automorphisms;
+      verified at N = 13 against the known nebentypus structure.
+    validation_plan: The Sage table above at nine primes.
+  target_complexity:
+    time_exponent: p^{1/2} unchanged
+    memory_exponent: O(N^2) for the modular-symbol space at toy N only
+    best_known: Pollard rho, KR-RHO-13bf67
+    hidden_overhead: Building <k> costs N^2 at least; no algorithm is proposed.
+    tradeoff_note: The spectral measure is uniform on mu_{ord(k)}; reading ord_N(k) from the instance
+      is CDH-type and generically sqrt N.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  dominated_by: KR-RHO-0528e7 for the constant on the special classes; the wave-2 automorphic RECORD A
+    (diamond-operator trace-formula population) for the twisted Lefschetz count. Neither states the untwisted
+    trace.
+  sota_delta: 'Exponent difference 0. New statement: the trace of the DL operator on X_1(N) is 2 - F(k)
+    with F supported on six residues.'
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/generic-rho
+    rows_checked:
+    - KR-RHO-0528e7
+    - KR-RHO-13bf67
+    - KR-RHO-755e35
+    - KR-RHO-53c89f
+    - KR-IC-5a43e5
+    nearest:
+    - ref: KR-RHO-0528e7
+      provenance: internal
+      relation: adjacent
+      delta: The row gives the sqrt(6) rho constant from Aut(E). This record shows the same six residues
+        are the only places the spectrum of <k> is non-generic.
+    - ref: KR-RHO-13bf67
+      provenance: internal
+      relation: adjacent
+      delta: The row bounds generic algorithms. This record reduces the whole spectral data of <k> to
+        ord_N(k), whose extraction is generic.
+    searched:
+      corpus_grep:
+      - REPO BRIEF wave-2 automorphic records and leads for diamond operator, trace formula, Lefschetz
+      - REPO BRIEF section 2 for IDEA-20260806-0c9de1 (X_1(N) representation)
+      web: []
+      blocked:
+      - the id of wave-2 RECORD A was not in the brief; next agent locates it in ledger/proposals and
+        cites it
+    lead: LEAD-STR-level-structure-torsor
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: In Sage, for N in {13, 23, 29, 31, 37, 41, 43, 47, 61}, build ModularSymbols(Gamma1(N),
+        2, sign=0).cuspidal_submodule(), take the diamond bracket operator for every k in (Z/N)^*, record
+        its trace and characteristic polynomial, and repeat on sign +1 and -1. Tabulate against F(k).
+        Record the eigenvalue multiset and verify it is the multiset of chi(k) over nebentypus chi with
+        multiplicity dim S_2(N, '

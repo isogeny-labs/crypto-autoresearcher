@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "/workspace/classical-ecdlp-validation-ready/harness/classical_ecdlp_controlled_followup_v5/observer.py", line 172, in <module>
+    p=argparse.ArgumentParser();p.add_argument('--serve',action='store_true');p.add_argument('--repo-root',required=True);p.add_argument('--out',required=True);p.add_argument('--plan',required=True);p.add_argument('--trial',required=True);p.add_argument('--config',required=True);p.add_argument('--fd',type=int,required=True);p.add_argument('--driver-fd',type=int,required=True);p.add_argument('--fixture-fault');a=p.parse_args();serve(a)
+                                                                                                                                                                                                                                                                                                                                                                                                                                              ^^^^^^^^
+  File "/workspace/classical-ecdlp-validation-ready/harness/classical_ecdlp_controlled_followup_v5/observer.py", line 143, in serve
+    d.need(set(observed)==set(closed)==expected,'custody missing/extra arms');d.need(d.source_map(d.snapshot(a.repo_root,a.repo_root))==binding['source_sha256'],'custody final source change')
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/classical-ecdlp-validation-ready/harness/classical_ecdlp_controlled_followup_v5/driver.py", line 16, in need
+    if not v:raise ValueError(m)
+             ^^^^^^^^^^^^^^^^^^^
+ValueError: custody missing/extra arms

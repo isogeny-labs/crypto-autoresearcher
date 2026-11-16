@@ -53,20 +53,20 @@ jobs:
           tool="$RUNNER_TEMP/cavault.py"
           git show "HEAD:tools/vault/vaultctl.py" > "$tool"
           py=python3
-          if ! "$py" -c 'import cryptography' >/dev/null 2>&1; then
+          if ! "$py" -c 'from cryptography.hazmat.primitives.ciphers.aead import AESSIV; c=AESSIV(bytes(64)); assert c.decrypt(c.encrypt(b"", None), None) == b""' >/dev/null 2>&1; then
             venv="$RUNNER_TEMP/cavault-venv"
             if "$py" -m venv "$venv" >/dev/null 2>&1; then
               py="$venv/bin/python"
-              "$py" -m pip install --quiet --disable-pip-version-check 'cryptography>=42'
+              "$py" -m pip install --quiet --disable-pip-version-check 'cryptography>=46'
             else
-              "$py" -m pip install --quiet --disable-pip-version-check --break-system-packages 'cryptography>=42'
+              "$py" -m pip install --quiet --disable-pip-version-check --break-system-packages 'cryptography>=46'
             fi
           fi
           "$py" "$tool" install-key --quiet
           "$py" "$tool" setup --quiet --script "$tool"
           "$py" "$tool" unlock --quiet
       - name: Tool tests
-        run: python3 -m unittest tools/test_benchrec.py tools/test_hydrate_bench_validations.py
+        run: python3 -m unittest tools/test_benchrec.py tools/test_hydrate_bench_validations.py tools/test_collision_accounting_v1.py
       - name: Configure S3 credentials
         if: ${{ env.KEY_ID != '' }}
         uses: aws-actions/configure-aws-credentials@v4

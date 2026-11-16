@@ -1,0 +1,135 @@
+idea:
+  id: IDEA-20261109-ce3d06
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: Self-gluing E x E along the instance <(P,Q)> is E x E for every k; both rational principal polarizations
+    forget k and the cyclic (1,N) quotient stores k only in a Hermitian form priced at the N-isogeny
+  class: transfer
+  claim: 'Let E/F_p be y^2 = x^3 + b, p = 1 mod 3, End(E) = Z[omega], Frobenius pi in Z[omega], N = (pi-1)(pibar-1)
+    prime, Q = kP, T a generator of ker(pi-p). (i) M = [[pi-1, 0], [-k, 1]] in End(E x E) has kernel exactly
+    {(R, kR) : R in E(F_p)} = <(P,Q)> (deg M = Norm(pi-1) = N), so A_k = (E x E)/<(P,Q)> is isomorphic
+    to E x E for every k and the product polarization descends to H_k = [[k^2+1, k(pi-1)], [k(pibar-1),
+    N]], Hermitian over Z[omega], det N, type (1,N). (ii) The Galois-stable maximal isotropic subgroups
+    of (E x E)[N] containing <(P,Q)> are exactly E(F_p)^2 and K''_k = <(P,kP), (T,-T/k)>; their quotients
+    are E x E via (pi-1)+(pi-1) and via Phi = M'' M, M'' = [[pibar-1, 0], [-c, 1]], c = -(k^2+1)(k(p-1))^{-1}
+    mod N, each with a unimodular Hermitian form H''_k. Hence no rational Kani self-gluing of a prime-order
+    curve along its ECDLP instance is a genus-2 Jacobian. Pre-registered counts at toy N in [10^3, 10^5]:
+    c''(N) = number of GL_2(Z[omega])-classes of {H''_k} equals 1 (all k give the product polarization),
+    and c(N) = classes of {H_k} is at least (N-1)/24. Either value of c(N) closes the route: large means
+    k is recoverable only from an object whose construction is the N-isogeny; small means the polarized
+    surface cannot see k.'
+  mechanism: Wave-1 lead 5 glued E to a free E' by an (ell,ell)-isogeny and the port angle noted every
+    algebraic exit is an isogeny. The omitted case is E glued to itself along the graph of the unknown
+    scalar. The abstract surface forgets k; the principally polarized rational quotients are forced into
+    a finite, k-independent set; only the non-principal cyclic quotient retains k, through the degree-N
+    endomorphism M that is Frobenius minus one in one slot and the unknown k in the other. The measurement
+    makes the lossy/lossless dichotomy a number instead of a sentence.
+  novelty_status: unverified
+  citations:
+  - ref: KR-RHO-755e35
+    provenance: internal
+    claim: Isogenous objects share hardness; here the isogeny is M on E x E.
+    verified_by: brief section 3 row text, 2026-11-09; file not opened
+  - ref: IDEA-20260805-51996a
+    provenance: internal
+    claim: Hidden correspondences were listed but never instantiated; this is one instantiation.
+    verified_by: brief section 2 index line, 2026-11-09; record not opened
+  - ref: 'RECALLED: Hayashida-Nishi 1965, existence of curves with Jacobian E x E'
+    provenance: recalled
+    claim: For E with CM by Z[omega], E x E carries no principal polarization that is a Jacobian.
+    verified_by: not verified in this session; the test measures c'(N) directly
+  assumptions:
+  - End(E) = Z[omega] exactly, true for every j = 0 curve over F_p with p = 1 mod 3.
+  - p does not divide N, so all isogenies used are separable and kernels have the stated orders.
+  - E[N] = ker(pi-1) + ker(pi-p) as Galois modules, since N does not divide p-1.
+  predictions:
+  - metric: c'(N), classes among the unimodular forms H'_k
+    direction: lower
+    minimum_effect: exactly 1 at every tested N
+  - metric: c(N), classes among the det-N forms H_k
+    direction: higher
+    minimum_effect: at least (N-1)/24
+  minimal_test:
+    design: 'Choose five j = 0 toy curves with prime N in [10^3, 10^5]; compute pi = a + b omega from
+      point counting. For each k in 1..N-1 form H_k and H''_k, reduce as binary Hermitian forms over Z[omega]
+      (Gauss-type reduction: translate the off-diagonal by a multiples of Z[omega], swap when the diagonal
+      order fails, canonicalize under the six units), and count distinct reduced forms. Also check det
+      H_k = N and det H''_k = 1 exactly for every k.'
+    controls:
+    - Random Hermitian forms of det N not of the H_k shape, to calibrate the reduction code's class count.
+    - Determinant identities verified for every k before counting.
+    required_metrics:
+    - c_N
+    - c_prime_N
+    - fraction_of_k_with_H_k_equivalent_to_H_minus_k
+    - determinant_check_failures
+  falsification_conditions:
+  - c'(N) > 2 at any N, which would mean a k-dependent principal polarization and a possible Jacobian;
+    the Hayashida-Nishi recall would be wrong.
+  - det H_k not equal to N or det H'_k not equal to 1 for some k; the matrix identities would be wrong
+    and the run invalid.
+  - c(N) below 12 is not a falsification but the lossy outcome; it must be reported as such.
+  confounders:
+  - A reduction bug can merge or split classes; the random-form control calibrates it.
+  - Equivalence over GL_2(Z[omega]) ignores non-O-linear automorphisms, which E x E over F_p does not
+    have.
+  interpretation_limits:
+  - Closes self-gluing along the instance; gluing with an independent E' remains wave-1 lead 5's size-law
+    closure.
+  - A large c(N) proves nothing about hardness beyond identifying the cost as the N-isogeny.
+  heuristic_assumptions:
+  - id: H1
+    statement: The reduced-form count c(N) grows linearly in N.
+    rigorous_support: Reduced det-N forms have top-left entry at most about 1.16 sqrt(N), giving order
+      N reduced forms overall; H_k is a subfamily of N forms with the symmetry k to -k.
+    validation_plan: Fit c(N) against N over the five toy curves; report slope and residual.
+  target_complexity:
+    time_exponent: p^{1/2} unchanged, delta 0
+    memory_exponent: O(N) for the toy class count only
+    best_known: Pollard rho at Theta(p^{1/2}) group operations (KR-RHO-13bf67).
+    hidden_overhead: Constructing A_k for a real instance is an N-isogeny, cost at least N, above rho.
+    tradeoff_note: No tradeoff; the record prices one transfer and finds it at or above the group order.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  dominated_by: KR-RHO-755e35 dominates the isogeny reading; KR-RHO-13bf67 dominates the exponent, delta
+    0. No row states the self-gluing identities.
+  sota_delta: Exponent delta 0. Adds explicit matrices M, M', H_k, H'_k showing the self-gluing surface
+    is E x E for all k, and a pre-registered class count deciding lossy versus lossless.
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/generic-rho
+    rows_checked:
+    - KR-RHO-13bf67
+    - KR-RHO-755e35
+    - KR-RHO-53c89f
+    - KR-IC-a4dd54
+    - KR-IC-5ea2f8
+    - KR-IC-cd159a
+    nearest:
+    - ref: KR-RHO-755e35
+      provenance: internal
+      relation: adjacent
+      delta: That row is about curves in one isogeny class; this record is about an N-isogeny of surfaces
+        whose kernel is the instance.
+    - ref: KR-IC-5ea2f8
+      provenance: internal
+      relation: orthogonal
+      delta: Cover attacks need a hyperelliptic Jacobian; the record shows the self-gluing never produces
+        one over F_p.
+    searched:
+      corpus_grep:
+      - brief section 2 for Kani, gluing, Richelot, polarization, correspondence
+      - wave-1 transfer leads 3, 5, 11 and the sextic-cover record
+      web: []
+      blocked: []
+    lead: LEAD-RHO-pool-class-quotient
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: Choose five j = 0 toy curves with prime N in [10^3, 10^5]; compute pi = a
+        + b omega from point counting. For each k in 1..N-1 form H_k and H''_k, reduce as binary Hermitian
+        forms over Z[omega] (Gauss-type reduction: translate the off-diagonal by a multiples of Z[omega],
+        swap when the diagonal order fails, canonicalize under the six units), and count distinct reduced
+        forms. Also check det H_k = N an'

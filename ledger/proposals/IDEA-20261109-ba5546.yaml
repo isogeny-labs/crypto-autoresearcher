@@ -1,0 +1,135 @@
+idea:
+  id: IDEA-20261109-ba5546
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: Carlitz T^k-torsion of phi_T = tau - 1 is the Artin-Schreier-Witt filtration of F_{p^{p^m}},
+    a linearised complete splitter with beta = 1 - p^v/k by Lucas, and the (beta, n'/n) table it produces
+    must be reconciled with KR-IC-49c882
+  class: factor_base
+  claim: Over F_p let tau be the p-power Frobenius and phi_T = tau - 1. For p^{m-1} < k <= p^m the T^k-torsion
+    V_k = ker (tau - 1)^k is a k-dimensional F_p-subspace of F_{p^{p^m}}, since x^{p^m} - 1 = (x - 1)^{p^m}
+    and F_{p^{p^m}} is a cyclic F_p[tau]-module. Its subspace polynomial is (tau - 1)^k = prod_i (tau^{p^i}
+    - 1)^{k_i} over the p-adic digits k_i of k, with prod (k_i + 1) nonzero terms and second-highest exponent
+    p^{k - p^v}, v the lowest nonzero digit position. As a linearised complete splitter X^{p^{n'}} - lambda(X)
+    over F_{p^n} it has n' = k, n = p^m, beta = 1 - p^v / k. For k = c p^{m-1}, 1 <= c <= p - 1, the pair
+    is (beta, n'/n) = (1 - 1/c, c/p), c = 1 being the subfield polynomial. Predictions, complete splitting
+    and dimensions verified at (p, m) in {(3,1), (3,2), (5,1), (7,1)}, and the pair (1/2, 2/p) for odd
+    p is either admitted by the definition in the KR-IC-49c882 sources, in which case the row text needs
+    a stated hypothesis, or excluded by an explicit condition, which the row should then quote. For prime-field
+    ECDLP the family is void, n = 1 gives only V_1 = F_p.
+  mechanism: The Carlitz module over the constant field commutes with Frobenius, so its torsion is the
+    unipotent filtration of tau. Lucas's theorem turns the digit pattern of k into the monomial support,
+    so sparsity and splitting field are both closed forms. The quasi-subfield question of KR-IC-49c882
+    asks for sparse linearised polynomials that split completely, this family is the canonical one and
+    its parameter table can be read off without computation.
+  novelty_status: adaptation
+  citations:
+  - ref: KR-IC-49c882
+    provenance: internal
+    claim: Quasi-subfield polynomials X^{p^{n'}} - lambda(X), existence of useful families open, beta
+      at least 3/4 for linearised complete splitters.
+    verified_by: REPO BRIEF 2026-11-09 section 3 row text, file not opened in this session
+  - ref: KR-IC-73db3f
+    provenance: internal
+    claim: Factor bases as F_2-subspaces V with small product spaces, the subfield and polynomial-basis
+      choices.
+    verified_by: REPO BRIEF 2026-11-09 section 3 row text, file not opened in this session
+  - ref: KR-IC-5931ee
+    provenance: internal
+    claim: Over F_p itself algebraic factor bases do not beat generic methods, consistent with the n =
+      1 vacuity here.
+    verified_by: REPO BRIEF 2026-11-09 section 3 row text, file not opened in this session
+  assumptions:
+  - The definition of beta in KN-LIT-0a321c is deg lambda <= p^{n' beta} with the polynomial over F_{p^n}
+    splitting completely in F_{p^n}, the next agent must confirm this from the source.
+  - Lucas's theorem over F_p, no heuristic.
+  predictions:
+  - metric: dimension of ker (tau - 1)^k in F_{p^{p^m}}
+    direction: different
+    minimum_effect: equals k exactly for every tested (p, m, k)
+  - metric: second-highest exponent of the subspace polynomial
+    direction: different
+    minimum_effect: equals p to the power (k - p^v) exactly
+  - metric: number of nonzero terms
+    direction: different
+    minimum_effect: equals the product of (k_i + 1) exactly
+  minimal_test:
+    design: Sage, construct F_{p^{p^m}} for (p, m) in {(3,1), (3,2), (5,1), (7,1)}, compute ker (tau -
+      1)^k as an F_p-matrix kernel for all k, expand (tau - 1)^k symbolically, compare dimension, support
+      and exponents with the closed forms. Then read KN-LIT-0a321c and KN-LIT-4fe9d2 through the knowledge
+      index and evaluate the row's cost formula at each (beta, n'/n) in the table.
+    controls:
+    - Random k-dimensional subspaces of the same field, their subspace polynomials should be dense, all
+      exponents present.
+    - The subfield polynomial c = 1 as the beta = 0 anchor.
+    required_metrics:
+    - dimension table
+    - support and second exponent table
+    - beta and n'/n per k
+    - cost exponent from the source formula per pair
+  falsification_conditions:
+  - Any (p, m, k) with dimension not k or support not the Lucas set, then the derivation is wrong.
+  - The sources define beta or n'/n so that the pair (1/2, 2/p) is excluded, then the record reduces to
+    a row-text correction request.
+  confounders:
+  - The useful regime for decomposition needs n/n' integral or near it, the pairs here have n/n' = p/c
+    which is integral only for c dividing p, that is c = 1.
+  interpretation_limits:
+  - Nothing here touches E/F_p, the ambient field has degree p^m over F_p and the N-part of a base-changed
+    prime-field curve sits in E(F_p), transfer-wave ascent null control.
+  - Small-characteristic extension-field curves are the only possible beneficiaries, and even there the
+    exponent reading waits on the source formula.
+  heuristic_assumptions:
+  - id: H1
+    statement: The row's bound beta >= 3/4 carries an unquoted hypothesis.
+    rigorous_support: The pair (1/2, 2/p) is a theorem for the explicit family, so either the hypothesis
+      exists or the row is misquoted.
+    validation_plan: Open the two KN-LIT sources named in the row and quote the hypothesis into the record's
+      notes.
+  target_complexity:
+    time_exponent: ECDLP over F_p exponent 1/2 unchanged, extension-field exponent to be evaluated from
+      the source formula
+    memory_exponent: O(p^m) field elements for the toy verification
+    best_known: KR-IC-49c882, quasi-subfield framework with no useful family known, KR-IC-46d822 for the
+      subfield case
+    hidden_overhead: none for the verification
+    tradeoff_note: No tradeoff proposed.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  dominated_by: KR-IC-49c882 dominates the mechanism, this record supplies an explicit parameter table
+    and a consistency check on the row.
+  sota_delta: Exponent delta 0 for prime-field ECDLP. For the frontier row, a closed-form family with
+    beta = 1 - 1/c at n'/n = c/p that the row must either absorb or exclude.
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/index-calculus
+    rows_checked:
+    - KR-IC-49c882
+    - KR-IC-73db3f
+    - KR-IC-46d822
+    - KR-IC-64659b
+    - KR-IC-5931ee
+    - KR-IC-f5c584
+    nearest:
+    - ref: KR-IC-49c882
+      provenance: internal
+      relation: special_case
+      delta: The Carlitz torsion family is one explicit class of linearised complete splitters, with its
+        (beta, n'/n) table in closed form.
+    - ref: KR-IC-46d822
+      provenance: internal
+      relation: adjacent
+      delta: c = 1 recovers the subfield factor base of Gaudry's decomposition.
+    searched:
+      corpus_grep:
+      - REPO BRIEF section 3 for quasi-subfield, linearised, complete splitter
+      - wave-1 sweep record on cyclotomic complete-splitter predicates, prime field only
+      web: []
+      blocked:
+      - KN-LIT-0a321c and KN-LIT-4fe9d2 not opened, exact definition of beta unverified
+    lead: new
+    new_lead_reason: 'No atlas lead covers this exact mechanism. Nearest atlas match: LEAD-ICE-subspace-frobenius-chain-mod-n
+      (score 9). The record instead positions against the cited KR rows.'
