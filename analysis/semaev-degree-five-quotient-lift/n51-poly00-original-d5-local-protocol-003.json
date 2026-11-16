@@ -1,0 +1,395 @@
+{
+  "amendments": [
+    {
+      "id": "n51-poly00-d5-gate-002",
+      "filed": "2026-11-05",
+      "filed_before_affected_data": true,
+      "reason": "A positive independently checked D5 quotient on the six-solution original instance proves the degree-six lower bound regardless of the unrelated polynomial01 W4 rank. Keep the resource and one-attempt gates unchanged.",
+      "changes": [
+        "Replace predecessor seed_exact_dimension requirement with terminal noncontradictory status.",
+        "Use V2 runner and V2 plan with a new write-once output root. V1 remains unlaunched and frozen."
+      ],
+      "supersedes_fields": [
+        "execution.placement.checkpoint_detail",
+        "inadmissible",
+        "invalidation_rules",
+        "links.launch_gate",
+        "links.plan",
+        "links.plan_sha256",
+        "analysis_plan.inputs",
+        "analysis_plan.script"
+      ]
+    },
+    {
+      "id": "n51-poly00-d5-deadline-003",
+      "filed": "2026-11-07",
+      "filed_before_affected_data": true,
+      "reason": "V1/V2 never launched and their original deadline expired. Extend the deadline for the same single first attempt without changing input, seed, source, resources, budget reservation or decision rule. Current daily budget is above its ceiling, so this remains queued.",
+      "changes": [
+        "Extend first-attempt deadline to 2026-11-10 23:30 UTC.",
+        "Write to V3 output root; V1/V2 remain immutable and unlaunched.",
+        "Correct the literature bridge reference to Proposition 1.4."
+      ],
+      "supersedes_fields": [
+        "links.plan",
+        "links.plan_sha256",
+        "links.launch_gate",
+        "analysis_plan.inputs",
+        "literature"
+      ]
+    }
+  ],
+  "analysis_plan": {
+    "blinded": false,
+    "frozen_before_data": true,
+    "inputs": [
+      "n51-poly00-original-d5-local-plan-003.json SHA-256 5617f42b04d997020c1fd336f9893034f0be258c94c0f00df76af58e46c51c46",
+      "retained accepted 52-variable original D4 seed SHA-256 90878ee8bc6bda02957f25728380a9e677cd13b0f46c9eed1828349da796f115",
+      "published D4 checker acceptance and six-solution count",
+      "source-derived blocked-rewrite envelope and pinned worker bundle"
+    ],
+    "outputs": [
+      "Write-once count and producer receipts, terminal result, and D5 candidate bytes if emitted. Independently check any candidate in a separately bounded stage before an LFD inference."
+    ],
+    "script": {
+      "path": "run_n51_poly00_d5_local_v2.py",
+      "sha256": "29a3437cae2e6846d984e7167835e323f45e397243a72225a4587f8bf53029b4"
+    }
+  },
+  "arms": [
+    {
+      "description": "Use the accepted 52-variable original D4 seed, freshly count the fixed six-solution input, and run one bounded checkpoint-free D5 lift after the predecessor direct-W4 attempt terminates without contradiction. Preserve any candidate for independent checking.",
+      "id": "producer",
+      "instrument": {
+        "binary_sha256": "fc0911db6560fe10b49d88d6206f89f8de6494616020a864c82d8be552749613",
+        "build": [
+          [
+            "reuse",
+            "qualified checkpoint-free worker bundle"
+          ]
+        ],
+        "commit": "414b0262e73501f64d3ed12b1685902f4b097838",
+        "env": {
+          "OMP_NUM_THREADS": "1",
+          "OPENBLAS_NUM_THREADS": "1"
+        },
+        "flags": {
+          "bundle_manifest_sha256": "28e0be1127afa741e89fd149e3464948c90e2eb04c8ed70f0248a885d0b0bbaa",
+          "runner_sha256": "29a3437cae2e6846d984e7167835e323f45e397243a72225a4587f8bf53029b4",
+          "seed_sha256": "90878ee8bc6bda02957f25728380a9e677cd13b0f46c9eed1828349da796f115"
+        },
+        "repo": "crypto-autoresearcher",
+        "threads": 1
+      },
+      "parameters": {
+        "chunk": 4096,
+        "degree": 5,
+        "memory_bytes": 68719476736,
+        "original_variables": 52,
+        "seed_degree": 4
+      },
+      "role": "candidate"
+    },
+    {
+      "description": "Fresh exact count of the same named original n51 polynomial00 input; require six before the D5 producer.",
+      "id": "exact-count",
+      "instrument": {
+        "binary_sha256": "dc5a10affb69abc0ed4cebc96e5d19560151944b3b091c66ccfafbb7c3631d56",
+        "build": [
+          [
+            "reuse",
+            "qualified count_by_sum binary"
+          ]
+        ],
+        "commit": "414b0262e73501f64d3ed12b1685902f4b097838",
+        "env": {
+          "OMP_NUM_THREADS": "1"
+        },
+        "flags": {
+          "record_seed": "8252374688181865515"
+        },
+        "repo": "crypto-autoresearcher",
+        "threads": 1
+      },
+      "parameters": {
+        "input_dispatch": "All inputs are unchained m2."
+      },
+      "role": "reference"
+    }
+  ],
+  "authors": [
+    "Codex, owner-authorized data preparation"
+  ],
+  "claims": [
+    {
+      "class": "exact_computation",
+      "decided_by": [
+        "acceptance"
+      ],
+      "id": "C1",
+      "text": "The single bounded producer emits an unchecked D5 candidate or reports projection_kills_one. Only a separate independent D5 checker with codimension at least seven and the fresh exact count of six can establish LFD at least six."
+    }
+  ],
+  "controls": {
+    "aa": {
+      "comparison": null,
+      "not_applicable_reason": "One exact named input, no timing comparison.",
+      "present": false
+    },
+    "negative": {
+      "arm": null,
+      "not_applicable_reason": "A targeted D5 C2 mutation was rejected by native and Python checkers in prior controls; this fixed named producer has no statistical null population.",
+      "null_population": null,
+      "present": false
+    },
+    "positive": {
+      "arm": null,
+      "expected_detection": null,
+      "not_applicable_reason": "The D5 checker accepted a separate nontrivial n8 evaluation-map fixture; no planted LFD-six instance is used in this one named producer run.",
+      "present": false
+    }
+  },
+  "created": "2026-11-07",
+  "decision_rule": {
+    "comparison_ids": [
+      "acceptance"
+    ],
+    "effect_size_measure": "none",
+    "interval": "none, exact",
+    "multiple_comparison_correction": "none",
+    "statistic": "none",
+    "text": "Record native candidate as candidate_unchecked with digest and bytes, killed projection as projection_kills_one, and failures/timeouts as failed. A candidate becomes an LFD-six lower bound only after an independent D5 checker accepts codimension at least seven and the exact count is six.",
+    "threshold": "Native producer exit zero with recognized status after fresh original count six; separate checked codimension at least seven for any LFD-six inference.",
+    "verdict_vocabulary": [
+      "candidate_unchecked",
+      "projection_kills_one",
+      "failed"
+    ]
+  },
+  "execution": {
+    "backend": "local",
+    "checkpoint": {
+      "after_restore": {
+        "counted_units": "valid",
+        "wall_time": "invalid"
+      },
+      "grace_seconds": 10,
+      "interval_seconds": null,
+      "policy": "none",
+      "restore_validation": "none"
+    },
+    "measurement_class": "throughput",
+    "placement": {
+      "checkpoint_detail": "No checkpoint, restore or automatic retry. Retain write-once local transcripts and any candidate. Predecessor W4 rank must be terminal with a noncontradictory status and both frontier locks free.",
+      "counter_memory_bytes": 1073741824,
+      "max_workers": 1,
+      "memory_per_worker_bytes": 68719476736,
+      "pod_memory_bytes": 77309411328
+    },
+    "queue": "local-exclusive-memory-after-n51-poly01-direct-W4",
+    "retries": {
+      "infrastructure_only": true,
+      "max_attempts": 1
+    },
+    "timeout_seconds": 21600
+  },
+  "freeze": {
+    "status": "frozen",
+    "protocol_sha256": "49e8abd25f04a57410ede126d4122d4108a1afd0b1371e2a1f28c5c299a90d1e",
+    "commit": "98e6abc769e2a1d536baf293800b81731ef387ac",
+    "frozen_at": "2026-11-07T00:27:52Z",
+    "filed_before_affected_data": true
+  },
+  "hypotheses": [],
+  "inadmissible": [
+    "Calling a killed over-approximating projection a proved W5 membership.",
+    "Calling a native candidate certified nonmembership before independent D5 checking.",
+    "Inferring LFD at least six from a candidate codimension of six or less.",
+    "Replacing the fixed named polynomial00 input or retained D4 seed after freeze.",
+    "Retrying, restoring, or bypassing the predecessor terminal, exclusive-memory, and budget gates under this protocol."
+  ],
+  "invalidation_rules": [
+    "Any source, binary, seed or checker hash mismatch prevents execution.",
+    "A nonterminal or contradictory predecessor W4 rank prevents this attempt.",
+    "A fresh exact count other than six stops before the producer.",
+    "A failed independent D5 checker prevents a lower-bound claim.",
+    "A killed projection, timeout, OOM, missing certificate or failed run leaves degree-five nonmembership unknown.",
+    "A candidate quotient dimension of six or less cannot exceed the exact solution count."
+  ],
+  "links": {
+    "accepted_seed_sha256": "90878ee8bc6bda02957f25728380a9e677cd13b0f46c9eed1828349da796f115",
+    "dimension_profile": "N51-POLY00-D5-READINESS.md",
+    "launch_gate": "Predecessor direct-W4 attempt terminal with seed_exact_dimension, seed_coarse, or unknown; contradiction_requires_diagnosis refuses launch; no live predecessor or EKS Semaev job; free exclusive locks; pinned 52-variable D4 seed and worker; 64 GiB child cap plus 8 GiB reserve; 37.59 GB maximum certificate plus 2 GiB disk reserve; fresh shared daily and monthly budget readback with USD 12 reservation; full 6h10m before 2026-11-10 23:30 UTC; one attempt and no retry.",
+    "plan": "n51-poly00-original-d5-local-plan-003.json",
+    "plan_sha256": "5617f42b04d997020c1fd336f9893034f0be258c94c0f00df76af58e46c51c46",
+    "prior_D4_receipt": "bounded-d4-archive-001/fresh-n51-poly-00-D5-cascade01-bounded-D4-001.receipt.json",
+    "seed_check_stdout_sha256": "4e8d4a386e75f18183c86ac934640361ae9578fbe4e10e0f8cd1968aa1d33b60",
+    "worker_manifest_sha256": "28e0be1127afa741e89fd149e3464948c90e2eb04c8ed70f0248a885d0b0bbaa"
+  },
+  "literature": [
+    {
+      "claim": "A checked D5 quotient codimension greater than the exact solution count proves a last-fall-degree lower bound of six.",
+      "provenance": "internal",
+      "ref": "analysis/semaev-m2-last-fall-degree/theorem-dossier.md Proposition 1.4",
+      "verified_by": "Codex 2026-11-05"
+    },
+    {
+      "claim": "An exact D4 seed on a six-solution system must retain a nonzero constant in its D5 lift, but checked seed containment alone is insufficient.",
+      "provenance": "internal",
+      "ref": "analysis/semaev-m2-last-fall-degree/theorem-dossier.md Lemmas 1.6 and 1.7",
+      "verified_by": "Codex 2026-11-05"
+    }
+  ],
+  "measurement": {
+    "clock": "counted",
+    "counters": [],
+    "isolation_required": "L0",
+    "order": "sequential",
+    "record": [
+      "cpu_model",
+      "kernel_release",
+      "binary_sha256",
+      "source_commit",
+      "argv",
+      "input_sha256"
+    ],
+    "timed_primary_justification": null,
+    "warmups": 0
+  },
+  "metrics": {
+    "primary": [
+      {
+        "aggregation": "per_row",
+        "definition": "Unverified native D5 quotient dimension, only when candidate_unchecked; a separate checker must accept it before comparison with six solutions.",
+        "id": "candidate_codimension",
+        "kind": "exact",
+        "name": "native candidate D5 quotient codimension",
+        "resolution": "1",
+        "source": "result.json candidate_codimension only when status candidate_unchecked",
+        "uncertainty": "none_exact",
+        "unit": "F2 dimension"
+      }
+    ],
+    "secondary": [
+      {
+        "aggregation": "per_row",
+        "definition": "Fresh exact count from the fixed original n51 polynomial00 record; expected six, not copied from the old D4 receipt.",
+        "id": "exact_solutions",
+        "kind": "exact",
+        "name": "fresh exhaustive original Boolean solution count",
+        "resolution": "1",
+        "source": "result.json exact_solutions",
+        "uncertainty": "none_exact",
+        "unit": "solutions"
+      }
+    ]
+  },
+  "protocol_id": "SEMAEV-N51-POLY00-ORIGINAL-D5-LOCAL-20261107-V3",
+  "question": "Does one bounded lift from the accepted original n51 polynomial00 D4 seed produce a separately checkable D5 quotient of dimension at least seven?",
+  "randomization": {
+    "arm_order": "fixed",
+    "arm_order_reason": "Exact named-input replay has no arm-dependent clock inference.",
+    "blinding": {
+      "analysis_labels_masked": false,
+      "how": "Exact inputs and prior campaign are visible; no population or timing inference.",
+      "unmasked_at": null
+    },
+    "instance_sampling": {
+      "independent_of_arm": true,
+      "rule": "One fixed prior named n51 polynomial00 input with accepted D4 seed and six exact solutions; no population inference."
+    },
+    "seed_derivation": {
+      "method": "explicit_list",
+      "nonce": null,
+      "note": "Original named input seed reused; no new random input or redraw.",
+      "seeds": [
+        8252374688181865515
+      ]
+    }
+  },
+  "reporting": {
+    "export_schema": "experiment.export/v1",
+    "graphs": [
+      "Per-instance D5 outcome with unknown cell explicit; no runtime graph."
+    ],
+    "report_dir": "reports",
+    "review_schema": "experiment.review/v1"
+  },
+  "repository": "crypto-autoresearcher",
+  "sample_size": {
+    "instances": 1,
+    "power": {
+      "alpha": 0.05,
+      "correction": "none",
+      "method": "exact",
+      "note": "Exact named-input verification, no population inference.",
+      "passes": true,
+      "tests_in_family": 1
+    },
+    "preflight_runtime": {
+      "estimated_total_seconds": 21600,
+      "fixed_seconds": 0,
+      "measured_on": "One named local run with a 21600-second producer watchdog; not a timing estimate or claim.",
+      "per_sample_seconds": 21600,
+      "threads": 1
+    },
+    "replicates": 1,
+    "warmups": 0
+  },
+  "schema": "experiment.protocol/v1",
+  "stopping_rules": [
+    {
+      "kind": "fixed_n",
+      "preregistered": true,
+      "rule": "One fixed original n51 polynomial00 D5 producer attempt only after the predecessor direct-W4 result is terminal and noncontradictory, with fresh count six and all launch gates. Stop on candidate, killed projection, timeout, resource refusal or failure; no retry or restore."
+    },
+    {
+      "kind": "invalidation",
+      "preregistered": true,
+      "rule": "An interruption, resource refusal or checker failure leaves D5 nonmembership unknown. A candidate requires separate independent D5 certificate checking."
+    }
+  ],
+  "study_dir": "analysis/semaev-degree-five-quotient-lift",
+  "variable_ledger": {
+    "aa_not_applicable": "Exact named-input computation, no performance comparison.",
+    "comparisons": [
+      {
+        "arms": [
+          "producer",
+          "exact-count"
+        ],
+        "design": "absolute",
+        "differs_in": [
+          "stage"
+        ],
+        "id": "acceptance",
+        "threshold": "Native recognized status after fresh original count six; any LFD-six inference requires a separate D5 checker with codimension at least seven."
+      }
+    ],
+    "crosses_map": false,
+    "factors": [
+      {
+        "how": "One fixed original n51 polynomial00 input, with published six-solution count and accepted 52-variable D4 seed.",
+        "name": "input",
+        "treatment": "fixed"
+      },
+      {
+        "how": "SHA-pinned worker bundle, runner, original D4 seed, checker stdout, profile, count binary and plan; checkpoint environment removed.",
+        "name": "instrument",
+        "treatment": "fixed"
+      },
+      {
+        "how": "Existing Spot host, one core, 64 GiB child cap plus 8 GiB reserve, 37.59 GB maximum output plus 2 GiB disk reserve, USD 12 reservation under live shared budget gates.",
+        "name": "host",
+        "treatment": "measured"
+      },
+      {
+        "how": "Fresh exact count six gates one native D5 producer; any D5 checker is a later separately bounded stage.",
+        "name": "stage",
+        "treatment": "crossed"
+      }
+    ],
+    "independent": []
+  },
+  "version": 3
+}
