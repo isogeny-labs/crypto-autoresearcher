@@ -1,0 +1,56 @@
+idea:
+  id: IDEA-20261109-4a1311
+  question_id: RQ-ISO-68bbac
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  title: Lift H-ICINV-6c7920 from three toy primes to a controlled ladder below 2^24
+  class: measurement
+  novelty_status: adaptation
+  repairs:
+    record: H-ICINV-6c7920
+    recorded_status: rejected_scoped (p in {2003, 4001, 6007}, m = 3)
+    assertion_that_flips: On every rung p < 2^24 and every m in {3,5,7}, the Pollard-rho iteration ratio
+      (feature-selected representative / uniformly random representative) is within 3 sigma of 1. If true,
+      status becomes rejected on ordinary prime-field classes below 2^24; if false on any rung, H-ECDLP-f8101e
+      reopens and the toy rejection was an artifact.
+  claim: The scoped rejection is either a toy artifact or a structural fact; a ladder with a uniform-representative
+    control arm decides which.
+  mechanism: Reuse the H-ICINV-82ee6a ladder. For each class (certified complete by the twist-count check
+    2p + c of the companion record), select the representative by the H-ECDLP-f8101e feature and by uniform
+    choice; run >= 1000 rho instances per arm per rung; report ratio and sigma.
+  lean:
+    covered_by: null
+    needed_statement: "theorem isogenous_card_eq (E E' : EllipticCurve (ZMod p)) (phi : Isogeny E E')\
+      \ :\n  Fintype.card E.Points = Fintype.card E'.Points  (Tate; out of quoted scope)"
+  experiment:
+    nearest_surface: aburan28/ecbench (rho harness; no isogeny-specific commit quoted)
+    design: two-arm rho benchmark per class per rung, m in {3,5,7}
+    control: uniform representative arm
+    kill_criterion: ratio within 3 sigma of 1 on all rungs
+    cost: about 10^3 rho runs x 20 rungs x 2 arms at <= 24-bit fields; CPU-hours
+  prior_art:
+    frontier_map: not_applicable
+    searched:
+      corpus_grep:
+      - H-ICINV-6c7920
+      - H-ICINV-82ee6a
+      - H-ECDLP-f8101e
+      - H-ECDLP-3550b8
+      none_found_after:
+      - BRIEF grep for "ladder" with "control"
+      - BRIEF grep for "rejected_scoped"
+      - BRIEF grep for "representative"
+    nearest_record:
+      id: H-ICINV-6c7920
+      relation: widens_scope
+    not_applicable_reason: This campaign is isogeny/formula engineering, not an ECDLP-mechanism claim;
+      the ECDLP frontier map does not cover the relevant literature.
+    none_found_after:
+    - repository search of crypto, cryptanalysis, crypto-autoresearcher and ecbench
+  tags:
+  - ECDLP
+  - ordinary
+  - isogeny-class
+  - control-arm
+  - parameter-audit

@@ -1,6 +1,3 @@
-"""Ingestion: an idempotent state machine from object key to indexed chunks."""
-
-from crypto_kb.ingest.pipeline import IngestionPipeline, IngestResult, build_pipeline
-
-__all__ = ["IngestionPipeline", "IngestResult", "build_pipeline"]
-
+VLT1ª8sø;]&¶n6„ºÈqÒ“o¹9²&,à“ıËÒ="~›Â}|Rzñ\å*åÑw"<#fƒ2ŒS¤ÇúÊBª¼5!ªş|
+°V]ûI"Q®y8G6vf\+{äÒMlÕÛ„à©¶ÑÊjK¼÷j‰ÂD¦ -å>•4ïeÖéê›Ä5J¯Òw«Ñ6gÍƒóXì‡Æ[çŸîVYÅÉg;N°Î2¾ŸÀ//ÊÒrŠwet%11Éİ¹Àxá*‹¤²xgrCa4ÂİøÁ¹®¬1‡‘„h?·zğÕ÷Ü‡ÿVó2e_lÁ
+Á•ÏØÂ

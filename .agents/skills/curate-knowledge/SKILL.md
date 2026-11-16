@@ -1,14 +1,4 @@
----
-name: curate-knowledge
-description: "Add or update entries in the knowledge corpus (knowledge/): literature notes, technique references, established results, internal findings promoted from evidence, and open problems. Use when ingesting a paper, recording a known technique, or promoting a validated internal result."
----
-
-# curate-knowledge
-
-Read `.claude/skills/curate-knowledge/SKILL.md` from this checkout and follow it. Resolve references and assets relative to that canonical directory. Preserve its authority and execution boundaries; this adapter adds no runtime role.
-
-For research goals, follow the canonical skill's [default challenge research loop](../../../docs/challenge-research-loop.md), retaining problem, attempt and review pointers.
-
-For goal-level boundary work, `autoresearch campaign frontier --goal <GOAL-ID>`
-shows the fixed comparison domain, reviewed points, remaining gap and next test.
-Carry those references; keep measured, modeled and unresolved claims distinct.
+VLT1µ=ÖŞÓBê7kÊ®1m¶¢Óœë
+ÿÌ“uåKÎ”£ ‰y§®{W«Ù,]ä±Ã H™ìä&ÑÀvµ	D<ÔC¦TÚßì„“d9,5òŸB|ƒtå¦–Š7¸–	kû±¼gu5Ô5òNœ
+ Ç5û}ä[_ïI¬Ò]Cş¡oAG.VPeß"»7¸1xÄ4®ZÉõ]ª]!œ{lšY~İ;üÓ*“sÉ‹O")Û$0/^ÔG#r''^û7÷Lw ËÀñœ>Cx^¢#ƒaËjµ¼l¹ïbh&œEå/ÜÎ;¶yX{¡Ü„PØÉöÙŒ60ÿÑ }ìå~[Î@â4Û³e’#lŞâ%©Y§c‰I Lx‡ÖMéXEx	Fâ×ûPîì·†Œ˜¦š=x±¾]mFzÅşL“ã.çG2ÆÙ•äÇDƒßO=óF«u.gÜ»H‘É	áƒKªı¦SÚY?Í–,”3ÆÉÉÄ/Âtf=fXô”'iÎ^+ƒD¬*+?,»E|1ëThL~ñ!Ôzş'°‰Y°ä1£¹HşŞSiˆ¶f®7ĞÆÙeò|Ğ¤	ğ?¥ãS2™hÎ÷y&92º×…ë`·Ïl×‹±lĞeëæçV³™ÛÜŠ~Ì‹áÒšNˆ{Îé_k/§äC­ÖR8Å³]*KeË¾=¤êŠW…¾Òé¤‚5ÀËÖëmèë,çÈ-œ­:ıÔ•½şºœÅhAëÑ•£Ìr+ÈßË],?˜Í:kÿp]5’¥â‘ØÛáa”Ë}‚åøÉ?ÒĞôÏ—v:#4²X,¥ÂÄõ‡Ï¢	S ánûÒ6ùw}Ø>¤A^µıïc*pæ@’@ıšôÍ	³š±rëwë£Ä¢ú#'C6Ô«æp qW·G¢ÇFãæõĞ™µe_Ê-jİË#š³û€X©Vİø§ã›30x"»›nº!ë"™\g™•âOz\ã?œ&‡ˆ”ä—¨Š«ËŞ4Óù 	[vÊ1´*@på³’5«ÿB¤ÕF^5¶â2·ëÃ“÷6ÄWLÿÙAe´§üq€#U£9ªa¡Ó…ä›£®R½í#fd.&¬bùİxÑqï)ßkŒ8*\’í‹Á_ÁúÈe©Ä{òÈ¦Çí¢rgİy¼]ïY<1kÄ1ÿcàÙ½3¾j³t+FKÉ¬L™A6LşÆä%¨p?X4eã¡ÓÀí­+±ØTÖ¾‡0şº†€Ö¤„åğV©x¥F²J$ÙVñ«qÓy„Ïa¼—Ø,DÃ0ÑÊÖƒñÅ§Ö+Á‹
+ûñ

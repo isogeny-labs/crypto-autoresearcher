@@ -1,5 +1,7 @@
-Prospective source-body reconstruction, ATKIN-NATIVE-GETALL-01.
-
-The original author-hosted Fortran text and native binary stay private because redistribution permission has not been established. SOURCE.json binds the exact extraction. adapter.cc and reconstruct.py are new reconstruction code. Original ZL, GETJQN and CHARLA are absent. All 299 rational parameters from the frozen 21-curve cohort are fixed before the new observations; the full 315-cell inventory includes cells with no rational parameter.
-
-The link failure in COMPILE-2.json occurred before all controls and cohort calls. COMPILE-3.json adds the SDK library search path; the original Fortran body is unchanged.
+VLT1et¼-$1Ì¯UA/o‹­ý¯¨¼gÈ±ïjÕwåŒ‚	èm{ÏF×ú†=Šˆ{†US"ÇµtŒ3“îûÉï¶“›
+Î?Ú‡ŸŒé%Ý£IãvéÆ[²‹®¨ð‚²¯ñ‡y§®Øä“X8)Ÿ—œ:ñÀ²³Õú¤™F[¤±†S§urPlîÏí©2•…T‹Ïqr¢Û
+\“T·¦rÞÄÒTá-›gÉ=¦P{ü™7Uv,,±¤1Ãš²3ê§4ðÑëÎB}("°­¥»Èó.àBhk¶¤_ƒâ)“j2reö-V$&ÞnyîDŠ>o¿
+ÂHfÈÆí“ß4I©eÃ êúy ;D|Rsô‰»ð`®#©Môm4Þ4|ûskaPº›Ô\l´ÌBP«¦¢©Â³Xyùf¤H‡GÖÌÉŸ ¼Óà{“ü
+æfþ0Â€9o×¤ÑM<&ÔˆõµžÜú§®Ö9ž=;ý²ÉLÀ”i [ü·/‚\!wªLßð³„Ú³ŽÓö9„ÉqžôvÑÙ_†Ýc\ÓòîFÕ%·-ˆYædk|í…h‘†XÇCÛ5g×EhÖþÝ¢2,¯¥[Ÿ¾¦Åúî«|ÜÃ4>'«~yºuOù»Äx‘;áÛ#õýrç÷NÕÔhë5‰ƒ~C¡³CbúÅ¿×s†mºí$Ë7Ê0á2£XÂí‚g0kbÚJ*™Þ:ƒSf¹g*“ìs½«M‡} 
+†*=Ì–Ü¨’÷þQ^·ágÜü2%[X¯¤4<Íã{µJ¨¾'¢Ø½ÍZ¸ûvþ_ a—WéZ¦?ud7Ã?f†óÒ^c3Ìfõæ: ©B[Áöu““õB9ß«
+õ!f¨

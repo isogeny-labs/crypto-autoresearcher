@@ -1,0 +1,26 @@
+Traceback (most recent call last):
+  File "/workspace/classical-ecdlp-validation-ready/harness/classical_ecdlp_controlled_followup_v5/driver.py", line 286, in <module>
+    if __name__=='__main__':raise SystemExit(main())
+                                             ^^^^^^
+  File "/workspace/classical-ecdlp-validation-ready/harness/classical_ecdlp_controlled_followup_v5/driver.py", line 282, in main
+    try:r=production(a.repo_root,a.out,a.trial_plan,a.trial_id,a.config)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/classical-ecdlp-validation-ready/harness/classical_ecdlp_controlled_followup_v5/driver.py", line 252, in production
+    result=execute(repo,repo,input_path,Path(out)/'execution',ctx,ctx['protocol_path'])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/classical-ecdlp-validation-ready/harness/classical_ecdlp_controlled_followup_v5/driver.py", line 236, in execute
+    records=[launch_arm(a,repo,contracts,input_path,out/a,ctx,(faults or {}).get(a)) for a in ('candidate','baseline')]
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/classical-ecdlp-validation-ready/harness/classical_ecdlp_controlled_followup_v5/driver.py", line 162, in launch_arm
+    observation=observer.capture(proc,argv,input_path,ctx['source_sha256']) if CUSTODY is None else CUSTODY.observe(arm,proc,argv,input_path,out/'barrier-ready.json')
+                                                                                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/classical-ecdlp-validation-ready/harness/classical_ecdlp_controlled_followup_v5/observer.py", line 90, in observe
+    d=_d();reply=_message(self.sock,{'op':'observe','arm':arm,'pid':proc.pid,'argv':argv,'input':str(Path(input_path).resolve()),'ready':str(ready_path)})
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/classical-ecdlp-validation-ready/harness/classical_ecdlp_controlled_followup_v5/observer.py", line 65, in _message
+    if obj is not None:_frame_send(sock,obj,deadline)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/classical-ecdlp-validation-ready/harness/classical_ecdlp_controlled_followup_v5/observer.py", line 60, in _frame_send
+    _remaining(sock,deadline);sock.sendall(payload);_remaining(sock,deadline)
+                              ^^^^^^^^^^^^^^^^^^^^^
+BrokenPipeError: [Errno 32] Broken pipe

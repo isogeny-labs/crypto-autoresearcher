@@ -1,0 +1,376 @@
+{
+  "amendments": [
+    {
+      "id": "A1",
+      "filed": "2026-11-08",
+      "filed_before_affected_data": true,
+      "reason": "A new pre-run proof gives the exact rank of variable lifts from the known linear syzygies.",
+      "changes": [
+        "Require the named-input linear-lift rank 3336.",
+        "Bound the combined generated rank between 3336 and 4417 using the proved overlap of trace-coordinate symmetric terms."
+      ],
+      "supersedes_fields": [
+        "decision_rule.threshold",
+        "decision_rule.text",
+        "variable_ledger.comparisons[0].threshold",
+        "controls.positive.not_applicable_reason"
+      ]
+    }
+  ],
+  "analysis_plan": {
+    "blinded": false,
+    "frozen_before_data": true,
+    "inputs": [
+      "n47-rand00-quadratic-generated-plan-001.json",
+      "n47-rand00-d5-local-plan-002.json",
+      "validation/n47-rand00-joint-top-syzygies-001.json"
+    ],
+    "outputs": [
+      "Complete stdout/stderr, exact rank JSON, hashes, exit, rusage and cost receipt or failure record."
+    ],
+    "script": {
+      "path": "joint_binary_top_syzygies.py",
+      "sha256": "6b2304a385d3509738f8fc3018f6982c385d14c658e14e89b197ead0e43001c5"
+    }
+  },
+  "arms": [
+    {
+      "id": "generated-rank",
+      "role": "candidate",
+      "description": "Exact F2 row rank of the explicitly generated degree-two top-syzygy vectors on the frozen n47 input.",
+      "instrument": {
+        "repo": "crypto-autoresearcher",
+        "commit": "db447a092155365d7a35334ae1bee500842cb91b",
+        "build": [
+          [
+            "reuse",
+            "Python 3 source at pinned SHA-256"
+          ]
+        ],
+        "binary_sha256": "6b2304a385d3509738f8fc3018f6982c385d14c658e14e89b197ead0e43001c5",
+        "threads": 1,
+        "env": {
+          "PYTHONHASHSEED": "0"
+        },
+        "flags": {
+          "mode": "--quadratic-generated",
+          "source_sha256": "6b2304a385d3509738f8fc3018f6982c385d14c658e14e89b197ead0e43001c5"
+        }
+      },
+      "parameters": {
+        "n": 47,
+        "variables": 48,
+        "quadratic_multiplier_domain": 53016,
+        "coordinate_cap": 60000
+      }
+    },
+    {
+      "id": "proved-minimum",
+      "role": "reference",
+      "description": "Algebraic direct-sum lower bound from the affine trace coordinate and independent symmetric top relations.",
+      "instrument": {
+        "repo": "crypto-autoresearcher",
+        "commit": "db447a092155365d7a35334ae1bee500842cb91b",
+        "build": [
+          [
+            "reuse",
+            "written Boolean-ring proof"
+          ]
+        ],
+        "binary_sha256": "ec1bf2b3dfea1ce24afc542d66265656f3a7de02b5b895b526a98d6ca209ade4",
+        "threads": 1,
+        "env": {},
+        "flags": {
+          "proof_file": "BINARY-BILINEAR-TOP-HOMOLOGY.md"
+        }
+      },
+      "parameters": {
+        "n": 47,
+        "expected_minimum_rank": 2209,
+        "expected_symmetric_rank": 1127
+      }
+    }
+  ],
+  "authors": [
+    "Codex, owner-authorized degree-six frontier"
+  ],
+  "claims": [
+    {
+      "id": "C1",
+      "class": "exact_computation",
+      "decided_by": [
+        "generated-rank"
+      ],
+      "text": "On the fixed n47 input, the generated quadratic top-syzygy subspace has the reported exact rank; this is only a lower bound on the full quadratic syzygy kernel and gives no LFD conclusion."
+    }
+  ],
+  "controls": {
+    "aa": {
+      "present": false,
+      "comparison": null,
+      "not_applicable_reason": "Exact deterministic F2 rank; no timing or variance claim."
+    },
+    "positive": {
+      "present": false,
+      "arm": null,
+      "expected_detection": null,
+      "not_applicable_reason": "The source checks symmetric rank against its proved formula; the frozen analysis also checks the independently proved linear-lift rank 3336. Default mode matches a committed exact replay."
+    },
+    "negative": {
+      "present": false,
+      "arm": null,
+      "null_population": null,
+      "not_applicable_reason": "No statistical null population or negative scanning claim."
+    }
+  },
+  "created": "2026-11-08",
+  "decision_rule": {
+    "comparison_ids": [
+      "generated-rank"
+    ],
+    "effect_size_measure": "none",
+    "interval": "none, exact",
+    "multiple_comparison_correction": "none",
+    "statistic": "none",
+    "text": "Record exact generated-subspace rank only after zero exit, source/input checks and both proved rank identities. The combined rank measures intersection of known families, not full kernel or LFD.",
+    "threshold": "q-rank=46, linear-kernel=94, linear-lift-rank=3336, symmetric-rank=1127, 3336<=combined-rank<=4417, exit0, hashes match",
+    "verdict_vocabulary": [
+      "generated_rank_verified",
+      "incomplete",
+      "mismatch",
+      "resource_refused"
+    ]
+  },
+  "execution": {
+    "backend": "local",
+    "checkpoint": {
+      "after_restore": {
+        "counted_units": "valid",
+        "wall_time": "invalid"
+      },
+      "grace_seconds": 0,
+      "interval_seconds": 0,
+      "policy": "none",
+      "restore_validation": "none"
+    },
+    "measurement_class": "search",
+    "placement": {
+      "counter_memory_bytes": 0,
+      "max_workers": 1,
+      "memory_per_worker_bytes": 4294967296,
+      "pod_memory_bytes": 0,
+      "checkpoint_detail": "No checkpoint; retain complete output and one total attempt."
+    },
+    "queue": "frozen-local-campaign",
+    "retries": {
+      "infrastructure_only": true,
+      "max_attempts": 1
+    },
+    "timeout_seconds": 1800
+  },
+  "freeze": {
+    "status": "frozen",
+    "protocol_sha256": "0178b12044e6be2e17207a045fefe44f51164da4db42c75882dadceab3ea3ba4",
+    "commit": "53acd5e521a01717d435dd51c71a9bcc2f397cec",
+    "frozen_at": "2026-11-08T00:59:02Z",
+    "filed_before_affected_data": true
+  },
+  "hypotheses": [],
+  "inadmissible": [
+    "Treating generated-subspace rank as full quadratic-multiplier kernel rank.",
+    "Inferring D4 or D5 closure exactness or LFD from this top-form calculation.",
+    "Treating timeout, partial stdout or a mismatch as an exact rank.",
+    "Changing the named input, generator families or one-attempt cap after seeing output."
+  ],
+  "invalidation_rules": [
+    "Any source, plan or input hash mismatch prevents execution.",
+    "Missing fresh shared budget headroom or existing output root prevents execution.",
+    "Nonzero exit, timeout, incomplete JSON or failed algebraic control makes the result inconclusive."
+  ],
+  "links": {
+    "plan": "n47-rand00-quadratic-generated-plan-001.json",
+    "plan_sha256": "2c5f6bbf87bc6b434938346906a0ad6fcb8a40bbe4bdd3c42186836ccac43570",
+    "source_sha256": "6b2304a385d3509738f8fc3018f6982c385d14c658e14e89b197ead0e43001c5",
+    "input_plan_sha256": "554486c20b6de56a4e53b57484ba8008783815358e21f854be7835b9d905a24a",
+    "source_commit": "db447a092155365d7a35334ae1bee500842cb91b",
+    "supersedes_protocol_sha256": "c274cf0d7100ddc301e8804d9ef159a32929a39d57a3904507bc3259195844dc"
+  },
+  "literature": [
+    {
+      "ref": "BINARY-BILINEAR-TOP-HOMOLOGY.md",
+      "provenance": "internal",
+      "claim": "Parameter-uniform symmetric syzygy and trace-coordinate lower bound.",
+      "verified_by": "Codex 2026-11-08"
+    },
+    {
+      "ref": "validation/n47-rand00-joint-top-syzygies-001.json",
+      "provenance": "internal",
+      "claim": "Named n47 rank-46 quadratic top and 94-dimensional linear syzygy kernel.",
+      "verified_by": "Codex 2026-11-08"
+    }
+  ],
+  "measurement": {
+    "clock": "counted",
+    "counters": [],
+    "isolation_required": "L0",
+    "order": "sequential",
+    "record": [
+      "source_sha256",
+      "input_plan_sha256",
+      "argv",
+      "host",
+      "exit_code",
+      "rusage",
+      "budget_readback"
+    ],
+    "timed_primary_justification": null,
+    "warmups": 0
+  },
+  "metrics": {
+    "primary": [
+      {
+        "id": "combined_generated_rank",
+        "kind": "exact",
+        "name": "exact generated quadratic top-syzygy rank",
+        "unit": "F2 dimension",
+        "definition": "Rank of the union of variable lifts of 94 linear syzygies and all symmetric quadratic generators.",
+        "source": "stdout quadratic_generated.combined_generated_rank",
+        "aggregation": "per_row",
+        "resolution": "1",
+        "uncertainty": "none_exact"
+      }
+    ],
+    "secondary": [
+      {
+        "id": "symmetric_rank",
+        "kind": "exact",
+        "name": "symmetric generator rank",
+        "unit": "F2 dimension",
+        "definition": "Rank of all q_i square and pair-exchange generators.",
+        "source": "stdout quadratic_generated.symmetric_rank",
+        "aggregation": "per_row",
+        "resolution": "1",
+        "uncertainty": "none_exact"
+      },
+      {
+        "id": "linear_lift_rank",
+        "kind": "exact",
+        "name": "lifted linear syzygy rank",
+        "unit": "F2 dimension",
+        "definition": "Rank of all variable multiples of the 94 displayed linear syzygies.",
+        "source": "stdout quadratic_generated.linear_lift_rank",
+        "aggregation": "per_row",
+        "resolution": "1",
+        "uncertainty": "none_exact"
+      }
+    ]
+  },
+  "protocol_id": "SEMAEV-N47-RAND00-QUADRATIC-GENERATED-20261108-V2",
+  "question": "What is the exact dimension of the quadratic top-syzygy subspace generated by the known linear and symmetric families on the named n47 random00 input?",
+  "randomization": {
+    "arm_order": "fixed",
+    "arm_order_reason": "One exact calculation checked against a fixed proof-derived lower bound; no timed comparison.",
+    "blinding": {
+      "analysis_labels_masked": false,
+      "how": "Named input and exact algebraic target are public.",
+      "unmasked_at": null
+    },
+    "instance_sampling": {
+      "independent_of_arm": true,
+      "rule": "Frozen n47 random00 input only; no new selection or population claim."
+    },
+    "seed_derivation": {
+      "method": "explicit_list",
+      "nonce": null,
+      "note": "Reuse the original fixed input seed; no draw.",
+      "seeds": [
+        9494361161180666839
+      ]
+    }
+  },
+  "reporting": {
+    "export_schema": "experiment.export/v1",
+    "review_schema": "experiment.review/v1",
+    "graphs": [
+      "Single named-input generated-rank table, or failure flow if incomplete."
+    ],
+    "report_dir": "reports/n47-rand00-quadratic-generated-001"
+  },
+  "repository": "crypto-autoresearcher",
+  "sample_size": {
+    "instances": 1,
+    "replicates": 1,
+    "warmups": 0,
+    "power": {
+      "alpha": 0.05,
+      "correction": "none",
+      "method": "exact",
+      "note": "One named exact rank; no population inference.",
+      "passes": true,
+      "tests_in_family": 1
+    },
+    "preflight_runtime": {
+      "estimated_total_seconds": 1800,
+      "fixed_seconds": 0,
+      "per_sample_seconds": 1800,
+      "measured_on": "Watchdog ceiling, not measured runtime.",
+      "threads": 1
+    }
+  },
+  "schema": "experiment.protocol/v1",
+  "stopping_rules": [
+    {
+      "kind": "fixed_n",
+      "preregistered": true,
+      "rule": "One named n47 generated-rank attempt under 1800-second watchdog, 4 GiB address-space cap, USD 0.10 reservation and no retry."
+    }
+  ],
+  "study_dir": "analysis/semaev-degree-five-quotient-lift",
+  "variable_ledger": {
+    "aa_not_applicable": "No timed or population comparison.",
+    "comparisons": [
+      {
+        "id": "generated-rank",
+        "arms": [
+          "generated-rank",
+          "proved-minimum"
+        ],
+        "design": "absolute",
+        "differs_in": [
+          "instrument"
+        ],
+        "threshold": "q-rank=46, linear-kernel=94, linear-lift-rank=3336, symmetric-rank=1127, 3336<=combined-rank<=4417, exit0, hashes match"
+      }
+    ],
+    "crosses_map": false,
+    "factors": [
+      {
+        "name": "input",
+        "treatment": "fixed",
+        "how": "Frozen n47 random00 field, target and factor-base record bound by input-plan SHA-256."
+      },
+      {
+        "name": "instrument",
+        "treatment": "fixed",
+        "how": "Pinned Python source and exact integer-row elimination; no build."
+      },
+      {
+        "name": "host",
+        "treatment": "measured",
+        "how": "One existing Spot host, 4 GiB address-space cap and one CPU; no performance claim."
+      },
+      {
+        "name": "order",
+        "treatment": "fixed",
+        "how": "Replay existing degree-one result first, then run quadratic-generated mode once."
+      },
+      {
+        "name": "migration",
+        "treatment": "measured",
+        "how": "Missing output or interrupted process remains inconclusive; no retry."
+      }
+    ],
+    "independent": []
+  },
+  "version": 2
+}

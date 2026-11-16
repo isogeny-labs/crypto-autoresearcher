@@ -1,0 +1,135 @@
+idea:
+  id: IDEA-20261109-ac7173
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: 'Generic-model classification of three quantum ECDLP ingredients (Shor on Z_N^2, Kuperberg on
+    the Z_{N-1} hidden shift, Regev-type d-dimensional periods): all generic, so every classical dequantization
+    keeps the sqrt N floor; gate-level audit of crypto/quantum_circuit_secp256k1'
+  class: methodological
+  claim: 'Shor''s period finding for f(a,b) = aP + bQ, Kuperberg''s sieve on F(t) = x(gamma^t P), G(t)
+    = x(gamma^t Q) over Z_{N-1}, and Regev-type period finding for z -> sum z_i P_i each touch E only
+    through the group law, negation and equality. Each is therefore a generic quantum algorithm, and by
+    KR-RHO-13bf67 any classical simulation or dequantization preserving that access costs Omega(sqrt N)
+    group operations. Their classical shadows are collision search, k-list summation without a propagating
+    label, and bounded-coefficient relation search, each >= sqrt N (KR-RHO-13bf67, KR-RHO-7d93f6). Predictions:
+    (1) in crypto/quantum_circuit_secp256k1 every gate on the point register implements EC addition/doubling
+    arithmetic or its uncomputation, controlled by scalar qubits; the QFT touches only scalar registers;
+    zero gates route coordinate bits into phase or measurement except through group-law outputs; (2) a
+    fixed literature pass finds zero quantum ECDLP algorithms whose speedup depends on F_p structure beyond
+    the group law. A confirmed record routes every quantum-inspired classical proposal to a representation
+    statistic and names the three already measured (character sums, merge bias, relation supply).'
+  mechanism: 'Shor never reads labels; it queries the oracle in superposition on the scalar register and
+    transforms that register. Kuperberg''s F and G use x as a label, and F(t) = F(t'') iff the points
+    agree up to sign, which a generic algorithm tests with one negation and one equality. Regev''s map
+    is a sum of multiples. Shoup''s bound is for classical generic algorithms while quantum generic algorithms
+    are polylog, so the gap is exactly the non-dequantizable content: coherent superposition over scalars
+    with Fourier interference. Nothing representation-dependent survives on the quantum side either: no
+    known quantum ECDLP speedup reads F_p beyond implementing the oracle. The circuit audit is the one
+    repository surface where the classification is checked rather than asserted. IDEA-20260726-004 and
+    IDEA-20260806-530fdd already classify augmented classical oracles as GGM-simulable; not re-derived
+    here.'
+  novelty_status: unverified
+  citations:
+  - ref: KR-RHO-13bf67
+    provenance: internal
+    claim: Generic DLP needs Omega(sqrt p); applied to dequantized generic quantum algorithms.
+    verified_by: REPO BRIEF 2026-11-09 section 3 row; file not opened
+  - ref: KR-RHO-7d93f6
+    provenance: internal
+    claim: T^2 S = Theta(C^2 N) for collisions; prices the k-list shadow of the sieve.
+    verified_by: REPO BRIEF 2026-11-09 section 3 row; file not opened
+  - ref: IDEA-20260806-530fdd
+    provenance: internal
+    claim: Records that KN-FIND-002 closes jet and endomorphism oracles as GGM-simulable with O(1) overhead.
+    verified_by: REPO BRIEF section 2 index line; record not opened
+  - ref: Regev 2023, arXiv 2308.06572; Ekera-Gartner extension to discrete logarithms
+    provenance: recalled
+    claim: d-dimensional period finding over small generators; any EC variant uses only the group law.
+    verified_by: not verified this session
+  assumptions:
+  - crypto/quantum_circuit_secp256k1 holds a circuit description or generator; its format is unknown from
+    the brief.
+  predictions:
+  - metric: fraction of point-register gate families outside EC group-law arithmetic and its uncomputation
+    direction: lower
+    minimum_effect: exactly 0
+  - metric: number of published quantum ECDLP algorithms with representation-dependent speedup found by
+      the fixed queries
+    direction: lower
+    minimum_effect: 0
+  minimal_test:
+    design: '(1) Read crypto/quantum_circuit_secp256k1; tabulate gate families by register (scalar, point,
+      ancilla) and flag any gate whose target or control carries point-coordinate bits into the scalar
+      or phase register. (2) Write a one-paragraph genericity proof per ingredient as a sibling .notes.md.
+      (3) Literature pass with fixed queries: ''quantum elliptic curve discrete logarithm non-generic'',
+      ''Regev algorithm elliptic curve discrete logarithm'', ''Ekera Gartner discrete logarithm Regev'',
+      ''hidden shift elliptic curve discrete logarithm classical''; record each hit''s access pattern
+      and verdict.'
+    controls:
+    - Shor's F_p^* circuit as the positive template of generic access.
+    - A synthetic negative template (QFT applied to an x-coordinate register) that the classifier must
+      flag.
+    required_metrics:
+    - gate-family table with register and verdict
+    - per-ingredient genericity verdict
+    - query list, hits, verdicts
+  falsification_conditions:
+  - A gate family feeding coordinate bits into phase or measurement other than via group-law output.
+  - A published quantum ECDLP algorithm whose speedup is representation-dependent; its classical shadow
+    then escapes the floor and needs its own record.
+  - A flaw in the genericity argument for Kuperberg's x-labels, e.g. a use of x beyond equality up to
+    sign.
+  confounders:
+  - Windowed arithmetic and lookup tables read coordinate bits to implement the oracle; generic at the
+    algorithm level, must not be flagged.
+  interpretation_limits:
+  - The floor binds generic shadows only; representation-reading classical algorithms are untouched, which
+    is the open problem.
+  heuristic_assumptions:
+  - id: H1
+    statement: The three ingredients are expressible with the group oracle, negation and equality only.
+    rigorous_support: Standard for Shor and Regev; for Kuperberg's labels it follows from x(P) = x(Q)
+      iff P = +-Q.
+    validation_plan: The desk proof in the sibling notes, checked by the Reviewer role.
+  target_complexity:
+    time_exponent: classical shadow >= 1/2; delta 0
+    memory_exponent: not applicable
+    best_known: Pollard rho, Theta(sqrt N), KR-RHO-13bf67
+    hidden_overhead: None.
+    tradeoff_note: None.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  dominated_by: KR-RHO-13bf67 states the bound; this record applies it and audits the circuit.
+  sota_delta: Exponent delta 0; routing value only.
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/generic-rho
+    rows_checked:
+    - KR-RHO-13bf67
+    - KR-RHO-7d93f6
+    - KR-RHO-93979e
+    - KR-RHO-0528e7
+    - KR-RHO-755e35
+    - KR-RHO-53c89f
+    nearest:
+    - ref: KR-RHO-13bf67
+      provenance: internal
+      relation: special_case
+      delta: The generic lower bound specialised to classical simulations of generic quantum ECDLP algorithms.
+    searched:
+      corpus_grep:
+      - 'REPO BRIEF sections 2-3 for: generic, GGM, simulable, quantum, Shor, dequantiz, Regev, Kuperberg'
+      web: []
+      blocked:
+      - crypto/quantum_circuit_secp256k1 not opened; the test's first step is to read it.
+    lead: LEAD-EXO-quantum-ecdlp-resources
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: (1) Read crypto/quantum_circuit_secp256k1; tabulate gate families by register
+        (scalar, point, ancilla) and flag any gate whose target or control carries point-coordinate bits
+        into the scalar or phase register. (2) Write a one-paragraph genericity proof per ingredient as
+        a sibling .notes.md. (3) Literature pass with fixed queries: ''quantum elliptic curve discrete
+        logarithm non-generic'', ''Regev algo'

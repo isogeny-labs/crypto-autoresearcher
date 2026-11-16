@@ -1,0 +1,74 @@
+{
+  "analysis": "Parse final W4_dims and W4_one from producer stdout. If exit=0 and W4_one=0, compare rank to 226437. Preserve failure or timeout as unknown; do not promote numeric output to a certified LFD claim.",
+  "build_argv": [
+    "/usr/bin/gcc",
+    "-O3",
+    "-std=c11",
+    "-Wall",
+    "-Wextra",
+    "analysis/semaev-m2-last-fall-degree/code/lfdclose2.c",
+    "-lm4ri",
+    "-o",
+    "/home/ec2-user/fall-degree-data-20261029/n51-poly01-direct-w4-rank-001/lfdclose2"
+  ],
+  "id": "n51-poly01-sliced-direct-w4-rank-local-001",
+  "input_check_path": "analysis/semaev-degree-five-quotient-lift/validation/n51-poly01-sliced-independent-sys-check-001.json",
+  "input_check_sha256": "fa9454e90da2ea7637a625b5443a8bea991148c81796911de23dedc233dbcc3f",
+  "input_path": "analysis/semaev-degree-five-quotient-lift/validation/n51-poly01-sliced-independent.sys",
+  "input_sha256": "d3c76b713b7fd9c54d84f0dc75a463766d84636f3c5e73c0b7c75aa1bedd9327",
+  "no_certificate_export": true,
+  "output_root": "/home/ec2-user/fall-degree-data-20261029/n51-poly01-direct-w4-rank-001",
+  "producer_argv": [
+    "/usr/bin/prlimit",
+    "--as=34359738368",
+    "--",
+    "/usr/bin/timeout",
+    "14400",
+    "/home/ec2-user/fall-degree-data-20261029/n51-poly01-direct-w4-rank-001/lfdclose2",
+    "4",
+    "1",
+    "20000"
+  ],
+  "protocol_canonical_sha256": "289255aa0c7b2802c4116a6fea96453b5328f5201a1a83c1a8386dbe6da29ee7",
+  "protocol_file_sha256": "94b5b826bd192b7fe08b3be74689e9a1e0898c3c894244aa3252ce93230d5555",
+  "protocol_path": "analysis/semaev-degree-five-quotient-lift/n51-poly01-direct-w4-rank-protocol-001.json",
+  "queue_gate": {
+    "existing_n51_d5_output_root": "/home/ec2-user/fall-degree-data-20261029/n51-poly01-sliced-d5-local-001",
+    "locks": [
+      "/home/ec2-user/fall-degree-data-20261029/expansion/expansion.lock",
+      "/home/ec2-user/fall-degree-data-20261029/frontier-highmem-001/owner.lock"
+    ],
+    "require_existing_n51_d5_terminal": true,
+    "require_fresh_budget_readback": true,
+    "require_frontier_locks_free": true,
+    "require_host_available_bytes": 42949672960,
+    "require_host_disk_available_bytes": 2147483648,
+    "run_only_if_existing_status": "projection_kills_one or terminal failure leaving D5 unproved"
+  },
+  "reference": {
+    "certificate_sha256": "be38aff828d9d3c73e70ea78914727fdca1305edbf5f99e99b28aa747cc396d8",
+    "exact_original_solution_count": 0,
+    "monomial_dimension": 272052,
+    "quotient_dimension": 45615,
+    "seed_kernel_dimension": 226437
+  },
+  "resource_ceiling": {
+    "build_timeout_seconds": 300,
+    "charge": "Builds, host runtime, failed attempt, storage and transfer within USD 12 reservation; refuse if daily/monthly allowance cannot cover it.",
+    "child_address_space_bytes": 34359738368,
+    "cpu_threads": 1,
+    "deadline_utc": "2026-11-05T23:30:00Z",
+    "disk_bytes": 2147483648,
+    "host_memory_reservation_bytes": 42949672960,
+    "max_attempts": 1,
+    "max_total_retries": 0,
+    "producer_timeout_seconds": 14400,
+    "usd_reservation": 12
+  },
+  "schema": "semaev.direct-w4-rank-plan/v1",
+  "source_commit": "9decca5e824102c0a1a2149cd0694166e8142d06",
+  "source_path": "analysis/semaev-m2-last-fall-degree/code/lfdclose2.c",
+  "source_sha256": "2413e3a3f34d0fdda8a53b0d62acff53aeaabc593b1c55fe42a3d7db8af3cc4f",
+  "status": "frozen_queued_not_launched",
+  "stdin": "committed input_path; runner must open and hash before child execution"
+}

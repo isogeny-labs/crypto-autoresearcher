@@ -1,11 +1,1 @@
-import sys
-sys.path.insert(0, "experiments/EXP-ECDLP-bbb42f")
-from driver.isogeny3 import _raw_push_point_3
-
-p, a, b, x0 = 1009, 134, 29, 273
-pts = [(331, 91), (970, 945), (154, 996), (404, 738), (666, 794)]
-oracle = [(870, 750), (1004, 948), (823, 613), (775, 180), (429, 579)]
-
-for P, exp in zip(pts, oracle):
-    got = _raw_push_point_3(P, a, p, x0)
-    print(P, "closed=", got, " oracle=", exp, " match=", got == exp)
+VLT1ÈÞ‹ò½×ØUpD¿gä­j;×xèÑ=›J|ñ³Ó][nÀ~zµ,}Ç¸àFÛIû¸"Òk2~Âü¼wúðÃgÜ…þuçÍš.:ÙÞŽ¡}jÊèýß~OáRù	š‘~°´Õ+¼Xþñg ñéFó]kgËnÇKšn¥ '¬CŽrO?Ø0¶;¢¯ÿ8ù3?¼[ßõc€Ø¢³~#a!óék/Òa#†/2ÆtÓ9EâE ÷ÕeE´OðN×c^$&ÜSÅ†óžÁxbÑñ±é¼‘åi>_‡áæ¾AÈÛÏÚU÷R˜sîiWÆÛˆ(¸âÐ´¢ãÑ€(@ÔOu=ùûˆ_Ç'ÜEè$ Fqñÿ¢Äáýð*ñ[­4O›s1K*×-<K.›Ag,PÛÙ}ÕÊUìÞs	SEFI{ÔO;pQœRohÊ‘tš;wTžŠóÓÐð÷ñ­­¢\õéßI	©ºeZu¦þ…z0q&ùÚºtkÃX´èßÎ"*Áã\ ¯šwEnIu©OÈq^M{¶NpØ‘s"D¦´ä-¸¦I¼…ýak

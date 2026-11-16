@@ -1,0 +1,156 @@
+idea:
+  id: IDEA-20261109-c361de
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: 'Pohlig-Hellman on the scalar torsor: the Cheon port to a prime-order curve reduces ECDLP to
+    one power-residue character of the logarithm'
+  class: reduction
+  claim: 'Let E/F_p have prime order N, P generate E(F_p), and A = (Z/N)^* (order N-1 = prod q_i^{e_i})
+    act on E(F_p) minus O by Q -> [m]Q. For a character chi of A put Phi_chi(P,Q) = chi(log_P Q). (a)
+    Exact reduction, no heuristic. Evaluators for one character of order q^e per prime power q^e dividing
+    N-1 reduce ECDLP(P,Q) in poly(log N) time plus one call per character to discrete logs in the subgroups
+    mu_{q^e} of F_N^*, i.e. to DLP in the 256-bit scalar field F_N^*, which NFS solves in L_N(1/3) (practical
+    with CADO). With only the quadratic character, M evaluations at Q+[s]P give the Legendre sequence
+    chi_2(k+s), and Legendre-PRF key recovery costs O(N log^2 N / M^2) symbol operations (Beullens-Beyne-Udovenko-Vitto
+    2020, recalled), so k is found in about N^{1/3} total. (b) The whole gap between this port and an
+    algorithm is the evaluator; none is proposed. Prediction fixed before any run: on toy curves no statistic
+    in a pre-registered battery B of eight poly-time coordinate functions correlates with chi_q(log_P
+    Q). With rho_s = (1/N) sum_k chi_q(k) conj(s([k]P)), s normalised to mean 0 and unit modulus, sqrt(N)|rho_s|
+    <= 4 for every curve, every prime q <= 64 dividing N-1, and every s in B.'
+  mechanism: Pohlig-Hellman decomposes a torsor under a cyclic group along the Sylow decomposition of
+    the acting group whenever the quotient torsors are computable. Here the quotient by the index-q subgroup
+    of A is computed exactly by chi_q(k) = k^{(N-1)/q} mod N, the same object Cheon's attack recovers
+    from the auxiliary input [k^d]P (repo ca_cheon.h, ca_pohlig.h). In F_p^* the analogous character is
+    visible because a character of the exponent is a multiplicative character of the element (Legendre
+    symbol of g^x is the parity of x). On a prime-order curve the needed function is a character of the
+    hidden scalar, not of the group, and no algebraic expression in the coordinates is known. The census
+    asks whether any cheap coordinate statistic carries a trace of it; the positive control is the additive
+    group Z/N, where the same character is read off the element directly.
+  novelty_status: speculative
+  citations:
+  - ref: KR-RHO-13bf67
+    provenance: internal
+    claim: Generic algorithms need Omega(sqrt N) operations; a generic evaluator of Phi_chi with constant
+      advantage would contradict the Shoup-type extension to balanced predicates (exact statement to be
+      located by the next agent).
+    verified_by: REPO BRIEF 2026-11-09 section 3 excerpt; KR yaml not opened
+  - ref: KR-RHO-53c89f
+    provenance: internal
+    claim: Known transfers need a special curve invariant. The torsor structure exists for every prime
+      N; the missing piece is computability of the quotient maps.
+    verified_by: REPO BRIEF 2026-11-09 section 3 excerpt; KR yaml not opened
+  - ref: IDEA-20260805-c4f675
+    provenance: recalled
+    claim: Measured additive-character sums of the logarithm over a small-x factor base with four incompatible
+      exponents; the multiplicative-character version was never measured.
+    verified_by: REPO BRIEF 2026-11-09 section 2 index line only
+  assumptions:
+  - N is prime and N-1 has a prime factor q <= 64 on each toy curve; curves without one are excluded and
+    counted.
+  - The battery B is frozen in the task file before the first curve is enumerated.
+  predictions:
+  - metric: max over (curve, q, s) of sqrt(N) * |rho_s|
+    direction: lower
+    minimum_effect: at most 4 on every toy curve with N in [2^20, 2^28]
+  - metric: sqrt(N) * |rho| for the additive-group positive control
+    direction: higher
+    minimum_effect: equals sqrt(N) up to rounding
+  - metric: reduction (a) on a toy curve with simulated evaluators (k known)
+    direction: different
+    minimum_effect: recovers k on 100 of 100 random targets
+  minimal_test:
+    design: For each prime-order toy curve in crypto/docs/ECDLP_CALIBRATION_PRIMES.md with N in [2^20,
+      2^28], plus three j=0 curves of the same sizes, fix P, enumerate Q=[k]P for all k, and for each
+      prime q <= 64 dividing N-1 compute rho_s for s in B = { Legendre symbol of x(Q), of y(Q), of x(Q)-x(P),
+      of x(Q)x(P); (-1)^(lsb x(Q)); sign of x(Q)-p/2; cubic residue character of x(Q) when p = 1 mod 3;
+      q-th power residue character of x(Q) when q divides p-1 }. Report sqrt(N)|rho_s| with a Bonferroni
+      threshold over 8 statistics times the number of q. Separately verify (a) at N about 2^20 using the
+      known k to simulate evaluators and brute force or CADO for the mu_q logs.
+    controls:
+    - Label control, same battery against chi_q(sigma(k)) for a random permutation sigma of the scalars.
+    - Positive control, the additive group Z/N with element k*g and the battery applied to the element;
+      must return sqrt(N)|rho| = sqrt(N) for s = chi_q.
+    - Per-curve log of p, N, j, the factorisation of N-1 and k = ord_N(p).
+    required_metrics:
+    - N, p, j, list of q tested
+    - sqrt(N) * |rho_s| for every (q, s) and the Bonferroni threshold
+    - label-control maximum of sqrt(N) * |rho_s|
+    - simulated-evaluator success count out of 100
+  falsification_conditions:
+  - Reduction (a) fails on any simulated toy instance; the port is mis-stated and the record is withdrawn.
+  - Some (q, s) reaches sqrt(N)|rho_s| >= 6 on three independent curves at each of two sizes with no decrease
+    in N; this falsifies the null in (b) and escalates the port, it does not confirm an algorithm.
+  - The label control exceeds the same threshold; the statistic, not the curve, is biased and the run
+    is invalid.
+  confounders:
+  - Eight statistics times several q inflate the null maximum; the Bonferroni threshold and label control
+    bound this.
+  - Primes q dividing both N-1 and p-1 couple scalar and field characters only by chance; such q are flagged.
+  interpretation_limits:
+  - A null at N <= 2^28 for eight statistics is a scoped no-go for cheap coordinate evaluators only.
+  - The conditional exponents in (a) assume an evaluator nobody has; this record proposes no algorithm
+    and moves no exponent.
+  heuristic_assumptions:
+  - id: H1
+    statement: Legendre-PRF key recovery from M symbols costs O(N log^2 N / M^2), giving N^{1/3} total
+      with the evaluator.
+    rigorous_support: Recalled from Beullens-Beyne-Udovenko-Vitto (ToSC 2020); not re-derived.
+    validation_plan: Re-read the paper; implement M-symbol recovery at N about 2^30 under cryptanalysis/experiments
+      with a simulated evaluator and fit time against M.
+  - id: H2
+    statement: No poly-time coordinate statistic correlates with chi_q(log_P Q).
+    rigorous_support: None; mixed sums of a multiplicative character of the logarithm against additive
+      characters of x(Q) have no known nontrivial bound.
+    validation_plan: The census above with both controls.
+  target_complexity:
+    time_exponent: N^{1/2} unchanged by this record; conditional on an evaluator, N^{1/3} (quadratic character)
+      or L_N(1/3) (all characters)
+    memory_exponent: O(1) for the census; N^{1/3} symbols in the conditional Legendre-PRF step
+    best_known: Pollard rho, Theta(N^{1/2}) group operations, KR-RHO-13bf67
+    hidden_overhead: the evaluator of Phi_chi, which no known method computes below the generic bound
+    tradeoff_note: conditional path trades M evaluator calls against N log^2 N / M^2 symbol operations
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  dominated_by: KR-RHO-13bf67 dominates every unconditional exponent reading; no frontier row states the
+    torsor decomposition or the Legendre-PRF link.
+  sota_delta: 'Exponent delta 0. Structural delta: Cheon and Pohlig-Hellman port to a prime-order curve
+    exactly, with the whole gap isolated in one power-residue character of the logarithm, measured at
+    toy sizes.'
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/generic-rho
+    rows_checked:
+    - KR-RHO-13bf67
+    - KR-RHO-53c89f
+    - KR-RHO-755e35
+    - KR-RHO-0528e7
+    - KR-IC-5931ee
+    - KR-IC-5a43e5
+    nearest:
+    - ref: KR-RHO-53c89f
+      provenance: internal
+      relation: adjacent
+      delta: Transfer attacks need a special curve invariant; this port uses the always-present factorisation
+        of N-1 and fails only at the quotient-map evaluator.
+    - ref: KR-RHO-13bf67
+      provenance: internal
+      relation: adjacent
+      delta: The generic bound forbids a generic evaluator; it says nothing about coordinate statistics,
+        which the census measures.
+    searched:
+      corpus_grep:
+      - REPO BRIEF section 2 for Cheon, Pohlig, torsor, power residue, Legendre, character of the logarithm
+      - REPO BRIEF section 3 for Pohlig-Hellman or Cheon rows (none present)
+      web: []
+      blocked: []
+    lead: LEAD-EXO-quadratic-phase-small-x-leakage
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: For each prime-order toy curve in crypto/docs/ECDLP_CALIBRATION_PRIMES.md
+        with N in [2^20, 2^28], plus three j=0 curves of the same sizes, fix P, enumerate Q=[k]P for all
+        k, and for each prime q <= 64 dividing N-1 compute rho_s for s in B = { Legendre symbol of x(Q),
+        of y(Q), of x(Q)-x(P), of x(Q)x(P); (-1)^(lsb x(Q)); sign of x(Q)-p/2; cubic residue character
+        of x(Q) when p = 1 mod 3; q-th power '

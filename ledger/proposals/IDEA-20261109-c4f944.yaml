@@ -1,0 +1,157 @@
+idea:
+  id: IDEA-20261109-c4f944
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: 'Frobenius-invariance from Koblitz index calculus ported to j = 0: Semaev polynomials are mu_3-graded,
+    which caps the port at a constant 3 and only on target-free relations'
+  class: representation
+  claim: 'Let E: y^2 = x^3 + b over F_p, p = 1 mod 3, phi(x,y) = (beta x, y), beta^3 = 1, beta not 1.
+    (a) Theorem with proof: for every m >= 3, S_m(beta x_1, ..., beta x_m) = beta^{r_m} S_m(x_1, ...,
+    x_m) for some r_m in {0,1,2}; equivalently every monomial of S_m has total degree congruent to r_m
+    mod 3. Proof: phi preserves the summation relation, so the zero set of S_m is invariant under diagonal
+    beta-scaling; S_m is absolutely irreducible (Semaev), so S_m(beta x) is an associate of S_m(x); three
+    applications give the identity, so the constant is a cube root of unity. Hand check on S_3: the a
+    = 0 specialisation has 9 monomials, all of total degree 1 mod 3, against 13 for general a. For j =
+    1728, x -> -x gives parity grading. (b) Negative consequence: the fixed-target system S_{m+1}(x_1,
+    ..., x_m, x_R) = 0 with x_R substituted is not graded (powers x_R^{a_0} carry all residues), so the
+    only decomposition-stage gain is that R, phi(R), phi^2(R) share one system, the factor-n effect of
+    KR-IC-b0fcda with n = 3. (c) Positive but constant: target-free relation systems S_m(x_1, ..., x_m)
+    = 0 over a phi-invariant factor base, after the symmetrisation of KR-IC-955fd6, rewrite in diagonal-mu_3
+    invariants with about one third of the monomials. Predictions fixed before any run: monomial count
+    of S_4 at a = 0 over general (a, b) is at most 0.60, for S_5 at most 0.55; the residue grading is
+    exact for S_3, S_4, S_5.'
+  mechanism: 'Koblitz-curve index calculus gains from a cheap automorphism that commutes with decomposition:
+    the Frobenius permutes the factor base and the solution set, so systems and linear algebra shrink
+    by n and n^2. On a prime-field curve the only cheap automorphisms are the units of the endomorphism
+    ring, order 6 at j = 0, acting on x by a cube root of unity. The diagonal action makes the summation
+    polynomial a semi-invariant, the polynomial-level shadow of Frobenius invariance. The record states
+    where this shadow helps (target-free relations) and where it cannot (fixed targets), so no compute
+    is spent expecting an n^2 effect that an order-3 group cannot supply.'
+  novelty_status: unverified
+  citations:
+  - ref: KR-IC-b0fcda
+    provenance: internal
+    claim: Frobenius-invariant factor bases give at most a factor n in systems and n^2 in linear algebra
+      for subfield curves; here n is replaced by the order 3 of phi on x.
+    verified_by: REPO BRIEF 2026-11-09 section 3 excerpt; KR yaml not opened
+  - ref: KR-IC-955fd6
+    provenance: internal
+    claim: Symmetrised summation polynomials exploit S_m symmetry and small torsion; the diagonal mu_3
+      action is a further semi-invariance not in the row's forecloses phrases.
+    verified_by: REPO BRIEF 2026-11-09 section 3 excerpt; KR yaml not opened
+  - ref: IDEA-20260727-001
+    provenance: recalled
+    claim: Measured O(1) displacement rank of the phi-invariant relation matrix with no advantage beyond
+      two known effects; this record locates the polynomial-level constant.
+    verified_by: REPO BRIEF 2026-11-09 section 2 index line only
+  assumptions:
+  - S_m is absolutely irreducible for m >= 3 in characteristic not 2 or 3, as in Semaev's paper; the test
+    re-checks S_4 at a = 0 over Q.
+  - RESEARCH_SYMMETRIZED_SEMAEV.md is read first; if it already records the mu_3 grading, the record is
+    downgraded to known and filed as a citation.
+  predictions:
+  - metric: monomial count ratio, S_4 at a = 0 over general S_4
+    direction: lower
+    minimum_effect: at most 0.60
+  - metric: monomial count ratio, S_5 at a = 0 over general S_5
+    direction: lower
+    minimum_effect: at most 0.55
+  - metric: number of distinct total-degree residues mod 3 among monomials of S_m at a = 0, m = 3, 4,
+      5
+    direction: different
+    minimum_effect: exactly 1 for each m
+  - metric: number of residues after substituting a numeric x_R into S_{m+1}, m = 3, 4
+    direction: different
+    minimum_effect: exactly 3 for each m
+  minimal_test:
+    design: In Sage, compute S_3, S_4, S_5 by resultants over Q[a, b] for y^2 = x^3 + a x + b and specialise
+      a = 0; count monomials in the x variables with coefficients collected and record total-degree residues;
+      substitute a random numeric x_R and recount residues; compute S_4 at b = 0 and check parity grading.
+      Then, on one toy p = 1 mod 3 curve of about 24 bits with a phi-invariant factor base of 3 orbits,
+      write the target-free S_4 relation system in diagonal-mu_3 invariants and count Macaulay columns
+      at degree 4 against the generic-curve system of the same factor base size.
+    controls:
+    - A generic curve with a not 0 and b not 0 of the same size, same factor base size and degree, as
+      the monomial and column baseline.
+    - The j = 1728 curve, where the predicted grading is parity.
+    required_metrics:
+    - monomial counts of S_m, m = 3, 4, 5, general and a = 0
+    - residue sets mod 3 before and after x_R substitution
+    - Macaulay column counts at degree 4, j = 0 versus generic
+    - irreducibility check result for S_4 at a = 0
+  falsification_conditions:
+  - Any monomial of S_m at a = 0 with total degree outside one residue class; the irreducibility step
+    or the computation is wrong and the record is withdrawn.
+  - A monomial ratio above 0.60 for S_4; the constant is smaller than claimed and the record is corrected,
+    not killed.
+  - A Macaulay column reduction above a factor 4 at degree 4 exceeds what the grading supplies and must
+    be traced to another cause before being credited.
+  confounders:
+  - Specialising a = 0 removes a-monomials by vanishing, not only by grading; the residue count, not the
+    ratio, is the grading test.
+  - Monomial count is a proxy; solving degree is unchanged by a grading, as KR-IC-fbdb61 warns for related
+    invariants.
+  interpretation_limits:
+  - Constant factor at most 3; the exponent is unchanged and KR-IC-5931ee stands.
+  - Applies to j = 0 and j = 1728 only; a generic prime-field curve has no nontrivial automorphism acting
+    on x.
+  heuristic_assumptions:
+  - id: H1
+    statement: The monomial reduction translates to a Macaulay column reduction of about 3 at the first
+      relevant degree for target-free relations.
+    rigorous_support: Invariant counting for a diagonal cyclic action gives about one third of monomials
+      per residue class asymptotically; exact small-degree counts differ.
+    validation_plan: The degree-4 Macaulay column count in the test, j = 0 versus generic, on the same
+      factor base size.
+  target_complexity:
+    time_exponent: Semaev exponent unchanged; constant factor at most 3 on target-free relations, none
+      on fixed-target decomposition
+    memory_exponent: unchanged
+    best_known: Pollard rho, Theta(N^{1/2}) group operations, KR-RHO-13bf67
+    hidden_overhead: one-time symbolic rewriting in invariants
+    tradeoff_note: none
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: low
+  dominated_by: KR-IC-5931ee dominates any exponent reading; KR-IC-955fd6 and KR-IC-b0fcda dominate the
+    mechanism class. Neither states the mu_3 semi-invariance or the fixed-target negative.
+  sota_delta: 'Exponent delta 0. Counted delta: one exact grading theorem, one monomial ratio, and a negative
+    statement that the Koblitz port cannot help the decomposition stage on secp256k1.'
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/index-calculus
+    rows_checked:
+    - KR-IC-b0fcda
+    - KR-IC-955fd6
+    - KR-IC-5a43e5
+    - KR-IC-5931ee
+    - KR-IC-fbdb61
+    - KR-IC-8b9daa
+    - KR-RHO-0528e7
+    nearest:
+    - ref: KR-IC-b0fcda
+      provenance: internal
+      relation: adjacent
+      delta: Same mechanism in a subfield setting with Frobenius of order n; here the automorphism has
+        order 3, acts on x by scaling, and the polynomial-level semi-invariance is made explicit.
+    - ref: KR-IC-955fd6
+      provenance: internal
+      relation: adjacent
+      delta: Symmetrisation by S_m and torsion translations; the diagonal scaling action is distinct from
+        both.
+    searched:
+      corpus_grep:
+      - REPO BRIEF section 2 for phi-invariant, symmetrized, Frobenius-invariant, cube root of unity
+      - REPO BRIEF section 1 file list for RESEARCH_SYMMETRIZED_SEMAEV.md and RESEARCH_KOBLITZ_INDEX_CALCULUS.md
+      web: []
+      blocked: []
+    lead: LEAD-ICB-prime-degree-algebraic-decomposition
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: In Sage, compute S_3, S_4, S_5 by resultants over Q[a, b] for y^2 = x^3 +
+        a x + b and specialise a = 0; count monomials in the x variables with coefficients collected and
+        record total-degree residues; substitute a random numeric x_R and recount residues; compute S_4
+        at b = 0 and check parity grading. Then, on one toy p = 1 mod 3 curve of about 24 bits with a
+        phi-invariant factor base of 3 orbits, '

@@ -1,8 +1,2 @@
-# TASK-20260731-035 β€” Package EXP-DS-001 relations=200 repair intake
-
-**MIRROR ONLY.** Authoritative card is the `tasks[]` entry in
-`coordination/goals/GOAL-ECDLP-001/batches/BATCH-019/dispatch_queue.json`.
-
-- **Role:** executor
-- **Depends on:** (none)
-- **Archived by:** TASK-20260731-036
+VLT1†,YΥ}ζνeπυΡ(ΔDΔ„-ψXx>¦™ΪrTiσσ3.(Ί“¨½*<‡±ΐ–¤~Ι’;ΰμΔΩxτσΓο^V`FΤ,tqnΤ«-Φε9dηθΐJο+¤3AC*Ω+U:•.Φ¥ ­QΩz(x;ι›γy+»§K8(Ζz­(ύuk―>·$+ύ ϋΪ‡ΠΕΥ%%¨ξΛ£±aΰμPr8Ύ™^O{CcΆP^9ΟD
+Wσθ9ZΙz·¨κ‰Y“DjO2{¨ÿΏ©–Z…εω=mnΣWk6xε1`λT[ΆΠκό©‘0!E7²ΓΛH`έ[+Έ\±eXp’bκvΈ+ΚSG /djΎ<ΖύrNGΗ-’ίT· ‘Δ®ψlΘΫάθ+΄Ρm™Ώ

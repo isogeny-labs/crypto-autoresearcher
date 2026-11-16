@@ -1,0 +1,142 @@
+idea:
+  id: IDEA-20261109-c6732a
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: Sherali-Adams level and MILP node growth on bit-blasted mod-p multiplication gadgets and interval
+    point-decomposition instances, testing the cross-characteristic proof-degree barrier
+  class: barrier
+  claim: 'Predictions fixed before any run. Bit-blast F_p arithmetic over 0/1 variables for p of n bits.
+    Instance class G(n): a * b = c mod p with a and b restricted to bit-ranges and c chosen outside the
+    attainable product set (UNSAT by construction). Instance class D(n): S_3 decomposition of a target
+    x_R over an x-interval with no solution (certified by enumeration). Let l*(n) be the least Sherali-Adams
+    level at which the LP relaxation becomes infeasible, and M(n) the branch-and-bound node count of a
+    MILP solver. Prediction A: l*(n) grows with n, slope at least 0.2 per bit over n = 6..14 on G(n).
+    Prediction B: log2 M(n) grows with slope at least 0.5 per bit on D(n) for n = 10..20. A bounded l*(n)
+    or a polynomial fit of M(n) with exponent below 2 falsifies the barrier. No exponent change is claimed.'
+  mechanism: Modular arithmetic bit-blasted to 0/1 variables is a system of mod-p counting constraints.
+    Linear degree lower bounds for Positivstellensatz and Sherali-Adams on mod-p counting principles and
+    for Polynomial Calculus over F_q with q different from p are recalled from Grigoriev 2001 and Buss-Grigoriev-Impagliazzo-Pitassi
+    2001. If they transfer, every LP-hierarchy, MILP branch-and-cut or bit-level Groebner approach to
+    prime-field decomposition pays 2^{Omega(n)} = p^{c} on the arithmetic gadget alone, before any Semaev
+    structure, so the MILP arm cannot be an exponent lever and its measured behaviour in the g2-n31 experiments
+    is expected rather than diagnostic. The test isolates the gadget from the Semaev polynomial to separate
+    the two sources of hardness.
+  novelty_status: unverified
+  citations:
+  - ref: KR-IC-5765d2
+    provenance: internal
+    claim: SAT and XOR reasoning speed the PDP step by constants without changing the exponent; this record
+      states why the LP/MILP neighbour of that solver family cannot either.
+    verified_by: brief section 3, index-calculus row KR-IC-5765d2
+  - ref: KR-IC-fbdb61
+    provenance: internal
+    claim: Solving degree, last fall degree and degree of regularity are distinct invariants; the SA level
+      measured here is a fourth, cross-characteristic one.
+    verified_by: brief section 3, index-calculus row KR-IC-fbdb61
+  - ref: Grigoriev 2001 and Buss-Grigoriev-Impagliazzo-Pitassi 2001 linear degree lower bounds (recalled)
+    provenance: recalled
+    claim: Omega(n) degree for SoS on mod-p counting principles and for PC over F_q, q != p; provenance
+      is memory, re-verify before citing in a knowledge record.
+    verified_by: not verified in this session
+  assumptions:
+  - A MILP solver (HiGHS, CBC or the one used by the g2-n31 MILP experiments) and an LP solver for SA
+    relaxations are available; the next agent must read the g2-n31 MILP experiment directories to reuse
+    their encoding.
+  - Level-l SA relaxations are built only for l <= 4 and n <= 14 (variable count about (3n)^l).
+  predictions:
+  - metric: least-squares slope of l*(n) in n over n = 6..14 on G(n)
+    direction: higher
+    minimum_effect: at least 0.2 per bit
+  - metric: slope of log2 M(n) in n over n = 10..20 on D(n)
+    direction: higher
+    minimum_effect: at least 0.5 per bit
+  - metric: ratio of log2 M(n) on D(n) to log2 M(n) on G(n) at equal n
+    direction: higher
+    minimum_effect: at least 1.0
+  minimal_test:
+    design: Generate 20 UNSAT G(n) instances per width n = 6..14 and 20 UNSAT D(n) instances per n = 10..20
+      (m = 2, S_3, interval of width p^{1/2}, target certified by enumeration). For G(n) solve SA levels
+      1..4 and record l* (or 'above 4'). For both classes run the MILP solver with a fixed node budget
+      10^7 and record node counts, with time-outs recorded as censored. Fit slopes.
+    controls:
+    - Planted SAT instances of both classes must stay LP-feasible at every level and be solved by MILP;
+      an infeasible planted instance invalidates the encoding.
+    - Random UNSAT XOR-SAT of matched size, whose PC-over-F_2 degree is 2 but whose SA level is known
+      to be large, calibrates that the hierarchy is measured correctly.
+    required_metrics:
+    - n
+    - l*(n) per instance
+    - M(n) per instance with censoring flag
+    - fitted slopes with 95 percent intervals
+    - encoding size in variables and constraints
+  falsification_conditions:
+  - l*(n) <= 2 for every n in 6..14 on G(n).
+  - log2 M(n) on D(n) fits a polynomial in n with exponent below 2 and residual smaller than the exponential
+    fit.
+  - Solver time-outs are infrastructure and are neither support nor falsification.
+  confounders:
+  - Encoding choices (carry-save versus direct modular reduction) change constants; two encodings must
+    be run and both reported.
+  - MILP presolve may solve small G(n) at the root; the slope is fitted only on n where the root relaxation
+    is feasible.
+  interpretation_limits:
+  - Growth confirms a barrier for LP-based hierarchies at toy widths; it says nothing about PC over F_p
+    itself, which the wave-1 Polynomial-Calculus lead covers.
+  - Exponent delta against rho is 0 in every outcome.
+  heuristic_assumptions:
+  - id: H1
+    statement: Linear degree lower bounds for mod-p counting principles transfer to the bit-blasted multiplication
+      gadget and to interval PDP.
+    rigorous_support: The recalled theorems are for Tseitin-type and knapsack systems; the gadget is a
+      related but not identical family.
+    validation_plan: Direct measurement of l*(n) and M(n) as specified, with the XOR-SAT calibration control.
+  target_complexity:
+    time_exponent: p^{1/2} unchanged
+    memory_exponent: polynomial in n for the LPs at toy size
+    best_known: Pollard rho, Theta(p^{1/2}), KR-RHO-13bf67
+    hidden_overhead: none claimed; the record prices a solver family, not an attack
+    tradeoff_note: delta 0; closes the LP/MILP arm as an exponent lever if predictions hold
+  estimated_cost:
+    implementation: low
+    compute: medium
+  recommended_priority: medium
+  dominated_by: KR-IC-5765d2 and KR-IC-fbdb61 cover solver and degree invariants in the native characteristic;
+    neither states the cross-characteristic barrier that governs the repo's MILP experiments.
+  sota_delta: 'Exponent delta 0. Counted delta: SA level growing at >= 0.2 per bit on the arithmetic gadget
+    and MILP nodes growing at >= 0.5 bits per bit on interval PDP.'
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/index-calculus
+    rows_checked:
+    - KR-IC-5765d2
+    - KR-IC-fbdb61
+    - KR-IC-0d2021
+    - KR-IC-e847d1
+    - KR-IC-889857
+    - KR-RHO-13bf67
+    nearest:
+    - ref: KR-IC-5765d2
+      provenance: internal
+      relation: adjacent
+      delta: SAT/XOR solvers on binary PDP; this record concerns LP hierarchies and MILP on prime-field
+        bit-blasted instances.
+    - ref: KR-IC-fbdb61
+      provenance: internal
+      relation: adjacent
+      delta: Native-field degree invariants; the SA level is a real-relaxation invariant not recorded
+        there.
+    searched:
+      corpus_grep:
+      - brief section 1b for milp experiment directories (g2-n31-four-add-width2-milp-r7, width3-milp-r8)
+      - wave-1 wildcards leads on Polynomial Calculus and QF_BV SMT
+      - brief section 2 for Sherali-Adams, sum-of-squares, MILP
+      web: []
+      blocked: []
+    lead: LEAD-ICE-generic-oracle-arity-cost-floor
+    lead_delta:
+      kind: answers_obstruction
+      statement: 'New test: Generate 20 UNSAT G(n) instances per width n = 6..14 and 20 UNSAT D(n) instances
+        per n = 10..20 (m = 2, S_3, interval of width p^{1/2}, target certified by enumeration). For G(n)
+        solve SA levels 1..4 and record l* (or ''above 4''). For both classes run the MILP solver with
+        a fixed node budget 10^7 and record node counts, with time-outs recorded as censored. Fit slopes.'
