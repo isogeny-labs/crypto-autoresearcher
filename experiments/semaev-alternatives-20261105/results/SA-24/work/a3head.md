@@ -1,3 +1,4 @@
-VLT1a£ÛûdÇ"ï•÷áÄ;ØHjHTÜ¢§«N°„‘gÇ‹ú\rmzk†yğÏOĞèãÿ8U/¡ã%(öw4°€k˜˜§U„#ğ=]SšC1€CQâ’l'›¢÷TmÎôñœ Í¯o†5!›ÎŠ±0ìV)5j9ç.e®Sf8BXõVßˆI‡ÕĞ¥sv£ÆùMÙd'döµEÒâe3¨%Û‘£Ø±‡DÖV‹¸£	ì½wæ~}±%É„<åì’<P6õœe
-¥šÙ4$ô]JÍû àY¼Ü8Ãå¦ìÑxÀtäš2+öå.C¬øtge6#0Jªê=³3&¡ÇÃa¸ÿfæ¬	|O¸½õà«òpY€Ï¦™±âœ£%\v •ıódEÛ÷ØíØ>)ZVêôò$Ñr¢’=‚OWÀ»o
-Ó× W¸~Kª&èŠWÌ»®øã<)³uğÛ]f†$#.x$ÚÀçÒ,bÛ+îïàZº<™ê7AWN3uœæ™m#8-†—Âë_n‡CúohÅ"Õ¢âÒ=û
+
+Per-delta slopes of log2 ratio on log2 p, A2 (CI): 0.3: -0.028 [-0.166, 0.050]; 0.4: 0.015 [-0.012, 0.038]; 0.5: -0.018 [-0.035, -0.002]; 0.6: 0.0001 [-0.003, 0.003]; 0.7: 0.0000 [-0.0006, 0.0006]; 0.8, 0.9: below 1e-4 in magnitude. Pooled (delta fixed effects): -0.0040 [-0.0142, 0.0027], n_boot 2000. Powered cells only enter slopes (needs >= 3 powered sizes per delta).
+
+## A3 splitting law, genus 3

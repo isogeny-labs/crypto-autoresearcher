@@ -1,0 +1,399 @@
+{
+  "amendments": [],
+  "analysis_plan": {
+    "blinded": false,
+    "frozen_before_data": true,
+    "inputs": [
+      "n47-rand00-sliced-d4-plan-001.json",
+      "Accepted hash-pinned original D4 map",
+      "Independently checked 24-generator affine span witness"
+    ],
+    "outputs": [
+      "Projection and rebase receipts with output hashes, independent C0-C3 checker receipt, exact rebased border and source-derived 64 GiB admission result."
+    ],
+    "script": {
+      "path": "check_trace_slice_certificate.py",
+      "sha256": "ca5a760e138e667a687418bb5d69c31c9b462b32029295b15a50e70c56f77e89"
+    }
+  },
+  "arms": [
+    {
+      "description": "Copy the original D4 rows that exclude x_47 into the 47-variable monomial universe.",
+      "id": "affine-projection",
+      "instrument": {
+        "binary_sha256": "8c14642013ad1383e229a1c63bcf1d6b3376d80fa8bc7138c026f2dda47f0bb3",
+        "build": [
+          [
+            "reuse",
+            "Python 3 source"
+          ]
+        ],
+        "commit": "dd5dd9c66772cf1f23a00e8a060147045757f310",
+        "env": {},
+        "flags": {
+          "source_sha256": "8c14642013ad1383e229a1c63bcf1d6b3376d80fa8bc7138c026f2dda47f0bb3",
+          "variable": "47"
+        },
+        "repo": "crypto-autoresearcher",
+        "threads": 1
+      },
+      "parameters": {
+        "degree": 4,
+        "input_sha256": "3bdad807113e43ec41ac6e9edcb2a282ffa486c7a694eba0dd3e0e9b0fa5162f",
+        "variables": 47
+      },
+      "role": "candidate"
+    },
+    {
+      "description": "Convert the projected map to unit-triangular coordinates with the SHA-pinned reused native binary.",
+      "id": "selective-rebase",
+      "instrument": {
+        "binary_sha256": "cebdb29f8feb2784d86da467fce568c751780af95e6388f09b7a24c51f01f6ba",
+        "build": [
+          [
+            "reuse",
+            "SHA-pinned prior binary"
+          ]
+        ],
+        "commit": "dd5dd9c66772cf1f23a00e8a060147045757f310",
+        "env": {},
+        "flags": {
+          "projected_sha256": "bound from projection receipt before invocation",
+          "source_sha256": "994e26671f90b5f2f1c9ae5e9377d3a683249173599f7d17c74d32978f462540"
+        },
+        "repo": "crypto-autoresearcher",
+        "threads": 1
+      },
+      "parameters": {
+        "degree": 4,
+        "input_sha256": "bound from projection receipt before invocation",
+        "variables": 47
+      },
+      "role": "candidate"
+    },
+    {
+      "description": "Rebuild the named Semaev equations, substitute the certified affine relation, and check C0-C3 on the rebased output.",
+      "id": "independent-check",
+      "instrument": {
+        "binary_sha256": "ca5a760e138e667a687418bb5d69c31c9b462b32029295b15a50e70c56f77e89",
+        "build": [
+          [
+            "reuse",
+            "Python 3 source"
+          ]
+        ],
+        "commit": "dd5dd9c66772cf1f23a00e8a060147045757f310",
+        "env": {},
+        "flags": {
+          "affine_combination_mask": "0x25d881e86ebe",
+          "descent_sha256": "b6e28168091986b3cb04790f51889723db0ec5838633767bb80a6dc4ac97bd70",
+          "variable": "47"
+        },
+        "repo": "crypto-autoresearcher",
+        "threads": 1
+      },
+      "parameters": {
+        "degree": 4,
+        "variables": 47
+      },
+      "role": "reference"
+    },
+    {
+      "description": "Count actual rebased border coordinates and calculate the published blocked-worker allocation envelope.",
+      "id": "border-profile",
+      "instrument": {
+        "binary_sha256": "082a71656c26da91959b77e11b01eb5b9bd2f3dcb5932b6f35cad78f751fc1b9",
+        "build": [
+          [
+            "reuse",
+            "Python 3 source"
+          ]
+        ],
+        "commit": "dd5dd9c66772cf1f23a00e8a060147045757f310",
+        "env": {},
+        "flags": {
+          "source_sha256": "082a71656c26da91959b77e11b01eb5b9bd2f3dcb5932b6f35cad78f751fc1b9"
+        },
+        "repo": "crypto-autoresearcher",
+        "threads": 1
+      },
+      "parameters": {
+        "degree": 4,
+        "variables": 47
+      },
+      "role": "reference"
+    }
+  ],
+  "authors": [
+    "Codex, owner-authorized data preparation"
+  ],
+  "claims": [
+    {
+      "class": "exact_computation",
+      "decided_by": [
+        "slice-acceptance"
+      ],
+      "id": "C1",
+      "text": "The sliced D4 map is accepted only if the independent C0-C3 checker validates the rebased output against a fresh named-instance descent."
+    },
+    {
+      "class": "exact_computation",
+      "decided_by": [
+        "slice-acceptance"
+      ],
+      "id": "C2",
+      "text": "The actual rebased border and source-derived 64 GiB admission verdict are determined by the pinned structural profiler only after C1."
+    }
+  ],
+  "controls": {
+    "aa": {
+      "comparison": null,
+      "not_applicable_reason": "Exact deterministic transformation, no timing comparison.",
+      "present": false
+    },
+    "negative": {
+      "arm": null,
+      "not_applicable_reason": "Wrong source SHA is a deterministic refusal condition; no statistical null population applies.",
+      "null_population": null,
+      "present": false
+    },
+    "positive": {
+      "arm": null,
+      "expected_detection": null,
+      "not_applicable_reason": "Deterministic small unsafe-unit and missing-unit kernel fixtures are software controls, not a positive population arm.",
+      "present": false
+    }
+  },
+  "created": "2026-11-07",
+  "decision_rule": {
+    "comparison_ids": [
+      "slice-acceptance"
+    ],
+    "effect_size_measure": "none",
+    "interval": "none, exact",
+    "multiple_comparison_correction": "none",
+    "statistic": "none",
+    "text": "Accept a sliced D4 seed only on independent C0-C3 checker success; report exact rebased border and source-derived admission separately.",
+    "threshold": "valid_affine_slice_nonmembership and valid triangular profile with border <=103156 for 64 GiB screen",
+    "verdict_vocabulary": [
+      "accepted_rebased_seed_fits_64gib",
+      "accepted_rebased_seed_exceeds_64gib",
+      "invalid",
+      "unknown"
+    ]
+  },
+  "execution": {
+    "backend": "local",
+    "checkpoint": {
+      "after_restore": {
+        "counted_units": "valid",
+        "wall_time": "invalid"
+      },
+      "grace_seconds": 10,
+      "interval_seconds": null,
+      "policy": "none",
+      "restore_validation": "none"
+    },
+    "measurement_class": "throughput",
+    "placement": {
+      "checkpoint_detail": "One projection, one rebase, one checker, one profile; no checkpoint or automatic retry. Preserve partial and failure outputs.",
+      "counter_memory_bytes": 0,
+      "max_workers": 1,
+      "memory_per_worker_bytes": 17179869184,
+      "pod_memory_bytes": 21474836480
+    },
+    "queue": "local-sliced-d4",
+    "retries": {
+      "infrastructure_only": true,
+      "max_attempts": 1
+    },
+    "timeout_seconds": 9000
+  },
+  "freeze": {
+    "status": "frozen",
+    "protocol_sha256": "d2cd8ac4e3170bebfdd896a6353541bef66535150a7eb43fd881ead2c4ec8711",
+    "commit": "76b5692f93be236b9fd0bf196d922bc89491758a",
+    "frozen_at": "2026-11-07T01:32:17Z",
+    "filed_before_affected_data": true
+  },
+  "hypotheses": [],
+  "inadmissible": [
+    "Inferring a D5 or LFD-six bound from this D4 transformation.",
+    "Calling a projected or rebased map accepted before the independent checker.",
+    "Treating an optimistic original-border screen as the actual sliced border.",
+    "Retrying the one-attempt run under another name without a new protocol."
+  ],
+  "invalidation_rules": [
+    "Any source or binary hash mismatch prevents execution.",
+    "A failed independent checker prevents a claim from that stage.",
+    "A counter failure prevents a solution-count comparison.",
+    "Killing1 in an over-approximating quotient is not membership evidence in the true closure.",
+    "Missing later stages remain unknown, even if an earlier stage proves a smaller lower bound.",
+    "Deferred export or missing checkpoint/certificate carries no mathematical bound.",
+    "Restore request mismatch or unverified state prevents native launch."
+  ],
+  "links": {
+    "affine_witness_sha256": "0ab35ae33e14ad1d0fbda17731aabc901b021ba369a84bfc604a33121e676a81",
+    "checked_seed_sha256": "3bdad807113e43ec41ac6e9edcb2a282ffa486c7a694eba0dd3e0e9b0fa5162f",
+    "plan": "n47-rand00-sliced-d4-plan-001.json",
+    "plan_sha256": "2c009b4ae6bf03519f99e1455bb27a6bc248b7ec5671fc836fe06e14a0216416",
+    "source_sha256": "994e26671f90b5f2f1c9ae5e9377d3a683249173599f7d17c74d32978f462540"
+  },
+  "literature": [
+    {
+      "claim": "Exact affine slicing and nonmembership transfer are proved in Proposition 2.5b.",
+      "provenance": "internal",
+      "ref": "analysis/semaev-m2-last-fall-degree/theorem-dossier.md",
+      "verified_by": "Codex 2026-11-07"
+    }
+  ],
+  "measurement": {
+    "clock": "counted",
+    "counters": [],
+    "isolation_required": "L0",
+    "order": "sequential",
+    "record": [
+      "cpu_model",
+      "kernel_release",
+      "binary_sha256",
+      "source_commit",
+      "argv",
+      "input_sha256"
+    ],
+    "timed_primary_justification": null,
+    "warmups": 0
+  },
+  "metrics": {
+    "primary": [
+      {
+        "aggregation": "per_row",
+        "definition": "Codimension of the rebased sliced D4 map only if independent checker accepts C0-C3.",
+        "id": "accepted_rebased_codimension",
+        "kind": "exact",
+        "name": "independently checked sliced D4 codimension",
+        "resolution": "1",
+        "source": "checker stdout codimension_lower_bound",
+        "uncertainty": "none_exact",
+        "unit": "F2 dimension"
+      }
+    ],
+    "secondary": [
+      {
+        "aggregation": "per_row",
+        "definition": "Actual D5 border coordinates of the accepted unit-triangular sliced D4 map.",
+        "id": "rebased_border",
+        "kind": "exact",
+        "name": "rebased border coordinates",
+        "resolution": "1",
+        "source": "capacity profile border_coordinates",
+        "uncertainty": "none_exact",
+        "unit": "coordinates"
+      }
+    ]
+  },
+  "protocol_id": "SEMAEV-N47-RAND00-SLICED-D4-LOCAL-20261107-V1",
+  "question": "Can the n47 random00 D4 quotient be projected along a proved affine relation, independently checked after selective rebase, and profiled under the 64 GiB D5 admission threshold?",
+  "randomization": {
+    "arm_order": "fixed",
+    "arm_order_reason": "Exact named-input replay has no arm-dependent clock inference.",
+    "blinding": {
+      "analysis_labels_masked": false,
+      "how": "Exact inputs and prior campaign are visible; no population or timing inference.",
+      "unmasked_at": null
+    },
+    "instance_sampling": {
+      "independent_of_arm": true,
+      "rule": "One fixed named n47 random00 D4 map; no population inference."
+    },
+    "seed_derivation": {
+      "method": "explicit_list",
+      "nonce": null,
+      "note": "Original named n47 input seed; no new random inputs.",
+      "seeds": [
+        9494361161180666839
+      ]
+    }
+  },
+  "reporting": {
+    "export_schema": "experiment.export/v1",
+    "graphs": [
+      "One-row proof dependency diagram and exact stage outcome table."
+    ],
+    "report_dir": "reports",
+    "review_schema": "experiment.review/v1"
+  },
+  "repository": "crypto-autoresearcher",
+  "sample_size": {
+    "instances": 1,
+    "power": {
+      "alpha": 0.05,
+      "correction": "none",
+      "method": "exact",
+      "note": "Exact named-input verification, no population inference.",
+      "passes": true,
+      "tests_in_family": 1
+    },
+    "preflight_runtime": {
+      "estimated_total_seconds": 9000,
+      "fixed_seconds": 0,
+      "measured_on": "Hard 900-second projection, 3600-second rebase, 3600-second checker, and 900-second profile caps; no timing comparison.",
+      "per_sample_seconds": 9000,
+      "threads": 1
+    },
+    "replicates": 1,
+    "warmups": 0
+  },
+  "schema": "experiment.protocol/v1",
+  "stopping_rules": [
+    {
+      "kind": "fixed_n",
+      "preregistered": true,
+      "rule": "One named n47 D4 map, one affine projection, one selective rebase, one independent check, one border profile. Stop at success, refusal, timeout, resource failure, or USD 5 reservation; no retry."
+    }
+  ],
+  "study_dir": "analysis/semaev-degree-five-quotient-lift",
+  "variable_ledger": {
+    "aa_not_applicable": "Exact kernel and certificate checks, no performance comparison.",
+    "comparisons": [
+      {
+        "arms": [
+          "affine-projection",
+          "selective-rebase",
+          "independent-check",
+          "border-profile"
+        ],
+        "design": "absolute",
+        "differs_in": [
+          "stage"
+        ],
+        "id": "slice-acceptance",
+        "threshold": "Independent checker C0-C3 acceptance, then actual border <=103156 for 64 GiB screen."
+      }
+    ],
+    "crosses_map": false,
+    "factors": [
+      {
+        "how": "One SHA-pinned accepted n47 random00 original D4 map and independently reconstructed named equations.",
+        "name": "input",
+        "treatment": "fixed"
+      },
+      {
+        "how": "24-generator primal witness, variable 47, combination mask 0x25d881e86ebe.",
+        "name": "affine_relation",
+        "treatment": "fixed"
+      },
+      {
+        "how": "Projection, selective rebase, independent checker, and structural profile in fixed causal order.",
+        "name": "stage",
+        "treatment": "crossed"
+      },
+      {
+        "how": "Existing Spot host, one process at a time; 4 GiB projection/profile, 8 GiB rebase, 16 GiB checker caps; USD 5 reservation.",
+        "name": "host",
+        "treatment": "measured"
+      }
+    ],
+    "independent": []
+  },
+  "version": 1
+}

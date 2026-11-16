@@ -1,0 +1,39 @@
+# artifact-store: no-pull (reads committed evals/baselines/*/summary.json only)
+name: harness-change-gate
+
+# Proposal I5 of docs/autoresearcher-harness-review-20261110.md. A PR that
+# changes a budget constant in tools/check_instruction_budget.py, touches
+# coordination/skill-tuning/**, or adds a docs/*loop*.md needs a committed
+# evals/baselines/<date>/summary.json no older than 30 days. The check prints
+# the command that creates one. Evidence about the harness, not about ECDLP.
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened, ready_for_review]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: harness-change-gate-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  gate:
+    name: gate
+    if: ${{ !github.event.pull_request.draft }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Unit tests
+        run: python3 -m unittest tools.test_check_harness_change_gate
+      - name: Harness change gate
+        run: python3 tools/check_harness_change_gate.py --base "origin/${{ github.base_ref || 'main' }}"

@@ -34,6 +34,8 @@ jobs:
             /tools/progress_fidelity.py
             /tools/progress_dashboard.py
             /tools/progress_metrics.py
+            /tools/vault/
+            /tests/__init__.py
           sparse-checkout-cone-mode: false
       - name: Unlock research vault (AES-256)
         shell: bash
@@ -51,13 +53,13 @@ jobs:
           tool="$RUNNER_TEMP/cavault.py"
           git show "HEAD:tools/vault/vaultctl.py" > "$tool"
           py=python3
-          if ! "$py" -c 'import cryptography' >/dev/null 2>&1; then
+          if ! "$py" -c 'from cryptography.hazmat.primitives.ciphers.aead import AESSIV; c=AESSIV(bytes(64)); assert c.decrypt(c.encrypt(b"", None), None) == b""' >/dev/null 2>&1; then
             venv="$RUNNER_TEMP/cavault-venv"
             if "$py" -m venv "$venv" >/dev/null 2>&1; then
               py="$venv/bin/python"
-              "$py" -m pip install --quiet --disable-pip-version-check 'cryptography>=42'
+              "$py" -m pip install --quiet --disable-pip-version-check 'cryptography>=46'
             else
-              "$py" -m pip install --quiet --disable-pip-version-check --break-system-packages 'cryptography>=42'
+              "$py" -m pip install --quiet --disable-pip-version-check --break-system-packages 'cryptography>=46'
             fi
           fi
           "$py" "$tool" install-key --quiet
@@ -81,7 +83,7 @@ jobs:
           python-version: '3.11'
       - name: Unit tests
         if: steps.scope.outputs.progress == 'true'
-        run: python3 -m unittest discover -s tests -p 'test_progress_*.py' -v
+        run: PYTHONPATH=. python3 -m unittest discover -s tests -p 'test_progress_*.py' -v
       - name: Validate all submitted claims
         if: steps.scope.outputs.progress == 'true'
         run: python3 -m tools.progress_fidelity portfolio claims/

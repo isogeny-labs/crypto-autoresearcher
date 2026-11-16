@@ -24,6 +24,13 @@ coordination records, is ciphertext in the object store.
 
 ## Local use
 
+The Python interpreter must support an empty AES-SIV encrypt/decrypt roundtrip.
+Use a `cryptography>=46` wheel linked to OpenSSL 3.5 or newer. Importing
+`cryptography` alone does not establish this capability; older backends reject
+valid authenticated empty files. CI probes the roundtrip before choosing its
+interpreter. Unlock reports an actionable dependency error and never accepts
+an empty ciphertext without authenticating it.
+
 ```sh
 export KEY=...                     # or keep `export KEY=...` in ~/.zshrc
 python3 tools/vault/vaultctl.py setup --codex

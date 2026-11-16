@@ -1,0 +1,169 @@
+idea:
+  id: IDEA-20261109-37348e
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: 'F4 degree wall of the mu_B membership system across one F_p-isogeny class: equal off the crater,
+    at most a factor 3 cheaper on the j = 0 crater when 3 divides B, no floor-curve heavy tail'
+  class: solver
+  claim: 'Toy instances only, predictions fixed before any run. Choose p near 2^28 with p = 1 mod 3 and
+    48 dividing p - 1, and a j = 0 curve E_0 of prime order N whose Frobenius satisfies 4p - t^2 = 3 f_pi^2
+    with f_pi divisible by 2, 3 and 5 (and by a prime q >= 17 if the search finds one). Walk down the
+    2-, 3- and 5-volcanoes to obtain curves E_f of conductor f dividing f_pi, all isogenous to E_0 over
+    F_p. For B in {12, 24, 48} and 20 random targets x_R on each curve run F4 on Sigma_B = {S_4(x_1, x_2,
+    x_3; x_R), x_i^B - 1 for i = 1..3} and record the maximal step degree d_wall, the peak Macaulay dimension
+    and wall-clock. Predictions: d_wall is identical on every curve of the class at fixed B; the wall-clock
+    ratio max/min over off-crater curves is below 1.5; the ratio crater/off-crater lies in [1/3, 1] when
+    3 divides B and in [0.7, 1.4] when it does not. No exponent changes.'
+  mechanism: The staircase of Sigma_B is fixed by (B, m) and the monomial support of S_4, which is the
+    full box outside O(m) exceptional targets. An F_p-isogeny changes the coefficients (a, b) of the target
+    curve and hence the coefficients of S_4 but not its generic support, and the quotient ring F_p[x]/(x_i^B
+    - 1) is shared, so F4 should hit the same wall on every curve. The one structural exception is the
+    crater curve, where a = 0 removes the a-monomials of S_3 and S_4 and makes S_4 weighted-homogeneous,
+    so the zero set on mu_B^4 is mu_3-invariant when 3 divides B; that gives at most a constant 3. IDEA-20260731-016
+    and IDEA-20260731-017 hypothesise instead that floor curves with a large conductor step carry a Groebner
+    heavy tail. This record is the solver-cost companion of the wave-1 synthesis record that stratified
+    relation statistics by volcano level and did not time a solver.
+  novelty_status: adaptation
+  citations:
+  - ref: KR-RHO-755e35
+    provenance: internal
+    claim: Isogenous curves share order and group-structure weaknesses; the row does not state whether
+      Groebner solve cost is shared.
+    verified_by: brief section 3 row text; the next agent must open knowledge/frontiers/ecdlp/generic-rho/KR-RHO-755e35.yaml
+  - ref: KR-IC-fbdb61
+    provenance: internal
+    claim: Solving degree, last fall degree and degree of regularity are distinct; this record reports
+      the observed F4 wall, not d_reg.
+    verified_by: brief section 3 row text; file not opened this session
+  - ref: KR-IC-5a43e5
+    provenance: internal
+    claim: S_4 has degree 4 in each variable; the system shape follows.
+    verified_by: brief section 3 row text; file not opened this session
+  - ref: IDEA-20260731-017
+    provenance: internal
+    claim: Floor versus crater Groebner heavy tail across a conductor step q >= 17 at toy sizes; this
+      record is its direct test on Sigma_B.
+    verified_by: ledger index excerpt in the brief; record not opened
+  assumptions:
+  - Such a p and E_0 exist near 2^28; the search over t with 4p - t^2 = 3 f_pi^2 and N prime is cheap
+    and its receipt is kept.
+  - The F4 implementation named in RESEARCH_GROEBNER_F4.md exposes step degrees and matrix dimensions;
+    if not, msolve or Sage F4 is used and named, with the same inputs on every curve.
+  proof_search_map:
+    not_applicable_reason: Solver-cost comparison at p near 2^28; no exponent claim.
+    bottleneck: not_applicable
+    baseline_embedding:
+      parameter_slice: not_applicable
+      reproduction_check: not_applicable
+    observation_collision:
+      observable: not_applicable
+      distinct_preimage_search: not_applicable
+    constructive_transforms: []
+    quantifier_order: not_applicable
+    method_ceiling:
+      strongest_certifiable_claim: not_applicable
+      nearby_object_control: not_applicable
+    proof_obligations: []
+  predictions:
+  - metric: max over the class of |d_wall(E_f) - median d_wall| at fixed B
+    direction: lower
+    minimum_effect: equal to 0 for every B that completes
+  - metric: off-crater wall-clock ratio max/min, target-averaged, fixed B
+    direction: lower
+    minimum_effect: below 1.5
+  - metric: crater over off-crater wall-clock ratio at B in {12, 24, 48}
+    direction: lower
+    minimum_effect: within [1/3, 1]
+  minimal_test:
+    design: Build the curve set from the volcano-position receipts or by a fresh search; verify each isogeny
+      by point count. For each curve, each B and each of 20 targets run F4 on Sigma_B with identical monomial
+      order and settings; record d_wall, peak matrix size, wall-clock, and whether the basis is {1}. Run
+      a random polynomial of the same multidegree in place of S_4 on every curve as the support control.
+      Stop a B level when the first solve exceeds 30 minutes and report it as infeasible, not as evidence.
+    controls:
+    - Random polynomial of the multidegree of S_4 on each curve.
+    - Same curve, 20 targets, for within-curve variance.
+    - A second F4 implementation on at least 2 curves and 5 targets.
+    required_metrics:
+    - p, t, f_pi, N, list of (curve, conductor f, a, b, volcano level)
+    - d_wall, peak Macaulay rows and columns, wall-clock per solve
+    - number of missing monomials of S_4 on the crater versus off-crater
+    - ratios named in predictions with their spread over targets
+  falsification_conditions:
+  - Some off-crater curve shows d_wall differing by at least 1 from the class median at a completed B,
+    reproduced by the second F4.
+  - A floor curve shows target-averaged wall-clock at least 3 times the crater curve at the same B, reproduced
+    by the second F4; this would support IDEA-20260731-017 rather than this record.
+  - The crater over off-crater ratio is above 1.4 or below 1/4 at a B divisible by 3.
+  - No B level completes on at least 4 curves is an invalid run.
+  confounders:
+  - Coefficient size and pivot luck vary with (a, b); the 20 targets and the random-polynomial control
+    bound that effect.
+  - Exceptional targets of IDEA-20260723-006 could be hit by chance; any target with a basis containing
+    a linear form is reported and excluded from averages, never silently dropped.
+  - Second implementation differences in F4 criteria; compare degrees first.
+  interpretation_limits:
+  - Equality of walls at p near 2^28 is a statement about Sigma_B at B <= 48 and m = 3; it does not bound
+    d_reg at cryptographic size.
+  - A floor-curve heavy tail, if found, transfers to nothing on the crater curve by IDEA-20260801-004
+    and KR-RHO-755e35; it would be a Groebner observation, not an attack.
+  heuristic_assumptions:
+  - id: H1
+    statement: The F4 wall of Sigma_B depends on the support of S_4 and on B, not on the coefficients
+      of the curve beyond the a = 0 split.
+    rigorous_support: Support of S_4 is generic outside O(m) exceptional targets (IDEA-20260723-006, recalled);
+      no theorem opened here fixes the wall as a function of support.
+    validation_plan: The random-polynomial control with the same support on each curve; if its wall tracks
+      the curve, H1 is refuted by the control.
+  target_complexity:
+    time_exponent: N^{1/2} unchanged, delta 0
+    memory_exponent: Macaulay matrix at the wall, reported, toy only
+    best_known: Pollard rho in Theta(N^{1/2}) group operations, KR-RHO-13bf67
+    hidden_overhead: None claimed; the crater factor is at most the constant 3 already noted in the wave-1
+      relations lead on weighted homogeneity.
+    tradeoff_note: A measurement; it defines no tradeoff.
+  estimated_cost:
+    implementation: medium
+    compute: medium
+  recommended_priority: medium
+  dominated_by: KR-RHO-13bf67 for any exponent reading, delta 0. KR-RHO-755e35 for any claim of a weak
+    curve in the class. Neither row states the solver-cost invariance tested here.
+  sota_delta: 'Exponent delta 0. Counted delta: a solver-cost invariance across an isogeny class that,
+    if confirmed, closes IDEA-20260731-016 and IDEA-20260731-017 for the mu_B presentation at toy size.'
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/index-calculus
+    rows_checked:
+    - KR-RHO-755e35
+    - KR-IC-fbdb61
+    - KR-IC-0d2021
+    - KR-IC-5a43e5
+    - KR-IC-5931ee
+    - KR-RHO-13bf67
+    nearest:
+    - ref: KR-RHO-755e35
+      provenance: internal
+      relation: adjacent
+      delta: States shared group-structure hardness across a class; this record measures shared Groebner
+        wall on one membership system.
+    - ref: KR-IC-fbdb61
+      provenance: internal
+      relation: adjacent
+      delta: Separates solving degree from d_reg for descended systems; this record measures the observed
+        F4 wall on an F_p system per curve.
+    searched:
+      corpus_grep:
+      - wave-1 synthesis and relations blocks for isogeny class, volcano, F4 wall
+      - ledger excerpts for IDEA-20260731-016, -017, IDEA-20260805-38aebb
+      - cryptanalysis experiments list for ecdlp-hecke-* directories
+      web: []
+      blocked: []
+    lead: LEAD-STR-class-representative-ic-selection
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: Build the curve set from the volcano-position receipts or by a fresh search;
+        verify each isogeny by point count. For each curve, each B and each of 20 targets run F4 on Sigma_B
+        with identical monomial order and settings; record d_wall, peak matrix size, wall-clock, and whether
+        the basis is {1}. Run a random polynomial of the same multidegree in place of S_4 on every curve
+        as the support control. S'

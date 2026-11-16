@@ -1,0 +1,144 @@
+idea:
+  id: IDEA-20261109-08cfbf
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: 'No bounded-defect height on E(F_p): every D-quasi-additive size function on a finite group is
+    bounded by D, so a smoothness-style point sieve cannot exist, with a toy defect-histogram measurement'
+  class: barrier
+  claim: 'Theorem (zero compute). Let G be a finite group and h a real-valued function on G with |h(ab)
+    - h(a) - h(b)| <= D for all a, b. Then |h(g)| <= D for every g. Proof: |h(g^n) - n h(g)| <= (n-1)
+    D by induction; take n a multiple of ord(g) so h(g^n) = h(e) with |h(e)| <= D; divide by n and let
+    n grow. Consequence: a size function on E(F_p) with spread H = max h - min h has defect at least H/2,
+    so the defect-zero log-norm that integer and function-field sieves rest on has no analogue on points,
+    and any relation collector of the shape "small points whose sum is small" is a statement about a set,
+    measured by the energy and spectral records already filed. Measured claim, falsifiable: at p about
+    2^20, for h = x(P)/p the defect D(P,Q) = h(P+Q) - h(P) - h(Q) over uniform pairs follows the law of
+    U3 - U1 - U2 for independent uniforms (probability of |D| <= 0.01 equal to 0.010 within 0.003, no
+    atom at 0), while for the discrete-log height h = k/N (k the least residue of the log) the law is
+    two atoms of mass 1/2 at D = 0 and D = -1, the theorem''s bound attained. No exponent moves.'
+  mechanism: Index calculus in Z or F_q[x] needs a height with defect zero on the ring and positive density
+    of small elements; relations exist because sums of small things stay small. On a torsion group every
+    quasi-additive function is bounded by its defect, so smallness cannot be preserved under addition.
+    The measurement asks whether the forced failure is concentrated (the DL height fails exactly on wrap-around
+    pairs, measure 1/2) or diffuse (coordinate heights fail everywhere, with no additive structure at
+    all). Either way the sieve step of NFS has no port to E(F_p). The theorem also covers maps into Z
+    or R with bounded defect, extending the algebraic-group exit maps of IDEA-20260727-005 to non-algebraic
+    quasi-homomorphisms.
+  novelty_status: unverified
+  citations:
+  - ref: KR-RHO-13bf67
+    provenance: internal
+    claim: Generic lower bound Omega(sqrt p); this record changes no exponent.
+    verified_by: brief section 3 row text, session 2026-11-09
+  - ref: KR-IC-cd159a
+    provenance: internal
+    claim: Heights exist on lifts and are quadratic; this record is about heights on E(F_p) itself.
+    verified_by: brief section 3 row text, session 2026-11-09
+  - ref: IDEA-20260727-005
+    provenance: internal
+    claim: Exit maps into algebraic groups; extended here to quasi-homomorphisms.
+    verified_by: brief section 2 index line only; full record not opened
+  - ref: KN-QUASIMORPHISM-BOUND
+    provenance: recalled
+    claim: A quasimorphism with defect D is within D of its homogenisation (Bavard; Calegari, scl). Proof
+      reproduced in the claim.
+    verified_by: not verified this session; the next agent re-derives the four lines
+  assumptions:
+  - The toy curve has prime order N so that the log table is a bijection.
+  - Pairs with P equal to plus or minus Q are excluded and counted.
+  predictions:
+  - metric: abs(P(|D| <= 0.01) - 0.010) for h = x/p
+    direction: lower
+    minimum_effect: at most 0.003
+  - metric: mass of the atom at D = 0 for the DL height k/N
+    direction: higher
+    minimum_effect: at least 0.49
+  - metric: mass of the atom at D = 0 for h = x/p
+    direction: lower
+    minimum_effect: at most 100/p
+  minimal_test:
+    design: Pick the smallest prime-order calibration curve above 2^19 from crypto/docs/ECDLP_CALIBRATION_PRIMES.md.
+      Build the log table by N successive additions. Sample 10^6 uniform pairs. Compute D for h1 = x/p,
+      h2 = y/p, h3 = (least absolute residue of x)/p, h4 = k/N. Histogram with bin 0.01; record atoms,
+      D_max, spread H, and the Kolmogorov distance to the three-uniform law.
+    controls:
+    - Simulated U3 - U1 - U2 with the same sample size.
+    - Integer control, pairs (a, b) uniform in [1, N/4) with h = a/N, defect exactly 0, confirming the
+      atom reading of the instrument.
+    required_metrics:
+    - p
+    - N
+    - sample size
+    - spread H and D_max for each h
+    - P(|D| <= 0.01) for each h
+    - atom masses at 0 and at -1 for each h
+    - Kolmogorov distance to the three-uniform law for h1 and h3
+  falsification_conditions:
+  - 'For h1 or h3, P(|D| <= 0.01) is at least 0.02, or an atom at 0 of mass at least 100/p appears: the
+    coordinate height carries additive structure and the practical reading of the barrier fails.'
+  - 'For h4 the atom masses fall outside 0.5 plus or minus 0.01: wrong log table (invalid run) or wrong
+    model.'
+  - D_max below H/2 for any h contradicts the theorem and marks an implementation error; invalid run.
+  - The theorem is not falsifiable by computation; only the measured claims are.
+  confounders:
+  - Representative choice for x (in [0,p) versus symmetric) changes the law; h3 is included for that reason.
+  - Sign convention of y affects h2 only.
+  interpretation_limits:
+  - Closes deterministic size functions on E(F_p); heights on p-adic or global lifts are out of scope.
+  - Does not bound set-based probabilistic relation supply; that is the wave-1 energy and spectral records.
+  heuristic_assumptions:
+  - id: H1
+    statement: The triple (x(P), x(Q), x(P+Q))/p is equidistributed in the unit cube to within p^{-1/2}
+      polylog p.
+    rigorous_support: Weil-type hybrid-sum bound as stated in the wave-1 hybrid-sum record; not re-derived
+      here.
+    validation_plan: The histogram and Kolmogorov metrics of the minimal test.
+  target_complexity:
+    time_exponent: p^{1/2} unchanged, delta 0
+    memory_exponent: O(N) log table at toy size only
+    best_known: Pollard rho in Theta(p^{1/2}) (KR-RHO-13bf67); naive Semaev over F_p not below generic
+      (KR-IC-5931ee)
+    hidden_overhead: None; no algorithm is proposed.
+    tradeoff_note: A barrier record; no tradeoff is defined.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  dominated_by: KR-RHO-13bf67 for any exponent reading. No row states the quasi-additivity bound; the
+    wave-1 sweep lead asserts the conclusion without proof.
+  sota_delta: Exponent delta 0. Replaces the assertion "no norm smoothness on points" by a four-line theorem
+    and a measured defect law.
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/index-calculus
+    rows_checked:
+    - KR-IC-5931ee
+    - KR-IC-cd159a
+    - KR-IC-9e610d
+    - KR-IC-5a43e5
+    - KR-RHO-13bf67
+    - KR-RHO-755e35
+    nearest:
+    - ref: KR-IC-cd159a
+      provenance: internal
+      relation: adjacent
+      delta: Lifting attaches a quadratic height to lifted points; this record proves no sub-additive
+        height exists on E(F_p) itself.
+    - ref: KR-IC-5931ee
+      provenance: internal
+      relation: adjacent
+      delta: YYTK is a statistical no-go for naive Semaev; this barrier is deterministic and solver-independent.
+    searched:
+      corpus_grep:
+      - brief section 2 for height, norm, smooth, quasimorphism, size function
+      - wave-1 index for norm smoothness, energy, Freiman
+      web: []
+      blocked: []
+    lead: LEAD-EXO-low-degree-query-lower-bound
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: Pick the smallest prime-order calibration curve above 2^19 from crypto/docs/ECDLP_CALIBRATION_PRIMES.md.
+        Build the log table by N successive additions. Sample 10^6 uniform pairs. Compute D for h1 = x/p,
+        h2 = y/p, h3 = (least absolute residue of x)/p, h4 = k/N. Histogram with bin 0.01; record atoms,
+        D_max, spread H, and the Kolmogorov distance to the three-uniform law.'
