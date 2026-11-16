@@ -1,0 +1,410 @@
+{
+  "amendments": [],
+  "analysis_plan": {
+    "blinded": false,
+    "frozen_before_data": true,
+    "inputs": [
+      "n50n51-w3-rank-panel-plan-001.json",
+      "n50n51-bounded-d4-concurrent-plan-001.json",
+      "N50N51-W3-EQUATION-PANEL-AUDIT.md"
+    ],
+    "outputs": [
+      "All 16 item stdout/stderr and start/finish hashes; complete exact rank table or failure flow."
+    ],
+    "script": {
+      "path": "verify_retained_m2_w3_item.py",
+      "sha256": "1df7a48d33ed09dd128c23a8d92df2251287bacc4b08b5e675b6e01b155ab700"
+    }
+  },
+  "arms": [
+    {
+      "description": "Independent direct S3 equation construction and exact Python integer-row W3 closure for 14 fixed named inputs, preceded by two already checked rank controls.",
+      "id": "w3-rank",
+      "instrument": {
+        "binary_sha256": "1df7a48d33ed09dd128c23a8d92df2251287bacc4b08b5e675b6e01b155ab700",
+        "build": [
+          [
+            "reuse",
+            "Python 3 source at pinned SHA-256"
+          ]
+        ],
+        "commit": "fa3b68e12b1e8c29cd9a06bb9cf9829f169d8a5f",
+        "env": {
+          "PYTHONHASHSEED": "0"
+        },
+        "flags": {
+          "mode": "fixed-panel",
+          "source_sha256": "1df7a48d33ed09dd128c23a8d92df2251287bacc4b08b5e675b6e01b155ab700"
+        },
+        "repo": "crypto-autoresearcher",
+        "threads": 1
+      },
+      "parameters": {
+        "control_items": 2,
+        "max_w3_columns": 23479,
+        "memory_bytes": 4294967296,
+        "n_values": [
+          50,
+          51
+        ],
+        "new_items": 14
+      },
+      "role": "candidate"
+    },
+    {
+      "description": "Previously accepted retained D3 quotient maps and their fixed quotient dimensions, used for exact equality checks; no reference computation is rerun.",
+      "id": "checked-d3-seeds",
+      "instrument": {
+        "binary_sha256": "1df7a48d33ed09dd128c23a8d92df2251287bacc4b08b5e675b6e01b155ab700",
+        "build": [
+          [
+            "reuse",
+            "published retained D3 maps and independent C0-C3 checks"
+          ]
+        ],
+        "commit": "fa3b68e12b1e8c29cd9a06bb9cf9829f169d8a5f",
+        "env": {},
+        "flags": {
+          "source_plan_sha256": "86c96513567714d882c41a63fc5a3313b96f6f5148d31f32c0e1aac4bf1072d4"
+        },
+        "repo": "crypto-autoresearcher",
+        "threads": 1
+      },
+      "parameters": {
+        "retained_items": 16
+      },
+      "role": "reference"
+    },
+    {
+      "description": "Rerun two previously checked named exact W3 rank controls through the same pinned direct verifier before the 14 new inputs.",
+      "id": "known-w3-controls",
+      "instrument": {
+        "binary_sha256": "1df7a48d33ed09dd128c23a8d92df2251287bacc4b08b5e675b6e01b155ab700",
+        "build": [
+          [
+            "reuse",
+            "Python 3 source at pinned SHA-256"
+          ]
+        ],
+        "commit": "fa3b68e12b1e8c29cd9a06bb9cf9829f169d8a5f",
+        "env": {
+          "PYTHONHASHSEED": "0"
+        },
+        "flags": {
+          "mode": "fixed-panel",
+          "source_sha256": "1df7a48d33ed09dd128c23a8d92df2251287bacc4b08b5e675b6e01b155ab700"
+        },
+        "repo": "crypto-autoresearcher",
+        "threads": 1
+      },
+      "parameters": {
+        "control_items": 2,
+        "max_w3_columns": 23479,
+        "memory_bytes": 4294967296,
+        "n_values": [
+          50,
+          51
+        ],
+        "new_items": 0
+      },
+      "role": "control_positive"
+    }
+  ],
+  "authors": [
+    "Codex, owner-authorized degree-six frontier"
+  ],
+  "claims": [
+    {
+      "class": "exact_computation",
+      "decided_by": [
+        "w3-rank"
+      ],
+      "id": "C1",
+      "text": "For each of 14 fixed named original systems, the direct S3 Boolean W3 closure has the reported exact rank; equality with the retained checked quotient dimension proves its D3 map kernel equals W3. No D4, D5 or LFD result follows."
+    }
+  ],
+  "controls": {
+    "aa": {
+      "comparison": null,
+      "not_applicable_reason": "Exact deterministic GF2 ranks; no timed or variance claim.",
+      "present": false
+    },
+    "negative": {
+      "arm": null,
+      "not_applicable_reason": "No population null hypothesis; every retained quotient dimension is compared exactly, and mismatches are preserved.",
+      "null_population": null,
+      "present": false
+    },
+    "positive": {
+      "arm": "known-w3-controls",
+      "expected_detection": "The two previously checked named controls reproduce ranks 8130 and 10970 and exact quotient dimensions 12746 and 12509 before any new item is accepted.",
+      "not_applicable_reason": null,
+      "present": true
+    }
+  },
+  "created": "2026-11-11",
+  "decision_rule": {
+    "comparison_ids": [
+      "w3-rank"
+    ],
+    "effect_size_measure": "none",
+    "interval": "none, exact",
+    "multiple_comparison_correction": "none",
+    "statistic": "none",
+    "text": "Accept a per-item exactness claim only after its direct closure exits zero, the equation-mask digest matches the published 16-item identity audit, and the resulting quotient dimension equals the retained independently checked D3 map dimension. Preserve all outcomes.",
+    "threshold": "2 controls agree; source/plan hashes match; each accepted item has exit0, exact rank and quotient equality",
+    "verdict_vocabulary": [
+      "exact_seed_verified",
+      "seed_dimension_mismatch",
+      "incomplete",
+      "resource_refused"
+    ]
+  },
+  "execution": {
+    "backend": "local",
+    "checkpoint": {
+      "after_restore": {
+        "counted_units": "valid",
+        "wall_time": "invalid"
+      },
+      "grace_seconds": 0,
+      "interval_seconds": 0,
+      "policy": "none",
+      "restore_validation": "none"
+    },
+    "measurement_class": "search",
+    "placement": {
+      "checkpoint_detail": "No checkpoint; one total attempt per named item, preserve every completed row and interruption.",
+      "counter_memory_bytes": 0,
+      "max_workers": 1,
+      "memory_per_worker_bytes": 4294967296,
+      "pod_memory_bytes": 0
+    },
+    "queue": "pending-budget-admission",
+    "retries": {
+      "infrastructure_only": true,
+      "max_attempts": 1
+    },
+    "timeout_seconds": 600
+  },
+  "freeze": {
+    "status": "frozen",
+    "protocol_sha256": "e5741c4378a1aa27671c16e8247b11fd4c77eb25f466915c08ae811a0e805054",
+    "commit": "fa3b68e12b1e8c29cd9a06bb9cf9829f169d8a5f",
+    "frozen_at": "2026-11-11T01:24:12Z",
+    "filed_before_affected_data": true
+  },
+  "hypotheses": [],
+  "inadmissible": [
+    "Inferring D4, D5 or LFD bounds from W3 dimension equality.",
+    "Discarding mismatched, failed, timed-out or unrun items.",
+    "Changing the fixed 16-input set or retaining only favorable ranks after output."
+  ],
+  "invalidation_rules": [
+    "Source, frozen source-plan, equation audit or input hash mismatch prevents accepting the affected row.",
+    "Insufficient daily or monthly budget headroom, absent authorization, duplicate active work or expired deadline prevents launch.",
+    "Nonzero exit, timeout or incomplete JSON is inconclusive for that item."
+  ],
+  "links": {
+    "equation_audit_stdout_sha256": "af611942a1b3d5d5fba66a4844b8a03fcf820752a60ef990b11c16ee3d315782",
+    "plan": "n50n51-w3-rank-panel-plan-001.json",
+    "plan_sha256": "b4c142910358e86c9eabbbca2494093b943d9751150e77f8599521561d2a6d5c",
+    "source_commit": "fa3b68e12b1e8c29cd9a06bb9cf9829f169d8a5f",
+    "source_plan_sha256": "86c96513567714d882c41a63fc5a3313b96f6f5148d31f32c0e1aac4bf1072d4",
+    "source_sha256": "1df7a48d33ed09dd128c23a8d92df2251287bacc4b08b5e675b6e01b155ab700"
+  },
+  "literature": [
+    {
+      "claim": "Definition of Boolean W3 and exactness gate for a checked quotient.",
+      "provenance": "internal",
+      "ref": "../semaev-m2-last-fall-degree/theorem-dossier.md",
+      "verified_by": "Codex 2026-11-11"
+    },
+    {
+      "claim": "All 16 named direct equation mask sets match separate Möbius descent.",
+      "provenance": "internal",
+      "ref": "N50N51-W3-EQUATION-PANEL-AUDIT.md",
+      "verified_by": "Codex 2026-11-11"
+    }
+  ],
+  "measurement": {
+    "clock": "counted",
+    "counters": [],
+    "isolation_required": "L0",
+    "order": "sequential",
+    "record": [
+      "source_sha256",
+      "source_plan_sha256",
+      "item_id",
+      "argv",
+      "host",
+      "exit_code",
+      "rusage",
+      "budget_readback"
+    ],
+    "timed_primary_justification": null,
+    "warmups": 0
+  },
+  "metrics": {
+    "primary": [
+      {
+        "aggregation": "per_row",
+        "definition": "Rank of the completed degree-at-most-three closure in the fixed named Boolean monomial space.",
+        "id": "w3_rank",
+        "kind": "exact",
+        "name": "exact Boolean W3 rank",
+        "resolution": "1",
+        "source": "stdout rank",
+        "uncertainty": "none_exact",
+        "unit": "F2 dimension"
+      }
+    ],
+    "secondary": [
+      {
+        "aggregation": "per_row",
+        "definition": "Number of degree-at-most-three Boolean monomials minus exact W3 rank.",
+        "id": "quotient_dimension",
+        "kind": "exact",
+        "name": "W3 quotient dimension",
+        "resolution": "1",
+        "source": "stdout quotient_dimension",
+        "uncertainty": "none_exact",
+        "unit": "F2 dimension"
+      },
+      {
+        "aggregation": "per_row",
+        "definition": "Exact W3 quotient dimension equals retained checked D3 map quotient dimension.",
+        "id": "seed_dimension_match",
+        "kind": "exact",
+        "name": "retained D3 seed dimension equality",
+        "resolution": "1",
+        "source": "stdout quotient_matches_seed",
+        "uncertainty": "none_exact",
+        "unit": "Boolean"
+      }
+    ]
+  },
+  "protocol_id": "SEMAEV-N50N51-W3-RANK-PANEL-20261111-V1",
+  "question": "Which of the 14 remaining fixed n50/n51 original-system D3 map kernels equal exact W3?",
+  "randomization": {
+    "arm_order": "fixed",
+    "arm_order_reason": "Two previously checked controls first, then all 14 fixed retained inputs; exact algebraic claim with no timing comparison.",
+    "blinding": {
+      "analysis_labels_masked": false,
+      "how": "Named instances and preexisting retained quotient dimensions are public.",
+      "unmasked_at": null
+    },
+    "instance_sampling": {
+      "independent_of_arm": true,
+      "rule": "All 16 preexisting named records from frozen source plan; no outcome-based selection."
+    },
+    "seed_derivation": {
+      "method": "explicit_list",
+      "nonce": null,
+      "note": "All instances reuse frozen seeds and records; no random draw.",
+      "seeds": [
+        5026844743918730416,
+        16880602125562644876,
+        12529940381286215122,
+        6284800221278469714,
+        11657629151918182887,
+        10426414147244783241,
+        8252374688181865515,
+        1812300214742206507,
+        11455777632684397595,
+        12357615873412323186,
+        13426654735712875497,
+        453968495886778835,
+        1455411430437643501,
+        12930991005483242442,
+        7920473122752886120,
+        8263290422483539202
+      ]
+    }
+  },
+  "reporting": {
+    "export_schema": "experiment.export/v1",
+    "graphs": [
+      "Per-item exact W3 rank, checked seed dimension, equality and flow/failure table."
+    ],
+    "report_dir": "reports/n50n51-w3-rank-panel-001",
+    "review_schema": "experiment.review/v1"
+  },
+  "repository": "crypto-autoresearcher",
+  "sample_size": {
+    "instances": 16,
+    "power": {
+      "alpha": 0.05,
+      "correction": "none",
+      "method": "exact",
+      "note": "Exhaustive fixed retained panel, no population inference or hypothesis test.",
+      "passes": true,
+      "tests_in_family": 1
+    },
+    "preflight_runtime": {
+      "estimated_total_seconds": 600,
+      "fixed_seconds": 0,
+      "measured_on": "Two prior controls took 2.234 and 3.185 seconds; 600 seconds is a conservative total watchdog, not a measured panel runtime.",
+      "per_sample_seconds": 37.5,
+      "threads": 1
+    },
+    "replicates": 1,
+    "warmups": 0
+  },
+  "schema": "experiment.protocol/v1",
+  "stopping_rules": [
+    {
+      "kind": "fixed_n",
+      "preregistered": true,
+      "rule": "Run two controls and all 14 new fixed inputs in plan order, at most one attempt per item, 60 seconds per item, 600 seconds total, 4 GiB per item and USD 1 total reservation; stop at deadline or admission failure."
+    }
+  ],
+  "study_dir": "analysis/semaev-degree-five-quotient-lift",
+  "variable_ledger": {
+    "aa_not_applicable": "No timed or population comparison.",
+    "comparisons": [
+      {
+        "arms": [
+          "w3-rank",
+          "checked-d3-seeds"
+        ],
+        "design": "absolute",
+        "differs_in": [
+          "instrument"
+        ],
+        "id": "w3-rank",
+        "threshold": "exact rank and checked seed dimension equality per fixed item"
+      }
+    ],
+    "crosses_map": false,
+    "factors": [
+      {
+        "how": "All 16 source-plan records and seeds pinned by SHA-256.",
+        "name": "input",
+        "treatment": "fixed"
+      },
+      {
+        "how": "Pushed Python direct S3 constructor and exact row elimination pinned by source SHA-256.",
+        "name": "instrument",
+        "treatment": "fixed"
+      },
+      {
+        "how": "Record Spot host, rusage and preemption; no performance claim.",
+        "name": "host",
+        "treatment": "measured"
+      },
+      {
+        "how": "Two controls, then every remaining item in frozen plan order.",
+        "name": "order",
+        "treatment": "fixed"
+      },
+      {
+        "how": "Missing or interrupted rows remain incomplete; no automatic retry.",
+        "name": "migration",
+        "treatment": "measured"
+      }
+    ],
+    "independent": []
+  },
+  "version": 1
+}

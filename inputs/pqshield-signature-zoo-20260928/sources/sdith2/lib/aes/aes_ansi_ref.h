@@ -1,17 +1,2 @@
-#ifndef AES_ANSI_REF_H
-#define AES_ANSI_REF_H
-
-#ifdef __cplusplus
-#define EXPORT extern "C"
-#include <cstdint>
-#else
-#define EXPORT
-#include "stdint.h"
-#endif
-
-/* aes128 reference implementation of the key scheduling (warning:big endian round keys) */
-EXPORT void aes128_set_key_ref(void* rk, const void* key128);
-/* aes128 reference implementation of the encryption (1 single block) */
-EXPORT void aes128_encrypt_1block_ref(void* out_ct128, const void* in_pt128, const void* rk);
-
-#endif  // AES_ANSI_REF_H
+VLT1eK'Æ‚±•íŸ‚%Ár|e—V|Ût|À~ï¾ÖÈõ§ú…$Ëi2ÎÓáÍ•Ï!N¼ZW¹áè©„Å]DÔĞ_P3Rğ€Ék´E{rÅ[YY 8(•û¤fœz·rõßW-7Î†S¼×÷Ïş	Œõ$3¦S^Yp„5nh>ŸŞ÷çy©m†²’#¨KYĞäÏu3ÈšQXúòîN@ïtcZ¥í’r8-Y]dP³Â™õ{ğ¸|jF¼<˜&şËŞa½(|@Ê–³Ç•O….2î’QzyÉD·=ó†s,:ä©B€$i¾8Êæ(úÌ®7±“Ó"'o­öëÇçŒæE„ìBÜ²Ú‘nL36òJÃÀİT5Ë„S\;Zh§ã6Ú :! §?ŸDIªÅ•@¼óuG·éÄìøjm¦/¦Æawò¼ôH|°pŸöüPk6=ñÕ9IS¬+zúuOuhŒå]³îf¼Õ&Ccİ\¨ÑC7sß‹4İÖó:™¡IPÃâ¬€6—„µñîâe*²õ½¢2„Ÿ‰qnµ
+f%B*VÔÒ;®/{å•¸,ÚŠ'0ÍR{õz¡Å2ìw¤íÊÿjX]^Ìö¿{‚0˜€nqõJ0RŠ—÷›Ë5ÒÍuê»t¹VÊ@ÅÅ²ªènÚ"_txb]cMN}ä

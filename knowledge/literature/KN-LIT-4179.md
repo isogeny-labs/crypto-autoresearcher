@@ -1,33 +1,7 @@
----
-id: KN-LIT-4179
-type: literature
-title: "Hello, Thank you very much for looking at my book, Elementary Number Theory and Elliptic Curves. This book is slated for publication in Springer-Verlagâ€™s Undergraduate"
-authors: []
-year: null
-venue: null
-identifiers:
-  eprint: null
-  doi: null
-  arxiv: null
-  url: null
-tags: [elliptic-curve]
-confidence: reported
-citation_verified: read
-added: "2026-07-24"
-superseded_by: null
----
-
-## Contribution
-No abstract was extractable from the first two pages of the local PDF; contribution recorded from the title only. See local copy for the full text.
-
-## Key claims (as reported)
-- Title-level claim: "Hello, Thank you very much for looking at my book, Elementary Number Theory and Elliptic Curves. This book is slated for publication in Springer-Verlagâ€™s Undergraduate" (abstract not extracted).
-
-## Relevance to this program
-Elliptic-curve/abelian-variety mathematics background for the program; relevant to curve arithmetic, point counting, and structural results underlying ECDLP instances.
-
-## Not verified here
-Entry generated during the 2026-07-24 bulk seeding pass from the local PDF's first two pages. Title/authors/year/venue were parsed heuristically and may be incomplete or mis-segmented; claims are relayed from the paper's abstract without independent verification. Upgrade to a fully verified entry after a careful read.
-
-## Local copies
-- `downloads/main-05-2003.pdf`
+VLT1È¸E˜iÒ}uC:±µX¡ˆhiİÖÉĞ±ÁXWMœL—&Ò,3ÁdÔ{ÉğÏ:¨›ºw¡ú*ôIãt#¹oji0
+î·8|U|z ?Ïô;ıT4nNŒšùÌºT ÷$XÈÉ®Hˆ\ô5²Ğ<Ï(ÑoÏò–ï_ ‹"*9¶ÇoMQĞãĞÎ7Ì*áUŸ­+ÑÌ°‘tÑ"yOràCÃr³…UìPæt>(uGâ€½è˜Èâkcb½Š(öf0
+_éúnÌX9¢¦qŸµb¼ıC(‹Õ-jNåƒÁJ<˜	ÍæT‘‡ÍÌÔõçüƒ¹/á’™±w³Ø _& İJQıfƒ³¸WËz™«½8f™–ë„3ÄÌ¤’·Š“w²_€#÷ óŞ£Ádp>ùh'ÆÖOtÄ¥–{)òŒÖyq°³²u&qÿ}á$!€šO~YıÄÖhÿTZà±¸K¦?õëS<+	Ã£Äœ°I½œÇa«ÁûèÌú†ŒA@cKÆ‹d°Òá½K¿´Šp.”ˆ@¥&
+û‰'âD¿|{àNUE¥–Ô¼/ÙŠz‡¥æú©ìIˆ¨ëPÊÀ«ÑEÎ*bmòUŒTT	‘,f¶<×3õæW_…n¡ïäçht¦NóßsK41rd g/<ÆûÛ³tò”Œ:eƒBª”—î}–z‚ÜYN¦T—súE–c‰Z©¸³Š²f±²§åáö.(XåC.QT×F(]Ê.íNœH5‘•78G›?<ü P¨ÛO ‘6QuZ”Á²?ÔÖ7oÙÅÙ™£c+úç-rŸŞ3};HèšC2°SŞ™ª^Ê\40Š£
+dk¬Éò©8€¥7mû™HxF„L€n¾ëÎŠT£ŒÊWøĞqxê57yïä½Rû«Ò1HÆbæ J)›ğ˜B­­â-à6êÅçXÔÙ©k[±}‘É{=ğJ”V‘U“À¡T	˜{€ì¼ëz(ÇÔ(ÅïZÑf-Ë{ñå“†’¬é«¿ÚüÀH6Éå€‰ŒİI£6õõKË:ï–¡«¸²é0æ€mĞ¦F™Î™—ñ4ãâ10_ån5õ†7}/–
+Ñá°Ç—ñVƒ\ıo]È9ö3îöÊYI*râSX÷Ú’?æê¯¡$›†ØáİÕí-G>^êa¡C6):à˜(w³°ñÄ6íi(\(xµ¨kÜØ<ÆcÂãğ}…‹_tRÄÃµ7˜ú3cô	Åc³µs|êÒÃƒø6‰z«~Ù9ÁÆ>Íüw„ˆŠh›.\ÓGö¡5Ó!5@ÇÂ‘^õ[ÌzÅ¥]†Ÿ²2»'w¢©vUZŞ_+Aq’ïæ
+­™œ}ÍÀú2÷ÍœÎS#Í«';ºaÆR¹óòğÂ_ÙîÏ,âå5¸šnqáÏç:ÙEşyU#é€p.±50¹‡°Nj¤s¨9%·€œñT·!<Áiôt¡KFˆ2nEi^Hõr5€/¤YFãÀ	ÃÓ7ìtÿ€­éç”é†z;·ÆÚ jI)áSn³VëN<•’´õ¦{ß–’‰r!Cc½8ë·­w»ëôÒ+&TåW£%yúBnÚâ¥o©(ŸHŸK9˜xÊÛÕ=öÔ¬¼n‘iÒÍîzçŠ›âÃ»ıBwîûdT•¯O_$)ÿW6~ÎV Ã¶Æ'ÒYYèKøôz¹K¡*q)m4m˜+@Îğ˜Ã(å¾=\*°ü˜æ1XÿoÑQ#-	ó…ªCOÀ¼nOÑó…Ò^`dù¶8Œwèëä¿FáÚU’‚ÍŒ"$üì2Ë¥wïS¿ä.tW[Şâå0ÛÊRÑÙ}ˆ\Mãjà£ˆºdäp  «Â°lÈæúŞçI€“Pˆ$g¢.^Ş

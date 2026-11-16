@@ -1,0 +1,104 @@
+{
+  "schema": "classical.ecdlp.actual-post-capsule-storage-proof/v1",
+  "capsule_cutoff": "Before its own storage/native boundary receipts; these exact supplemental receipts avoid recursive capsule repacking.",
+  "records": {
+    "pack-receipt.json": {
+      "schema": "classical.ecdlp.lossless-root-operations-receipt/v1",
+      "capsule_path": "/tmp/classical-ecdlp-recovery-20261105/coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-9576ee/recovery-v3/final-admin/root-operations.json",
+      "bytes": 86879929,
+      "sha256": "629f7c50454ef4f1fa21e97a29f412dbdf2fe41aba29453b9ba24d9d178b4012",
+      "members": 960,
+      "all_members_roundtrip_and_source_equal": true,
+      "credential_shape_check_passed": true,
+      "raw_sources_unchanged": true,
+      "elapsed_seconds_unqualified_admin": 1.8968613690012717
+    },
+    "storage-publication.json": {
+      "schema": "classical.ecdlp.assigned-file-publication/v1",
+      "started_at": "2026-11-05T06:47:05.266661+00:00",
+      "artifact_tool_sha256": "ebca27d94ae3c94099688621823105c7e8e624b14210ea1d62eb0917620762e9",
+      "artifacts": [
+        {
+          "path": "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-9576ee/recovery-v3/final-admin/root-operations.json",
+          "bytes": 86879929,
+          "sha256": "629f7c50454ef4f1fa21e97a29f412dbdf2fe41aba29453b9ba24d9d178b4012",
+          "pointer": {
+            "schema": "crypto.autoresearch.blob_pointer.v1",
+            "encoding": "identity",
+            "sha256": "629f7c50454ef4f1fa21e97a29f412dbdf2fe41aba29453b9ba24d9d178b4012",
+            "size": 86879929,
+            "content_sha256": "629f7c50454ef4f1fa21e97a29f412dbdf2fe41aba29453b9ba24d9d178b4012",
+            "content_size": 86879929,
+            "uri": "s3://setec-astronomy-artifacts/store/sha256/62/629f7c50454ef4f1fa21e97a29f412dbdf2fe41aba29453b9ba24d9d178b4012"
+          }
+        }
+      ],
+      "remote_prefix": "s3://setec-astronomy-artifacts/store",
+      "remote_deletions": false,
+      "hydrated_bytes_retained": true,
+      "all_full_s3_gets_verified": true,
+      "publication_requested": true,
+      "finished_at": "2026-11-05T06:47:12.707952+00:00",
+      "readbacks": [
+        {
+          "path": "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-9576ee/recovery-v3/final-admin/root-operations.json",
+          "bytes": 86879929,
+          "sha256": "629f7c50454ef4f1fa21e97a29f412dbdf2fe41aba29453b9ba24d9d178b4012",
+          "put_sent_bytes": true,
+          "full_s3_get_verified": true,
+          "readback_method": "uncached aws s3 cp object to stdout; entire body streamed through SHA256/byte verification",
+          "local_readback_spool_bytes": 0,
+          "get_argv": [
+            "/workspace/classical-ecdlp-endpoint-reuse/runtime-20261028/bin/aws",
+            "--region",
+            "us-east-2",
+            "--cli-connect-timeout",
+            "10",
+            "--cli-read-timeout",
+            "30",
+            "s3",
+            "cp",
+            "s3://setec-astronomy-artifacts/store/sha256/62/629f7c50454ef4f1fa21e97a29f412dbdf2fe41aba29453b9ba24d9d178b4012",
+            "-",
+            "--only-show-errors",
+            "--no-progress"
+          ],
+          "get_returncode": 0,
+          "get_started_at": "2026-11-05T06:47:09.360972+00:00",
+          "get_finished_at": "2026-11-05T06:47:12.619678+00:00",
+          "stderr_file": "/workspace/classical-ecdlp-endpoint-reuse/fresh48-20261105-final-root-preservation/storage-publication.get-0.stderr.txt"
+        }
+      ],
+      "storage_metadata": [
+        {
+          "path": "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-9576ee/recovery-v3/final-admin/.artifacts.json",
+          "sha256": "3e0174723bb8d70a8a90956e846b6ab114d2318ee8c6f6c5a853c24a9c7a162e"
+        },
+        {
+          "path": "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-9576ee/recovery-v3/final-admin/.gitignore",
+          "sha256": "4309adfc29c929ef5d5bee39009af83144818e52129ab59997f5411c65a81b44"
+        }
+      ]
+    },
+    "storage-command.json": {
+      "started_at": "2026-11-05T06:47:05.113166+00:00",
+      "argv": [
+        "/workspace/classical-ecdlp-endpoint-reuse/runtime-20261028/bin/python",
+        "-B",
+        "/workspace/classical-ecdlp-endpoint-reuse/runtime-tools/publish_assigned_observation_files.streamed.py",
+        "--repo",
+        "/tmp/classical-ecdlp-recovery-20261105",
+        "--file",
+        "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-9576ee/recovery-v3/final-admin/root-operations.json",
+        "--receipt",
+        "/workspace/classical-ecdlp-endpoint-reuse/fresh48-20261105-final-root-preservation/storage-publication.json",
+        "--publish"
+      ],
+      "cwd": "/tmp/classical-ecdlp-recovery-20261105",
+      "provider": "aws",
+      "credentials_saved_to_disk": false,
+      "returncode": 0,
+      "finished_at": "2026-11-05T06:47:12.725017+00:00"
+    }
+  }
+}

@@ -1,1 +1,1 @@
-"""Verify-exit / F_verify obligation ledger harness (BATCH-029)."""
+VLT1TûNŸşQŠ	qLSÙMı}*ÏÚ'Õ»Ñ)À!¥I2C^¢e(’3XÑß·6]|o®F/82{f;,±%'–¤A6fxê„éòß74Nˆº¥

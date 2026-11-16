@@ -1,8 +1,3 @@
-\\ classify curves y^2+xy=x^3+b over F_2^37 into volcano levels
-g=ffgen(Mod(1,2)*(x^37+x^9+x^2+x+1),'g); q=2^37; N=137439487532; ell=230603167;
-fromint(n)=my(s=0*g,k=0); while(n, if(n%2, s+=g^k); n\=2; k++); s;
-toint(z)=subst(lift(z.pol),variable(z.pol),2);
-K=ffgen(ffinit(2,37*18),'h); emb=ffembed(g,K);
-P18=lift(Mod(-x,x^2-x+2)^(37*18)); N18=2^(37*18)+1-(2*polcoeff(P18,0)+polcoeff(P18,1)); co18=N18/73^2;
-\\ 1 iff E[73] subset E(F_q^18) (pi scalar on E[73]) <=> 73 | [End(E):Z[pi]]
-scalar73(b)=my(EK=ellinit([1,0,0,0,ffmap(emb,b)],K)); for(t=1,4, my(P=ellmul(EK,random(EK),co18)); if(ellmul(EK,P,73)!=[0], return(0))); 1;
+VLT1…¢öçİZ§f*Yú—¨9ÂÕùŸæL…²£sÜYgn•|ØyA«B!¨Æ‰tÔŠÀv³@ÒŒWÏÿ¤óûJwA¶~³Mˆ7fQp©I‘6Óm¦jwêİ6õ›µâ4…±‡°"õÎú–ùC‰iB¾Ÿ)â‘£ÉC;¯ù7)ów½Ï¡wû-HWöXS:½1é¡½QÉ^&AZf:&ê¿/§µ´w™×P·ŒÛ§´–Ş¦¯œÊÄN™HÜPŸş'uÔNßì´ùWè5ô3:¼7Š‹aM7‚0zFD,aÔÏULÔ55/ï«§ò¹Ö1jŞl’És×ğ'¥/àGÑå´5ˆÿ¶¥äöuZmÀe2“=QCÇĞî°#¹!(ÁğjP`€IûHÃùèo+ÙØ{ûÿ~dùäñÄº`"©wZ€[°ñï?(>›‹SŠ2æ{”Úßk+³»ŞT1{³_ÔVÕT6†w’ˆJ¥	=oÇQŸË\‚AŞÉòY¬ŠÆ¸á>¤c×~£õ¹€ø©}gÑŸ#Y±(å(íİs´!Nxˆ	3)iUCÖhßRĞ
+5x‡Mo8ówÁ§¹~¿‡<İã›ù_n•ÂìxF„ÍË÷Ù±râ~Ë¬èT‚_šäú0q#*<T'µ]zÑòÇôĞË”['OÄTUÔºœDZqû«Š	w¿tF*{a²{§#'ÙmŠ Eï‚ÎÁğ7D´ÇÙ5/'d¬]?ª?¤sÁGŠ~Èªp
+ç]«êŒ0Ü ƒúd«9ã´z>s€8nxÊªşIdPĞC™¦‰Á¾Ü=æ‘å/”Ş­´ƒÂì6x

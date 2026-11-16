@@ -1,0 +1,132 @@
+idea:
+  id: IDEA-20261109-ce92d0
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: Drinfeld-submodule factor bases V_b = ker phi_b for phi_T = theta + tau over F_{2^n}, product-space
+    dimension measured against the polynomial-basis bound 2k - 1 and random subspaces, with the constant-theta
+    arm proved to meet 2k - 1 and the prime-degree arm predicted generic
+  class: factor_base
+  claim: For phi_T(x) = theta x + x^2 on L = F_{2^n}, L is a cyclic F_2[T]-module A/(a_theta) with a_theta
+    the minimal polynomial of the F_2-linear map phi_T, deg a_theta = n, and each divisor b | a_theta
+    gives a subspace V_b = ker phi_b of dimension deg b stable under phi_T. Arm A, theta = 1 and n = 2^m,
+    V_{T^k} = ker (tau - 1)^k satisfies V_j V_k contained in V_{j+k-1}, so dim span(V_k V_k) <= 2k - 1,
+    the KR-IC-73db3f polynomial-basis bound, with strict drops at k a power of 2 (V_2 = F_4). Arm B, n
+    prime in {7, 11, 13} and theta outside F_2, prediction, for at least 90 percent of pairs (theta, b)
+    with 2 <= deg b = d <= n - 2, dim span(V_b V_b) = min(n, d(d+1)/2), the random-subspace value, so
+    Drinfeld structure gives no product-space saving on prime-degree fields such as F_{2^131}.
+  mechanism: The product-space dimension of the factor-base subspace controls the variable count of the
+    Weil-descended Semaev system (KR-IC-73db3f). Constant theta makes delta = tau - 1 satisfy a Leibniz
+    identity, forcing a polynomial-like filtration and the known bound. Non-constant theta breaks the
+    identity, delta(xy) is theta xy + x^2 y^2, so the submodules have no reason to be product-closed.
+    Prime n kills arm A because tau^n - 1 = (tau - 1) Phi_n(tau) has tau - 1 to multiplicity one.
+  novelty_status: adaptation
+  citations:
+  - ref: KR-IC-73db3f
+    provenance: internal
+    claim: Choose V so that V^(i) have small dimension, polynomial basis and subfield choices are the
+      known options.
+    verified_by: REPO BRIEF 2026-11-09 section 3 row text, file not opened in this session
+  - ref: KR-IC-b0fcda
+    provenance: internal
+    claim: Frobenius-invariant factor bases on subfield curves, the repository's Koblitz lane.
+    verified_by: REPO BRIEF 2026-11-09 section 3 row text, file not opened in this session
+  - ref: KR-IC-1fcdbc
+    provenance: internal
+    claim: Binary summation algorithms remain far slower than rho, constant-factor context for any V improvement.
+    verified_by: REPO BRIEF 2026-11-09 section 3 row text, file not opened in this session
+  assumptions:
+  - Product space means the F_2-span of pairwise products inside L, as in the cited row.
+  - The pipeline in cryptanalysis/experiments/g2-n31-* consumes a factor-base subspace by its basis, the
+    next agent must read one such directory to confirm the input format.
+  predictions:
+  - metric: fraction of (theta, b) pairs at prime n with product dimension below the random value
+    direction: lower
+    minimum_effect: at most 10 percent, matched by random subspaces within 5 points
+  - metric: product dimension of V_k at theta equal 1 and n equal 2^m
+    direction: lower
+    minimum_effect: at most 2k - 1 for every k, strictly below at k equal 2 and 4
+  minimal_test:
+    design: Rust or Sage over GF(2^n). Arm A, n in {8, 16, 32}, theta = 1, compute ker (tau - 1)^k and
+      its product span for all k. Arm B, n in {7, 11, 13}, every theta in L outside F_2, build the n x
+      n matrix of phi_T, factor its minimal polynomial, for every divisor b compute V_b and the product
+      span dimension. Compare with 1000 random subspaces per (n, d) and with span{1, z, ..., z^{d-1}}
+      in the standard polynomial representation.
+    controls:
+    - Random d-dimensional subspaces, same n.
+    - Polynomial-basis subspaces in the standard representation, dimension 2d - 1.
+    required_metrics:
+    - product dimension histogram per (n, d) for Drinfeld, random, polynomial
+    - count of theta with a_theta divisible by T^k for k at least 2
+    - arm A table of dim V_k V_k versus 2k - 1
+  falsification_conditions:
+  - Arm A shows some k with product dimension above 2k - 1, then the Leibniz derivation is wrong.
+  - Arm B shows at least 10 percent of pairs with product dimension at most 2d, with d near n/2, then
+    Drinfeld submodules are a new structured factor base and must be run through the g2 pipeline before
+    any further claim.
+  - Timeouts are infrastructure.
+  confounders:
+  - Most theta give a_theta coprime to T, the T-primary arm may be empty at small n, report counts rather
+    than silently dropping.
+  - Small n caps dimensions at n, compare only where d(d+1)/2 < n.
+  interpretation_limits:
+  - Any gain is a constant or polynomial factor in the Weil-descent PDP step (KR-IC-1fcdbc), not an exponent.
+  - Over F_p itself n = 1 and the only subspaces are 0 and F_p, the construction is empty for the program's
+    prime-field target.
+  heuristic_assumptions:
+  - id: H1
+    statement: For non-constant theta the subspaces V_b behave as random subspaces under multiplication.
+    rigorous_support: None, delta is not a derivation, which removes the only known reason for product
+      closure.
+    validation_plan: Exhaustive enumeration at n in {7, 11, 13} as designed.
+  target_complexity:
+    time_exponent: binary-curve PDP exponent unchanged, prime-field ECDLP 1/2 unchanged
+    memory_exponent: O(n^2) bits per instance
+    best_known: KR-IC-73db3f polynomial-basis and subfield subspaces, product dimension 2k - 1 or k
+    hidden_overhead: none for the census
+    tradeoff_note: No tradeoff.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  dominated_by: KR-IC-73db3f dominates the mechanism, this record tests one structured family the row
+    does not list and proves the constant-theta arm meets the row's bound.
+  sota_delta: Exponent delta 0. Expected outcome, a null that closes Drinfeld submodules as factor bases
+    on prime-degree fields, plus one proven identification of Carlitz torsion with the polynomial-basis
+    choice on fields of degree 2^m.
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/index-calculus
+    rows_checked:
+    - KR-IC-73db3f
+    - KR-IC-b0fcda
+    - KR-IC-1fcdbc
+    - KR-IC-f5c584
+    - KR-IC-49c882
+    - KR-RHO-037e22
+    nearest:
+    - ref: KR-IC-73db3f
+      provenance: internal
+      relation: adjacent
+      delta: The row names polynomial-basis and subfield subspaces, this record adds Drinfeld submodules
+        and shows the constant case coincides with the row's best choice.
+    - ref: KR-IC-b0fcda
+      provenance: internal
+      relation: orthogonal
+      delta: Frobenius invariance acts on the point set through the curve, this record structures the
+        x-coordinate subspace through a Drinfeld action.
+    searched:
+      corpus_grep:
+      - REPO BRIEF sections 2 and 3 for Drinfeld, additive polynomial, subspace factor base, Artin-Schreier
+      - cryptanalysis/experiments names for g2-n31 and ecc2k130 lanes
+      web: []
+      blocked:
+      - g2-n31 input format not opened
+    lead: LEAD-ICB-learned-cost-model-factor-base-selection
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: Rust or Sage over GF(2^n). Arm A, n in {8, 16, 32}, theta = 1, compute ker
+        (tau - 1)^k and its product span for all k. Arm B, n in {7, 11, 13}, every theta in L outside
+        F_2, build the n x n matrix of phi_T, factor its minimal polynomial, for every divisor b compute
+        V_b and the product span dimension. Compare with 1000 random subspaces per (n, d) and with span{1,
+        z, ..., z^{d-1}} in the standard po'
