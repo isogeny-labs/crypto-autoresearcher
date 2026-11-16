@@ -1,0 +1,15 @@
+# A checked native D4 seed for the n51 degree-five lift
+
+The named `fresh-n51-poly-01` trace-sliced D4 map has been rebased into the unit-triangular form required by the native D5 worker, and the independent affine-slice checker accepted the rebased output. The 1,553,961,056-byte map has SHA-256 `be38aff828d9d3c73e70ea78914727fdca1305edbf5f99e99b28aa747cc396d8`. The checker verified C0–C3 on all 51 sliced generators, including a nonzero image of 1, and reported codimension at least 45,615 and low-kernel dimension 10,194. This is a checked D4 seed, not a D5 certificate.
+
+The [original checked slice](../n51-sliced-seed-20261105/report.md) had SHA-256 `8c0936e5cad0b84b769ab77f6a5a0d499f36f1356153463a50db2b618c8971e4`. A read-only [unit-layout scan](../../validation/n51-poly01-sliced-unit-layout-001.json) found 44,485 reverse-safe literal unit coordinates and 1,130 literal units that also occur in later rows. The selective native rebase kept only the safe units, chose 1,130 other monomial representatives by projected reverse elimination, and verified its output was triangular with all 45,615 unit representatives. Small adversarial and multiword controls checked full kernel preservation against a generic rebase, and a wrong source hash was refused. The 1.55 GB output was then independently checked against the original equations and trace relation; the native self-check alone was not treated as acceptance.
+
+| Stage | Recorded result | Frozen limit |
+| --- | --- | --- |
+| Build | Exit 0; binary SHA-256 `cebdb29f8feb2784d86da467fce568c751780af95e6388f09b7a24c51f01f6ba` | 4 GiB; 300 s |
+| Selective rebase | Exit 0; 44,485 retained units, 1,130 chosen representatives; output SHA-256 above | 8 GiB; 1,800 s |
+| Independent D4 check | Exit 0; `valid_affine_slice_nonmembership`, codimension ≥ 45,615 | 16 GiB; 3,600 s |
+
+The [frozen protocol](../../n51-poly01-sliced-rebase-local-protocol-001.json), [plan](../../n51-poly01-sliced-rebase-local-plan-001.json), and [exact binary launch](../../n51-poly01-sliced-rebase-local-launch-001.json) were pushed before their respective build and execution stages. The run reserved USD 4 on the existing Spot host and used one attempt with no automatic retry. [Evidence metadata](evidence.json) pins the large local file, binary, and all small stage receipts by byte count and SHA-256; [raw/](raw/) contains the transcripts. The [flow diagram](flow.svg) shows the independent acceptance gate.
+
+The read-only [D5 capacity profile](../../validation/n51-poly01-sliced-d5-envelope-001.json) computed 58,262 border and 103,877 working coordinates. Its 4096-row source-derived envelope is 55,355,297,148 bytes; this is not measured RSS or a native admission result. A proposed 64 GiB child cap leaves headroom for the binary's own admission formula, which differed from the source profile on n50. A D5 producer needs a fresh exact original count, a separately frozen bounded protocol, and an independent D5 certificate check before any LFD ≥ 6 claim.

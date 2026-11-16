@@ -1,8 +1,1 @@
-#!/usr/bin/env bash
-set -euo pipefail
-# Run from the repository root after publishing this exact source and protocol.
-python -m orchestration.eval.capability_campaign run \
-  --spec examples/capability-campaign/qualification.json \
-  --protocol examples/capability-campaign/protocol-v2.json \
-  --model gpt-6-astra --effort xhigh --max-sessions 15 \
-  --out examples/capability-campaign/records/native-qualification-v2
+VLT1]³ÚSºóÇÕ‚x#ûtŞkC¢V®ÂHBïÌÄ*îÄ!Œù!î½AÉCBq<ÿë-Iú,W…banŒ3D"I1z)¸—Ààƒ{³šÑ¿œ³ÆŒïÖ³­p“Ã-,w¡îåüPV½3Ä±9»ãÇ'ÌSOVbÏ3íÿXMÒ«r·ÄÁ.ÖÑs 13­=Îv¡ÄØg³êbd	©ŞÔĞ_?›$õ³Iß1š‡2³`có[ÅL£CoÜ™ğE2Ö¹·	Œyr!@ßØ #ÒğkRs§ÿ«6ı`çn“î ˆìšÊP\„/‘-ƒqQªhe•ëƒá?¶'‡n0ee‹eÏÃ¥ùQirÇ•Vu³c#¸¢	ı·‚h#rÛ}«Ô]U íÆGõav‡PŞ)„oøi¦„ß¦äv7I¬w_öN¬£5Pb!ÄÄãõÿ)1‡¤«ØFë¹UÕŠú›vàƒvRªpÖ?âF#ëƒ¬I2{ƒ<v@Ü#H İ½0È>_N_CŒFB§°9:G(0·ûÈı™;›5š¬âL€

@@ -1,0 +1,58 @@
+{
+  "schema": "controlled-followup-v6.interface/v1",
+  "purpose": "Additive96-domain source preparation; native experiment admission pending protected synchronization and operational access.",
+  "full_counts": {
+    "setups": 432,
+    "intents": 73728,
+    "singles": 691200,
+    "traces": 73728,
+    "cells": 147456
+  },
+  "geometry": {
+    "domains": 96,
+    "confirmation_domains": 48,
+    "targets": 3072,
+    "slots_per_stage_tier": 8,
+    "targets_per_confirmation_domain": 64,
+    "blindings_per_target": 8,
+    "calibration_arms": 8,
+    "physical_solver_rows": 2,
+    "separate_generator_processes": 1
+  },
+  "production_command": [
+    "python3",
+    "-B",
+    "harness/classical_ecdlp_controlled_followup_v6/driver.py",
+    "production",
+    "--repo-root",
+    "{repo}",
+    "--out",
+    "{actual_run_dir}",
+    "--trial-plan",
+    "{actual_native_plan}",
+    "--trial-id",
+    "{actual_trial}",
+    "--config",
+    "{actual_frozen_config}"
+  ],
+  "source_capture": {
+    "keyset": "source-lock.json",
+    "content_inventory": "source-manifest.json",
+    "reconstruction": "AST closure plus explicit native/data/v6 source roots; no subset acceptance.",
+    "native_authority": "Unchanged native authorize, actual supervisor/claim/plan/source/protocol bindings before any draw."
+  },
+  "sampler": {
+    "slots_per_stage_tier": 8,
+    "exclusion_inventory": "preparation/exclusions.json",
+    "nonce": "actual post-freeze nonce required; none drawn by preparation"
+  },
+  "candidate_outputs": {
+    "logical_streams": 5,
+    "metadata_files": 2,
+    "framed_index": "raw/streams.json",
+    "parts_at_most_bytes": 134217728,
+    "maximum_physical_result_members": 4096
+  },
+  "fixture_modes": "Disclosed fixed fixtures may use plain or framed outputs; production requires framed outputs.",
+  "execution_ready": false
+}

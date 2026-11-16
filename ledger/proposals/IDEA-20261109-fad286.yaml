@@ -1,0 +1,119 @@
+idea:
+  id: IDEA-20261109-fad286
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECC-5038da
+  title: Constant-time Ed25519 variable-base scalar multiplication from the X25519 ladder, Okeya-Sakurai
+    y-recovery and the Montgomery-to-Edwards map
+  class: composition
+  claim: "Run RFC 7748's ladder on P = (x_1, y_1) in Montgomery form, keeping both legs (X_2:Z_2) = kP\
+    \ and (X_3:Z_3) = (k+1)P. Then y(kP) = ((x_1 x_2 + 1)(x_1 + x_2 + 2A) - 2A - (x_1 - x_2)^2 x_3)/(2\
+    \ B y_1) with x_2 = X_2/Z_2, x_3 = X_3/Z_3, B = 1; projectively v = 2 y_1 Z_2 Z_3, X' = v X_2, Z'\
+    \ = v Z_2, Y' = [(x_1 X_2 + Z_2)(x_1 Z_2 + X_2 + 2A Z_2) - 2A Z_2^2] Z_3\n    - (x_1 Z_2 - X_2)^2\
+    \ X_3,\ncosting 10M+2S+2c_small, giving kP = (X':Y':Z'). The Edwards point is y_E = (u-1)/(u+1), x_E\
+    \ = sqrt(-486664) u / v' with u = X'/Z', v' = Y'/Z', one shared inversion (1I+3M). Total for a 255-bit\
+    \ scalar: 255(5M+4S+1c_small) + 10M+2S+2c + 1I + 3M ~ 1290M + 1022S + 1I, with a uniform bit read\
+    \ and an arithmetic swap, against the repository's variable-time double-and-add at ~ 2672M + 1020S\
+    \ + 127I (BRIEF counts) and against an optimised window-4 projective-Niels method at ~ 1277M + 1020S\
+    \ with a 16-entry secret-indexed table. Exceptions: y_1 = 0 (P = T_2), Z_2 Z_3 = 0 (kP = O or (k+1)P\
+    \ = O), and u = -1 (never rational since A - 2 = 486660 is a non-square); for P of order l and 0 <\
+    \ k < l - 1 none occurs."
+  mechanism: From the Montgomery addition x_3 = B (y_2 - y_1)^2/(x_2 - x_1)^2 - A - x_1 - x_2 one gets
+    2 B y_1 y_2 = x_1 + x_2 + 2 A x_1 x_2 + x_1 x_2 (x_1 + x_2) - x_3 (x_1 - x_2)^2 after cancelling the
+    cubic terms with the curve equations of P and kP; this is the stated numerator. The ladder's involution
+    swapping the two legs makes the scalar read uniform; the second leg is exactly the (k+1)P needed by
+    the recovery, so recovery is free of extra group operations. The birational map u = (1+y)/(1-y), x_E
+    = sqrt(-486664) u / v is a bijection E_M(F_p) \ {O, T_2} -> E(F_p) \ {(0,1), (0,-1)}; the two excluded
+    points are assigned explicitly (infinity -> (0,1), (0,0) -> (0,-1)). The sign of sqrt(-486664) is
+    fixed once by requiring the image of (9, v_9) to equal RFC 8032's base point B, where v_9 is the root
+    of v^2 = 9^3 + A 81 + 9 making that image's x have LSB 0; the test asserts this.
+  novelty_status: unverified
+  citations:
+  - ref: Okeya-Sakurai 2001, y-coordinate recovery for the Montgomery ladder
+    provenance: recalled
+    claim: y(kP) from x(P), y(P), x(kP), x((k+1)P)
+    verified_by: null
+  - ref: Costello-Smith 2017, Montgomery curves and their arithmetic, projective recovery count ~ 10M+1S+2c
+    provenance: recalled
+    claim: projective recovery cost of order 10M
+    verified_by: null
+  - ref: RFC 7748 section 4.1 and RFC 8032 section 5.1 (map between forms and base point)
+    provenance: recalled
+    claim: sqrt(-486664) u / v and (u-1)/(u+1) relate the two models
+    verified_by: null
+  - ref: BRIEF section 1, src/ecc/ed25519.rs scalar_mul and x25519.rs ladder
+    provenance: internal
+    claim: current Ed25519 path is variable-time double-and-add; ladder uses a secret-dependent branch
+      for swap
+    verified_by: idea-generator session 2026-11-09 read the BRIEF excerpt
+  assumptions:
+  - B = 1, A = 486662; 486660 is a non-square mod p (asserted, needed so u = -1 is not rational).
+  - The ladder swap is replaced by arithmetic selection; with BigUint this costs about 4 extra masked
+    operations per bit, counted separately.
+  - Inputs P are accepted only after the repository's existing small-order and subgroup rejection.
+  proof_search_map:
+    not_applicable_reason: Composition of verified formulas with an equivalence test; no exponent claim.
+    bottleneck: not_applicable
+    proof_obligations: []
+  predictions:
+  - metric: RFC 8032 section 7.1 public keys reproduced by ladder+recovery+map from the derived scalar
+    direction: equal
+    minimum_effect: all vectors
+  - metric: disagreement with EdPoint::scalar_mul on random (k, P) in the prime-order subgroup
+    direction: equal
+    minimum_effect: exactly 0 of 10^3
+  - metric: inversions per scalar multiplication in the counting field
+    direction: lower
+    minimum_effect: 1 versus 127 in the current path
+  minimal_test:
+    design: 'tests/ed25519_ladder_equivalence.rs: for each RFC 8032 vector derive s, compute ladder_with_y(s,
+      (9, v_9)), map to Edwards, assert encode() equals the public key; for 10^3 random (k, P) assert
+      equality with EdPoint::scalar_mul; assert that the u-coordinate of the recovered point equals x25519(k_clamped,
+      u) when k is clamped. A counting field records M, S, c, I per call.'
+    controls:
+    - P = T_2 (u = 0) must return the documented exception, never a silently wrong point.
+    - k = l - 1 must either be handled by the documented cmov fallback or return the exception; the test
+      exercises it.
+    - Deliberately flipping the sign of sqrt(-486664) must fail the RFC vectors (sensitivity control).
+    required_metrics:
+    - vector agreement count
+    - random agreement count
+    - M, S, c, I per scalar multiplication
+    - presence of any secret-dependent branch or index in the new path (code review checklist)
+  falsification_conditions:
+  - Any RFC 8032 vector or random pair disagreeing with the existing implementation.
+  - Counting field shows more than 1 inversion or more than about 1310M for a 255-bit scalar.
+  - A rational point with u = -1 (would mean 486660 is a square) breaks the map; the test asserts the
+    quadratic character.
+  confounders:
+  - The repository's S = M and c = M arithmetic hides the S and c savings; report counts, not wall time.
+  - Fixed-base signing is better served by a precomputed comb; this record targets variable-base and the
+    private-key path only.
+  interpretation_limits:
+  - Constant-time property depends on the field layer being constant-time; BigUint is not, so the claim
+    is branch-freeness at the formula level.
+  - No change to verification semantics; small-order inputs remain rejected upstream.
+  heuristic_assumptions: []
+  target_complexity:
+    time_exponent: not an exponent claim; per-scalar field count
+    memory_exponent: 5 field elements of state, no table
+    best_known: window-4 projective-Niels variable-base ~ 1277M + 1020S with a 16-entry table
+    hidden_overhead: arithmetic swap cost in the chosen field backend; one recovery block of ~ 10M+2S
+    tradeoff_note: ~ 1% more multiplies than the windowed method in exchange for no secret-indexed table
+  estimated_cost:
+    implementation: medium
+    compute: low
+  recommended_priority: high
+  dominated_by: Fixed-base comb methods dominate for signing with the base point; the windowed Niels method
+    matches the count but needs a secret-indexed table. Neither is implemented in the repository.
+  sota_delta: 'Versus the repository path: -126 inversions and about -1380M per scalar multiplication,
+    plus removal of the secret-dependent branch. Versus the best windowed method: +13M, -16 table entries,
+    no secret index.'
+  prior_art:
+    frontier_map: not_applicable
+    not_applicable_reason: Curve25519 explicit-formula campaign (alternative coordinate systems); no ECDLP
+      mechanism is claimed.
+    none_found_after:
+    - 'BRIEF section 2 ledger index: no record files y-recovery or a ladder-based Ed25519 path'
+    - 'BRIEF section 1: x25519.rs discards the second ladder leg; ed25519.rs uses double-and-add'

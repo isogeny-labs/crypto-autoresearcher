@@ -1,0 +1,20 @@
+{
+  "schema": "semaev.native-checker-d5-control/v1",
+  "id": "n8-d5-native-checker-c2-negative-20261105-001",
+  "scope": "One targeted degree-five C2 rejection control for the pinned native checker; no n51 or LFD claim.",
+  "mutation": "From the committed positive D5 fixture, set bit zero of the all-zero row for mask 31 (x0*x1*x2*x3*x4). The degree-four monomial mask 15 remains a kernel element and its x4 product now has nonzero image.",
+  "source_certificate_sha256": "216b3772ea8559c3b7cff8100666aab528aa5f92766e5684119e5e2cd2650c65",
+  "mutation_source_sha256": "f5c08b40cc8b5d27f7768d1d1b3f2bf359fefec2afa7c35c6f769e49b4f6b27e",
+  "certificate": "validation/d5-checker-c2-negative.bin",
+  "certificate_sha256": "6e6d42b87adea3da52337cec7b02d2e1067f115bc875ef5e14132d8c99db9a1b",
+  "generators": "validation/d5-checker-fixture-generators.bin",
+  "generators_sha256": "7b184be37c88fc36736565fa14e417372f4a65b0f26bcfbc9b22cc149a0bb9a4",
+  "checker_binary": "/home/ec2-user/fall-degree-data-20261029/n51-poly01-native-checker-control-001/check_quotient_map_native",
+  "checker_binary_sha256": "5adf9d71ceef5810774a833f8e18ecb0ae4a5656d5c23899db4e190178ef3b27",
+  "launch_argv": ["prlimit", "--as=1073741824", "--", "check_quotient_map_native", "d5-checker-c2-negative.bin", "d5-checker-fixture-generators.bin", "6e6d42b87adea3da52337cec7b02d2e1067f115bc875ef5e14132d8c99db9a1b", "7b184be37c88fc36736565fa14e417372f4a65b0f26bcfbc9b22cc149a0bb9a4"],
+  "expected": {"returncode_nonzero": true, "stderr_contains": "C2: multiplication does not preserve low kernel"},
+  "decision_rule": "Only a C2 refusal after valid hashes and input shape counts as detection. A C0, C1, C3, hash, timeout or resource failure is inconclusive; zero exit fails this control. One native attempt, no retry.",
+  "limits": {"attempts": 1, "automatic_retries": 0, "cpu_cores": 1, "as_bytes": 1073741824, "timeout_seconds": 120, "additional_reserved_usd": 0.25, "deadline_utc": "2026-11-05T23:30:00Z"},
+  "concurrency": "5,288-byte checker fixture, existing binary, no competing frontier producer or high-memory reservation. Revalidate live host memory and shared budget before launch.",
+  "freeze": "Commit and verify GitHub revision before the one checker attempt. Preserve stdout, stderr, exit and hashes."
+}

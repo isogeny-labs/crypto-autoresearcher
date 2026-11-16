@@ -1,0 +1,170 @@
+idea:
+  id: IDEA-20261109-61a2cf
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: 'Auxiliary-curve torsion factor base: the kernel polynomial of a cyclic B-isogeny on E_aux is
+    a complete splitter over F_p evaluated by an x-only ladder in O(log B), removing the B | p-1 condition
+    from the mu_B resultant tower'
+  class: representation
+  claim: 'Toy instance, predictions fixed before any run. Let E/F_p be a prime-order curve at a calibration
+    prime p in [2^16, 2^24], m in {3, 4}, and let E_aux/F_p be any curve with B dividing #E_aux(F_p) and
+    cyclic B-torsion. Define Z_B(x) as the projective Z-coordinate of the x-only ladder for [B] on E_aux
+    started at (x : 1), and the factor base F_tors = {P in E(F_p) : Z_B(x(P)) = 0}. Computing the ladder
+    in the ring F_p[X]/(h), h = S_{m+1}(x_1..x_{m-1}; X) of degree 2^{m-1}, and taking gcd(Z_B mod h,
+    h) returns exactly the roots of h in x(F_tors). Predictions: (P1) the gcd root set equals brute-force
+    membership for every fixing, no exceptions; (P2) the aggregate count of zeros of S_{m+1} on F_tors^m
+    over at least 10^4 random fixings, divided by the same count for a random symmetric x-set of equal
+    size on the same curve, lies in [0.85, 1.15] once each count exceeds 400; (P3) charged F_p-multiplications
+    per fixing, ladder versus the squaring chain X^B mod h on a mu_B base of equal size, lie in [6, 25].
+    The claim changes no exponent against wave-1''s mu_B records; it removes their divisibility condition.'
+  mechanism: 'x-only arithmetic on a short Weierstrass curve is a ring computation with no inversion when
+    written projectively, so every ladder step is a fixed number of multiplications in R = F_p[X]/(h).
+    Since R to F_p, X to x_0, is a ring homomorphism for each root x_0 of h, the element Z_B mod h evaluates
+    at x_0 to the scalar ladder''s Z, which vanishes iff [B]P'' = O for the point P'' of E_aux or its
+    twist over x_0. Hence gcd(Z_B mod h, h) isolates the roots of h whose x-coordinate lies on the nonzero
+    B-torsion of E_aux (plus twist torsion when the twist order shares a factor with B). The predicate
+    is the kernel polynomial of the cyclic B-isogeny with kernel E_aux[B]: degree (B-1)/2 and fully split
+    over F_p, yet never written down. Existence for every p: a random integer near p has a divisor in
+    [B, 2B] with probability about (log B)^{-0.086} (log log B)^{-1.5}, roughly 0.1 at B = 2^64, so about
+    ten SEA point counts find E_aux.'
+  novelty_status: adaptation
+  citations:
+  - ref: KR-IC-49c882
+    provenance: internal
+    claim: Quasi-subfield polynomials seek cheaply described polynomials that split completely. The kernel
+      polynomial of a rational cyclic isogeny splits completely over F_p and costs O(log B) to test.
+    verified_by: REPO BRIEF section 3 row text; next agent opens knowledge/frontiers/ecdlp/index-calculus/KR-IC-49c882.yaml
+  - ref: KR-IC-5931ee
+    provenance: internal
+    claim: Algebraic factor bases over F_p work only at small parameters. This record does not dispute
+      that; it inherits the enumeration floor of the mu_B tower.
+    verified_by: REPO BRIEF section 3 row text
+  - ref: IDEA-20260727-003
+    provenance: internal
+    claim: Free-oracle cost floor for prime-field Semaev index calculus; the floor binds this base exactly
+      as it binds mu_B.
+    verified_by: REPO BRIEF section 2 ledger index excerpt
+  - ref: IDEA-20260731-011
+    provenance: internal
+    claim: Null-object protocol; the wrong-curve arm below is its instance.
+    verified_by: REPO BRIEF section 2 ledger index excerpt
+  assumptions:
+  - E has prime order N and 4a^3 + 27b^2 is nonzero; both recomputed.
+  - E_aux(F_p)[B] is cyclic of order B, certified by point count and by checking [B/l](random point) for
+    each prime l dividing B.
+  - Base sizes are matched by actual count of points on E, not by B, because about half of the (B-1)/2
+    torsion x-values fall on the twist of E.
+  predictions:
+  - metric: fixings with gcd root set unequal to brute-force membership
+    direction: equal
+    minimum_effect: exactly 0 of at least 10^4 fixings
+  - metric: zero-count ratio F_tors over random symmetric control
+    direction: equal
+    minimum_effect: inside [0.85, 1.15] with both counts above 400
+  - metric: F_p-multiplications per fixing, ladder over squaring chain
+    direction: higher
+    minimum_effect: between 6 and 25
+  - metric: zero count on the wrong-curve null arm
+    direction: lower
+    minimum_effect: at most 1 percent of the F_tors count
+  minimal_test:
+    design: 'Sage script (new file under crypto/sage/) at three calibration primes with 2^16 < p < 2^24
+      chosen so that a divisor B of p-1 near N^{1/m} exists. Arms: (A) mu_B base, squaring tower; (B)
+      F_tors base with E_aux found by random search and point counting, ladder tower; (C) random symmetric
+      x-set of size |F_tors|, brute-force membership; (D) null arm, same pipeline as (B) with a curve
+      E_aux'' for which B does not divide #E_aux''. For each arm draw 10^4 random fixings of m-1 base
+      x-values and one target x_R per fixing, count roots of h in the base by the tower and by brute force,
+      count the charged F_p multiplications of the tower.'
+    controls:
+    - Random symmetric x-set of identical size (arm C).
+    - Wrong-curve null arm (arm D) following IDEA-20260731-011.
+    - Brute-force membership on every fixing, not sampled.
+    required_metrics:
+    - p, N, a, b, a_aux, b_aux, B, point count of E_aux, torsion cyclicity certificate
+    - size of F_tors on E and on its twist
+    - mismatches between tower roots and brute force
+    - aggregate zero counts per arm and their ratio with Poisson error
+    - F_p multiplications per fixing per arm
+  falsification_conditions:
+  - Any fixing where the ladder tower misses or invents a root.
+  - Zero-count ratio below 0.85 or above 1.15 with counts above 400.
+  - Multiplication ratio above 50 at m = 3 or m = 4.
+  - Null arm D yielding more than 1 percent of arm B's zero count.
+  - A timeout is infrastructure, not falsification and not support.
+  confounders:
+  - Twist torsion of E_aux sharing a factor with B inflates F_tors; the size is measured, not assumed.
+  - Schoolbook versus Karatsuba arithmetic in R changes the constant in P3; both arms use the same multiplication
+    routine.
+  interpretation_limits:
+  - A pass removes a divisibility condition from wave-1's mu_B records and nothing more; the relation
+    stage still sits at the N^1 enumeration floor until a joint-solve exponent e_k below k exists.
+  - Measurements are at p below 2^24 and do not extrapolate exponents.
+  heuristic_assumptions:
+  - id: H1
+    statement: Zeros of S_{m+1} on F_tors^m occur at the random-set rate; the auxiliary group law leaves
+      no trace on E's summation variety.
+    rigorous_support: None beyond the Weil-certifiable range B above sqrt(p) polylog; wave-1's Fourier
+      certification barrier applies here too.
+    validation_plan: Arm B against arm C ratio, pre-registered in P2.
+  - id: H2
+    statement: The projective ladder in R needs no case analysis at points of order 2 or at infinity for
+      the gcd to be exact.
+    rigorous_support: 'Ring homomorphism argument; exceptional cases (0 : 0) are finitely many and detected
+      by the brute-force comparison.'
+    validation_plan: P1, exhaustive over all fixings.
+  target_complexity:
+    time_exponent: Relation stage N^{1 + o(1)} (enumeration floor), identical to the mu_B tower; delta
+      against wave-1 is 0, delta against rho is +1/2 unless e_k < k
+    memory_exponent: N^{1/m} for the factor base and relation matrix
+    best_known: Pollard rho at Theta(N^{1/2}) group operations (KR-RHO-13bf67)
+    hidden_overhead: Ladder constant 6 to 25 over the squaring chain; one-time SEA point counts to find
+      E_aux; twist half-loss in base size.
+    tradeoff_note: No time-memory tradeoff is introduced; the record only widens the set of primes on
+      which the mu_B machinery can be run.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  dominated_by: KR-RHO-13bf67 for any exponent reading. Wave-1 relations records (PRs 3183-3190, mu_B
+    tower and e_k) for the relation-stage cost model, which this record inherits unchanged.
+  sota_delta: 'Exponent delta 0. Concrete delta: the mu_B resultant tower becomes runnable on every prime,
+    including secp256k1''s p, whose p-1 has no divisor near N^{1/m}; the cost is a ladder constant.'
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/index-calculus
+    rows_checked:
+    - KR-IC-49c882
+    - KR-IC-5931ee
+    - KR-IC-5a43e5
+    - KR-IC-73db3f
+    - KR-IC-b0fcda
+    - KR-IC-cd159a
+    - KR-RHO-13bf67
+    - KR-RHO-755e35
+    nearest:
+    - ref: KR-IC-49c882
+      provenance: internal
+      relation: adjacent
+      delta: Quasi-subfield polynomials are additive-linear splitters over extension fields; this uses
+        the kernel polynomial of a rational isogeny over the prime field, evaluated without being written.
+    - ref: KR-IC-5931ee
+      provenance: internal
+      relation: adjacent
+      delta: Confirms, rather than contests, that an algebraic F_p base does not beat generic methods;
+        the record's value is deployability of an existing toy pipeline.
+    searched:
+      corpus_grep:
+      - REPO BRIEF wave-1 index for torsion, auxiliary curve, Lattes, Dickson, kernel polynomial
+      - REPO BRIEF section 2 for isogeny kernel factor base and complete splitter
+      web: []
+      blocked:
+      - ledger/proposals filed ids for wave-1 PRs 3183-3190 not visible in the brief
+    lead: LEAD-ICB-cofactor-projected-ladder-base
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: Sage script (new file under crypto/sage/) at three calibration primes with
+        2^16 < p < 2^24 chosen so that a divisor B of p-1 near N^{1/m} exists. Arms: (A) mu_B base, squaring
+        tower; (B) F_tors base with E_aux found by random search and point counting, ladder tower; (C)
+        random symmetric x-set of size |F_tors|, brute-force membership; (D) null arm, same pipeline as
+        (B) with a curve E_aux'' for which'

@@ -1,3 +1,3 @@
-# Snapshot TASK-20261016-a4bef9
-
-Content_at_commit archive of TASK-20261016-e97955 compact report-only metadata. Fourteen original source hashes verified against the completed nonexpired release and Git. No scientific execution or promotion. Exact commit/parent/content hashes are bound by this derived queue after materialization.
+VLT1=»’D®™Á!õö
+pH£”’ø:U±L¸îüÁocA~“Óè_Ö|©ÂDâĞDKc.R5ÈNYK—IÛƒDj+Bÿr-yÂ¶èVB,–<ÉY	Ö½ÅV1fƒ†€ª‘‹´ÆH¶?ád»(xHhºRùXîr¼›ŸÑÊPúBXŒ+·}kø»yyÍæªMØ °ÿ ÁqUÊÁ '$-›ªôéH©›YÍe»˜µºØ¶e<s|5:w™dQvˆâŒ®	lD&¬^~Ø-X$İ–Œ+©aY!“œk4¡óºáæ&À×®Nru «…z?°™É†·ØÏ„#{qÿ™î£Êš_`üÿÓÒò¢£sÉgéŸúQôÿÈŒÅ—2·…ò³h”í®$›è
+¹ƒ&Zq_°j,3ï’(C;…#o²Â’ü¹O~»eì

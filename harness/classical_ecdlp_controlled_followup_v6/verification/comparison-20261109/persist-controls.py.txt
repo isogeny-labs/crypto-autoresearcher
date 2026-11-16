@@ -1,0 +1,23 @@
+from pathlib import Path
+import hashlib,json,os,subprocess,tarfile
+root=Path('/tmp/ecd-develop-20261109');repo=root/'repository'
+py='/workspace/classical-ecdlp-endpoint-reuse/runtime-20261028/bin/python';aws='/workspace/classical-ecdlp-endpoint-reuse/runtime-20261028/bin/aws'
+identity=json.loads(subprocess.check_output([aws,'sts','get-caller-identity'],text=True));assert identity['Account']=='104186811093'
+meta=json.loads((root/'package-metadata.json').read_text());archive=Path(meta['archive']);rel=archive.relative_to(repo).as_posix()
+env=os.environ.copy();env.update(ARTIFACTS_AWS=aws,ARTIFACTS_CACHE=str(root/'artifact-cache'))
+cmd=[py,'-B','tools/artifacts/artifacts.py','push',rel]
+r=subprocess.run(cmd,cwd=repo,env=env,text=True,capture_output=True)
+(root/'native-store.stdout.txt').write_text(r.stdout);(root/'native-store.stderr.txt').write_text(r.stderr)
+assert r.returncode==0,(r.returncode,r.stderr)
+manifest=json.loads((archive.parent/'.artifacts.json').read_text())
+(root/'native-store-manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
+uri='s3://setec-astronomy-artifacts/store/sha256/'+meta['sha256'][:2]+'/'+meta['sha256']
+download=root/'controls-full-get.tar.gz';subprocess.run([aws,'s3','cp','--only-show-errors',uri,str(download)],check=True)
+with download.open('rb') as stream:digest=hashlib.file_digest(stream,'sha256').hexdigest()
+assert digest==meta['sha256'] and download.stat().st_size==meta['bytes']
+with tarfile.open(download,'r:gz') as tar:members=tar.getnames()
+proof={'schema':'ecd-software-controls.storage-proof/v1','source_commit':meta['source_commit'],
+       'object':uri,'bytes':meta['bytes'],'sha256':digest,'full_get_verified':True,
+       'archive_members':len(members),'native_push_argv':cmd,'native_push_returncode':r.returncode,
+       'credential_identity_account':identity['Account'],'credentials_saved_to_disk':False}
+(root/'storage-proof.json').write_text(json.dumps(proof,indent=2)+'\n');print(json.dumps(proof))

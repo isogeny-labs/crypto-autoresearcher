@@ -1,0 +1,154 @@
+idea:
+  id: IDEA-20261109-ebb9e8
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: Multiplicative-subgroup factor base x^B = 1 makes prime-field Semaev membership algebraic; measure
+    the F4 degree wall at B against the resultant tower
+  class: factor_base
+  claim: 'Toy sizes only; predictions fixed before any run. Let p be prime with 128 | p - 1, p in [2^20,
+    2^30], E/F_p of prime order N, B in {16, 32, 64, 128}, F_B = {P in E(F_p) : x(P)^B = 1}. For a target
+    R and arity m = 3 the system Sigma_B = {S_4(x_1, x_2, x_3, x_R), x_i^B - 1 (i = 1, 2, 3)} is zero-dimensional,
+    so F4 decides membership without enumeration. (P1) the maximal F4 step degree D_max lies in [B, 3B]
+    at every B; (P2) the fitted exponent e_F4 of median F4 time in B is at least m - 1 = 2, so F4 is not
+    better than the resultant tower; (P3) replacing S_4 by a random polynomial of per-variable degree
+    4 leaves D_max within 4 and e_F4 within 0.2 of the Semaev values. No exponent change is claimed; cost
+    per relation stays at least N/B.'
+  mechanism: 'Over F_p the small-x factor base is not algebraic, so every solve in RESEARCH_SEMAEV_DECOMPOSITION.md
+    must enumerate m - 1 variables and root-find the last. If B | p - 1, membership x^B = 1 is a binomial
+    of degree B evaluated in log_2 B squarings, and the full membership system is a zero-dimensional ideal
+    F4 can process. IDEA-20260801-021 bounds an algebraic factor base by 3 d for a degree-d predicate
+    but does not price sparse predicates whose degree is free. Comparator: fix x_1 over the B/2 rational
+    values, set s(X, Y) = S_4(x_1, X, Y, x_R), evaluate its 5 coefficient polynomials on mu_B by a length-B
+    DFT, build prod_zeta s(X, zeta) of degree 4B by a product tree, compute X^B mod it and gcd with X^B
+    - 1. Cost O~(4B) per x_1, O~(2 B^2) per target, exponent 2 in B.'
+  novelty_status: adaptation
+  citations:
+  - ref: KR-IC-5931ee
+    provenance: internal
+    claim: Naive Semaev over F_p is no better than generic methods; algebraic factor bases work only at
+      small parameters. This record measures a sparse algebraic predicate inside that regime.
+    verified_by: REPO BRIEF 2026-11-09 section 3 row text; file knowledge/frontiers/ecdlp/index-calculus/KR-IC-5931ee.yaml
+      not opened
+  - ref: KR-IC-fbdb61
+    provenance: internal
+    claim: Semi-regular predictions do not describe summation systems; the wall here is a field-like-equation
+      effect, not a semi-regular one.
+    verified_by: REPO BRIEF 2026-11-09 section 3 row text
+  - ref: IDEA-20260801-021
+    provenance: internal
+    claim: Bounds an algebraic factor base by 3 d_p; this record asks whether the degree or only the evaluation
+      cost of the predicate matters.
+    verified_by: REPO BRIEF 2026-11-09 section 2 ledger excerpt
+  - ref: IDEA-20260805-96cb3d
+    provenance: internal
+    claim: GOAL-RELN-001 separates p_exist from p_solve; on F_B the solver decides both, so the split
+      is unnecessary for this base.
+    verified_by: REPO BRIEF 2026-11-09 section 2 ledger excerpt
+  assumptions:
+  - 128 divides p - 1 so mu_B and the length-B DFT exist for every B in the grid.
+  - N is prime or the target lives in a prime-order subgroup of index at most 4; the index is recorded.
+  - The F4 named in RESEARCH_GROEBNER_F4.md logs step degrees; if not, the next agent patches logging
+    before timings are recorded.
+  predictions:
+  - metric: D_max divided by B, median over 20 targets per (p, B)
+    direction: higher
+    minimum_effect: at least 1.0 at every B
+  - metric: e_F4, slope of log2 median F4 time against log2 B for B in 32..128
+    direction: higher
+    minimum_effect: at least 1.8
+  - metric: absolute difference of e_F4 between Semaev and random-polynomial systems
+    direction: lower
+    minimum_effect: at most 0.2
+  minimal_test:
+    design: For p near 2^20, 2^24, 2^28 with 128 | p - 1 and each B, build F_B, draw 20 targets R = [r]P
+      with known r, form Sigma_B, run F4 to a Groebner basis, record D_max, wall time and solutions. Run
+      the resultant tower and brute-force enumeration of F_B^3 on the same instances. Repeat with S_4
+      replaced by a random polynomial of per-variable degree 4 (null system).
+    controls:
+    - F4 solutions equal the brute-force decomposition list on every instance.
+    - Null system with the same membership equations and degree pattern.
+    - Resultant tower time on the same instances, predicted exponent 2.0.
+    - Factor-base construction and system build charged in both arms; a second pass without that charge
+      must move e_F4 by less than 0.1.
+    required_metrics:
+    - D_max
+    - median F4 wall time per (p, B)
+    - e_F4
+    - e_tower
+    - e_F4 of the null system
+    - rational solutions and spurious zeros per target
+  falsification_conditions:
+  - D_max is below B/2 at two or more B values.
+  - e_F4 is below 1.7 while the null-system e_F4 is at least 2.0 (a Semaev-specific gain; this record
+    is wrong and Lead 2 becomes live).
+  - F4 does not terminate at B = 32, m = 3 within one CPU-hour (surface unusable; infrastructure, not
+    support).
+  confounders:
+  - F4 constants dominate at B = 16; the fit uses B at least 32.
+  - About half of mu_B are not x-coordinates of rational points; 2^m - 1 spurious zeros per rational one
+    are filtered after the solve and counted.
+  interpretation_limits:
+  - Confirming P1 to P3 at 20 to 30 bits does not prove F4 cannot exploit structure at larger B or m.
+  - Nothing applies to secp256k1 unless p - 1 has a divisor near p^{1/m}; the brief records only that
+    2, 3 and 7 divide p - 1.
+  heuristic_assumptions:
+  - id: H1
+    statement: The equations x_i^B - 1 force every Groebner computation on Sigma_B through degree at least
+      B.
+    rigorous_support: No element of the ideal of degree below B can use a membership equation, and S_4
+      alone is positive-dimensional. Not a theorem about the F4 selection strategy.
+    validation_plan: Read D_max from the F4 log on every instance in the grid.
+  target_complexity:
+    time_exponent: N^1 for relation collection (about 2 m! N log^2 B field operations by the tower, more
+      by F4); unchanged by this record
+    memory_exponent: O~(2^{m-1} B) field elements for the tower; the Macaulay matrix for F4
+    best_known: Pollard rho, 0.886 sqrt(N) group operations (KR-RHO-13bf67)
+    hidden_overhead: Spurious-zero filtering (factor 2^m in candidates), B Legendre symbols for the base,
+      and the LA step (m + 1) B^2.
+    tradeoff_note: Delta against rho is +1/2 in the exponent; the record's value is the first solver-side
+      measurement on a zero-dimensional prime-field membership system.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  dominated_by: KR-IC-5931ee dominates any exponent reading. No row or ledger record states the F4 degree
+    wall for a sparse algebraic membership predicate.
+  sota_delta: 'Exponent delta 0 against Omega(sqrt N). Measured delta: D_max at the wall B and e_F4 relative
+    to the tower''s 2.0, with a null system.'
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/index-calculus
+    rows_checked:
+    - KR-IC-5931ee
+    - KR-IC-5a43e5
+    - KR-IC-0d2021
+    - KR-IC-fbdb61
+    - KR-IC-73db3f
+    - KR-IC-889857
+    - KR-RHO-13bf67
+    nearest:
+    - ref: KR-IC-5931ee
+      provenance: internal
+      relation: special_case
+      delta: The row closes naive and algebraic bases over F_p at the exponent; this record stays inside
+        that closure and measures the solver's degree wall, which the row does not state.
+    - ref: KR-IC-73db3f
+      provenance: internal
+      relation: adjacent
+      delta: Vector-space bases over F_2^n keep degree constant; mu_B is the prime-field analogue with
+        degree B, and the record prices it.
+    searched:
+      corpus_grep:
+      - REPO BRIEF section 2 for subgroup, roots of unity, multiplicative, algebraic factor base, Fourier-accessible
+      - REPO BRIEF section 3 forecloses phrases for algebraic factor base over F_p and small x-coordinate
+        factor base
+      web: []
+      blocked: []
+    lead: LEAD-ICP-pkm-tower-algebraic-oracle
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: For p near 2^20, 2^24, 2^28 with 128 | p - 1 and each B, build F_B, draw 20
+        targets R = [r]P with known r, form Sigma_B, run F4 to a Groebner basis, record D_max, wall time
+        and solutions. Run the resultant tower and brute-force enumeration of F_B^3 on the same instances.
+        Repeat with S_4 replaced by a random polynomial of per-variable degree 4 (null system).'
