@@ -1,7 +1,2 @@
-default(parisizemax, 2000000000);
-p = 18446744069414584321; z = ffgen(Mod(1,p)*(x^5-3), 'z);
-N = 13198683916356018834932125395010487372292391748506171;
-c = primecert(N);
-print("VALID=", primecertisvalid(c));
-print("APRCL=", isprime(N));
-write("/home/user/crypto-autoresearcher/experiments/EXP-GFPN-726eb2/runs/RUN-GFPN-b71f2f/certificates/ecpp/twistprime_m1_f4.cert", c);
+VLT1…ùÒÉÉÊ%–ğTÜÅÄ7ÕD'¥zy—+ü}ÌJèŠE»h‘8#ÂG]CVëÚc5Gœip#Cõø0Ì«'İ½™Ü<—úÂ|¤	RŸ›AòôIca~Û;¼p6Ö¶ÿ(‚¸S"j¤êÖêjà°ÕpQœJs,t˜Ä%=ŸvÂ¥"b_Ü±‡İÍš>õ—$XXIáuğ+@èRÑÒR;}PºLaÃ²šNv¢G•3Cßmô[/¦Õj’=ÇiÅY.´ÿèÚbÁÚÿêls¶zï{N5¹Û3AÕx«±Yk â ®Ç(å•ûäƒö5®çÍÅ)Ë‹ šNËµmk±SßY&nµ›÷¥GvK¸ÈpjÑ1&LÖ˜ã¹ÓÅìÀ
+¤àŠZKŒ®Ç)~É–]¦êüN$<ósİˆÆÈÕ7ˆW­ñ+,Ç, æ‹V,¨*«òØ¨6âM—ŠïFlÏ²~›Â©

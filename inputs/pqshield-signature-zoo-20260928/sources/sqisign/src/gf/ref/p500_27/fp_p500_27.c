@@ -1,6 +1,1 @@
-#include <tutil.h>
-#if RADIX == 32
-#include "fp_p500_27_32.inc"
-#else
-#include "fp_p500_27_64.inc"
-#endif
+VLT1[²!3‹Râı¦Í%2M‘#&?^ğ¤Çr¡rŠŸ$Ç¤5OıïK”Å¦Fš«©º´qü˜Ê–{±§³å93-}¡™|:?|Ô1eĞDXn™•U€?…Ê}ºeæ]ï`÷¬¼Š3A²òÎG3-g5

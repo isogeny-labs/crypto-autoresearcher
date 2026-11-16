@@ -1,0 +1,126 @@
+idea:
+  id: IDEA-20261109-529190
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: Schmidt-rank profile and Toffoli census of the Shor-ECDLP scalar ladder, the exact quantities
+    that price tensor-network and stabilizer-rank classical simulation at or above N, checked on toy state
+    vectors and on crypto/quantum_circuit_secp256k1
+  class: barrier
+  claim: 'Let the control register hold j processed bits of the scalar and the point register hold the
+    x-coordinate of the running multiple. After j controlled steps the state is sum_a |a>|x(a 2^{n-j}
+    P)> and its Schmidt rank across the control|point cut equals min(2^j, (N+1)/2) exactly when ord P
+    = N (full-point register: min(2^j, N)). Consequently any exact matrix-product or tensor-network simulation
+    of the ladder needs bond dimension at least (N+1)/2 at the last layer and total cost at least N, above
+    the N^{1/2} rho floor. Prediction 2: the Toffoli count of the repository circuit at 256 bits is at
+    least 10^10, so stabilizer-rank simulation costs 2^{Omega(10^10)}. Prediction 3: the post-QFT amplitude
+    path sum has average sign 1/N. No exponent change is claimed and no quantum algorithm is claimed classical.'
+  mechanism: Tensor-network dequantization requires bounded entanglement across some cut; the scalar ladder
+    is an injective classical map, so entanglement grows linearly in j until it saturates at the group
+    order, with the x-only register halving it. Stabilizer-rank methods (Bravyi-Gosset, recalled) scale
+    exponentially in the non-Clifford count, which is dominated by Toffoli gates in the modular arithmetic.
+    Monte Carlo path summation needs a sign-problem-free amplitude; after the QFT the amplitudes cancel
+    to 1/N on average. Each of the three general-purpose classical simulation routes therefore prices
+    the circuit at or above N, which closes simulation-based dequantization and leaves only representation
+    statistics.
+  novelty_status: unverified
+  citations:
+  - ref: KR-RHO-13bf67
+    provenance: internal
+    claim: Generic floor; the circuit's quantum step is generic and this record moves no exponent.
+    verified_by: Mythos ideation 2026-11-09 read the row in the REPO BRIEF frontier map; row file not
+      opened.
+  - ref: Vidal 2003; Bravyi-Gosset 2016; Roetteler-Naehrig-Svore-Lauter 2017 (recalled)
+    provenance: recalled
+    claim: MPS cost scales with Schmidt rank; stabilizer simulation scales 2^{c T}; ECDLP circuits at
+      256 bits need order 10^11 Toffolis.
+    verified_by: recalled, not opened in this session.
+  assumptions:
+  - crypto/quantum_circuit_secp256k1 contains a circuit description or generator with a countable gate
+    list; the next agent must read it and report its register layout.
+  - Toy state vectors use p <= 2^10 so the full register fits in memory.
+  predictions:
+  - metric: Schmidt rank across control|point after j steps, toy instance
+    direction: different
+    minimum_effect: equals min(2^j, (N+1)/2) exactly at every j
+  - metric: Schmidt rank for a point of small order r (control)
+    direction: lower
+    minimum_effect: saturates at (r+1)/2
+  - metric: Toffoli count of the repository circuit at 256 bits
+    direction: higher
+    minimum_effect: at least 10^10
+  minimal_test:
+    design: Build the x-only windowed ladder as a classical reversible map on a toy curve, form the state
+      vector after each step, and compute the Schmidt rank by SVD of the control x point matrix. Then
+      open crypto/quantum_circuit_secp256k1, identify the circuit format, and count Toffoli and T gates
+      at the native size.
+    controls:
+    - Point of small order r on a composite-order toy curve, same ladder.
+    - Full-point register versus x-only register, ranks compared.
+    required_metrics:
+    - p, N, ord P, n, j
+    - Schmidt rank per layer, both registers
+    - Toffoli and T counts, register widths, source path of the circuit
+  falsification_conditions:
+  - Schmidt rank below min(2^j, (N+1)/2) at some layer on a prime-order curve (implementation error, invalid
+    run).
+  - Repository circuit found to have fewer than 10^8 Toffolis at 256 bits, which would require re-deriving
+    the stabilizer floor.
+  confounders:
+  - Ancilla registers change the cut; ranks are taken after uncomputing ancillae.
+  - Toffoli counts depend on the adder design; the census reports the design found, not an optimum.
+  interpretation_limits:
+  - This closes general-purpose classical simulation of the circuit; it says nothing about representation-level
+    statistics, which are the other three records.
+  - The entanglement statement is a theorem given injectivity; the measurement verifies the repository
+    artifact, not the theorem.
+  heuristic_assumptions:
+  - id: H1
+    statement: The repository circuit implements the standard windowed ladder with an uncomputed ancilla
+      pool.
+    rigorous_support: Unknown until the directory is read.
+    validation_plan: Read crypto/quantum_circuit_secp256k1 and record layout and counts before any claim.
+  target_complexity:
+    time_exponent: N^{1/2} unchanged, delta 0
+    memory_exponent: O(N) for toy state vectors only
+    best_known: Pollard rho, Theta(N^{1/2}), KR-RHO-13bf67
+    hidden_overhead: None; barrier record.
+    tradeoff_note: Simulation routes cost at least N, which is above the comparator, not a tradeoff.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: low
+  sota_delta: 'Exponent delta 0. Contribution: exact entanglement and gate-count figures that price the
+    three simulation-based dequantization routes, tied to a repository circuit.'
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/generic-rho
+    rows_checked:
+    - KR-RHO-13bf67
+    - KR-RHO-7d93f6
+    - KR-RHO-ea34b8
+    - KR-RHO-93979e
+    nearest:
+    - ref: KR-RHO-13bf67
+      provenance: internal
+      relation: adjacent
+      delta: The row bounds generic classical algorithms; this record bounds classical simulators of the
+        quantum circuit.
+    - ref: KR-RHO-7d93f6
+      provenance: internal
+      relation: orthogonal
+      delta: Time-space bounds for collisions do not address circuit simulation.
+    searched:
+      corpus_grep:
+      - REPO BRIEF wave-2 quantum-classical record Generic-model classification of three quantum ECDLP
+        ingredients, gate-level audit
+      - REPO BRIEF wave-2 quantum-classical lead Dequantization frameworks do not apply
+      web: []
+      blocked: []
+    lead: LEAD-EXO-quantum-ecdlp-resources
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: Build the x-only windowed ladder as a classical reversible map on a toy curve,
+        form the state vector after each step, and compute the Schmidt rank by SVD of the control x point
+        matrix. Then open crypto/quantum_circuit_secp256k1, identify the circuit format, and count Toffoli
+        and T gates at the native size.'
