@@ -1,5 +1,1 @@
-import sys
-
-from .cli import main
-
-sys.exit(main())
+VLT1§¬Çë¨VYØæÅŸ“%ÏnFÏÛÉx´øE¾°AqÃ’a[_x‘_fN\îXªÇãõ•	†Uµ;¤µòàø—

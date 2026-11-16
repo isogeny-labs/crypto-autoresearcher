@@ -1,28 +1,3 @@
-// SPDX-License-Identifier: CC0 OR Apache-2.0
-/// @file gf256_tabs.h
-/// @brief Defining the constant tables for performing GF arithmetics.
-///
-
-#ifndef _GF256_TABS_H_
-#define _GF256_TABS_H_
-
-#include <stdint.h>
-#include "params.h"
-
-//IF_CRYPTO_CORE:define CRYPTO_NAMESPACE
-
-#ifdef  __cplusplus
-extern  "C" {
-#endif
-#define __gf256_mulbase_avx PQOV_NAMESPACE(__gf256_mulbase_avx)
-extern const unsigned char __gf256_mulbase_avx[];
-
-
-
-#ifdef  __cplusplus
-}
-#endif
-
-
-
-#endif // _GF16_TABS_H_
+VLT1Fx@Gİhs&¶ZjT£WaÛÕ¤õ“+¦RC’¿±Üªä1 z±‰ÏUÃVë‹îñú~.8pµb%ƒİ(¼"0³‰şê»âºèŒ®±©÷ÖÕ=ˆ=îÿÉ2”êšW5aPø£nìg×ÆÄáæ>nA™º8Ú:ï4®÷\×âCşÖb«:À¸¦§Á›‰>˜ê7v
+)²œ®°§])#.ãy§•	gŸÉ&;_‚Zß¾ÙöÓ9øW7Â˜ÍJXZw ³½‚\o‚*²ãIzYÔËbD&¢E½`;UúÁ!àfY®Fùü‹Êp@nPŒ%²*Ù¥óÀ—:Ô¨ÕS'ğqğå¯¨6Û¾—ÖúRòˆI$çÛBöa®Îiˆğî`jÜ!eµùrƒ¾^,É,¥×˜ï-†&µ¬Z@¦Y_ùë3Á=„…­kÕ£Ñ8Ø'Iæ*hìk&ß1—6,íû'õµı–‚òúS+Æå_Mê#vñ<é?‰‰ºFø4 ÒúçÁ«±d'1yÚHÂò¡àˆy†NH¨|ùëmdö¯9}).ğÚë…g1£èRÊüÁGTã‡š°t%ûêšhı£­¬}ŸQK 5fKønDÉæw¤/–µÛnJ.k
+vÍ>š‚M_@§ô¸`¢å©“ãiÃø¯Ä£záîÙ%

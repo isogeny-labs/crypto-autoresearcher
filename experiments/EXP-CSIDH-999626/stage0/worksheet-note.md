@@ -1,8 +1,2 @@
-# Stage 0 freeze â€” EXP-CSIDH-999626
-
-Pinned: p=419, disc=-419 (not -4*419).
-
-C(G,M)=G*2^{ceil(sqrt(n))}*ceil(M_free/M); C_blind drops the ceil(M_free/M) factor.
-
-Nearby object N=1 must return ratio 1.
-No form census in this stage. Amazon Bedrock is NOT SELECTED.
+VLT1ÆI/e4[˜É{Trx£­ë1lâ0VâåÍ¿ºRDªƒÑ	©9Ji,îÑIhA²Vä>–ƒÃ’Ìï´‚»‘‡êWm=Í:äúøªl¦	0Î*¨u£2"ùµH e^ŠfWO_Þ°xB¯k#=ö5³¿¢‡†ƒ#9‹])ulz"À«TI¶Ëhó+–Žøø°>ooÞC/öœa²š³ótN:“Êã´´
+[Ä-3¢ò?¤=pjq^ˆœÎ¦þÍÍ€vÒw¯¥“ÎKÏ[\åÎw¿yóBå­ÿ‡AƒÈ?Œt“ëº(c=ã#}Æ£ó"ü”û‚ÝøðéƒLSdJ}Šã^me#ÔG3[F\‘µà¾lbfýhÏS

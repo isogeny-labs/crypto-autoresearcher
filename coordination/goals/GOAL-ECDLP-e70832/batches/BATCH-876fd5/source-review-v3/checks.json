@@ -1,0 +1,237 @@
+{
+  "schema": "classical.ecdlp.independent-focused-status-review/v1",
+  "task_id": "TASK-20261106-025191",
+  "review_attestation": {
+    "task_id": "TASK-20261106-025191",
+    "joints_owned": [
+      "J1"
+    ],
+    "sources_read": [
+      "ledger/handoffs/TASK-20261106-025191.yaml",
+      "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/claims/TASK-20261106-025191.1.claim.json",
+      "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/source-status-contract-v3.json",
+      "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/source-materialization-v3.json",
+      "harness/classical_ecdlp_controlled_followup/engine.py",
+      "harness/classical_ecdlp_public_reference_audit_v3/solver.py",
+      "harness/classical_ecdlp_public_reference_audit_v3/driver.py",
+      "harness/classical_ecdlp_public_reference_audit_v3/verify.py",
+      "harness/classical_ecdlp_public_reference_audit_v2/solver.py",
+      "harness/classical_ecdlp_public_reference_audit_v2/driver.py",
+      "harness/classical_ecdlp_public_reference_audit_v2/verify.py"
+    ],
+    "read_sibling_reports": false,
+    "blind_from_respected": true,
+    "verdicts": {
+      "J1": "breaks"
+    },
+    "independent_session": "/root/independent_reference_source_review_20261106",
+    "independence_statement": "Independent of implementer; same prior adverse V1/V2 reviewer, openly post hoc focused delta, not independent replication of own prior."
+  },
+  "externally_pinned_handoff": {
+    "path": "ledger/handoffs/TASK-20261106-025191.yaml",
+    "actual_sha256": "c4ea84a4065b1d8be8692b5c58024ec55629e8e9542c2eb2ed2d9af4894c36f7",
+    "expected_sha256": "c4ea84a4065b1d8be8692b5c58024ec55629e8e9542c2eb2ed2d9af4894c36f7",
+    "matches": true
+  },
+  "review_plan_sorted_compact_sha256": "e71cc0b0c26c079089e815c263ffe266380caa0fa21602f250b70e69f531cdb5",
+  "claim": {
+    "acquired_at": "2026-11-06T17:20:36Z",
+    "branch": "experiment/classical-ecdlp-endpoint-reuse-20261026",
+    "epoch": 1,
+    "expires_at": "2026-11-06T17:25:36Z",
+    "forced": false,
+    "owner": "independent-reference-status-reviewer",
+    "schema": "crypto.autoresearch.task_claim.v1",
+    "session": "independent_reference_source_review_20261106",
+    "supersedes": null,
+    "supersedes_lost_completion": null,
+    "task_id": "TASK-20261106-025191",
+    "worktree": "/tmp/classical-ecdlp-validation-20261106",
+    "write_scope": [
+      "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/source-review-v3/report.md",
+      "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/source-review-v3/checks.json",
+      "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/source-review-v3/diagram.svg",
+      "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/source-review-v3/report.pdf",
+      "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/source-review-v3/visual-inspection.json"
+    ]
+  },
+  "supplied_source_commit": "1effc78f6842107898db9b0bd50863d50182dd4d",
+  "supplied_manifest_commit": "4206a269f8a835be6d7bf8ce411a2b77d10a1c43",
+  "supplied_claim_publication_commit": "0a95dddedd33f357d9b5d096be85fa035a371050",
+  "source_sha256": {
+    "harness/classical_ecdlp_public_reference_audit_v3/solver.py": "d462b17ffb10772852d6024a92be71eb768b27d3d4b619cd582c868f88953031",
+    "harness/classical_ecdlp_public_reference_audit_v3/driver.py": "99a6a535dda612a762d4b56c3fed8749321ddc849f2200b19474ba1d79010849",
+    "harness/classical_ecdlp_public_reference_audit_v3/verify.py": "84cb0cbebba0338fef0c78ba5f91d6e3608d3bd4d8c4d5cbe8c3f1415bb4f5f0"
+  },
+  "producer_engine_sha256": "22da83d6494ea66c520b0e58eaa4b54e621c822d8f0275deda8822c7179915fb",
+  "solver_driver_byte_identical_v2": {
+    "solver.py": true,
+    "driver.py": true
+  },
+  "checker_kernel_AST_identical_v2": {
+    "is_prime": true,
+    "Projective": true,
+    "canonical_scalar": true,
+    "write_new": true
+  },
+  "residual_findings": [
+    {
+      "id": "R3",
+      "assessment": "breaks focused producer-trace compatibility",
+      "source_locations": [
+        "verify.py:92-109",
+        "engine.py:341-359",
+        "engine.py:423-442"
+      ],
+      "static_shape": {
+        "draw": {
+          "point_sampling": {
+            "status": "ACCEPTED",
+            "proposals": [
+              {
+                "status": "ACCEPTED"
+              }
+            ]
+          }
+        },
+        "original": {
+          "status": "UNDEFINED",
+          "predicate_trace": [
+            {
+              "answer": {
+                "status": "UNDEFINED"
+              }
+            }
+          ]
+        },
+        "incremental": null
+      },
+      "preconditions": "Embed in an otherwise valid producer trace. No runtime or raw-prefix occurrence claimed.",
+      "derivation": "Producer calibration-trace branch samples a point at425 and puts sampling in draw.point_sampling at434. Sampler emits ACCEPTED and proposal ACCEPTED/REJECTED statuses at356-359. Trace emission442 includes draw. V3 walk recursively reaches draw.point_sampling.status, which is absent from registered_paths92-95, and raises ValueError104 before accepted strict/predicate statuses can produce a successful audit. The same rejects proposal status paths.",
+      "scope": "The declared recursive validation claims every status-bearing path in the fixed producer trace schema. This valid producer metadata is not an unknown status or an unregistered extension to the producer. Matching immutable raw binding could fail too if such rows occur; occurrence is deliberately untested.",
+      "next_action": "Prospectively include all status-bearing producer paths with separate sampler/proposal enums and censuses, or prospectively restrict recursion to named status positions while retaining explicit metadata coverage limits; publish and independently review the correction. No raw outcome scan is needed to derive the schema."
+    }
+  ],
+  "proves_too_much": {
+    "method": "Static source branch and pinned producer-schema analysis; no execution",
+    "objects": [
+      {
+        "object": "unknown/nontext/missing required cell/word status, including unclaimed",
+        "assessment": "closed statically",
+        "lines": "verify.py:56-59,488-493,598-603",
+        "reason": "Exact str and membership are checked before census/claim branching. Missing .get returns None and fails."
+      },
+      {
+        "object": "unknown/missing/nontext original/incremental or predicate answer status",
+        "assessment": "closed at named paths statically",
+        "lines": "verify.py:69-90",
+        "reason": "Each present attempt must be an object; original null rejects, incremental null explicitly allowed. Required attempt status, predicate list, answer object and answer status checked."
+      },
+      {
+        "object": "valid registered statuses; UNDEFINED t0.e0",
+        "assessment": "named enums fit pinned producer; global trace-fit exception R3 remains",
+        "lines": "engine.py:124,236,312-317; verify.py:50-53,56-59",
+        "reason": "Strict4, cell5, word3 and predicate2 match source constructors. Cell UNDEFINED is legal through inherited attempt status at317. Word UNDEFINED is excluded correctly."
+      },
+      {
+        "object": "optional top absence and incremental null",
+        "assessment": "retained explicitly",
+        "lines": "verify.py:66-76,133-140,492,515-517",
+        "reason": "Presence/null markers distinguish absence; provided literal marker is not an allowed enum and rejects."
+      },
+      {
+        "object": "nested census and unexpected status paths",
+        "assessment": "named paths counted; R3 false rejection",
+        "lines": "verify.py:92-114,508-518",
+        "reason": "Walk aggregates named strict/predicate statuses and scan retains pertrace/aggregate coverage. Rejecting every other path includes legitimate producer sampler metadata."
+      },
+      {
+        "object": "future positive/negative guard controls",
+        "assessment": "scheduled in admitted checker only; not executed here",
+        "lines": "verify.py:117-160,461-464",
+        "reason": "Every registered enum is scheduled as pure guard positive; unknown/empty/null/bool/int/list negatives, invalid trace shapes and optional absence/null checks are scheduled. Exceptions stop before independent reference seal."
+      },
+      {
+        "object": "F1/F2 and prior guards nonregression",
+        "assessment": "preserved statically with existing qualifications",
+        "lines": "verify.py:540-560,596,615-624; driver unchanged",
+        "reason": "Empty RECOVERED undefined event and canonical a,b checks preserved; solver/driver byte-identical, arithmetic/canonical/write kernels AST-identical, diff adds status plumbing only. Sampled CPU/fixed reserve/cooperative wall/native hard-guard and future custody checks retain prior qualifications."
+      }
+    ]
+  },
+  "scientific_execution": {
+    "solver": 0,
+    "control": 0,
+    "fixture": 0,
+    "unit": 0,
+    "benchmark": 0,
+    "raw_scan": 0,
+    "source_import": 0,
+    "syntax_compile": 0,
+    "AST_parse_only": true
+  },
+  "budget": {
+    "claim_acquired_epoch_seconds": 1793985636,
+    "fixed_stop_epoch_seconds": 1793985936,
+    "maximum_wall_seconds": 300,
+    "memory_gib": 4,
+    "extensions": 0,
+    "resets": 0,
+    "review_retries": 0,
+    "memory_compliance": "unverified; reviewer memory measurement/enforcement not instrumented",
+    "final_artifact_accounting_epoch_seconds": 1793985849.7253351,
+    "elapsed_seconds_at_final_accounting": 213.72533512115479,
+    "whole_wall_cap_met": true
+  },
+  "prior_reviews_preserved": {
+    "V1": "J1 breaks;305.135592s/300s UNMET; memory unverified",
+    "V2": "J1 breaks;364.42s/600s within cap; memory unverified"
+  },
+  "read_accounting": {
+    "actual_this_task_sources": [
+      "ledger/handoffs/TASK-20261106-025191.yaml",
+      "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/claims/TASK-20261106-025191.1.claim.json",
+      "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/source-status-contract-v3.json",
+      "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/source-materialization-v3.json",
+      "harness/classical_ecdlp_controlled_followup/engine.py",
+      "harness/classical_ecdlp_public_reference_audit_v3/solver.py",
+      "harness/classical_ecdlp_public_reference_audit_v3/driver.py",
+      "harness/classical_ecdlp_public_reference_audit_v3/verify.py",
+      "harness/classical_ecdlp_public_reference_audit_v2/solver.py",
+      "harness/classical_ecdlp_public_reference_audit_v2/driver.py",
+      "harness/classical_ecdlp_public_reference_audit_v2/verify.py"
+    ],
+    "engine_sections": "75-170,165-252,250-345,420-450 plus rg status search (source only)",
+    "raw_public_trace_or_cell_payload_read": false,
+    "sibling_review_read": false,
+    "Git_or_remote_query_or_mutation": false,
+    "previous_contracts_retained_from_session": [
+      "AGENTS.md",
+      "agents/validator.md",
+      ".claude/skills/research-visuals/SKILL.md",
+      "docs/agent-contract-extended.md"
+    ],
+    "source_literature": "Pinned producer source is the primary schema authority for this focused status delta; mathematical literature and unchanged kernels were assessed in prior reviews."
+  },
+  "limitations": [
+    "No empirical status-control outcomes, actual certificate validation or raw-prefix occurrence claims.",
+    "Publication commits supplied by dispatcher; local source and engine SHA independently checked against those pins, no Git query.",
+    "G1 sampled shared CPU/fixed finalization reserve and G3 cooperative stop/native outer hard guard remain conditional; G4 source/manifest/order checks remain future runtime checks. No native enforcement or admission approval asserted.",
+    "Canonical scientific graphs are outside scope and unchanged."
+  ],
+  "render_and_inspection": {
+    "compile_command": "/workspace/classical-ecdlp-endpoint-reuse/runtime-20261028/bin/python -c \"import typst; typst.compile('/tmp/independent-reference-source-review-v3-render-20261106/report.typ',output='/tmp/independent-reference-source-review-v3-20261106/report.pdf',root='/'); print('Typst compile succeeded')\"",
+    "compile_exit_code": 0,
+    "compile_stdout": "Typst compile succeeded",
+    "compile_attempts": 1,
+    "pdfinfo_command": "pdfinfo /tmp/independent-reference-source-review-v3-20261106/report.pdf",
+    "pdfinfo_result": "Creator Typst0.15.0; PDF1.7; A4;2pages;43310bytes; unencrypted",
+    "raster_command": "pdftoppm -r 80 -png /tmp/independent-reference-source-review-v3-20261106/report.pdf /tmp/independent-reference-source-review-v3-render-20261106/page",
+    "raster_exit_code": 0,
+    "view_tool": "tools.view_image via functions.exec",
+    "pages_actually_viewed": [
+      1,
+      2
+    ]
+  }
+}

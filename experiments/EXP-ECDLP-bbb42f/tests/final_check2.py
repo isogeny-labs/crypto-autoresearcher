@@ -1,8 +1,1 @@
-p = 1009
-x, x0 = 331, 273
-x_num_general = 580
-Xd = 337
-term = x_num_general * pow(Xd, -1, p) % p
-print("x_num/Xd term =", term)
-print("x + term =", (x + term) % p)
-print("term alone =", term, " (compare to oracle 870)")
+VLT1lõŞ™BVºân=ĞÒ˜)ZÆĞ±æ)¶¼ÇÿM¡ÅC“¨TN{ÔşÊ„7¾½/õ´uÌ­;d‹t@¼:Møş¤ús 7¿s"ÀŸ@1ŒK7Aó[…–3ŠSWbÿ®LĞ½E<"rÂ(´Z…îOwÚs}ˆû"ÁÄÅvLHÖÇ>‘cc¶²›Ê«ÂV5æ7)'¦L™¹€×…ú<ˆ%LúUt¬"ÓìÀ&óØpKG¥ÃNÏœ6¥—}äákQêú^ä½×Ô==’ôıÃ„e TW6(D™×‚æ{÷zÃD~ŠÑÕ²QC’¾%C» f{E)Ö

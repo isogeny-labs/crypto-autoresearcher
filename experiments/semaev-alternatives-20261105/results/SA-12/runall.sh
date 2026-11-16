@@ -1,6 +1,2 @@
-#!/bin/bash
-# small regime: n<=90 ; 3 seeds
-cd /home/user/semaev-runs/SA-12
-for m in ea sa random; do for md in convex full; do
- echo "NCAP=90 TAG=s nice -n 10 timeout 1700 python3 search.py $m $md 90 3 >> log_s_${m}_${md}.txt"
-done; done > jobs_s.txt
+VLT1lèX‘{-çE¾Þ6\.ÎÀîùb!ˆcrÖ‘ÛÒ€¡é³ðé~r;Çê¸öˆPnñ.OÖ†À9Â›šG	˜ñB¿'Cø¿ÂççyçÀóJÛ§£-Û¾‡ðX™°Pi¯ëJH¸¹Á+ÿ4Š9ðÏ´/OòZhÚÀšÄïxÀ;òY#»V‘’ér„ÀÕÌPè!&ÖÑÉox•‘çÇ£ÔV»Ý9qN‚_µLõ$ý­¾â
+z’xH÷ƒþK¤wwO‰<äæA/)U‘Ý„¹Cx=& µÜhèâ€¥Ýd"ú3dšìÏ{µ$6©ý4§äˆæŸyn•ª[ó]FPÿ‡K:äÜœEóm5ÔölÇµ«X

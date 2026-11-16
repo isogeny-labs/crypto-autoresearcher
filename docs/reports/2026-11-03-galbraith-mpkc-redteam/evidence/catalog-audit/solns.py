@@ -1,9 +1,2 @@
-import pymupdf,re,json,collections
-A="/tmp/claude-0/-home-user/98db1f19-f745-5cea-bbb2-82920372e57a/scratchpad/catalog-audit/"
-rows=[json.loads(l) for l in open(A+"out2/cat.jsonl")]
-ex={r['label']:r for r in rows if r['kind']=="Exercise"}
-d=pymupdf.open("/tmp/claude-0/-home-user/98db1f19-f745-5cea-bbb2-82920372e57a/scratchpad/src/main.pdf")
-# locate Appendix B
-for pn in range(600,640):
-    t=d[pn-1].get_text("text")[:300].replace("\n"," ")
-    if "Appendix B" in t or "APPENDIX B" in t or "HINTS" in t.upper() and "SOLUTIONS" in t.upper(): print(pn,t[:150])
+VLT1·n#4¢ä$Úù}m€¥òÖ¿c{¶°šªkøf]"Ì\—¯-Å}RboÒ½³«>ï®«/DˆÃµÈ……h¡}¶B‡•TÊy¤¨½·8ôÅì4Œ>H¹ÉÆÈõÓ
+6I³‹4—õÜ*SdÀ^sŸ—?ü¦«¥fhëz%Þ5SèãaðóÓìÍdX+%Ò¦¾*ðd¸'ÞT´‡9¬U¢•Ñãó‰zéÛ…ˆëÖÊ<AÚ?ýqÀ£3^? ö ÿÂ&ùÝýÔ8±i­¹ÀWy|ª´´æe™Zuß7u½ZCOù"Dî¨jfŽ_Ä'eÃS—ÔÉ»¯3/¹*OLAâ£€$H¬¿èxåÈž›E¡7AO“åšä±†¨Ô;øèCµÜŠ(”Ø•a8oPÖÆIC÷äAò>y8kÍ€ú]Î ÖeSþÔ:OZL¦t÷ªÕ­ŒEwØ"‡×¶a,[ë©ê®ÏhKD8üsxÿhïDö"µóMvžêv²Êt/cMD¢¶yÚs6iøñØÝh)cmîÔKíåçêI Ÿì(brÚtI±ç¶Öøæk\Û9•ˆÂ·8(¡”°OãøF`É¡â‡ïXT½ñˆx 	Öâå‡ÖŠ›'´GK´ÕÞQ¨¸š[ÆZþ?ÓñÓtŸvÒƒ‡‹@šý¦JB>K¶Bïñp°Wù÷&Ú<¥	Dô¶°ÕGæs „?êBzIÿS¸dHÕD	ö¾þR

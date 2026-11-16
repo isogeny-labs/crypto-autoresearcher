@@ -1,0 +1,151 @@
+idea:
+  id: IDEA-20261109-44606b
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: 'Fourier certification barrier: relation supply for prime-field decomposition at beta < 2/m is
+    unprovable by character sums, and the Weil-certifiable range prices rigorous interval index calculus
+    at exponent at least 3 omega/4'
+  class: barrier
+  claim: 'Let G = <P> have prime order N, F a subset of G with |F| = B = N^beta, and r_m(R) the number
+    of m-tuples in F^m summing to R. Theorem A: |r_m(R) - B^m/N| <= M^(m-2) B for every R, where M is
+    the maximum of |hat 1_F(chi)| over chi != 1, and M >= sqrt(B(N-B)/(N-1)) by Parseval. Hence a proof
+    that r_m(R) >= 1 for a positive fraction of R which goes through this inequality needs B^(m/2) > N,
+    i.e. beta > 2/m, for every factor base, flat spectrum included. Theorem B: for coordinate factor bases
+    of points with x in A, the only M the Weil bound yields is 3 p^(-1/2) times the Wiener norm of 1_A;
+    for an interval this is 3 sqrt(p)(1+ln p), so the Weil-certifiable range is beta > m/(2(m-1)) up to
+    logs (3/4 at m = 3, 2/3 at m = 4, limit 1/2); for generic A the Wiener norm is about p sqrt(B) and
+    nothing is certified below beta = 1. Consequences: (1) the relation-yield heuristic at the operating
+    point beta = 1/m cannot be discharged by Fourier or Weil methods and must remain numbered or be attacked
+    by point counts on the Semaev variety restricted to boxes, higher moments or sieve arguments; (2)
+    rigorous interval index calculus has provable supply only at beta >= m/(2(m-1)), where linear algebra
+    alone costs B^omega = N^(omega m/(2(m-1))) >= N^(1.5); (3) the certification margin mu = B^(m-1)/(N
+    M^(m-2)) at beta = 1/m obeys mu <= N^(-1/2) by Parseval alone and, with the measured M of the spectral-norm
+    record, is predicted near N^(-1/2)(2 ln N)^(-(m-2)/2), about 2^-19 at p = 2^28, m = 4.'
+  mechanism: Fourier inversion on Z/N gives r_m(R) = (1/N) sum_chi hat 1_F(chi)^m conj chi(R). Separate
+    chi = 1, bound each remaining term by M^(m-2) |hat 1_F(chi)|^2 and apply Parseval, sum over chi of
+    |hat 1_F|^2 = N B. The Weil input is the hybrid bound |sum_Q psi_a(x(Q)) chi(Q)| <= 3 sqrt(p) with
+    1_A expanded in additive characters. The barrier is about proofs that pass through the sup-norm of
+    the spectrum; it is not an algorithmic impossibility and leaves non-Fourier rigour open. Diem's rigorous
+    extension-field results (KR-IC-64659b) avoid it because the subfield factor base is a subvariety and
+    supply is a point count; over F_p every proper subvariety of E is finite (IDEA-20260801-021's bound
+    |F cap Z| <= 3 d), so that route does not exist and the Fourier route is the only generic one.
+  novelty_status: adaptation
+  citations:
+  - ref: IDEA-20260727-006
+    provenance: internal
+    claim: Introduces exponents for a Fourier-accessible interval factor base; this record adds the factor-base-independent
+      Parseval floor 2/m and the explicit Weil range. If its exponent (A) already states the 2/m floor,
+      downgrade this record to known.
+    verified_by: brief section 2 excerpt only; next agent opens ledger/proposals/IDEA-20260727-006.yaml.
+  - ref: IDEA-20260801-021
+    provenance: internal
+    claim: An algebraic predicate of degree d cuts at most 3 d points of the factor base, so no prime-field
+      subvariety route to supply exists.
+    verified_by: brief section 2 excerpt only.
+  - ref: KR-IC-64659b
+    provenance: internal
+    claim: Rigorous subexponential index calculus exists over extension fields via a route unavailable
+      over F_p.
+    verified_by: brief section 3 row text.
+  - ref: KR-IC-5931ee
+    provenance: internal
+    claim: The prime-field negative is conditional on statistical assumptions; this record shows which
+      tools cannot remove them.
+    verified_by: brief section 3 row text.
+  assumptions:
+  - omega >= 2 is used only to state the rigorous exponent floor.
+  - Log factors are dropped in exponents and kept in the margin predictions.
+  predictions:
+  - metric: measured margin mu at beta 1/m for m equal 3 and 4, p in [2^20, 2^28]
+    direction: lower
+    minimum_effect: below 2^-10 at every prime and below N^(-1/2) always
+  - metric: fraction of R with r_3(R) >= 1 against 1 - exp(-B^3/N) at beta 1/3, p near 2^20
+    direction: different
+    minimum_effect: within 10 percent, the heuristic holding while uncertifiable
+  - metric: M against sqrt(B(N-B)/(N-1)) and against 3 sqrt(p)(1+ln p)
+    direction: different
+    minimum_effect: inside both bounds at every prime
+  minimal_test:
+    design: Reuse the spectral-norm sweep for M. At one prime near 2^20 with beta = 1/3, compute r_3(R)
+      for every R by enumerating the B^2 pairs of F (about 2^27 group operations) and report the fraction
+      of targets with a decomposition together with mu. Only a pair enumeration over the ic executable's
+      point lists is new.
+    controls:
+    - Random subset of G of size B for mu and the yield fraction.
+    - Both theorem bounds on M checked per prime.
+    required_metrics:
+    - p, N, B, beta, m
+    - M, mu and the two bounds
+    - yield fraction and its Poisson prediction
+  falsification_conditions:
+  - A filed proof of r_m(R) >= 1 for a positive fraction of R at beta < 2/m that uses only the sup-norm
+    of hat 1_F and Parseval; Theorem A says none exists, so one would expose an error here.
+  - M measured outside either theorem bound is invalid arithmetic.
+  - Yield fraction off 1 - exp(-B^3/N) by more than 10 percent at p near 2^20 puts the heuristic, not
+    the barrier, in question and needs its own record.
+  confounders:
+  - Symmetric F makes hat 1_F real and signs cancel, so the true error can sit far below M^(m-2) B; that
+    does not weaken a barrier about what the inequality certifies.
+  interpretation_limits:
+  - The barrier concerns a proof route and licenses no algorithmic conclusion.
+  - Exponent statements are up to log factors; the margin keeps them.
+  heuristic_assumptions:
+  - id: H1
+    statement: The measured M for the interval factor base is near sqrt(2 B ln N), giving mu near N^(-1/2)(2
+      ln N)^(-(m-2)/2).
+    rigorous_support: Only mu <= N^(-1/2) is proven; the sharper value is the random regime of the companion
+      record.
+    validation_plan: Read M from the spectral-norm sweep; no new runs.
+  target_complexity:
+    time_exponent: rigorous interval index calculus needs at least omega m/(2(m-1)) >= 3 omega/4 >= 1.5
+      against 1/2 heuristic; delta at least +1.0
+    memory_exponent: B = N^(m/(2(m-1))) >= N^(3/4) for the rigorous variant
+    best_known: Pollard rho at exponent 1/2 heuristically; no rigorous prime-field index calculus below
+      exponent 1 is known
+    hidden_overhead: the decomposition step is uncosted and can only raise the rigorous exponent
+    tradeoff_note: Lowering beta below the certifiable range trades a theorem for the numbered yield heuristic;
+      there is no intermediate.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  dominated_by: KR-RHO-13bf67 for exponents. KR-IC-64659b dominates the rigorous question over extension
+    fields; no row states a prime-field certification range.
+  sota_delta: Exponent delta +1.0 or worse for the rigorous variant; the useful delta is a closed-form
+    statement of which heuristics character sums can never discharge, at zero compute.
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/index-calculus
+    rows_checked:
+    - KR-IC-5931ee
+    - KR-IC-64659b
+    - KR-IC-46d822
+    - KR-IC-5a43e5
+    - KR-IC-fbdb61
+    - KR-RHO-13bf67
+    nearest:
+    - ref: KR-IC-5931ee
+      provenance: internal
+      relation: adjacent
+      delta: Yokoyama et al. bound the cost under statistical assumptions; this record bounds the proof
+        tools, not the cost.
+    - ref: KR-IC-64659b
+      provenance: internal
+      relation: adjacent
+      delta: Diem's rigour comes from point counts on subfield factor bases; the prime-field analogue
+        is shown Fourier-inaccessible below beta = 2/m.
+    searched:
+      corpus_grep:
+      - brief section 2 for certified, rigorous, Fourier, yield heuristic, HEUR-DS-1
+      - brief section 3 for rigorous, subexponential, prime field
+      web: []
+      blocked:
+      - no tool access; IDEA-20260727-006 body unread
+    lead: LEAD-ICP-lattice-ic-relation-construction
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: Reuse the spectral-norm sweep for M. At one prime near 2^20 with beta = 1/3,
+        compute r_3(R) for every R by enumerating the B^2 pairs of F (about 2^27 group operations) and
+        report the fraction of targets with a decomposition together with mu. Only a pair enumeration
+        over the ic executable''s point lists is new.'

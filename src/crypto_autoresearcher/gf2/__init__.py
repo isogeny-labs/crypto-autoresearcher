@@ -1,10 +1,2 @@
-"""Fast bit-packed GF(2) elimination for the CERTBIN Macaulay engines.
-
-``kernels`` holds the elimination, row-pass, replay, back-trace and product
-kernels (native C via ctypes, numpy reference fallback, identical outputs);
-``closure`` holds the M_D / W_D closures and the trace instrument built on
-them. See docs in each module and tests/test_gf2_kernels.py.
-"""
-from . import kernels  # noqa: F401
-from .kernels import backend  # noqa: F401
-from . import rank_only  # noqa: F401
+VLT1NY•ž«ÛòcJ”<R^'LÎ¶Ñ›hÜª5}‡÷ùCüú2ÕLÕdN|ªOä¬
+­šÖ3ÀÃ†6(ê*çø^Vs~Œòñ^—âp½ ¸-g9¸<ƒm¾iýdž“v“4£[”Þ¢ÕläE½»}à‘`K“r{ÞA¡c´ÛºŸOycíÓHeS|g¥S7=c˜ZÖ£¯pŽ¨.¡5°ðÉèÚ$Æ”DûéÓo¡‚ß‰ê7‘÷©xòˆÈ"#%F„Y;©‰–mW=LŒË'Øè5™{¿r£ß8æã¡TxÐ/†\‹àE—qâ¥aZ\Ÿ)`éA”‚5ì4yvžQOø«H4},kU+Q‰¯%pÒªB¢97}X“‚Ž—Ž…·NéžÔiÝÕôžŠÕ»b›¯8t‡hŠ¢€Ž?öu”ÃˆAÝƒ …`]¼·q`!Ð´E÷Q~mÒ%j¿ÌkÿtM¥ì$œæi¿“^+EÅÞhÎ;†8¹±—¦³àƒyg³îvˆÿd÷ëæC÷WóÀ7ÝÞû}ÈõÖÇË¹ó/çvhŠD©ÜÅôv_ÜÛûœ‰Ž»Q,ºH¾˜ÄRÏl‹†ô„uA{	ŒÙ3m¾@Íj€ª}”Õ™¦tüqšSŽ„Ô¦vªIÈ

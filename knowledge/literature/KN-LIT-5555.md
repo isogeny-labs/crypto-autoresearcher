@@ -1,35 +1,4 @@
----
-id: KN-LIT-5555
-type: literature
-title: "On the Relationship between Statistical"
-authors:
-  - "Statistical Randomized"
-year: null
-venue: null
-identifiers:
-  eprint: null
-  doi: null
-  arxiv: null
-  url: null
-tags: [complexity-theory, hash, survey, zk-proof]
-confidence: reported
-citation_verified: read
-added: "2026-07-24"
-superseded_by: null
----
-
-## Contribution
-No abstract was extractable from the first two pages of the local PDF; contribution recorded from the title only. See local copy for the full text.
-
-## Key claims (as reported)
-- Title-level claim: "On the Relationship between Statistical" (abstract not extracted).
-
-## Relevance to this program
-Recorded for completeness of the local cryptography library. Peripheral to the ECDLP index-calculus program; cite in novelty checks for the tagged areas only.
-
-## Not verified here
-Entry generated during the 2026-07-24 bulk seeding pass from the local PDF's first two pages. Title/authors/year/venue were parsed heuristically and may be incomplete or mis-segmented; claims are relayed from the paper's abstract without independent verification. Upgrade to a fully verified entry after a careful read.
-
-## Local copies
-- `downloads/98160434 (1).pdf`
-- `downloads/98160434.pdf`
+VLT1ryÄS·1vÊÌæl;=vt×Lõ¦bğ~²Rón+Åw`äxFä‚—2IÅßÇ#<ö¨1Äñ8`oT-ïoçç&`'á)¬'1NN
+kÎL?/ÙÈ¯M§ÅRgù1²Ÿô€‚ìH“›°mû±7óÄY0¨¾vŞ(â È_31VŸ¥×­œj;¤<¾SÿXFm¹­¼›½¾ 'T‰„ívsh¬úôÉ×c±Æ¦9#¾;WÔ×Gğuä¼1°ã%ê~~!uën1á$BÊĞõ2Ée¾ÿƒÈ¥d––ØØÔ¶q¦On–Ešd×O,·	K¤PPç2{jÅØ .ßQéÈî^Qâ3ñWRÈàIÂkÙŠ<x¼ÑÍ=ğÓë¥|ˆ‚"l/uRYÒ¸Àn mÒ€¤à}…Év0/Ó´-èzØË–ÍxzÚ2ÆuáÜõ…r½É¼RÂş‡Eë†ÔÏ Rê„_[}é¤ş"yÊû	‡·ÂğJÅúE{Ñ{Ö¼›µqtõ@5ÍyC7ø’4ë¾;+ï}O3°Ìj$â(.]GÕÏùƒ}ßR.uİ†F§…eD¦^f`ob\¸ã–Gèà*2mì!ºÎë?Ê‹’¥²¥3Ñó?v?Seé@ÅÛw¾ş·r¯¶(¯”Ê[şo«j-VƒÒPzŸDœÓD?C/«f&c/õ1º-Ç?J;œÀ£È”†0¨ ’	›_Üp§qpŞ0|–e†I}LÒå¾ôS™4^`|ù¤Š[˜7ÍÌ!ˆ?ä%z²áí¸¤ÖÖÄ_ø1p0ºT(¹§QŠÏòø|/vÿ4W5ı€m’qñ`FäÎA„Iå.J²ÿ×Ñô€­g÷«ÃUÔÿKM0ª›§¢0ˆK	_ ƒO¦•“@BÅ®‡(®EaS³Æ™òÇ÷ü‹†[Ìóâxb[ª~†ª<~Ó—n¹®ÌíOBŠëÇ§é³Gúyl$œşeSl¡m˜a?şı aâê_æ¨‚3j)ßXöòÌ}1ğâÔÕ)äb Ÿâ†I{däc<Vñı<cdm¦ªl“R‡Aaãê½fëï~WoğgúÕ˜’<So½œ‰Š~6©ÏP©“ø[W&ƒ¤Wò/$šoß]Tî}ÿ³·ïtu ¹lFAûÈà2¸Œ•ÊÎeTïİp@g3äè›‡PĞÌTy	CIeX]ó"Vó×A8@Ø±¤P7˜2µR›Tû@æ:Fûõóş[÷ŸÓŒÁìp[<5E	Ë¬­õW….åR¾tKíq~a¨<İëºzÒò„VÂ¯x,ì…=§R(+gV€µbÒ³ëÀ•úg]¨æ—O†¬µ;Ô7&ª|àã2‹=@—5ÁJØõv|!<—ŒèaÔòÛ¼®LWádn°’Ûc8Lc{Êy§ïÁÜ4.XÓÜ‰³ÄŞÁßé¼i‹fÖçõ»*´ùrQ×O>zC
+¶nºÌíò¾v(Ê—Ìø,ˆ!ÔaÄ©l)Uš¶íŸfV5¡óÙ…4OÒÛ¦M”=¡GZÈ½¡E|àIÕ„Âl×¿XVùMc·fÊ¡ÑZ,e…ÈÓ‰{–V0Òãß°^ª‡=‰á×*œ"¬òÿ*€Î‚?
+‚)ğu‚Œyaã¯ÏÃIK1÷‡èöó#‘
