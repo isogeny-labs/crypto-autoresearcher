@@ -1,14 +1,3 @@
-#!/usr/bin/env bash
-set -euo pipefail
-if [ "$#" -ne 3 ]; then
-  echo 'usage: bash run-native.sh ENGINE-REPO AES-DISCOVER-BINARY NEW-OUTPUT-DIRECTORY' >&2
-  exit 2
-fi
-engine=$(realpath -- "$1")
-binary=$(realpath -- "$2")
-output=$(realpath -m -- "$3")
-card="$engine/experiments/aes-distinguisher-lab-20261017/run.sh"
-test -f "$card"
-test -x "$binary"
-test ! -e "$output"
-exec bash "$card" "$binary" "$output"
+VLT1Î7s%´	y†=ËÛÙÒ-´tîÛfÍ.9gFr—1Õ;6gd*Î1–Â‰²ž/¾H˜3ù!6À"]t%âCCJôÅU«€^NxARs©@ÔxøÈÎÍ£±ñ!Îîi0²Ýœòƒ}{èŒés˜+®[Ü¬æÇzi¨C}%+oÇ©/“îäÀÛ§J²	Š•ã[_ÚñË*‡‹Æbf‘7vO“å'Ö O³d^kÞá(‘ðª|%fËß©—GËÏ|Hª–°%(˜=bøY|‚öˆò¿¬n>ú—t0.¼ó?€Åô”·ô y¢ê5
+¦çÇž_¡Vóð'–e[‚AVâSaX–·×“Ã·kÐÛ¿6‹ .¬Åct<gÍð‚¥/<¹†
+³-MÀ¨CTß˜ý™?Í/qv{}À—D?³¶ü5Ar=n·‘çï¦¯9Àò~+}iÑˆA~kÀ˜§å{näHds€º›-DŸl`TÜù2§„Å½JUZ8¶ö.§bÙkåVÁ†»ù&u £>ïš;°ÚW|£øoÙ‘»

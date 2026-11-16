@@ -1,4 +1,1 @@
-namespace Control
-@[aesop safe] axiom magic : False
-theorem good : False := magic
-end Control
+VLT1ª©^±ÂÚ• ·HÅž.*v|øBjÒðÎ÷‹‹:oóµ ç´ñ²ƒâU¡&7sÙóô.Ö:BT.¯]y%>„¾Þ­E$—h;3]@õ…pÃ&å_PFÅú0ÔEh3»

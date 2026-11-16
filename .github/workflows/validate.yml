@@ -41,9 +41,13 @@ env:
 
 jobs:
   changes:
+    name: "${{ github.event_name == 'pull_request_target' && 'post-merge / ' || '' }}changes"
     if: ${{ (github.event.action != 'closed' || github.event.pull_request.merged) && !github.event.pull_request.draft }}
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    # A cold blobless checkout can consume nearly five minutes before scope
+    # detection starts (job 126140552341). Keep the same fail-closed scope
+    # decision while allowing its store pull and controls to finish.
+    timeout-minutes: 15
     outputs:
       base: ${{ steps.scope.outputs.base }}
       ledger: ${{ steps.scope.outputs.ledger }}
@@ -65,6 +69,34 @@ jobs:
             .artifacts
             tools/artifacts
             coordination
+      - name: Unlock research vault (AES-256)
+        shell: bash
+        env:
+          KEY: ${{ secrets.KEY }}
+          PYTHONDONTWRITEBYTECODE: "1"
+        run: |
+          set -euo pipefail
+          set +x
+          umask 077
+          if [ -z "${KEY:-}" ]; then
+            echo "vault: KEY is unavailable; refusing to run on ciphertext" >&2
+            exit 1
+          fi
+          tool="$RUNNER_TEMP/cavault.py"
+          git show "HEAD:tools/vault/vaultctl.py" > "$tool"
+          py=python3
+          if ! "$py" -c 'from cryptography.hazmat.primitives.ciphers.aead import AESSIV; c=AESSIV(bytes(64)); assert c.decrypt(c.encrypt(b"", None), None) == b""' >/dev/null 2>&1; then
+            venv="$RUNNER_TEMP/cavault-venv"
+            if "$py" -m venv "$venv" >/dev/null 2>&1; then
+              py="$venv/bin/python"
+              "$py" -m pip install --quiet --disable-pip-version-check 'cryptography>=46'
+            else
+              "$py" -m pip install --quiet --disable-pip-version-check --break-system-packages 'cryptography>=46'
+            fi
+          fi
+          "$py" "$tool" install-key --quiet
+          "$py" "$tool" setup --quiet --script "$tool"
+          "$py" "$tool" unlock --quiet
       - name: Pull store data this workflow reads (tools/artifacts)
         shell: bash
         working-directory: ${{ github.workspace }}
@@ -85,6 +117,7 @@ jobs:
             export ARTIFACTS_AWS="$artifacts_cli_aws"
           fi
           python3 tools/artifacts/artifacts.py pull --jobs 16 coordination examples/experiment-protocol/ecbench-l2-smoke-subset/session experiments/EXP-ECDLP-00e491/runs/RUN-ECDLP-ee0d23
+          python3 tools/artifacts/artifacts.py verify coordination examples/experiment-protocol/ecbench-l2-smoke-subset/session experiments/EXP-ECDLP-00e491/runs/RUN-ECDLP-ee0d23
       - name: Verify CI scope controls
         run: python3 -m unittest discover -s .github/scripts -p test_ci_scope.py -v
       - id: scope
@@ -101,6 +134,7 @@ jobs:
   # PRs. Sparse is safe only for paths explicitly classified as documentation;
   # archive, record, code and unknown paths receive the full checkout.
   merge-hygiene:
+    name: "${{ github.event_name == 'pull_request_target' && 'post-merge / ' || '' }}merge-hygiene"
     if: ${{ (github.event.action != 'closed' || github.event.pull_request.merged) && !github.event.pull_request.draft }}
     needs: changes
     runs-on: ubuntu-latest
@@ -117,6 +151,34 @@ jobs:
           filter: blob:none
           sparse-checkout: ${{ needs.changes.outputs.full_checkout != 'true' && env.SPARSE_RULES || '' }}
           sparse-checkout-cone-mode: false
+      - name: Unlock research vault (AES-256)
+        shell: bash
+        env:
+          KEY: ${{ secrets.KEY }}
+          PYTHONDONTWRITEBYTECODE: "1"
+        run: |
+          set -euo pipefail
+          set +x
+          umask 077
+          if [ -z "${KEY:-}" ]; then
+            echo "vault: KEY is unavailable; refusing to run on ciphertext" >&2
+            exit 1
+          fi
+          tool="$RUNNER_TEMP/cavault.py"
+          git show "HEAD:tools/vault/vaultctl.py" > "$tool"
+          py=python3
+          if ! "$py" -c 'from cryptography.hazmat.primitives.ciphers.aead import AESSIV; c=AESSIV(bytes(64)); assert c.decrypt(c.encrypt(b"", None), None) == b""' >/dev/null 2>&1; then
+            venv="$RUNNER_TEMP/cavault-venv"
+            if "$py" -m venv "$venv" >/dev/null 2>&1; then
+              py="$venv/bin/python"
+              "$py" -m pip install --quiet --disable-pip-version-check 'cryptography>=46'
+            else
+              "$py" -m pip install --quiet --disable-pip-version-check --break-system-packages 'cryptography>=46'
+            fi
+          fi
+          "$py" "$tool" install-key --quiet
+          "$py" "$tool" setup --quiet --script "$tool"
+          "$py" "$tool" unlock --quiet
       - name: Pull store data this workflow reads (tools/artifacts)
         shell: bash
         working-directory: ${{ github.workspace }}
@@ -137,10 +199,11 @@ jobs:
             export ARTIFACTS_AWS="$artifacts_cli_aws"
           fi
           python3 tools/artifacts/artifacts.py pull --jobs 16 coordination examples/experiment-protocol/ecbench-l2-smoke-subset/session experiments/EXP-ECDLP-00e491/runs/RUN-ECDLP-ee0d23
+          python3 tools/artifacts/artifacts.py verify coordination examples/experiment-protocol/ecbench-l2-smoke-subset/session experiments/EXP-ECDLP-00e491/runs/RUN-ECDLP-ee0d23
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - run: python3 -m pip install 'PyYAML>=6.0'
+      - run: python3 -m pip install 'PyYAML>=6.0' 'cryptography>=46'
       - name: Conflict markers, parseability and identifier collisions
         run: |
           if [ -n "$DIFF_BASE" ]; then
@@ -150,6 +213,7 @@ jobs:
           fi
 
   runtime-regressions:
+    name: "${{ github.event_name == 'pull_request_target' && 'post-merge / ' || '' }}runtime-regressions (${{ matrix.python }})"
     needs: changes
     if: >-
       (github.event.action != 'closed' || github.event.pull_request.merged) &&
@@ -178,6 +242,35 @@ jobs:
         with:
           sparse-checkout: ${{ env.SPARSE_RULES }}
           sparse-checkout-cone-mode: false
+      - name: Unlock research vault (AES-256)
+        if: env.RUN_RUNTIME == 'true'
+        shell: bash
+        env:
+          KEY: ${{ secrets.KEY }}
+          PYTHONDONTWRITEBYTECODE: "1"
+        run: |
+          set -euo pipefail
+          set +x
+          umask 077
+          if [ -z "${KEY:-}" ]; then
+            echo "vault: KEY is unavailable; refusing to run on ciphertext" >&2
+            exit 1
+          fi
+          tool="$RUNNER_TEMP/cavault.py"
+          git show "HEAD:tools/vault/vaultctl.py" > "$tool"
+          py=python3
+          if ! "$py" -c 'from cryptography.hazmat.primitives.ciphers.aead import AESSIV; c=AESSIV(bytes(64)); assert c.decrypt(c.encrypt(b"", None), None) == b""' >/dev/null 2>&1; then
+            venv="$RUNNER_TEMP/cavault-venv"
+            if "$py" -m venv "$venv" >/dev/null 2>&1; then
+              py="$venv/bin/python"
+              "$py" -m pip install --quiet --disable-pip-version-check 'cryptography>=46'
+            else
+              "$py" -m pip install --quiet --disable-pip-version-check --break-system-packages 'cryptography>=46'
+            fi
+          fi
+          "$py" "$tool" install-key --quiet
+          "$py" "$tool" setup --quiet --script "$tool"
+          "$py" "$tool" unlock --quiet
       - name: Pull store data this workflow reads (tools/artifacts)
         if: env.RUN_RUNTIME == 'true'
         shell: bash
@@ -199,6 +292,7 @@ jobs:
             export ARTIFACTS_AWS="$artifacts_cli_aws"
           fi
           python3 tools/artifacts/artifacts.py pull --jobs 16 coordination examples/experiment-protocol/ecbench-l2-smoke-subset/session experiments/EXP-ECDLP-00e491/runs/RUN-ECDLP-ee0d23
+          python3 tools/artifacts/artifacts.py verify coordination examples/experiment-protocol/ecbench-l2-smoke-subset/session experiments/EXP-ECDLP-00e491/runs/RUN-ECDLP-ee0d23
       - uses: actions/setup-python@v5
         if: env.RUN_RUNTIME == 'true'
         with:
@@ -251,6 +345,7 @@ jobs:
   # Each component installs the dependencies its checker needs.
 
   ledger:
+    name: "${{ github.event_name == 'pull_request_target' && 'post-merge / ' || '' }}ledger"
     needs: changes
     if: >-
       (github.event.action != 'closed' || github.event.pull_request.merged) &&
@@ -273,6 +368,34 @@ jobs:
         with:
           fetch-depth: 0        # full history: the base worktree and the immutability diff
           filter: blob:none
+      - name: Unlock research vault (AES-256)
+        shell: bash
+        env:
+          KEY: ${{ secrets.KEY }}
+          PYTHONDONTWRITEBYTECODE: "1"
+        run: |
+          set -euo pipefail
+          set +x
+          umask 077
+          if [ -z "${KEY:-}" ]; then
+            echo "vault: KEY is unavailable; refusing to run on ciphertext" >&2
+            exit 1
+          fi
+          tool="$RUNNER_TEMP/cavault.py"
+          git show "HEAD:tools/vault/vaultctl.py" > "$tool"
+          py=python3
+          if ! "$py" -c 'from cryptography.hazmat.primitives.ciphers.aead import AESSIV; c=AESSIV(bytes(64)); assert c.decrypt(c.encrypt(b"", None), None) == b""' >/dev/null 2>&1; then
+            venv="$RUNNER_TEMP/cavault-venv"
+            if "$py" -m venv "$venv" >/dev/null 2>&1; then
+              py="$venv/bin/python"
+              "$py" -m pip install --quiet --disable-pip-version-check 'cryptography>=46'
+            else
+              "$py" -m pip install --quiet --disable-pip-version-check --break-system-packages 'cryptography>=46'
+            fi
+          fi
+          "$py" "$tool" install-key --quiet
+          "$py" "$tool" setup --quiet --script "$tool"
+          "$py" "$tool" unlock --quiet
       - name: Pull store data this workflow reads (tools/artifacts)
         shell: bash
         working-directory: ${{ github.workspace }}
@@ -293,6 +416,7 @@ jobs:
             export ARTIFACTS_AWS="$artifacts_cli_aws"
           fi
           python3 tools/artifacts/artifacts.py pull --jobs 16 coordination examples/experiment-protocol/ecbench-l2-smoke-subset/session experiments/EXP-ECDLP-00e491/runs/RUN-ECDLP-ee0d23
+          python3 tools/artifacts/artifacts.py verify coordination examples/experiment-protocol/ecbench-l2-smoke-subset/session experiments/EXP-ECDLP-00e491/runs/RUN-ECDLP-ee0d23
 
       - uses: actions/setup-python@v5
         with:
@@ -303,7 +427,7 @@ jobs:
             requirements-agent.txt
 
       - name: Install dependencies
-        run: python3 -m pip install 'PyYAML>=6.0'
+        run: python3 -m pip install 'PyYAML>=6.0' 'cryptography>=46'
 
       # The corpus tools parse YAML through libyaml (orchestration/fast_yaml.py); without
       # it they stay correct but fall back to the pure parser, ~10x slower.
@@ -363,13 +487,16 @@ jobs:
           if-no-files-found: ignore
 
   static-checks:
+    name: "${{ github.event_name == 'pull_request_target' && 'post-merge / ' || '' }}static-checks"
     needs: changes
     if: >-
       (github.event.action != 'closed' || github.event.pull_request.merged) &&
       !github.event.pull_request.draft &&
       (always() && !cancelled() && (needs.changes.result != 'success' || needs.changes.outputs.static != 'false'))
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    # Job 126126779357 exhausted the former 20m cap inside the full-history
+    # partial checkout, before any static command ran.
+    timeout-minutes: 45
     env:
       SCOPE_RESULT: ${{ needs.changes.result }}
       RUN_STATIC: ${{ needs.changes.outputs.static }}
@@ -383,6 +510,34 @@ jobs:
         with:
           fetch-depth: 0
           filter: blob:none
+      - name: Unlock research vault (AES-256)
+        shell: bash
+        env:
+          KEY: ${{ secrets.KEY }}
+          PYTHONDONTWRITEBYTECODE: "1"
+        run: |
+          set -euo pipefail
+          set +x
+          umask 077
+          if [ -z "${KEY:-}" ]; then
+            echo "vault: KEY is unavailable; refusing to run on ciphertext" >&2
+            exit 1
+          fi
+          tool="$RUNNER_TEMP/cavault.py"
+          git show "HEAD:tools/vault/vaultctl.py" > "$tool"
+          py=python3
+          if ! "$py" -c 'from cryptography.hazmat.primitives.ciphers.aead import AESSIV; c=AESSIV(bytes(64)); assert c.decrypt(c.encrypt(b"", None), None) == b""' >/dev/null 2>&1; then
+            venv="$RUNNER_TEMP/cavault-venv"
+            if "$py" -m venv "$venv" >/dev/null 2>&1; then
+              py="$venv/bin/python"
+              "$py" -m pip install --quiet --disable-pip-version-check 'cryptography>=46'
+            else
+              "$py" -m pip install --quiet --disable-pip-version-check --break-system-packages 'cryptography>=46'
+            fi
+          fi
+          "$py" "$tool" install-key --quiet
+          "$py" "$tool" setup --quiet --script "$tool"
+          "$py" "$tool" unlock --quiet
       - name: Pull store data this workflow reads (tools/artifacts)
         shell: bash
         working-directory: ${{ github.workspace }}
@@ -403,6 +558,7 @@ jobs:
             export ARTIFACTS_AWS="$artifacts_cli_aws"
           fi
           python3 tools/artifacts/artifacts.py pull --jobs 16 coordination examples/experiment-protocol/ecbench-l2-smoke-subset/session experiments/EXP-ECDLP-00e491/runs/RUN-ECDLP-ee0d23
+          python3 tools/artifacts/artifacts.py verify coordination examples/experiment-protocol/ecbench-l2-smoke-subset/session experiments/EXP-ECDLP-00e491/runs/RUN-ECDLP-ee0d23
 
       - uses: actions/setup-python@v5
         with:
@@ -567,14 +723,15 @@ jobs:
       (github.event.action != 'closed' || github.event.pull_request.merged) &&
       !github.event.pull_request.draft &&
       (always())
-    name: harness-tests (${{ matrix.shard }}/4)
+    name: "${{ github.event_name == 'pull_request_target' && 'post-merge / ' || '' }}harness-tests (${{ matrix.shard }}/4)"
     env:
       SCOPE_RESULT: ${{ needs.changes.result }}
       RUN_TESTS: ${{ needs.changes.outputs.tests }}
     runs-on: ubuntu-latest
-    # Job 122973073212 spent >11m on full-checkout/setup and was cancelled
-    # at 66% of shard 1. Sparse shards retain their existing total allowance.
-    timeout-minutes: ${{ matrix.shard == 1 && 45 || 20 }}
+    # Shard 1 needs a full checkout. Job 126188037687 spent about 44 minutes
+    # reaching its test step and hit the 45-minute job limit before tests could
+    # finish. Keep the complete suite and allow checkout plus test time.
+    timeout-minutes: 90
     strategy:
       fail-fast: false
       matrix:
@@ -596,6 +753,35 @@ jobs:
           filter: blob:none
           sparse-checkout: ${{ matrix.shard != 1 && env.SPARSE_RULES || '' }}
           sparse-checkout-cone-mode: false
+      - name: Unlock research vault (AES-256)
+        if: env.RUN_TESTS == 'true'
+        shell: bash
+        env:
+          KEY: ${{ secrets.KEY }}
+          PYTHONDONTWRITEBYTECODE: "1"
+        run: |
+          set -euo pipefail
+          set +x
+          umask 077
+          if [ -z "${KEY:-}" ]; then
+            echo "vault: KEY is unavailable; refusing to run on ciphertext" >&2
+            exit 1
+          fi
+          tool="$RUNNER_TEMP/cavault.py"
+          git show "HEAD:tools/vault/vaultctl.py" > "$tool"
+          py=python3
+          if ! "$py" -c 'from cryptography.hazmat.primitives.ciphers.aead import AESSIV; c=AESSIV(bytes(64)); assert c.decrypt(c.encrypt(b"", None), None) == b""' >/dev/null 2>&1; then
+            venv="$RUNNER_TEMP/cavault-venv"
+            if "$py" -m venv "$venv" >/dev/null 2>&1; then
+              py="$venv/bin/python"
+              "$py" -m pip install --quiet --disable-pip-version-check 'cryptography>=46'
+            else
+              "$py" -m pip install --quiet --disable-pip-version-check --break-system-packages 'cryptography>=46'
+            fi
+          fi
+          "$py" "$tool" install-key --quiet
+          "$py" "$tool" setup --quiet --script "$tool"
+          "$py" "$tool" unlock --quiet
       - name: Pull store data this workflow reads (tools/artifacts)
         if: env.RUN_TESTS == 'true'
         shell: bash
@@ -617,6 +803,7 @@ jobs:
             export ARTIFACTS_AWS="$artifacts_cli_aws"
           fi
           python3 tools/artifacts/artifacts.py pull --jobs 16 coordination examples/experiment-protocol/ecbench-l2-smoke-subset/session experiments/EXP-ECDLP-00e491/runs/RUN-ECDLP-ee0d23
+          python3 tools/artifacts/artifacts.py verify coordination examples/experiment-protocol/ecbench-l2-smoke-subset/session experiments/EXP-ECDLP-00e491/runs/RUN-ECDLP-ee0d23
 
       - uses: actions/setup-python@v5
         if: env.RUN_TESTS == 'true'
@@ -670,7 +857,9 @@ jobs:
         run: python3 tools/ci_sparse_guard.py tripwires
 
       - name: Run harness tests (shard ${{ matrix.shard }} of 4)
-        timeout-minutes: 20
+        # Job 126205293514 completed 953 tests and 324 subtests in 29m40s,
+        # then the 30-minute step limit fired during teardown.
+        timeout-minutes: 40
         if: env.RUN_TESTS == 'true'
         env:
           SPARSE: ${{ matrix.shard != 1 && '1' || '' }}
@@ -702,6 +891,7 @@ jobs:
 
   # Keeps the check name branch protection and auto-merge already know.
   ledger-and-harness:
+    name: "${{ github.event_name == 'pull_request_target' && 'post-merge / ' || '' }}ledger-and-harness"
     needs: [changes, merge-hygiene, ledger, static-checks, harness-tests, runtime-regressions]
     if: >-
       (github.event.action != 'closed' || github.event.pull_request.merged) &&

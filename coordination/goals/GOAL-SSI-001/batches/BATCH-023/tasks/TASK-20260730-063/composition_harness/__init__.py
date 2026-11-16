@@ -1,11 +1,2 @@
-"""BATCH-023 F_* composition and peak live-set harness (TASK-20260730-063).
-
-Read-only uses BATCH-022 FC0-EXT-PKG-SSI-001 scaffold via import path.
-Does not modify BATCH-022 artifacts. Zero curve/isogeny/circuit compute.
-"""
-
-__all__ = ["BATCH022_SCAFFOLD_TASK_DIR"]
-
-BATCH022_SCAFFOLD_TASK_DIR = (
-    "coordination/goals/GOAL-SSI-001/batches/BATCH-022/tasks/TASK-20260730-059"
-)
+VLT1×vüÊgtÚÀ9™²®ÚÊÃğè0ª”{~l	úbY"‚ä2=,:ìS‰ÊŒ»'º³òÁÎ&\Ë1kJuğ¢,W*ªÇÕƒeiëR5e™,ğ²çØ]a­ã¶kºƒ×¡Û+#)ÂwCIÎÅŒ_©5íÚA'×yşŠ5ñ,º½6n¢±­×ã‚ì¸ªkaÒôô¹ºA"ÈÜ‹Üe&,q<*Y ¿3šRçÈW\ÙÇ¸aR$œÅô˜l&	ax'­2hÂ$èµ'>Â…€~5‰]ÃüŸˆ'ˆ×òBä"Å4®ôâûøGÑéR¨¾ÙT^†;
+ßàÒŠLCËŸ'¸wÂß„’İN¬é–uß<F!—…ËßÄ8ÔvˆiÏÌÓÓ	¨‚ÆOÄÊê2œÀ»óT‹&Šçrƒ;N= 6#ˆ‹¼¼rK‹›Ëx„¾ñÈİ	wºi·Vqÿ-Î›i¥\‘S3çgF2íØB 8J“>Ö\"‡æG4dO¤®ËZğ(µE¨R
