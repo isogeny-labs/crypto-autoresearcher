@@ -1,0 +1,116 @@
+idea:
+  id: IDEA-20261109-378d6a
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECC-5038da
+  title: The u -> 1/u involution of the Montgomery ladder as a zero-code test oracle, and the proof that
+    the 2-isogenous Montgomery model has a full-size constant
+  class: control
+  claim: '(1) Translation by T = (0,0) on v^2 = u^3 + A u^2 + u is u(P+T) = 1/u, v(P+T) = -v/u^2 (chord
+    slope lambda = v/u gives lambda^2 - A - u = 1/u), i.e. (X:Z) -> (Z:X) on the u-line and Y -> -Y on
+    the Edwards y-line. The RFC 7748 step is invariant: swapping X_i and Z_i for both points negates B
+    = X_2 - Z_2 and D = X_3 - Z_3 and leaves AA, BB, E, (DA + CB)^2, (DA - CB)^2 unchanged, so L(x_1;
+    Z_2:X_2, Z_3:X_3) = L(x_1; X_2:Z_2, X_3:Z_3) as polynomials. Hence X25519(k, u) = X25519(k, 1/u) for
+    every even k, in particular every clamped k, and every u not 0, on curve and twist alike; for odd
+    k, X25519(k, 1/u) = 1/X25519(k, u). The exceptional set is closed: 0 <-> infinity, 1 and -1 fixed,
+    the two order-8 u-values are the F_p-roots of the palindromic quartic u^4 - 4u^3 - (4A+2)u^2 - 4u
+    + 1 and are exchanged. (2) The T-invariant coordinate X'' = u + 1/u is the Velu 2-isogeny phi: E ->
+    E'', E'': Y^2 = (X'' + A)(X'' - 2)(X'' + 2), with dual phi_hat(X'') = (X''^2 - 4)/(4(X'' + A)) and
+    phi_hat(phi(u)) = u(2P). E(F_p)[2] = {O, T} because A^2 - 4 is a non-residue, so phi is the only rational
+    2-isogeny from E. E'' has full 2-torsion; shifting each root to 0 gives a_4 in {4(A+2), -4(A-2), A^2
+    - 4}, of which only 4(A+2) is a square, so E'' has a unique Montgomery model up to sign: xi = (u -
+    1)^2/(2 sqrt(A+2) u), A'' = (A + 6)/(2 sqrt(A+2)), a full-size field element. Running the ladder on
+    E'' for k/2 and pulling back by phi_hat costs 254*(6M + 4S) + 4M + 1S + 2c against 255*(5M + 4S +
+    1c): about 250 (M - c) worse. No Montgomery curve one rational 2-isogeny from E has a small a24.'
+  mechanism: 'Part (1) is the group law: k(P + T) = kP + kT and kT = O for even k. It acts on the ladder
+    as the coordinate exchange, which buys a differential test needing no second implementation: run ladder(k,
+    u) and ladder(k, inv(u)) and assert equality; any bug asymmetric in X and Z in the swap or select,
+    in doubling, or in reduction breaks the identity, while a correct implementation of any coordinate
+    form in this campaign satisfies it. It also halves the low-order inputs that need hand analysis. It
+    saves no field operations, because the step is already a function of the Hadamard coordinates on which
+    the involution is a sign. Part (2) is Velu''s formula for a 2-torsion kernel, X = x + t/(x - x_Q)
+    with t = 3x_Q^2 + 2Ax_Q + 1 = 1 at x_Q = 0, and the codomain X^3 + AX^2 - 4X - 4A; the Montgomery-form
+    test is the residue character of the a_4 after each shift. The obstruction is a closed statement about
+    model switching along the one rational 2-isogeny, and the E'' ladder is a second, independent computation
+    path for testing.'
+  novelty_status: unverified
+  citations:
+  - ref: src/ecc/x25519.rs ladder and x25519_checked (BRIEF excerpt)
+    provenance: internal
+    claim: Tests currently cover RFC vectors only; no invariance oracle exists.
+    verified_by: this session, read from the BRIEF excerpt
+  - ref: Renes 2018, Computing isogenies between Montgomery curves using the action of (0,0)
+    provenance: recalled
+    claim: Pointer only; the A prime = (A+6)/(2 sqrt(A+2)) form is attributed there and re-derived here.
+    verified_by: none; recalled pointer, not support
+  - ref: IDEA-20260807-e6d79e
+    provenance: internal
+    claim: Filed Montgomery to Weierstrass map; adjacent, does not state the 2-isogeny or the involution.
+    verified_by: this session, read from the BRIEF section 2 summary
+  assumptions:
+  - A + 2 = 486664 is a square mod p (sqrt(-486664) is the RFC 7748 map constant and -1 is a square).
+  - A - 2 = 4 * 121665 is a non-square (d non-square, 121666 square).
+  predictions:
+  - metric: mismatches of x25519(k, u) vs x25519(k, inv(u)) on 1000 random clamped k and all low-order
+      u not 0
+    direction: different
+    minimum_effect: exactly 0
+  - metric: bit length of min(A_prime, p - A_prime) and of (A_prime +- 2)/4
+    direction: higher
+    minimum_effect: greater than 200 bits
+  - metric: mismatches of phi_hat((k/2) * phi(u)) vs x25519(k, u) on 1000 random clamped (k, u)
+    direction: different
+    minimum_effect: exactly 0
+  minimal_test:
+    design: Add tests/ecc/ladder_forms.rs::inverse_u_invariance running both directions of the identity
+      including odd k. Add x25519_forms.sage two_isogeny computing A_prime, the three residue characters,
+      and the E_prime ladder for k/2 with pullback by phi_hat.
+    controls:
+    - Odd k must give the reciprocal, not equality (the oracle has polarity).
+    - A deliberately X/Z-asymmetric fault injected into Z_4 must fail the invariance test.
+    - legendre(-4(A-2)) and legendre(A^2-4) must be -1; a +1 would mean a second Montgomery model and
+      would falsify (2).
+    required_metrics:
+    - mismatch counts for even and odd k
+    - residue characters of 4(A+2), -4(A-2), A^2-4
+    - bit lengths of A_prime and (A_prime +- 2)/4
+    - E_prime ladder operation count versus RFC
+  falsification_conditions:
+  - Any even-k mismatch for u not 0.
+  - A second square a_4 among the three shifts, or an A_prime of fewer than 64 bits.
+  - Infrastructure failures are not evidence.
+  confounders:
+  - u = 0 has no inverse; it is excluded by definition and is the one input the ladder degenerates on.
+  - Non-canonical u encodings (u >= p) must be reduced before inversion.
+  interpretation_limits:
+  - Equivalence of public keys u and 1/u is a known X25519 property; the contribution is the explicit
+    step-level invariance and the closed isogeny obstruction.
+  - No ECDLP cost changes.
+  heuristic_assumptions:
+  - id: H1
+    statement: A_prime behaves as a generic field element; its size is checked, not assumed.
+    rigorous_support: Direct computation in the script.
+    validation_plan: Assert the bit lengths.
+  target_complexity:
+    time_exponent: not an ECDLP claim
+    memory_exponent: O(1)
+    best_known: 255*(5M+4S+1c) for X25519
+    hidden_overhead: the E_prime path adds about 250 M-equivalents; it is a control, not a replacement
+    tradeoff_note: the oracle costs one inversion per check
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  dominated_by: As a formula, dominated by RFC 7748 (no operation saved). As a test control, not dominated
+    by anything in the BRIEF. The obstruction is a negative result and dominates any proposal to switch
+    to the 2-isogenous Montgomery model.
+  sota_delta: 'Zero field operations saved. One test oracle covering every ladder form in this campaign.
+    One closed negative: the 2-isogenous Montgomery model costs about 250 (M - c) more per scalar.'
+  prior_art:
+    frontier_map: not_applicable
+    not_applicable_reason: Curve25519 explicit-formula campaign; no ECDLP mechanism is claimed.
+    none_found_after:
+    - 'BRIEF section 2: IDEA-20260807-e6d79e (Weierstrass map) and IDEA-20260905-05648a (torsion certificates)
+      are adjacent, neither states the involution or the 2-isogeny model.'
+    - 'BRIEF section 1 code and tests: no invariance test.'

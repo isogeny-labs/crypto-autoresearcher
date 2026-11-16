@@ -1,2 +1,2 @@
-MOD = x^163+x^7+x^6+x^3+1; IN = "d5.txt"; S = 11; CAP = 200000;
-read("cyc_gen.gp");
+VLT1_º„?Çž¢¶>‰ÏKn3ìj…±'3D9kE1ž2;œ=“¾¼,çt´qï9­  
+íU=ŒŸ3KKõ²¶rÆúnT·üÞtY[ˆc—Y„&Ù²!F&	«N#£!xHT¬Ù.GvôøÃ

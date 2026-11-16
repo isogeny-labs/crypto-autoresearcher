@@ -1,3 +1,1 @@
-namespace CryptoResearch.Control
-def P : Prop := True
-end CryptoResearch.Control
+VLT1ØQFßÇ®\€zp‘}ØŒ¤%úŠGA{ãSõ|˜b\rY+Ëöuº°ùgÙ[¯[ÒÔ£¬²qKÏ)|=•=Ä¡ô?h<*ƒYõcİk„ìû.‚Rq<ßù¢#<Á‹÷(™
