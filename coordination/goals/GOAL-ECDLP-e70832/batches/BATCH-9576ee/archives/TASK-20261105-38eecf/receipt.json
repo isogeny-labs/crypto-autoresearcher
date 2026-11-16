@@ -1,0 +1,298 @@
+{
+  "actual_main_reference": "5440a26b36693841b89fc803baf73d4061df4826",
+  "actual_required_checks": {
+    "interstage-source-full-ledger": {
+      "command_receipt": {
+        "argv": [
+          "/workspace/classical-ecdlp-endpoint-reuse/runtime-20261028/bin/python",
+          "-B",
+          "tools/validate_ledger.py"
+        ],
+        "cwd": "/workspace/classical-ecdlp-validation-ready",
+        "elapsed_seconds": 21.363158549000218,
+        "environment": {
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "PATH": "/home/agent/.local/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/bin/override:/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/bin:/opt/codex/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/home/agent/.local/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/bin/fallback",
+          "SSL_CERT_FILE": "/etc/ssl/certs/ca-certificates.crt"
+        },
+        "environment_scope": "Only named nonsecret execution settings; credentials and full inherited environment are not serialized.",
+        "files": {
+          "stderr.txt": {
+            "bytes": 480,
+            "path": "/workspace/classical-ecdlp-endpoint-reuse/fresh48-20261105-root/interstage-source-full-ledger.stderr.txt",
+            "sha256": "0e28afb1b7ca415d14ef89c86984a29101fdc845d13d8edbccf5fea4443c37e2"
+          },
+          "stdout.txt": {
+            "bytes": 656,
+            "path": "/workspace/classical-ecdlp-endpoint-reuse/fresh48-20261105-root/interstage-source-full-ledger.stdout.txt",
+            "sha256": "d97585514679a1f52aae7f94e3dd0ff8bd71eae8d5bfc00f637191293717a02f"
+          }
+        },
+        "finished_at": "2026-11-05T02:48:37.891992+00:00",
+        "helper_sha256": "9ec6975142148c4c3700c47804303c23de77cd433ecaca97bf170ca9aac8a6db",
+        "pid": 109334,
+        "returncode": 1,
+        "started_at": "2026-11-05T02:48:16.528759+00:00",
+        "wait_returned": true
+      },
+      "stderr": "FAIL: 4 new validation error(s):\n\n  - experiments/EXP-ECDLP-8dc19d/specification.yaml: variable_ledger.crosses_map is true; transfer_obligations is required\n  - experiments/EXP-ECDLP-ef7323/specification.yaml: variable_ledger.crosses_map is true; transfer_obligations is required\n  - experiments/EXP-ECDLP-f50061/specification.yaml: prediction_provenance must be a nonempty list\n  - experiments/EXP-BINSTD-591d28/runs/RUN-BINSTD-f7ca97/manifest.yaml: expected top-level key 'run'\n",
+      "stdout": "note: 1210 grandfathered legacy error(s) suppressed by tools/validate_ledger_baseline.txt\nnote: 103 frozen root-level ledger records were indexed; 378 legacy run manifest(s) were indexed; 986 legacy schema issue(s) remain read-only\nnote: 280 superseded run manifest(s) routed to their superseding records by tools/run_supersession_registry.yaml; both records stay hash-pinned\nnote: 266 archived schema record(s) routed to complete replacements by tools/schema_supersession_registry.yaml; both records stay hash-pinned\nnote: 643 advisory(ies), not failures (14 goal head, 119 next_action, 48 proposal, 368 handoff, 82 json-only run); list with --advisories\n"
+    },
+    "interstage-source-hygiene": {
+      "command_receipt": {
+        "argv": [
+          "/workspace/classical-ecdlp-endpoint-reuse/runtime-20261028/bin/python",
+          "-B",
+          "tools/check_merge_hygiene.py",
+          "--base",
+          "origin/main"
+        ],
+        "cwd": "/workspace/classical-ecdlp-validation-ready",
+        "elapsed_seconds": 17.121000193998043,
+        "environment": {
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "PATH": "/home/agent/.local/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/bin/override:/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/bin:/opt/codex/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/home/agent/.local/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/bin/fallback",
+          "SSL_CERT_FILE": "/etc/ssl/certs/ca-certificates.crt"
+        },
+        "environment_scope": "Only named nonsecret execution settings; credentials and full inherited environment are not serialized.",
+        "files": {
+          "stderr.txt": {
+            "bytes": 139,
+            "path": "/workspace/classical-ecdlp-endpoint-reuse/fresh48-20261105-root/interstage-source-hygiene.stderr.txt",
+            "sha256": "b6ca03e02ef19532ba30838df5f77d7c33937f684c8c9c7393d0521fea0eeae7"
+          },
+          "stdout.txt": {
+            "bytes": 207,
+            "path": "/workspace/classical-ecdlp-endpoint-reuse/fresh48-20261105-root/interstage-source-hygiene.stdout.txt",
+            "sha256": "f1292fade8829de1a95b5229bfa18ef3b60e8fd912ef82747779d95ea63e4600"
+          }
+        },
+        "finished_at": "2026-11-05T02:48:33.655039+00:00",
+        "helper_sha256": "9ec6975142148c4c3700c47804303c23de77cd433ecaca97bf170ca9aac8a6db",
+        "pid": 109335,
+        "returncode": 0,
+        "started_at": "2026-11-05T02:48:16.534009+00:00",
+        "wait_returned": true
+      },
+      "stderr": "note: parseability scoped to 2722 committed, staged, or tracked-worktree candidate path(s) vs origin/main; the absolute sweep runs on main\n",
+      "stdout": "PASS: no conflict markers, no unparseable records, no duplicate registry keys, no changed runbook-session files, no schema-failing new run manifests, no identifier collisions, no new legacy GOAL identifiers\n"
+    },
+    "interstage-source-prepare": {
+      "command_receipt": {
+        "argv": [
+          "/workspace/classical-ecdlp-endpoint-reuse/runtime-20261028/bin/python",
+          "-B",
+          "/workspace/classical-ecdlp-endpoint-reuse/exact-density-20261030/archive_stage.v3.py",
+          "prepare",
+          "--queue",
+          "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-9576ee/dispatch_queue.json",
+          "--task",
+          "TASK-20261105-38eecf",
+          "--out",
+          "/workspace/classical-ecdlp-endpoint-reuse/fresh48-20261105-root/interstage-source-prepared-receipt.json"
+        ],
+        "cwd": "/workspace/classical-ecdlp-validation-ready",
+        "elapsed_seconds": 1.6867061529992498,
+        "environment": {
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "PATH": "/home/agent/.local/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/bin/override:/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/bin:/opt/codex/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/home/agent/.local/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/bin/fallback",
+          "SSL_CERT_FILE": "/etc/ssl/certs/ca-certificates.crt"
+        },
+        "environment_scope": "Only named nonsecret execution settings; credentials and full inherited environment are not serialized.",
+        "files": {
+          "stderr.txt": {
+            "bytes": 0,
+            "path": "/workspace/classical-ecdlp-endpoint-reuse/fresh48-20261105-root/interstage-source-prepare.stderr.txt",
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          "stdout.txt": {
+            "bytes": 216,
+            "path": "/workspace/classical-ecdlp-endpoint-reuse/fresh48-20261105-root/interstage-source-prepare.stdout.txt",
+            "sha256": "f3952de59e46c91da308bb3144be9f0ad8d0b47504808828eca59229af3c62eb"
+          }
+        },
+        "finished_at": "2026-11-05T02:48:18.235284+00:00",
+        "helper_sha256": "9ec6975142148c4c3700c47804303c23de77cd433ecaca97bf170ca9aac8a6db",
+        "pid": 109336,
+        "returncode": 0,
+        "started_at": "2026-11-05T02:48:16.548463+00:00",
+        "wait_returned": true
+      },
+      "stderr": "",
+      "stdout": "{\"ok\": true, \"snapshot\": \"83fe36634dd607070e8bf1d106600f9fc1db462a\", \"source_paths\": 19, \"receipt_proposal\": \"/workspace/classical-ecdlp-endpoint-reuse/fresh48-20261105-root/interstage-source-prepared-receipt.json\"}\n"
+    }
+  },
+  "actual_source_publication": "964579a78b488fcfe8040837f5af138b5cd0be3c",
+  "bindings": {
+    "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-9576ee/interstage-recovery-a33086/failed-archive-reconciliation-plan.json": {
+      "payload_bytes": 1611,
+      "payload_sha256": "fd51a8bb007809f6d92b4ac8dc01ab802c263b70c389ec66fdd27fa06581226e",
+      "stored_path": "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-9576ee/interstage-recovery-a33086/failed-archive-reconciliation-plan.json",
+      "stored_sha256": "fd51a8bb007809f6d92b4ac8dc01ab802c263b70c389ec66fdd27fa06581226e"
+    },
+    "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-9576ee/interstage-recovery-a33086/failed-run-preservation.json": {
+      "payload_bytes": 19082,
+      "payload_sha256": "05859701d7cc30928f0f827438877d818915801e99d9862cd00f34dbb52e9415",
+      "stored_path": "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-9576ee/interstage-recovery-a33086/failed-run-preservation.json",
+      "stored_sha256": "05859701d7cc30928f0f827438877d818915801e99d9862cd00f34dbb52e9415"
+    },
+    "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-9576ee/interstage-recovery-a33086/implementation/diagram.svg": {
+      "payload_bytes": 1240,
+      "payload_sha256": "3db177f6a5c98a758aaa3f9ff94ca45c67477cd538b10533097c73906fd37562",
+      "stored_path": "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-9576ee/interstage-recovery-a33086/implementation/diagram.svg",
+      "stored_sha256": "3db177f6a5c98a758aaa3f9ff94ca45c67477cd538b10533097c73906fd37562"
+    },
+    "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-9576ee/interstage-recovery-a33086/implementation/observations.json": {
+      "payload_bytes": 42189,
+      "payload_sha256": "39eb71c3fc2d832444433be784a515fcadc37a255af40b6da00adc79444506de",
+      "stored_path": "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-9576ee/interstage-recovery-a33086/implementation/observations.json",
+      "stored_sha256": "39eb71c3fc2d832444433be784a515fcadc37a255af40b6da00adc79444506de"
+    },
+    "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-9576ee/interstage-recovery-a33086/implementation/report.md": {
+      "payload_bytes": 2382,
+      "payload_sha256": "0442a4a5068fe33731dc79a14d89db18275fa3a4648dedbb0225d51adee10d4e",
+      "stored_path": "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-9576ee/interstage-recovery-a33086/implementation/report.md",
+      "stored_sha256": "0442a4a5068fe33731dc79a14d89db18275fa3a4648dedbb0225d51adee10d4e"
+    },
+    "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-9576ee/interstage-recovery-a33086/implementation/report.pdf": {
+      "payload_bytes": 26517,
+      "payload_sha256": "d13cf64d11de8afc05e489c6679a7ac554df279b85dfb2e7b8a198f020100a1b",
+      "stored_path": "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-9576ee/interstage-recovery-a33086/implementation/report.pdf",
+      "stored_sha256": "d13cf64d11de8afc05e489c6679a7ac554df279b85dfb2e7b8a198f020100a1b"
+    },
+    "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-9576ee/interstage-recovery-a33086/implementation/visual-inspection.json": {
+      "payload_bytes": 472,
+      "payload_sha256": "3b2f3ea1fac6725092560ac06abf441b7e36dc44d0fb597e48d2219dccddd015",
+      "stored_path": "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-9576ee/interstage-recovery-a33086/implementation/visual-inspection.json",
+      "stored_sha256": "3b2f3ea1fac6725092560ac06abf441b7e36dc44d0fb597e48d2219dccddd015"
+    },
+    "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-9576ee/interstage-recovery-a33086/review-plan.json": {
+      "payload_bytes": 4292,
+      "payload_sha256": "0e0064440b785e2be8bc9c869f4917557b88471e70d0e4e370499edb7e8ae31f",
+      "stored_path": "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-9576ee/interstage-recovery-a33086/review-plan.json",
+      "stored_sha256": "0e0064440b785e2be8bc9c869f4917557b88471e70d0e4e370499edb7e8ae31f"
+    },
+    "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-9576ee/interstage-recovery-a33086/same-cohort-recovery-policy.json": {
+      "payload_bytes": 1822,
+      "payload_sha256": "4d399df47e7c56169ada39ff8b7a65891e88c90e7838232c3d7e364db90b8091",
+      "stored_path": "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-9576ee/interstage-recovery-a33086/same-cohort-recovery-policy.json",
+      "stored_sha256": "4d399df47e7c56169ada39ff8b7a65891e88c90e7838232c3d7e364db90b8091"
+    },
+    "harness/classical_ecdlp_controlled_followup_v5/observer.py": {
+      "payload_bytes": 16842,
+      "payload_sha256": "986cda118dc688460bc6490a58db7b496e8541530461ef38f447622a630f231a",
+      "stored_path": "harness/classical_ecdlp_controlled_followup_v5/observer.py",
+      "stored_sha256": "986cda118dc688460bc6490a58db7b496e8541530461ef38f447622a630f231a"
+    },
+    "harness/classical_ecdlp_controlled_followup_v5/source-manifest.json": {
+      "payload_bytes": 2264,
+      "payload_sha256": "32b047ce243568f47c64e36c19366bfc5dac28c30b111370650f5c2438af357c",
+      "stored_path": "harness/classical_ecdlp_controlled_followup_v5/source-manifest.json",
+      "stored_sha256": "32b047ce243568f47c64e36c19366bfc5dac28c30b111370650f5c2438af357c"
+    },
+    "ledger/decisions/DEC-20261105-a33086.yaml": {
+      "payload_bytes": 9566,
+      "payload_sha256": "8bd4ffcab7b842cf40d504bda2020e6e4f19d03b608efbd7369c10bf334cdd1c",
+      "stored_path": "ledger/decisions/DEC-20261105-a33086.yaml",
+      "stored_sha256": "8bd4ffcab7b842cf40d504bda2020e6e4f19d03b608efbd7369c10bf334cdd1c"
+    },
+    "ledger/handoffs/TASK-20261105-2251a1.yaml": {
+      "payload_bytes": 8666,
+      "payload_sha256": "115bfde39283a6bcef29412ceffd8c92ee223c061a0d948f59b76cdb14a49d28",
+      "stored_path": "ledger/handoffs/TASK-20261105-2251a1.yaml",
+      "stored_sha256": "115bfde39283a6bcef29412ceffd8c92ee223c061a0d948f59b76cdb14a49d28"
+    },
+    "ledger/handoffs/TASK-20261105-38eecf.yaml": {
+      "payload_bytes": 7792,
+      "payload_sha256": "096403971fdf291c13f5b5618a6bccde20a7656923f3d082be3325fe19820174",
+      "stored_path": "ledger/handoffs/TASK-20261105-38eecf.yaml",
+      "stored_sha256": "096403971fdf291c13f5b5618a6bccde20a7656923f3d082be3325fe19820174"
+    },
+    "ledger/handoffs/TASK-20261105-58f55b.yaml": {
+      "payload_bytes": 6416,
+      "payload_sha256": "e01bed1a83d72547a980c8ebdb9c94912c2b982b09dbbc0ddb6cd7624d6b450c",
+      "stored_path": "ledger/handoffs/TASK-20261105-58f55b.yaml",
+      "stored_sha256": "e01bed1a83d72547a980c8ebdb9c94912c2b982b09dbbc0ddb6cd7624d6b450c"
+    },
+    "ledger/handoffs/TASK-20261105-85442c.yaml": {
+      "payload_bytes": 12833,
+      "payload_sha256": "ce25402966d1d760f15923c1885a048da23b2cd9fb70f171f2a3e70835aac7ce",
+      "stored_path": "ledger/handoffs/TASK-20261105-85442c.yaml",
+      "stored_sha256": "ce25402966d1d760f15923c1885a048da23b2cd9fb70f171f2a3e70835aac7ce"
+    },
+    "ledger/handoffs/TASK-20261105-ad13ba.yaml": {
+      "payload_bytes": 8040,
+      "payload_sha256": "3d84ea280084d56a91b68308e5b3bf17e75ccbeab35f04c62f601bd22bf66e23",
+      "stored_path": "ledger/handoffs/TASK-20261105-ad13ba.yaml",
+      "stored_sha256": "3d84ea280084d56a91b68308e5b3bf17e75ccbeab35f04c62f601bd22bf66e23"
+    },
+    "problems/README.md": {
+      "payload_bytes": 48683,
+      "payload_sha256": "cb16dc7f421938098eae060aa8fd087e5ea5d56228bd180c12ee9b22d1ffd716",
+      "stored_path": "problems/README.md",
+      "stored_sha256": "cb16dc7f421938098eae060aa8fd087e5ea5d56228bd180c12ee9b22d1ffd716"
+    },
+    "problems/classical-ecdlp-observer-interstage-idle-gap.md": {
+      "payload_bytes": 1521,
+      "payload_sha256": "e7a4302ea4f73f92e678ba43e5cb31cc203c70329ed9f25b73506b3dd100574d",
+      "stored_path": "problems/classical-ecdlp-observer-interstage-idle-gap.md",
+      "stored_sha256": "e7a4302ea4f73f92e678ba43e5cb31cc203c70329ed9f25b73506b3dd100574d"
+    }
+  },
+  "exact_four_baseline_diagnostics": [
+    "  - experiments/EXP-ECDLP-8dc19d/specification.yaml: variable_ledger.crosses_map is true; transfer_obligations is required",
+    "  - experiments/EXP-ECDLP-ef7323/specification.yaml: variable_ledger.crosses_map is true; transfer_obligations is required",
+    "  - experiments/EXP-ECDLP-f50061/specification.yaml: prediction_provenance must be a nonempty list",
+    "  - experiments/EXP-BINSTD-591d28/runs/RUN-BINSTD-f7ca97/manifest.yaml: expected top-level key 'run'"
+  ],
+  "finished_at": "2026-11-05T02:48:18.215945+00:00",
+  "generated_paths_skipped": [],
+  "literal_pcc_ledger_supplement": {
+    "Git_blob_oid": "d0f6503c6e5f26da522a8217e2f64d9d92cb1939",
+    "actual_R1": "83fe36634dd607070e8bf1d106600f9fc1db462a",
+    "bytes": 5584,
+    "full_text": "{\"at\":\"2026-11-04T16:37:12Z\",\"body\":{\"commit\":\"774611edb0a58861c2991372b81e49be0a0644b4\",\"contract\":\"docs/SABOTAGE_RESISTANCE.md\",\"repo\":\"crypto-autoresearcher\"},\"hash\":\"dd98ae4ea8d4851e1a71c728c48076afbbac7852c10a3bab1baa833730f9162e\",\"prev\":\"0000000000000000000000000000000000000000000000000000000000000000\",\"schema\":\"pcc.ledger-entry/v1\",\"seq\":0,\"type\":\"genesis\"}\n{\"at\":\"2026-11-04T20:46:11Z\",\"body\":{\"claim_id\":\"PCC-20261104-7a6a65\",\"claim_sha256\":\"39026a5d280f288facd27187fba49774a9a16de6e7f19bc05f7bbbee4d2f3a42\",\"path\":\"pcc/claims/PCC-20261104-7a6a65.json\"},\"hash\":\"a32c927d48ec67538dabfcaafff2f21b3b585b7562930a14eac533002bbb8899\",\"prev\":\"dd98ae4ea8d4851e1a71c728c48076afbbac7852c10a3bab1baa833730f9162e\",\"schema\":\"pcc.ledger-entry/v1\",\"seq\":1,\"type\":\"claim\"}\n{\"at\":\"2026-11-04T21:22:58Z\",\"body\":{\"claim_id\":\"PCC-20261104-e12587\",\"claim_sha256\":\"376920dd1dc98b154a105ea97429c45bbc58d89f186f73a6ebcd50380121d31d\",\"path\":\"pcc/claims/PCC-20261104-e12587.json\"},\"hash\":\"60f9d36295be40e965f1065a14c5d2c0b275c29a5125bd6a9ebcbe781550c262\",\"prev\":\"a32c927d48ec67538dabfcaafff2f21b3b585b7562930a14eac533002bbb8899\",\"schema\":\"pcc.ledger-entry/v1\",\"seq\":2,\"type\":\"claim\"}\n{\"at\":\"2026-11-04T21:51:41Z\",\"body\":{\"claim_id\":\"PCC-20261104-b87ced\",\"claim_sha256\":\"95cc30da9ca75e3e5c3e568df850f6b963b09b8ab0ccb49ce8a6a318145d5cb3\",\"path\":\"pcc/claims/PCC-20261104-b87ced.json\"},\"hash\":\"1308748dab6d61aa1ea78391027d20d045d013ea2a635ccc8f4ce35dc807b571\",\"prev\":\"60f9d36295be40e965f1065a14c5d2c0b275c29a5125bd6a9ebcbe781550c262\",\"schema\":\"pcc.ledger-entry/v1\",\"seq\":3,\"type\":\"claim\"}\n{\"at\":\"2026-11-04T22:02:20Z\",\"body\":{\"claim_id\":\"PCC-20261104-d7c489\",\"claim_sha256\":\"73e03c41f9e97003c27eead0e0fd2ad72d2e17f059b5c0dedd7157650c0435e7\",\"path\":\"pcc/claims/PCC-20261104-d7c489.json\"},\"hash\":\"dff1e39fc4a9ec85907de718866b49224ca4ee5aa3e69e02ffd6eb8caf313c61\",\"prev\":\"1308748dab6d61aa1ea78391027d20d045d013ea2a635ccc8f4ce35dc807b571\",\"schema\":\"pcc.ledger-entry/v1\",\"seq\":4,\"type\":\"claim\"}\n{\"at\":\"2026-11-04T22:18:09Z\",\"body\":{\"claim_id\":\"PCC-20261104-55bc45\",\"claim_sha256\":\"0a63c21d6d8110d1f20b61385874c1939b92c99c44b9f7453ffda5c3a31a93e4\",\"path\":\"pcc/claims/PCC-20261104-55bc45.json\"},\"hash\":\"6d8798286a8763f818901453431a2c0f317d901348d44a45f7dfc770c1e36984\",\"prev\":\"dff1e39fc4a9ec85907de718866b49224ca4ee5aa3e69e02ffd6eb8caf313c61\",\"schema\":\"pcc.ledger-entry/v1\",\"seq\":5,\"type\":\"claim\"}\n{\"at\":\"2026-11-04T23:08:59Z\",\"body\":{\"claim_id\":\"PCC-20261104-779b96\",\"claim_sha256\":\"4ec53b876036253044a87872382d75f9bef604b46d647c73b67a9e81b0d4928a\",\"path\":\"pcc/claims/PCC-20261104-779b96.json\"},\"hash\":\"adbd17f7573fde31368439289edbdafcd57c38746e28a1b92479e31ddad3ca9a\",\"prev\":\"6d8798286a8763f818901453431a2c0f317d901348d44a45f7dfc770c1e36984\",\"schema\":\"pcc.ledger-entry/v1\",\"seq\":6,\"type\":\"claim\"}\n{\"at\":\"2026-11-04T23:31:26Z\",\"body\":{\"claim_id\":\"PCC-20261104-4a2f17\",\"claim_sha256\":\"8a5153c8e82266bc996f1522a2fa4d30fab366382a68959855c8ea0f81ace549\",\"path\":\"pcc/claims/PCC-20261104-4a2f17.json\"},\"hash\":\"db728ea4989a2be05c4274a3596db65961d5b5bbe92e6bc63c8f5142e730fb0a\",\"prev\":\"adbd17f7573fde31368439289edbdafcd57c38746e28a1b92479e31ddad3ca9a\",\"schema\":\"pcc.ledger-entry/v1\",\"seq\":7,\"type\":\"claim\"}\n{\"at\":\"2026-11-04T23:58:23Z\",\"body\":{\"claim_id\":\"PCC-20261104-57070c\",\"claim_sha256\":\"a4470866282d6e4eb0b488c86fc864a37dee2fbf3b5a2f5784e31c8beed94b8c\",\"path\":\"pcc/claims/PCC-20261104-57070c.json\"},\"hash\":\"43c1d8fcbc3ae7438f011e030032cc0f1e1c5f8c9c435f356097634f2c868375\",\"prev\":\"db728ea4989a2be05c4274a3596db65961d5b5bbe92e6bc63c8f5142e730fb0a\",\"schema\":\"pcc.ledger-entry/v1\",\"seq\":8,\"type\":\"claim\"}\n{\"at\":\"2026-11-05T00:20:44Z\",\"body\":{\"claim_id\":\"PCC-20261105-0bce53\",\"claim_sha256\":\"e8782e196fac893ec725b52f6225c190eb60e5bf7c1375495ef03efbe23624e7\",\"path\":\"pcc/claims/PCC-20261105-0bce53.json\"},\"hash\":\"36b4d21ff4ae48233f99067e2bc5627fa8679a8683752d3942495e441a001e64\",\"prev\":\"43c1d8fcbc3ae7438f011e030032cc0f1e1c5f8c9c435f356097634f2c868375\",\"schema\":\"pcc.ledger-entry/v1\",\"seq\":9,\"type\":\"claim\"}\n{\"at\":\"2026-11-05T00:43:35Z\",\"body\":{\"claim_id\":\"PCC-20261105-7c8f32\",\"claim_sha256\":\"29caae2e7fd9b399cb3debd500d4fe2f5daaf2df89c936a6e5526906592f6c0f\",\"path\":\"pcc/claims/PCC-20261105-7c8f32.json\"},\"hash\":\"ab48e47ac22ca7e6decc3ca296a1705ae1a002b479db0934f4ca1a3b50f516ec\",\"prev\":\"36b4d21ff4ae48233f99067e2bc5627fa8679a8683752d3942495e441a001e64\",\"schema\":\"pcc.ledger-entry/v1\",\"seq\":10,\"type\":\"claim\"}\n{\"at\":\"2026-11-05T00:59:27Z\",\"body\":{\"claim_id\":\"PCC-20261105-9304bf\",\"claim_sha256\":\"44b8ceb1a8d9d38cd3ff24072907372a2d14b3702793eadaaede4e5fbd610b88\",\"path\":\"pcc/claims/PCC-20261105-9304bf.json\"},\"hash\":\"154acc1f6f9649e76e98f76b5fe584925f697b4a946532320dc6eb393b54e681\",\"prev\":\"ab48e47ac22ca7e6decc3ca296a1705ae1a002b479db0934f4ca1a3b50f516ec\",\"schema\":\"pcc.ledger-entry/v1\",\"seq\":11,\"type\":\"claim\"}\n{\"at\":\"2026-11-05T02:06:33Z\",\"body\":{\"claim_id\":\"PCC-20261105-9149bd\",\"claim_sha256\":\"4793196d648494c21d9f38519ac5f8d6f7d636841ba5e02591e940b8a6d91493\",\"path\":\"pcc/claims/PCC-20261105-9149bd.json\"},\"hash\":\"80e84042def1aed9044977866eccbb37b0038e930e689879c8cfd6ddbdd42cd2\",\"prev\":\"154acc1f6f9649e76e98f76b5fe584925f697b4a946532320dc6eb393b54e681\",\"schema\":\"pcc.ledger-entry/v1\",\"seq\":12,\"type\":\"claim\"}\n{\"at\":\"2026-11-05T02:44:20Z\",\"body\":{\"claim_id\":\"PCC-20261105-3fff14\",\"claim_sha256\":\"94d7ea612133aa7bdf79f5ab9bdcaddfd9cade0b90417fc2c2265b4ec5d80b7b\",\"path\":\"pcc/claims/PCC-20261105-3fff14.json\"},\"hash\":\"431f947022068d9e0bfe446c7e6156741b50238d0414c76f20971c533addb866\",\"prev\":\"80e84042def1aed9044977866eccbb37b0038e930e689879c8cfd6ddbdd42cd2\",\"schema\":\"pcc.ledger-entry/v1\",\"seq\":13,\"type\":\"claim\"}\n",
+    "literal_owner_in_this_queue": "TASK-20261105-51a597",
+    "previous_prefix_exact": true,
+    "previous_terminal_snapshot_prefix_bytes": 5182,
+    "scope": "Supplement only, no duplicate literal path ownership or signed verification.",
+    "sha256": "3724f577b0e3fd1f05c6fe68b468818aa48df3e7cd44db92f6e383aaa64ee2d8"
+  },
+  "method": "Actual immutable Git blobs and hydrated payload size/SHA. Receipt self-digest is bound externally after its actual commit. No scientific execution.",
+  "producer_pcc_supplement": {
+    "Git_blob_oid": "f603c034a48555180244f6f32d3cb05c837a28a6",
+    "file_sha256": "88d4f5d57cc3dc4da509805974a4115279d6a3387beecd512d6d05a2b1ca69f7",
+    "future_unique_archive_owner": "TASK-20261105-ad13ba",
+    "native_standing": {
+      "claim_id": "PCC-20261105-3fff14",
+      "claim_sha256": "94d7ea612133aa7bdf79f5ab9bdcaddfd9cade0b90417fc2c2265b4ec5d80b7b",
+      "standing": "unverified",
+      "verdicts": []
+    },
+    "native_standing_returncode": 2,
+    "path": "pcc/claims/PCC-20261105-3fff14.json"
+  },
+  "publication_receipts": [],
+  "receipt_preparation_correction": {
+    "actual_standing_returncode": 2,
+    "native_standing": {
+      "claim_id": "PCC-20261105-3fff14",
+      "claim_sha256": "94d7ea612133aa7bdf79f5ab9bdcaddfd9cade0b90417fc2c2265b4ec5d80b7b",
+      "standing": "unverified",
+      "verdicts": []
+    },
+    "previous_preparation_failed_before_any_receipt_write": true,
+    "reason": "Root expected zero status for unverified PCC standing. Native standing intentionally returns2 for unverified, actual JSON remains unverified. Distinct from a verification success; no gate bypass.",
+    "recorded_at": "2026-11-05T02:56:03.717204+00:00"
+  },
+  "schema": "exact-density.root-snapshot-receipt/v1",
+  "source_snapshot_commit": "83fe36634dd607070e8bf1d106600f9fc1db462a",
+  "source_task_ids": [
+    "TASK-20261105-58f55b"
+  ],
+  "started_at": "2026-11-05T02:48:17.973304+00:00",
+  "task_id": "TASK-20261105-38eecf"
+}

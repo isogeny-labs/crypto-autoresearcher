@@ -1,0 +1,55 @@
+idea:
+  id: IDEA-20261109-47e218
+  question_id: RQ-ISO-68bbac
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  class: mechanism
+  novelty_status: unverified
+  title: Does the integer admissible-divisor count k(d) predict the number of dimension-2 Kani gluings
+    of degree d?
+  claim: 'Dimension-2 ideal-to-isogeny translation (SQIsign2D-type signing, Clapoti-type class-group action)
+    needs an auxiliary degree d with d_1 d_2 = d, gcd(d_1, d_2) = 1 and d + N = 2^e so that E x E'' glues
+    along a (2^e, 2^e)-isogeny. H-SSIQ-dfee7e counts admissible divisors of a B-smooth d in the split
+    window [ceil(d/X), X] as an integer-only proxy. Proposal: test whether k(d) tracks the actual count
+    of realizable gluings (which also needs the quaternion norm equation to be solvable). SIDH/SIKE scope
+    note: attacker-side use requires published torsion images, which SQIsign and CSIDH do not expose;
+    this is an honest-party cost model. Cleared against H-SSIQ-dfee7e, H-ALISO-014, H-ALISO-017; no Lean
+    lemma constrains it.'
+  mechanism: At p ~ 2^30 with a known-End E_0, enumerate B-smooth d in the window, compute k(d), and for
+    each d attempt to realize all coprime splittings as actual gluings (kernel of order 2^(2e) on E_0
+    x E', verified by evaluating the (2,2)-chain). Record realizable/k(d) and the norm equation failure
+    rate.
+  security_delta: None; a mismatch > 10 percent means the integer proxy misstates signing cost and auxiliary
+    search cost in the parameter sheets that cite it.
+  kill_test: If realizable count equals k(d) within 10 percent across the window, the proxy is validated
+    and the record closes as supported; otherwise refile with the corrected predictor.
+  cleared:
+    checked:
+    - H-SSIQ-dfee7e
+    - H-ALISO-014
+    - H-ALISO-017
+    disproven: none in the brief
+    lean: 'no Lean coverage; would need Kani''s lemma in dimension 2: for coprime d_1, d_2 with d_1 d_2
+      + N = 2^e the Kani matrix has kernel of order 2^(2e) and splits the product'
+    exp: none; nearest surface is aburan28/crypto-autoresearcher autolab package p1243_auxiliary_lattice_kani
+  prior_art:
+    frontier_map: not_applicable
+    frontier_map_reason: no frontier map in the brief
+    searched:
+      corpus_grep:
+      - H-SSIQ-dfee7e
+      - H-ALISO-014
+      - H-ALISO-015
+      - H-ALISO-016
+      - H-ALISO-017
+    none_found_after:
+    - 'BRIEF grep: ''admissible divisor'' outside H-SSIQ-dfee7e'
+    - 'BRIEF grep: ''gluing'' OR ''(2,2)'' OR ''dimension 2'''
+    - 'BRIEF grep: ''torsion image'' (SIDH scope check)'
+    not_applicable_reason: This campaign is isogeny/formula engineering, not an ECDLP-mechanism claim;
+      the ECDLP frontier map does not cover the relevant literature.
+  marks:
+    proved: Kani's lemma as a statement (not in CryptoLean per brief)
+    heuristic: that integer splitting count approximates realizable gluings
+    analogy: none

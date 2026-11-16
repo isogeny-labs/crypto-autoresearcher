@@ -1,0 +1,139 @@
+idea:
+  id: IDEA-20261109-f5435b
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: Exact Fourier spectrum and decomposition-count histograms of the small-x factor base below sqrt(p),
+    from one exhaustive log table
+  class: relation_collection
+  claim: 'Toy instrument, predictions fixed before any run. For prime-order curves y^2 = x^3 + b over
+    F_p with p = 1 mod 3 and p in [2^16, 2^26], let F_beta = {P : x(P) < p^beta}, beta in {1/4, 1/3, 1/2},
+    let f be its indicator on Z/N through one exhaustive table k -> kP, and hat f its length-N transform.
+    Null predictions: (i) C = max over nonzero xi of |hat f(xi)| / sqrt(|F|) is at most sqrt(2 ln N) and
+    its fitted exponent alpha in C ~ p^alpha has |alpha| <= 0.02; (ii) the additive energy E(F) = (1/N)
+    sum |hat f|^4 is within 3 sigma of a random negation-closed set of equal size; (iii) the exact counts
+    N_m(T) = (f^{*m})(-T), hence p_exist(m, beta) for m = 2..6, match the control within binomial error.
+    A violation of (i) or (ii) sustained at three consecutive primes would be the first measured relation
+    surplus of a prime-field small-x base; it is predicted not to occur. No exponent change is claimed.'
+  mechanism: 'The mean decomposition count of IDEA-20260805-a25f11 is forced by counting; the second moment
+    is not, and below sqrt(p) the Weil-type bounds that make small-x sets equidistributed are vacuous.
+    One table of all N multiples of P (instrumentation on a toy group, charged as N steps, never part
+    of an attack) turns F into a function on Z/N. One transform then yields every statistic the relation
+    lane has estimated by sampling: C(p) of IDEA-20260805-c4f675, the energy, and N_m(T) for all targets
+    at once by inverse transform of hat f^m. A random negation-closed control of equal size supplies the
+    null; a log-interval positive control (|k| <= |F|/2, C about sqrt(|F|)) proves the instrument sees
+    structure.'
+  novelty_status: adaptation
+  citations:
+  - ref: KR-IC-5931ee
+    provenance: internal
+    claim: Small-x index calculus over F_p is no better than generic under stated statistical assumptions;
+      this record measures the second-moment content of those assumptions.
+    verified_by: REPO BRIEF 2026-11-09 section 3 quotation only; filer must open knowledge/frontiers/ecdlp/index-calculus/KR-IC-5931ee.yaml
+  - ref: IDEA-20260805-c4f675
+    provenance: internal
+    claim: Reports C(p) growing like p^alpha with four incompatible alpha values; this record computes
+      C exactly.
+    verified_by: REPO BRIEF 2026-11-09 section 2 index excerpt; filer must open ledger/proposals/IDEA-20260805-c4f675.yaml
+      for the four values
+  assumptions:
+  - Primes come from crypto/docs/ECDLP_CALIBRATION_PRIMES.md with prime N and p = 1 mod 3; a composite
+    N is an invalid run.
+  - The length-N transform is exact (pocketfft or Bluestein), never subsampled.
+  predictions:
+  - metric: absolute fitted exponent alpha of C versus p at fixed beta
+    direction: lower
+    minimum_effect: at most 0.02 on six primes
+  - metric: deviation of E(F) from the control mean in control sigma units
+    direction: lower
+    minimum_effect: at most 3 at every beta and prime
+  - metric: C of the log-interval positive control divided by sqrt(2 ln N)
+    direction: higher
+    minimum_effect: at least 3 at every prime
+  minimal_test:
+    design: Six primes in [2^16, 2^26], three beta values, three bases (small-x; its mu_6 closure on a
+      = 0; small-y). Build the log table, transform, record C, E(F), the |hat f|^2 histogram and p_exist(m,
+      beta) for m = 2..6. Five control seeds per cell. Fit alpha by least squares on log C versus log
+      p.
+    controls:
+    - Random negation-closed subset of Z/N of equal size, five seeds.
+    - Log-interval positive control of equal size.
+    - A second family with a != 0 to separate j = 0 effects.
+    required_metrics:
+    - size of F
+    - C and alpha with 95 percent interval
+    - E(F) with control mean and sigma
+    - p_exist(m, beta) for m 2 to 6, F and control
+    - maximum over T of N_m(T), F and control
+    - wall time and peak memory
+  falsification_conditions:
+  - Positive control below 3 sqrt(2 ln N) at any prime means the instrument is broken; the run is invalid.
+  - Random control above sqrt(2 ln N) in more than 5 percent of seeds means the null model is wrong and
+    must be refit first.
+  - 'Abandonment rule: if all three null predictions hold at every prime, beta and base, the lane closes
+    with a KR row and no more compute goes to prime-field small-x relation surplus.'
+  - 'Escalation rule: a violation of (i) or (ii) at three consecutive primes is filed only after an independent
+    reimplementation reproduces it.'
+  confounders:
+  - Degenerate tuples (P plus minus P) inflate N_m(T) equally for F and control; report them separately.
+  - The generator only permutes Z/N; verify invariance with a second generator on one prime.
+  interpretation_limits:
+  - Toy p <= 2^26; extrapolation to 2^256 is a fit in beta and p, not a theorem.
+  - A null closes the surplus question, not the solver questions of the slope and lattice records.
+  heuristic_assumptions:
+  - id: H1
+    statement: Statistics of F_beta at toy p follow the same beta-scaling as at cryptographic p.
+    rigorous_support: None below sqrt(p); Kohel-Shparlinski-type bounds have error O(sqrt(p) log p), vacuous
+      for |F| < sqrt(p).
+    validation_plan: Six primes spanning ten bits; report the fitted slope and interval; refuse extrapolation
+      if the interval exceeds 0.1.
+  target_complexity:
+    time_exponent: No algorithm proposed. A surplus p^sigma would lower collection under the enumeration
+      wall to N^{1 - sigma}; beating rho needs sigma > 1/2; predicted sigma = 0. Delta 0.
+    memory_exponent: O(N) instrumentation on toy groups; no attack memory claim.
+    best_known: Pollard rho, Theta(p^{1/2}) group operations (KR-RHO-13bf67, KR-IC-9e610d).
+    hidden_overhead: None claimed.
+    tradeoff_note: Exhaustive toy enumeration is instrumentation and is never charged to an attack.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: high
+  dominated_by: KR-IC-5931ee dominates any exponent reading. No row or record states the second moment
+    or an exact p_exist ladder.
+  sota_delta: 'Exponent delta 0. Measured delta: exact C, energy and p_exist for m 2 to 6 at six primes,
+    replacing sampled estimates and resolving the four alpha values of IDEA-20260805-c4f675.'
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/index-calculus
+    rows_checked:
+    - KR-IC-5931ee
+    - KR-IC-5a43e5
+    - KR-IC-73db3f
+    - KR-IC-9e610d
+    - KR-RHO-13bf67
+    - KR-RHO-46c2c6
+    nearest:
+    - ref: KR-IC-5931ee
+      provenance: internal
+      relation: adjacent
+      delta: The row closes small-x index calculus under statistical assumptions; this record measures
+        the second moment those assumptions presuppose, with a random control.
+    - ref: KR-IC-73db3f
+      provenance: internal
+      relation: orthogonal
+      delta: Subspace factor bases exist only in binary fields; the small-x set over F_p has no such structure,
+        which is the point of the measurement.
+    searched:
+      corpus_grep:
+      - brief section 2 for exponential sum, C(p), pseudo, Fourier, energy
+      - brief section 2 for mu(B,m), relation density, decomposition probability
+      - brief section 3 index-calculus rows for prime field factor base
+      web: []
+      blocked: []
+    lead: LEAD-EXO-quadratic-phase-small-x-leakage
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: Six primes in [2^16, 2^26], three beta values, three bases (small-x; its mu_6
+        closure on a = 0; small-y). Build the log table, transform, record C, E(F), the |hat f|^2 histogram
+        and p_exist(m, beta) for m = 2..6. Five control seeds per cell. Fit alpha by least squares on
+        log C versus log p.'

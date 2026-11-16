@@ -1,0 +1,128 @@
+# DEC-20261112-4c8b11 - reject the draft proposal EXP-DREG-afca27 as written.
+coordinator_decision:
+  id: DEC-20261112-4c8b11
+  id_provenance: >-
+    Allocated with tools/allocate_id.py --next coordinator_decision --date
+    20261112 and checked with --check (OK: well-formed and free across the
+    union) before this file was written. The Coordinator agent had no shell and
+    did not allocate it.
+  recorded_at: '2026-11-12'
+  decided_at: '2026-11-11'
+  decided_by: coordinator
+  archived_by: null
+  recording_note: >-
+    The decision and its reasons are the report of a Coordinator subagent run
+    by a Claude producer session (2026-11-11). That session transcribed them
+    here at the owner's instruction and ran n1_class_facts.py to check the
+    numerical claims. The agent had no shell: its figures are hand arithmetic.
+    This record is a transcription of a subagent report, not an independent
+    review, and no human Coordinator has reviewed it. [pcc:unverified]
+  context: >-
+    EXP-DREG-dd668d returned degenerate-unit-ideal (RUN-DREG-826fb8): both
+    chained ideals have no common zero over F_2^8. A producer session drafted
+    EXP-DREG-afca27 (crypto-autoresearcher PR #3267) to repeat the question with
+    the target carried across the isogeny edge by R_X' = R_X + s/R_X. It
+    computed no rank profile for any instance in the draft.
+  decision: reject
+  decision_label: >-
+    Reject EXP-DREG-afca27 as drafted. It is not approved, not runnable, and
+    should not be revised into a run. Hypothesis statuses are unchanged.
+  target_ids:
+    - EXP-DREG-afca27
+  rationale:
+    - >-
+      Instance B (a6 = 1, R_X = 1 against R_X' = 0) is not a comparison of two
+      curves. Over F_4 with a1 = 1, a2 only moves a curve within a twist pair,
+      so the isomorphism classes are (a6, Tr a2). The edge keeps a6'' = a6 = 1
+      and the twist class, so the codomain is F_4-isomorphic to the domain.
+      Because S_3 depends only on (a6, R_X), Instance B compares one curve with
+      two targets; the isogeny plays no role beyond fixing R_X' = 0. Checked by
+      experiments/EXP-DREG-afca27/n1_class_facts.py: #E(F_4) is 8 or 2 for
+      a6 = 1 (traces -3, +3), against 4 or 6 for a6 in {z, z+1}, so the a6 = 1
+      class is outside the dd668d base class (#E = 4, trace +1).
+    - >-
+      With R_X' = 0 the third equation reads (u2 x4)^2 + 1 = 0 and forces
+      x4 = u2 = 1 (checked: one zero, at (x4, u2) = (1, 1)). A rank-profile gap
+      is then to be expected for reasons unrelated to any isogeny, and the draft
+      would have labelled it filtration-gap and called it a falsification of
+      H-DREG-1d0e5d, whose test_boundary is the single dd668d edge. The agent
+      did not compute r(d); this is an expectation, not a result.
+    - >-
+      Instance A (a6 = z against a6 = z+1) and the dd668d pair itself are
+      Galois-conjugate under z <-> z+1, which is additive on the bits and fixes
+      V = {0, 1} and R_X = 1. The producer's check (n1_class_facts.py, 4096
+      parameter and assignment combinations, 0 mismatches) shows the two
+      systems are linearly equivalent, so equal profiles were predicted by
+      symmetry alone. Rung n=1 over F_4 has no informative isogeny instance of
+      this chained system.
+    - >-
+      The transport is incomplete (the factor base V = {0, 1} is not carried
+      across the edge), and the draft redefines LADDER-W-v1 (which says R_X is
+      the element 1 and that a change is an amendment of that file) instead of
+      amending it. Reusing H-DREG-1d0e5d breaks its test_boundary. The draft
+      lists no edge certificate for the new a6 = 1 edge. [pcc:unverified]
+      (agent's reading; not re-derived)
+    - >-
+      The negative-control spread is undefined (no statistic, and the label is
+      assigned before it is applied), CONJUGATE-PAIR duplicates GL-8 in
+      function, and the dd668d unit-ideal gate ("in degree <= 1") did not match
+      the run, where 1 first entered at d = 4. [pcc:unverified] (agent's
+      reading; not re-derived)
+    - >-
+      One informative instance is not worth an experiment, and the single
+      candidate is not informative (first rationale item).
+  conditional_flag:
+    statement: >-
+      EXP-DREG-ab3fee (rung n=2) may be symmetry-degenerate in the same way:
+      if it keeps V = {0, 1}, R_X = 1 and F_4 coefficients, the F_16 Frobenius
+      acts as an F_2-linear map on the bits that fixes V and R_X and swaps the
+      two base-class vertices, which would make their profiles equal at both
+      rungs and its "range 0" outcome trivial.
+    status: >-
+      Unchecked. The ab3fee specification is vault-encrypted on main (starts
+      with the VLT1 magic) and was not read by the agent or by the producer.
+      The argument is the agent's, from ledger records H-DREG-b6bfd1 and
+      DEC-20260922-e53e23. [pcc:unverified]
+  evidence_refs: []
+  limitations:
+    - The agent had no shell and computed nothing beyond hand arithmetic; the numerical claims above were checked by the producer with n1_class_facts.py, a stdlib script that computes no rank profile.
+    - No rank profile was computed for Instance A or B. Nothing here is a statement about the value of r(d).
+    - EXP-DREG-ab3fee was not read (vault-encrypted), so overlap with it is unchecked.
+    - research-kb and the lead atlas were not queried; the agent read the lead YAML directly. The lead LEAD-ICE-curve-presentation-invariance still lists dd668d as the frozen next step (last_reviewed 2026-10-29) and is stale.
+    - The agent found no Coordinator decision citing RUN-DREG-826fb8 in its checkout; that absence was not checked a second time, and the checkout is sparse and partly vault-encrypted.
+    - Toy tier only (F_4, 8 Boolean variables, D_max 4); no ECDLP statement.
+  next_actions:
+    - >-
+      Executor, no experiment: check #E(F_4) by (a6, a2-class), that the a6 = 1
+      edge codomain is isomorphic to its domain, and the conjugation equality of
+      the system pairs. n1_class_facts.py already does this on the producer's
+      side; a second implementation would make it independent.
+    - >-
+      Someone with the vault key reads EXP-DREG-ab3fee and records the overlap
+      comparison. Before any ab3fee run, require an outcome-independent F_16
+      zero-count feasibility check and an explicit statement of how the
+      conjugation symmetry is broken, or a class with at least three
+      non-conjugate vertices.
+    - >-
+      Record RUN-DREG-826fb8 (degenerate-unit-ideal) as inconclusive with
+      knowledge_promotion not_warranted, and update the lead
+      LEAD-ICE-curve-presentation-invariance. Not done here.
+    - >-
+      If a transport variant is still wanted: a new hypothesis and a versioned
+      protocol_amendment (or a new ladder id) fixing R_X and factor-base
+      transport; an edge between non-conjugate curves; a defined negative-control
+      statistic; an edge certificate for every instance; a stricter unit-ideal
+      gate.
+    - >-
+      No runner change is warranted for this proposal. tools/exp_dreg_dd668d.py
+      (PR #3106) hard-codes R_X = 1; do not extend it for an unapproved
+      protocol.
+  hypothesis_status: >-
+    No change. H-DREG-1d0e5d stays as it is: the dd668d test was degenerate, so
+    it is neither supported nor rejected.
+  knowledge_promotion:
+    promoted: []
+    not_warranted: No evidence and no replicated result; a rejection of a draft proposal and a finite hand derivation create no finding.
+  user_authorization: >-
+    Owner instruction in the authoring session, 2026-11-12: write the rejection
+    as a decision record and keep PR #3267 open.
