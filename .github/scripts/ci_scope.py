@@ -112,6 +112,27 @@ def resolve_base(event: dict, event_name: str) -> tuple[str | None, bool]:
         # potentially stale pull_request.base.sha. Compare exactly that merge.
         parents = git("rev-list", "--parents", "-n", "1", "HEAD").split()
         base = parents[1] if len(parents) > 2 else event["pull_request"]["base"]["sha"]
+    elif event_name == "pull_request_target":
+        # This trigger is limited to merged PRs on main. GitHub checks out the
+        # base-branch commit, whose first parent is the pre-merge main tip.
+        if event.get("action") != "closed" or not event["pull_request"].get("merged"):
+            return None, True
+        parents = git("rev-list", "--parents", "-n", "1", "HEAD").split()
+        if len(parents) < 2:
+            raise ValueError("merged main commit has no parent")
+        # HEAD must be THIS PR's merge commit. With two merges before the
+        # checkout, HEAD^1..HEAD would be another PR's diff attributed to this
+        # one (SHF-20261106-a114e7, CIX-3).
+        pull = event["pull_request"]
+        merge_sha = pull.get("merge_commit_sha")
+        head_sha = (pull.get("head") or {}).get("sha")
+        if merge_sha and parents[0] != merge_sha:
+            raise ValueError(f"checked-out commit {parents[0]} is not this PR's merge commit "
+                             f"{merge_sha}; refusing to attribute another diff to it")
+        if len(parents) > 2 and head_sha and parents[2] != head_sha:
+            raise ValueError(f"checked-out merge commit's second parent {parents[2]} is not "
+                             f"this PR's head {head_sha}")
+        base = parents[1]
     elif event_name == "merge_group":
         base = event["merge_group"]["base_sha"]
     elif event_name == "push":

@@ -1,3 +1,16 @@
+# Research vault: tracked files are AES-256-SIV ciphertext in the object store.
+# Bootstrap paths below stay plaintext so GitHub can parse workflows and Git can
+# select the filter. Specific LFS rules later in this file override filter=vault.
+* filter=vault -text -diff
+/.gitattributes -filter -text
+**/.gitattributes -filter -text
+/.codex/environments/** -filter -text
+/.gitignore -filter -text
+/.github/** -filter -text
+/.artifacts/** -filter -text
+**/.artifacts.json -filter -text
+/tools/vault/** -filter -text
+/VAULT.md -filter -text
 experiments/EXP-ECDLP-56ee42/implementation/runs/stage-cache/rung_T25_{x,y}.npy filter=lfs diff=lfs merge=lfs -text
 experiments/EXP-ECDLP-56ee42/implementation/runs/stage-cache/rung_T27_{x,y}.npy filter=lfs diff=lfs merge=lfs -text
 experiments/EXP-ECRANK-8156f9/runs/R2-primary/coset-totals.json filter=lfs diff=lfs merge=lfs -text
@@ -27,12 +40,23 @@ research/icperf_binary_all_channels_xcnf_20261017/*.xcnf.gz -text -diff
 docs/reports/2026-10-17-icperf-next-experiments.pdf -text -diff
 docs/reports/2026-10-17-icperf-k11-common-target-inputs.pdf -text -diff
 experiments/EXP-ICPERF-018b0c/inputs/*.xcnf.gz -text -diff
+docs/reports/2026-10-18-koblitz-orbit-base.pdf -text -diff
+docs/reports/2026-10-18-koblitz-six-orbit.pdf -text -diff
+docs/reports/2026-10-18-koblitz-high-arity-inputs.pdf -text -diff
+research/icperf_koblitz_high_arity_20261018/sage_replay_attempt_01.partial -text -diff
 research/prym_relation_followup_20261019/report.pdf -text -diff
 research/prym_experiment_design_20261019/report.pdf -text -diff
 research/nist_seed_twist_embedding_20261023/report.pdf -text -diff
 research/nist_seed_1997_draft_archive_20261023/report.pdf -text -diff
+coordination/goals/GOAL-PFDR-fd09e0/batches/BATCH-3cfef2/tasks/TASK-20261025-b7e32e/report.pdf -text -diff
 research/p256_factor_base_parallel_20261025/**/*.pdf -text -diff
 research/p256_factor_base_parallel_20261025/**/*.gz -text -diff
 research/p256_factor_base_parallel_20261026/**/*.pdf -text -diff
 research/p256_factor_base_parallel_20261026/**/*.gz -text -diff
+docs/benchmarks/progress/*.pdf -text -diff
 research/sheriff/SHF-20261024-46b7da/report.pdf -text -diff
+docs/reports/2026-10-26-ledger-parse-audit/report.pdf -text -diff
+docs/reports/ecdlp-lead-atlas-20261024/report.pdf -text -diff
+docs/reports/2026-10-31-k163-coprime-transfer-lean/report.pdf -text -diff
+
+experiments/EXP-PFIVE-e26798/reports/review-readiness-20261107-f23e4c/report.pdf -text -diff

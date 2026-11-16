@@ -1,4 +1,5 @@
 name: kb
+# artifact-store: no-pull (the frozen corpus checks do not read stored report bytes)
 
 # The retrieval layer, kept separate from validate.yml on purpose.
 #
@@ -18,6 +19,7 @@ name: kb
 
 on:
   pull_request:
+    branches: [main]
     types: [opened, synchronize, reopened, ready_for_review]
     paths:
       - 'kb/**'
@@ -26,8 +28,9 @@ on:
       - 'docs/**'
       - '.mcp.json'
       - '.github/workflows/kb.yml'
-  push:
+  pull_request_target:
     branches: [main]
+    types: [closed]
     paths:
       - 'kb/**'
       - 'knowledge/**'
@@ -36,15 +39,15 @@ on:
       - '.mcp.json'
       - '.github/workflows/kb.yml'
 
-# One run per pull request (or per branch on push): a newer push cancels the run it
-# supersedes, so the shared runner pool is not spent on commits nobody will look at.
+# Supersede obsolete open-PR checks, and retain a distinct check for each merge.
 concurrency:
-  group: kb-${{ github.event.pull_request.number || github.ref }}
-  cancel-in-progress: true
+  group: kb-${{ github.event.action == 'closed' && github.sha || github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   kb:
-    if: ${{ !github.event.pull_request.draft }}
+    name: "${{ github.event_name == 'pull_request_target' && 'post-merge / ' || '' }}kb"
+    if: ${{ (github.event.action != 'closed' || github.event.pull_request.merged) && !github.event.pull_request.draft }}
     timeout-minutes: 20
     runs-on: ubuntu-latest
     steps:
@@ -52,7 +55,34 @@ jobs:
         with:
           fetch-depth: 0        # so the base ref is resolvable for the diff below
           filter: blob:none
-
+      - name: Unlock research vault (AES-256)
+        shell: bash
+        env:
+          KEY: ${{ secrets.KEY }}
+          PYTHONDONTWRITEBYTECODE: "1"
+        run: |
+          set -euo pipefail
+          set +x
+          umask 077
+          if [ -z "${KEY:-}" ]; then
+            echo "vault: KEY is unavailable; refusing to run on ciphertext" >&2
+            exit 1
+          fi
+          tool="$RUNNER_TEMP/cavault.py"
+          git show "HEAD:tools/vault/vaultctl.py" > "$tool"
+          py=python3
+          if ! "$py" -c 'from cryptography.hazmat.primitives.ciphers.aead import AESSIV; c=AESSIV(bytes(64)); assert c.decrypt(c.encrypt(b"", None), None) == b""' >/dev/null 2>&1; then
+            venv="$RUNNER_TEMP/cavault-venv"
+            if "$py" -m venv "$venv" >/dev/null 2>&1; then
+              py="$venv/bin/python"
+              "$py" -m pip install --quiet --disable-pip-version-check 'cryptography>=46'
+            else
+              "$py" -m pip install --quiet --disable-pip-version-check --break-system-packages 'cryptography>=46'
+            fi
+          fi
+          "$py" "$tool" install-key --quiet
+          "$py" "$tool" setup --quiet --script "$tool"
+          "$py" "$tool" unlock --quiet
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
@@ -90,6 +120,8 @@ jobs:
         run: |
           if [ "${{ github.event_name }}" = "pull_request" ]; then
             base="origin/${{ github.base_ref }}"
+          elif [ "${{ github.event_name }}" = "pull_request_target" ]; then
+            base=$(git rev-parse HEAD^)
           else
             base="${{ github.event.before }}"
           fi

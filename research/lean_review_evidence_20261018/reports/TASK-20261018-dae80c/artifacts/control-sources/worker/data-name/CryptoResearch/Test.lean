@@ -1,3 +1,1 @@
-namespace Control
-def good : Nat := 3
-end Control
+VLT1ºÞôšó·}%µŠDsAEÈÕ<óûØvªbè¥ã¥8ŠÕÀµÃN‹ä&0ÅwlÒÌ«áu9²‡3£ äTU

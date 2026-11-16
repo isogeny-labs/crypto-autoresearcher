@@ -1,21 +1,24 @@
 name: progress-fidelity
 on:
   pull_request:
-  push:
     branches: [main]
+    types: [opened, synchronize, reopened, ready_for_review]
+  pull_request_target:
+    branches: [main]
+    types: [closed]
   merge_group:
   workflow_dispatch:
-# The pull_request event is the required check. Pushing a PR branch also fired
-# this workflow through `push` (every branch, no filter), so each PR push ran it
-# twice on a full checkout, and nothing cancelled a superseded run. Run on
-# pull_request and on main only, one run per ref, newest PR revision wins.
+# Open PR revisions provide the required check. A merged PR runs once against
+# its main commit; direct bot commits to main do not start this gate.
 concurrency:
-  group: progress-fidelity-${{ github.event.pull_request.number || github.ref }}
-  cancel-in-progress: ${{ github.event_name == 'pull_request' || github.event_name == 'merge_group' }}
+  group: progress-fidelity-${{ github.event.action == 'closed' && github.sha || github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ (github.event_name == 'pull_request' && github.event.action != 'closed') || github.event_name == 'merge_group' }}
 permissions:
   contents: read
 jobs:
   progress-fidelity:
+    name: "${{ github.event_name == 'pull_request_target' && 'post-merge / ' || '' }}progress-fidelity"
+    if: ${{ github.event.action != 'closed' || github.event.pull_request.merged }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -30,7 +33,38 @@ jobs:
             /tests/test_progress_*.py
             /tools/progress_fidelity.py
             /tools/progress_dashboard.py
+            /tools/progress_metrics.py
+            /tools/vault/
+            /tests/__init__.py
           sparse-checkout-cone-mode: false
+      - name: Unlock research vault (AES-256)
+        shell: bash
+        env:
+          KEY: ${{ secrets.KEY }}
+          PYTHONDONTWRITEBYTECODE: "1"
+        run: |
+          set -euo pipefail
+          set +x
+          umask 077
+          if [ -z "${KEY:-}" ]; then
+            echo "vault: KEY is unavailable; refusing to run on ciphertext" >&2
+            exit 1
+          fi
+          tool="$RUNNER_TEMP/cavault.py"
+          git show "HEAD:tools/vault/vaultctl.py" > "$tool"
+          py=python3
+          if ! "$py" -c 'from cryptography.hazmat.primitives.ciphers.aead import AESSIV; c=AESSIV(bytes(64)); assert c.decrypt(c.encrypt(b"", None), None) == b""' >/dev/null 2>&1; then
+            venv="$RUNNER_TEMP/cavault-venv"
+            if "$py" -m venv "$venv" >/dev/null 2>&1; then
+              py="$venv/bin/python"
+              "$py" -m pip install --quiet --disable-pip-version-check 'cryptography>=46'
+            else
+              "$py" -m pip install --quiet --disable-pip-version-check --break-system-packages 'cryptography>=46'
+            fi
+          fi
+          "$py" "$tool" install-key --quiet
+          "$py" "$tool" setup --quiet --script "$tool"
+          "$py" "$tool" unlock --quiet
       - id: scope
         run: python3 .github/scripts/ci_scope.py
       - name: Require a complete CI scope decision
@@ -49,7 +83,7 @@ jobs:
           python-version: '3.11'
       - name: Unit tests
         if: steps.scope.outputs.progress == 'true'
-        run: python3 -m unittest discover -s tests -p 'test_progress_*.py' -v
+        run: PYTHONPATH=. python3 -m unittest discover -s tests -p 'test_progress_*.py' -v
       - name: Validate all submitted claims
         if: steps.scope.outputs.progress == 'true'
         run: python3 -m tools.progress_fidelity portfolio claims/
