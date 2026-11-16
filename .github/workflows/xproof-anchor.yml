@@ -1,0 +1,94 @@
+# xproof lab identity: anchors one digest into the public, append-only, hash-chained lab chain
+# (branch xproof-lab-anchors) and signs the chain line keylessly with this workflow's identity.
+#
+#   identity  https://github.com/isogeny-labs/crypto-autoresearcher/.github/workflows/xproof-anchor.yml@refs/heads/main
+#   issuer    https://token.actions.githubusercontent.com
+#
+# Spec: docs/experiment-proofs.md section 7. Dispatch with:
+#   gh workflow run xproof-anchor.yml --ref main -f digest=<64 hex> -f kind=protocol -f experiment_id=<id>
+#
+# SECURITY RULES for editing this file:
+#   - Inputs are passed to the script ONLY through `env:` and validated inside Python. Never write an
+#     expression such as ${{ inputs.* }} inside a `run:` body (script injection).
+#   - Pin third-party actions to full commit SHAs, with the version in a comment.
+#   - Changing this file changes what the lab identity vouches for. The change is visible in main's history.
+name: xproof-anchor
+
+on:
+  workflow_dispatch:
+    inputs:
+      digest:
+        description: "SHA-256 digest to anchor (64 lowercase hex)"
+        required: true
+        type: string
+      kind:
+        description: "What the digest is"
+        required: true
+        type: choice
+        options:
+          - protocol
+          - result
+          - capability
+          - abandon
+      experiment_id:
+        description: "Experiment id, [A-Za-z0-9._-]{1,64}"
+        required: true
+        type: string
+      refs:
+        description: "Optional, comma-separated chain seqs or Rekor uuids (abandon: the protocol seqs; protocol: the seqs it supersedes)"
+        required: false
+        default: ""
+        type: string
+
+permissions:
+  contents: write
+  id-token: write
+
+concurrency:
+  group: xproof-lab-anchors
+  cancel-in-progress: false
+
+jobs:
+  anchor:
+    # The identity is only valid for main. lab_anchor.py repeats this check on GITHUB_REF.
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: true   # the lab-branch worktree below pushes with this credential
+
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: "3.12"
+
+      - name: Check out the lab branch (create it as an orphan when absent)
+        run: |
+          set -euo pipefail
+          lab="$RUNNER_TEMP/xproof-lab"
+          echo "LAB_DIR=$lab" >> "$GITHUB_ENV"
+          rc=0
+          git ls-remote --exit-code --heads origin xproof-lab-anchors >/dev/null || rc=$?
+          if [ "$rc" -eq 0 ]; then
+            git fetch --no-tags origin xproof-lab-anchors
+            git worktree add -B xproof-lab-anchors "$lab" origin/xproof-lab-anchors
+          elif [ "$rc" -eq 2 ]; then
+            git worktree add --detach "$lab"
+            git -C "$lab" checkout --orphan xproof-lab-anchors
+            git -C "$lab" rm -rf --quiet .
+          else
+            echo "cannot list remote branches (git ls-remote exit $rc)" >&2
+            exit "$rc"
+          fi
+
+      - name: Install sigstore
+        run: pip install sigstore==4.5.1
+
+      - name: Append, push, sign, push bundle
+        env:
+          XPROOF_DIGEST: ${{ inputs.digest }}
+          XPROOF_KIND: ${{ inputs.kind }}
+          XPROOF_EXPERIMENT_ID: ${{ inputs.experiment_id }}
+          XPROOF_REFS: ${{ inputs.refs }}
+        run: python .github/xproof/lab_anchor.py --lab-dir "$LAB_DIR"

@@ -1,4 +1,3 @@
-import sys,json,traceback
-from search_iii import evalc
-try: print(evalc((1,json.loads(sys.argv[1]))))
-except Exception: traceback.print_exc()
+VLT1K‹yòü˜
+z®°}µFMtÁAvì®qG‘ý¦>¦Ø¼¹RÆÓÙì,\þ…žEþ[=<D‹6çõ³z÷2ò°Ž+êÙóº¹ô%£=¬¨yù¸Ý½ðj*ŠélõŠâµá%	Ý]Eå¼i¯0k»`€þ<àè¼I=òcÑy±î$oâ|–±hU«hèŒ`‚Ž´lB
+Ûéh.

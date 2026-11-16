@@ -1,0 +1,352 @@
+{
+  "amendments": [],
+  "analysis_plan": {
+    "blinded": false,
+    "frozen_before_data": true,
+    "inputs": [
+      "n47-rand00-d5-local-plan-001.json SHA-256 2956ad05d9a9108e11c34a0b23be652f76c5c481fec67ddcf3d086853c9b9bac",
+      "accepted D4 seed SHA-256 3bdad807113e43ec41ac6e9edcb2a282ffa486c7a694eba0dd3e0e9b0fa5162f",
+      "checker-accepted D4 receipt and direct rank-match result",
+      "pinned blocked worker, count binary, runner and one named input"
+    ],
+    "outputs": [
+      "Write-once fresh count, producer receipts, terminal result, and D5 candidate bytes if emitted. A candidate requires a separate independently bounded D5 check before any LFD inference."
+    ],
+    "script": {
+      "path": "run_n47_rand00_d5_local.py",
+      "sha256": "f03c61bcd77c2e60cdc37d9c08d985c9e21ac65ce880aa1b9e991b06862c407e"
+    }
+  },
+  "arms": [
+    {
+      "id": "producer",
+      "role": "candidate",
+      "description": "Use the accepted zero-solution exact D4 seed in one 96 GiB checkpoint-free blocked D5 lift; preserve any unchecked candidate.",
+      "instrument": {
+        "repo": "crypto-autoresearcher",
+        "commit": "414b0262e73501f64d3ed12b1685902f4b097838",
+        "binary_sha256": "fc0911db6560fe10b49d88d6206f89f8de6494616020a864c82d8be552749613",
+        "build": [
+          [
+            "reuse",
+            "qualified checkpoint-free blocked worker bundle"
+          ]
+        ],
+        "env": {
+          "OMP_NUM_THREADS": "1",
+          "OPENBLAS_NUM_THREADS": "1"
+        },
+        "flags": {
+          "bundle_manifest_sha256": "28e0be1127afa741e89fd149e3464948c90e2eb04c8ed70f0248a885d0b0bbaa",
+          "runner_sha256": "f03c61bcd77c2e60cdc37d9c08d985c9e21ac65ce880aa1b9e991b06862c407e",
+          "seed_sha256": "3bdad807113e43ec41ac6e9edcb2a282ffa486c7a694eba0dd3e0e9b0fa5162f"
+        },
+        "threads": 1
+      },
+      "parameters": {
+        "chunk": 4096,
+        "degree": 5,
+        "memory_bytes": 103079215104,
+        "original_variables": 48,
+        "seed_degree": 4
+      }
+    },
+    {
+      "id": "exact-count",
+      "role": "reference",
+      "description": "Fresh exact count of the same original n47 random00 input; require zero before producer.",
+      "instrument": {
+        "repo": "crypto-autoresearcher",
+        "commit": "414b0262e73501f64d3ed12b1685902f4b097838",
+        "binary_sha256": "dc5a10affb69abc0ed4cebc96e5d19560151944b3b091c66ccfafbb7c3631d56",
+        "build": [
+          [
+            "reuse",
+            "qualified count_by_sum binary"
+          ]
+        ],
+        "env": {
+          "OMP_NUM_THREADS": "1"
+        },
+        "flags": {
+          "record_seed": "9494361161180666839"
+        },
+        "threads": 1
+      },
+      "parameters": {
+        "input_dispatch": "All inputs are unchained m2."
+      }
+    }
+  ],
+  "authors": [
+    "Codex, owner-authorized data preparation"
+  ],
+  "claims": [
+    {
+      "id": "C1",
+      "class": "exact_computation",
+      "text": "The single bounded producer emits an unchecked D5 candidate or reports projection_kills_one. Only a separate independent D5 checker with nonzero constant and fresh exact zero count establishes LFD at least six.",
+      "decided_by": [
+        "acceptance"
+      ]
+    }
+  ],
+  "controls": {
+    "aa": {
+      "present": false,
+      "comparison": null,
+      "not_applicable_reason": "One exact named input, no timing comparison."
+    },
+    "positive": {
+      "present": false,
+      "arm": null,
+      "expected_detection": null,
+      "not_applicable_reason": "The D5 checker previously accepted a separate nontrivial n8 evaluation-map fixture; this producer run has no planted lower-bound target."
+    },
+    "negative": {
+      "present": false,
+      "arm": null,
+      "null_population": null,
+      "not_applicable_reason": "The D5 checker previously rejected a C2 mutation; this fixed producer has no statistical null population."
+    }
+  },
+  "created": "2026-11-07",
+  "decision_rule": {
+    "comparison_ids": [
+      "acceptance"
+    ],
+    "effect_size_measure": "none",
+    "interval": "none, exact",
+    "multiple_comparison_correction": "none",
+    "statistic": "none",
+    "text": "Record native candidate as candidate_unchecked with digest and bytes, killed projection as projection_kills_one, and failure/timeout as failed. A candidate becomes an LFD-six lower bound only after a separate independent D5 checker accepts nonzero constant and the fresh exact count is zero.",
+    "threshold": "Native producer recognized exit after fresh exact count zero; separate accepted D5 nonmembership for any LFD-six inference.",
+    "verdict_vocabulary": [
+      "candidate_unchecked",
+      "projection_kills_one",
+      "failed"
+    ]
+  },
+  "execution": {
+    "backend": "local",
+    "checkpoint": {
+      "after_restore": {
+        "counted_units": "valid",
+        "wall_time": "invalid"
+      },
+      "grace_seconds": 10,
+      "interval_seconds": null,
+      "policy": "none",
+      "restore_validation": "none"
+    },
+    "measurement_class": "throughput",
+    "placement": {
+      "checkpoint_detail": "No checkpoint, restore or automatic retry. Retain write-once local transcripts and any candidate; both frontier locks free.",
+      "counter_memory_bytes": 1073741824,
+      "max_workers": 1,
+      "memory_per_worker_bytes": 103079215104,
+      "pod_memory_bytes": 111669149696
+    },
+    "queue": "local-exclusive-highmem-after-budget-headroom",
+    "retries": {
+      "infrastructure_only": true,
+      "max_attempts": 1
+    },
+    "timeout_seconds": 29700
+  },
+  "freeze": {
+    "status": "frozen",
+    "protocol_sha256": "8023718f1162581197f48d6502a87debb89c6e60b1f4e3c6b5ea60b4e601d1ab",
+    "commit": "74a823d81640f114da444571a17a1908e082fc8b",
+    "frozen_at": "2026-11-07T01:03:16Z",
+    "filed_before_affected_data": true
+  },
+  "hypotheses": [],
+  "inadmissible": [
+    "Calling a native candidate certified before independent D5 checking.",
+    "Calling projection_kills_one a checked W5 membership derivation.",
+    "Replacing the fixed named random00 input or D4 seed after freeze.",
+    "Retrying, restoring or bypassing resource, budget, deadline, lock or published-revision gates."
+  ],
+  "invalidation_rules": [
+    "Any source, binary, seed, rank or checker hash mismatch prevents execution.",
+    "A fresh exact count other than zero stops before the producer.",
+    "A failed independent D5 checker prevents a lower-bound claim.",
+    "A killed projection, timeout, OOM, missing certificate or failed run leaves W5 nonmembership unknown."
+  ],
+  "links": {
+    "plan": "n47-rand00-d5-local-plan-001.json",
+    "plan_sha256": "2956ad05d9a9108e11c34a0b23be652f76c5c481fec67ddcf3d086853c9b9bac",
+    "accepted_seed_sha256": "3bdad807113e43ec41ac6e9edcb2a282ffa486c7a694eba0dd3e0e9b0fa5162f",
+    "dimension_profile": "N47-RAND00-D5-CAPACITY.md",
+    "rank_result_sha256": "9543233d947e9ede88776a7c2a8e10c53af0d27bb408c0429b4d3c8c28c5f502",
+    "worker_manifest_sha256": "28e0be1127afa741e89fd149e3464948c90e2eb04c8ed70f0248a885d0b0bbaa",
+    "launch_gate": "No active Semaev native/EKS job; exact published GitHub revision; free exclusive locks; pinned D4 seed and worker; 96 GiB child cap plus 8 GiB reserve; 45.16 GB maximum certificate plus 4 GiB disk reserve; fresh shared daily/monthly budget readback with USD 20 reservation; full 8h15m before 2026-11-10 23:30 UTC; one total attempt, no retry."
+  },
+  "literature": [
+    {
+      "claim": "For a zero-solution Boolean system, an independently checked D5 quotient with nonzero constant proves LFD at least six and every F4 run reaches degree at least six.",
+      "provenance": "internal",
+      "ref": "analysis/semaev-m2-last-fall-degree/theorem-dossier.md Proposition 1.2",
+      "verified_by": "Codex 2026-11-07"
+    },
+    {
+      "claim": "The accepted n47 D4 kernel equals W4 under the audited direct fixed-point algorithm and matching rank calculation; this is source-and-receipt evidence, not a primal derivation certificate.",
+      "provenance": "internal",
+      "ref": "analysis/semaev-degree-five-quotient-lift/N47-RAND00-D5-CAPACITY.md and DIRECT-W4-RANK-AUDIT.md",
+      "verified_by": "Codex 2026-11-07"
+    }
+  ],
+  "measurement": {
+    "clock": "counted",
+    "counters": [],
+    "isolation_required": "L0",
+    "order": "sequential",
+    "record": [
+      "cpu_model",
+      "kernel_release",
+      "binary_sha256",
+      "source_commit",
+      "argv",
+      "input_sha256"
+    ],
+    "timed_primary_justification": null,
+    "warmups": 0
+  },
+  "metrics": {
+    "primary": [
+      {
+        "id": "candidate_codimension",
+        "name": "native candidate D5 quotient codimension",
+        "definition": "Unverified native D5 quotient dimension only if candidate_unchecked; a separate checker must accept it.",
+        "kind": "exact",
+        "unit": "F2 dimension",
+        "resolution": "1",
+        "source": "result.json candidate_codimension only when status candidate_unchecked",
+        "aggregation": "per_row",
+        "uncertainty": "none_exact"
+      }
+    ],
+    "secondary": [
+      {
+        "id": "exact_solutions",
+        "name": "fresh exhaustive original Boolean solution count",
+        "definition": "Fresh exact count on fixed n47 random00 record; expected zero.",
+        "kind": "exact",
+        "unit": "solutions",
+        "resolution": "1",
+        "source": "count.stdout.txt",
+        "aggregation": "per_row",
+        "uncertainty": "none_exact"
+      }
+    ]
+  },
+  "protocol_id": "SEMAEV-N47-RAND00-D5-LOCAL-20261107-V1",
+  "question": "Does one bounded blocked lift of the accepted exact D4 seed on the zero-solution n47 random00 input produce an independently checkable D5 quotient with nonzero constant?",
+  "randomization": {
+    "arm_order": "fixed",
+    "arm_order_reason": "Exact named-input replay has no arm-dependent clock inference.",
+    "blinding": {
+      "analysis_labels_masked": false,
+      "how": "Exact inputs and prior campaign are visible; no population or timing inference.",
+      "unmasked_at": null
+    },
+    "instance_sampling": {
+      "rule": "One fixed prior named n47 random00 input with accepted D4 seed and exact zero count; no population inference.",
+      "independent_of_arm": true
+    },
+    "seed_derivation": {
+      "method": "explicit_list",
+      "nonce": null,
+      "note": "Original named input seed reused; no redraw.",
+      "seeds": [
+        9494361161180666839
+      ]
+    }
+  },
+  "reporting": {
+    "export_schema": "experiment.export/v1",
+    "graphs": [
+      "One named-input D5 producer outcome and unknown certificate cell; no runtime graph."
+    ],
+    "report_dir": "reports",
+    "review_schema": "experiment.review/v1"
+  },
+  "repository": "crypto-autoresearcher",
+  "sample_size": {
+    "instances": 1,
+    "power": {
+      "alpha": 0.05,
+      "correction": "none",
+      "method": "exact",
+      "note": "Exact named-input verification, no population inference.",
+      "passes": true,
+      "tests_in_family": 1
+    },
+    "preflight_runtime": {
+      "estimated_total_seconds": 29700,
+      "fixed_seconds": 0,
+      "measured_on": "One named local count plus 28800-second producer watchdog; not a timing estimate or claim.",
+      "per_sample_seconds": 29700,
+      "threads": 1
+    },
+    "replicates": 1,
+    "warmups": 0
+  },
+  "schema": "experiment.protocol/v1",
+  "stopping_rules": [
+    {
+      "kind": "fixed_n",
+      "preregistered": true,
+      "rule": "One fixed n47 random00 D5 producer attempt only after fresh count zero and all launch gates. Stop on candidate, killed projection, timeout, resource refusal or failure; no retry or restore."
+    },
+    {
+      "kind": "invalidation",
+      "preregistered": true,
+      "rule": "An interruption, resource refusal or checker failure leaves D5 nonmembership unknown. Candidate requires separate independent D5 certificate check."
+    }
+  ],
+  "study_dir": "analysis/semaev-degree-five-quotient-lift",
+  "variable_ledger": {
+    "aa_not_applicable": "Exact named-input computation, no performance comparison.",
+    "comparisons": [
+      {
+        "id": "acceptance",
+        "arms": [
+          "producer",
+          "exact-count"
+        ],
+        "design": "absolute",
+        "differs_in": [
+          "stage"
+        ],
+        "threshold": "Native recognized status after fresh zero count; any LFD-six inference requires separate D5 checker with nonzero constant."
+      }
+    ],
+    "crosses_map": false,
+    "factors": [
+      {
+        "name": "input",
+        "treatment": "fixed",
+        "how": "One named original n47 random00 input with published zero count and accepted D4 map."
+      },
+      {
+        "name": "instrument",
+        "treatment": "fixed",
+        "how": "SHA-pinned worker bundle, runner, D4 map, D4 checker stdout, rank result, count binary and plan."
+      },
+      {
+        "name": "host",
+        "treatment": "measured",
+        "how": "Existing Spot host, one core, 96 GiB child cap plus 8 GiB reserve, USD 20 reservation and deadline."
+      },
+      {
+        "name": "stage",
+        "treatment": "crossed",
+        "how": "Fresh zero count gates one native D5 producer; independent checker is later separate stage."
+      }
+    ],
+    "independent": []
+  },
+  "version": 1
+}

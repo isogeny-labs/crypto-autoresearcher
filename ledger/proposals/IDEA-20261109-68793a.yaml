@@ -1,0 +1,137 @@
+idea:
+  id: IDEA-20261109-68793a
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: 'Kummer-line exit rigidity: no rational function on a prime-order curve intertwines [m] with
+    a polynomial map, closing power, Chebyshev and Drinfeld-type dynamical transfers, with a nodal control'
+  class: barrier
+  claim: 'Let E/F_p (p odd) be y^2 = x^3 + b of prime order N and let L_m be the x-coordinate multiplication
+    map, L_2(x) = (x^4 - 8bx)/(4(x^3+b)). Theorem, no heuristic: for m >= 2 with p not dividing m there
+    is no nonconstant f in Fpbar(E) and polynomial g with f o [m] = g o f. Proof: deg g = m^2, and [m]^*(f)_infty
+    = m^2 (f)_infty as divisors, so the pole set of f is closed under [m]^{-1} and infinite. Inseparable
+    f reduce to separable ones since Frobenius commutes with [m] and with g over F_p. Corollary: no rational
+    h on P^1 satisfies h(x(kP)) = g_k(h(x(P))) with g_k a power x^k, a Chebyshev T_k, an additive (Carlitz/Drinfeld)
+    polynomial, or any polynomial; the only rational semiconjugacies of the Kummer dynamics are isogeny-induced.
+    Toy prediction fixed before any run: an exhaustive search over h of degree <= 2 over F_p, p in {17,19,23,29},
+    for h o L_2 = g o h with g in {x^4, T_4} returns 0 solutions on every smooth prime-order y^2 = x^3
+    + b and at least 1 solution (h a Moebius map, g = T_4) on the split nodal control y^2 = x^2 (x+1).'
+  mechanism: 'Wave-1 transfer lead 9 closed homomorphic exits E -> H_aff. This record closes the strictly
+    larger class of non-homomorphic rational maps on the x-line that merely intertwine scalar multiplication
+    with a polynomial dynamical system; such a map would hand ECDLP to F_p^*, to the norm-one torus, or
+    to a Drinfeld-module action, each with a sub-sqrt(p) algorithm. The obstruction is divisor rigidity:
+    a polynomial has a totally invariant point at infinity and [m] has none. The nodal cubic, whose smooth
+    locus is G_m, is the positive control where the obstruction vanishes and the search must succeed.'
+  novelty_status: unverified
+  citations:
+  - ref: KR-RHO-755e35
+    provenance: internal
+    claim: Isogeny-induced maps are the surviving semiconjugacies and preserve ECDLP hardness.
+    verified_by: brief section 3 row text, 2026-11-09; file not opened
+  - ref: KR-RHO-53c89f
+    provenance: internal
+    claim: Transfers to F_{p^k}^* exist only via pairings on special curves; this record adds that no
+      dynamical transfer exists on any curve.
+    verified_by: brief section 3 row text, 2026-11-09; file not opened
+  - ref: IDEA-20260806-071255
+    provenance: internal
+    claim: Deterministic propagation maps pi from G to a set admit no advantage; this record is the algebraic
+      instance on P^1.
+    verified_by: brief section 2 index line, 2026-11-09; record not opened
+  - ref: 'RECALLED: Ritt 1923; Milnor, On Lattes maps, 2006; Pakovich, semiconjugate rational functions,
+      2016'
+    provenance: recalled
+    claim: Over C, Lattes maps are not semiconjugate to power or Chebyshev maps; the divisor argument
+      above is characteristic-free for p odd.
+    verified_by: not verified in this session
+  assumptions:
+  - p is odd and p does not divide m, so [m] is separable and every point has m^2 distinct preimages.
+  - Nothing about End(E) is used; the statement depends only on the divisor of f.
+  predictions:
+  - metric: number of (h, g) solutions of degree <= 2 on smooth prime-order curves
+    direction: lower
+    minimum_effect: exactly 0 at every tested (p, b)
+  - metric: number of solutions on the split nodal control
+    direction: higher
+    minimum_effect: at least 1 at every tested p
+  minimal_test:
+    design: For each p in {17,19,23,29} and each b in F_p^* with N prime (others skipped and counted),
+      enumerate h = (a x^2 + c x + d)/ (e x^2 + f x + g) up to scalar, require h o L_2 = g o h as rational
+      functions by exact polynomial identity after clearing denominators (degree <= 16), for g in {x^4,
+      T_4}. Run the identical code on y^2 = x^2 (x+1) with its own doubling map. Report counts and the
+      explicit nodal h.
+    controls:
+    - Split nodal cubic must yield at least one solution (search sensitivity).
+    - Exact polynomial equality, not point sampling.
+    - Prime-order check of E for each b.
+    required_metrics:
+    - solutions_smooth_per_pb
+    - solutions_nodal_per_p
+    - number_of_h_enumerated
+    - explicit_nodal_h
+  falsification_conditions:
+  - Any nonconstant h with polynomial g on a smooth prime-order curve; the divisor proof would be wrong.
+  - Zero solutions on the nodal control makes the run invalid, not supportive.
+  confounders:
+  - Degree <= 2 is a finite sample of an infinite-degree statement; the theorem, not the search, carries
+    the closure.
+  - h over F_{p^2} is not enumerated; the proof covers it, the search does not.
+  interpretation_limits:
+  - Closes polynomial and non-isogeny rational semiconjugacies only; non-algebraic set maps are out of
+    scope.
+  - Says nothing about summation-polynomial decomposition or transfers of the group itself.
+  heuristic_assumptions:
+  - id: H1
+    statement: The nodal control admits a degree-1 intertwiner to T_4 over F_p.
+    rigorous_support: The smooth locus of a split nodal cubic is G_m over F_p; x is a degree-2 function
+      invariant under inversion, hence a Moebius image of t + 1/t, and [4] on G_m descends to T_4.
+    validation_plan: The search must output the explicit Moebius h; verify h o L_2 = T_4 o h symbolically.
+  target_complexity:
+    time_exponent: p^{1/2} unchanged, delta 0
+    memory_exponent: O(1)
+    best_known: Pollard rho at Theta(p^{1/2}) group operations (KR-RHO-13bf67).
+    hidden_overhead: None; this is a closure, not an algorithm.
+    tradeoff_note: No tradeoff is defined; the record removes a family of candidate exits.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  dominated_by: KR-RHO-13bf67 dominates any exponent reading, delta 0. No frontier row states the polynomial-semiconjugacy
+    rigidity itself.
+  sota_delta: Exponent delta 0. Adds a two-line theorem closing all polynomial dynamical exits from the
+    Kummer line, with a positive control that separates smooth from nodal cubics.
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/generic-rho
+    rows_checked:
+    - KR-RHO-13bf67
+    - KR-RHO-755e35
+    - KR-RHO-53c89f
+    - KR-RHO-0528e7
+    - KR-IC-5a43e5
+    - KR-IC-cd159a
+    nearest:
+    - ref: KR-RHO-755e35
+      provenance: internal
+      relation: adjacent
+      delta: That row covers isogeny transfers; this record shows isogenies are the only rational semiconjugacies
+        of the x-line dynamics.
+    - ref: KR-RHO-53c89f
+      provenance: internal
+      relation: adjacent
+      delta: Pairing transfers need small embedding degree; dynamical transfers to F_p^* are impossible
+        on every curve.
+    searched:
+      corpus_grep:
+      - brief section 2 for semiconjugacy, Lattes, Kummer, x-only
+      - wave-1 transfer leads 9 and 10, port exit-dimension theorem
+      web: []
+      blocked: []
+    lead: LEAD-EXO-quadratic-phase-small-x-leakage
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: For each p in {17,19,23,29} and each b in F_p^* with N prime (others skipped
+        and counted), enumerate h = (a x^2 + c x + d)/ (e x^2 + f x + g) up to scalar, require h o L_2
+        = g o h as rational functions by exact polynomial identity after clearing denominators (degree
+        <= 16), for g in {x^4, T_4}. Run the identical code on y^2 = x^2 (x+1) with its own doubling map.
+        Report counts and the explicit noda'

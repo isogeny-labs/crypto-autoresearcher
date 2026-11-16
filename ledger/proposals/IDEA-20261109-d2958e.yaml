@@ -1,0 +1,54 @@
+idea:
+  id: IDEA-20261109-d2958e
+  question_id: RQ-ISO-68bbac
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  class: algorithm
+  novelty_status: adaptation
+  title: 'Spine-hit to one endomorphism: drop the second Delfs-Galbraith phase and measure the constant'
+  claim: For a public supersingular E_A/F_{p^2} with secret path from a known E_0/F_p, a random non-backtracking
+    2-walk psi of length k ~ (1/2)log2 p + c that lands on an F_p-rational curve E' yields the non-scalar
+    endomorphism theta = psi_dual o pi_p o psi of degree p*4^k, and OneEnd-to-EndRing saturation then
+    recovers End(E_A) without any class-group computation on the spine. Expected cost Theta~(p^{1/2})
+    walk steps, O(1) memory; same exponent as Delfs-Galbraith, improved constant. Cleared against H-WESO-516558,
+    H-ALISO-003, H-ALISO-005; no Lean lemma in the brief constrains it.
+  mechanism: 'Graph G_2(p): floor(p/12)+{0,1,2} vertices, 3-regular, Ramanujan. Spine size h(-4p) (+h(-p)
+    when p = 3 mod 4), i.e. Theta~(p^{1/2}). Hitting time from a mixed start is ~ (p/12)/|spine| walks
+    of length k. Since E''^(p) = E'', Frobenius pi_p is an endomorphism of E'' of degree p and reduced
+    trace 0, so theta is not in Z. Saturation: compute the order Z<theta, theta''> for a second hit theta''
+    or use the Page-Wesolowski reduction; cost polynomial in log p, constant unmeasured.'
+  security_delta: None in exponent. Breaks nothing new; recalibrates the constant in SQIsign key-recovery
+    cost claims (p ~ 2^248 at NIST-I gives p^{1/2} = 2^124 walk steps before the constant).
+  kill_test: At p in [2^28, 2^40], measure walks-to-spine against 12/sqrt(p) and the saturation wall-clock.
+    If the end-to-end gain over full Delfs-Galbraith is below 2x at all sizes, refile as measurement only
+    and close as algorithmic lead.
+  cleared:
+    checked:
+    - H-WESO-516558
+    - H-ALISO-003
+    - H-ALISO-005
+    disproven: none in the brief
+    lean: 'no Lean coverage; would need: for E''/F_p supersingular and psi: E -> E'', psi_dual o pi_p
+      o psi in End(E) and not in Z'
+    exp: none; nearest surface is aburan28/crypto-autoresearcher autolab package p1486_frobenius_midpoint_sweep
+  prior_art:
+    frontier_map: not_applicable
+    frontier_map_reason: the brief exposes no frontier map for the isogeny lane
+    searched:
+      corpus_grep:
+      - H-WESO-516558
+      - H-ALISO-003
+      - H-ALISO-004
+      - H-ALISO-005
+      - H-SSIQ-d724f2
+    none_found_after:
+    - 'BRIEF grep: ''Frobenius'' AND ''endomorphism'' AND ''spine'''
+    - 'BRIEF grep: ''Delfs'' OR ''Galbraith'''
+    - 'BRIEF grep: ''OneEnd'' OR ''Page'' OR ''Wesolowski'' beyond H-WESO-516558'
+    not_applicable_reason: This campaign is isogeny/formula engineering, not an ECDLP-mechanism claim;
+      the ECDLP frontier map does not cover the relevant literature.
+  marks:
+    proved: pi_p in End(E') for E' over F_p; theta non-scalar
+    heuristic: hitting time via Ramanujan mixing; saturation cost
+    analogy: none

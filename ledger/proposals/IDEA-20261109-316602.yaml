@@ -1,0 +1,157 @@
+idea:
+  id: IDEA-20261109-316602
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: 'Class-group reduction ported through Lenstra''s module isomorphism: the GLV hexagonal lattice
+    realises the reduced-representative step exactly, and the gap is a hidden multiplication'
+  class: representation
+  claim: 'Let E: y^2 = x^3 + b over F_p, p = 1 mod 3, have prime order N, Frobenius pi, End(E) = Z[omega]
+    with omega^2 + omega + 1 = 0 acting as phi(x,y) = (beta x, y), and lambda = omega mod (pi-1). (a)
+    Lenstra 1996: E(F_p) is isomorphic to Z[omega]/(pi-1) as Z[omega]-modules; the scalar of a point is
+    a class in this quotient. (b) The ideal (pi-1)Z[omega] is the hexagonal lattice scaled by sqrt(N);
+    its covering radius is sqrt(N/3), so every k in Z/N has a representative k = k1 + k2 lambda with Norm(k1
+    + k2 omega) = k1^2 - k1 k2 + k2^2 <= N/3. This is the class-group reduction step of Hafner-McCurley
+    and Jacobson (reduced form a <= sqrt(|D|/3), same hexagonal constant) realised in O(1) time by exact
+    2-dimensional CVP. Prediction fixed before any run: Babai rounding in the Gauss-reduced basis, the
+    usual GLV decomposition, attains max Norm/N = 3/4 + o(1) over all k, exact CVP attains 1/3 + o(1);
+    the test records which one the repo''s GLV code is. (c) The second class-group step, factor the norm
+    of the reduced representative and multiply relations, needs k. Any realisation on points requires
+    products of hidden scalars, [k1 k2]P from [k1]P and [k2]P, i.e. computational Diffie-Hellman; Maurer-Wolf
+    (1999) turn a CDH algorithm for E(F_p) into a DL algorithm with polynomial overhead given an auxiliary
+    curve over F_N of smooth order. So step (c) is as hard as ECDLP, and the only sub-step not blocked
+    by a theorem is smoothness visibility: whether S_B(k) = [Norm(red(k)) is B-smooth] correlates with
+    any cheap coordinate statistic of [k]P. Prediction: it does not; sqrt(N)|corr(S_B, s)| <= 4 for all
+    s in the battery of the torsor census record.'
+  mechanism: 'Class-group index calculus works because composition followed by reduction returns a canonical
+    representative of bounded norm whose norm factors over the factor-base primes. The first half transfers
+    verbatim: Lenstra''s isomorphism makes the scalar group a quotient of Z[omega] by a principal ideal
+    of prime norm, and the covering radius of the hexagonal ideal lattice gives the same bound shape as
+    reduced forms. The second half cannot transfer because reduction acts on the hidden scalar while only
+    the point is visible; the first operation needed on points is a hidden multiplication, which Maurer-Wolf
+    show is discrete-log-hard. The record turns the analogy into two numbers: the covering-radius constant
+    the repo''s GLV code achieves, and the smoothness-visibility correlation.'
+  novelty_status: unverified
+  citations:
+  - ref: KR-RHO-0528e7
+    provenance: internal
+    claim: The order-6 automorphism group of a j=0 curve gives rho a constant factor; here the same endomorphism
+      is used as a module action, not a walk symmetry.
+    verified_by: REPO BRIEF 2026-11-09 section 3 excerpt; KR yaml not opened
+  - ref: KR-IC-5931ee
+    provenance: internal
+    claim: Naive prime-field index calculus cannot beat generic methods; this record names which class-group
+      step fails to port.
+    verified_by: REPO BRIEF 2026-11-09 section 3 excerpt; KR yaml not opened
+  - ref: IDEA-20260726-002
+    provenance: recalled
+    claim: phi-orbit factor bases were proposed; the module-quotient reading and the covering-radius bound
+      are not in its index line.
+    verified_by: REPO BRIEF 2026-11-09 section 2 index line only
+  assumptions:
+  - p = 1 mod 3 and E has prime order, so End(E) = Z[omega] and (pi-1) has prime norm N.
+  - Norm convention Norm(a + b omega) = a^2 - ab + b^2 with omega = (-1 + sqrt(-3))/2.
+  predictions:
+  - metric: max_k Norm(red(k))/N with exact 2-dimensional CVP
+    direction: lower
+    minimum_effect: at most 1/3 + 2/sqrt(N) on every toy curve
+  - metric: max_k Norm(red(k))/N with Babai rounding in the Gauss-reduced basis
+    direction: higher
+    minimum_effect: at least 0.70 on every toy curve
+  - metric: max over s of sqrt(N) |corr(S_B, s)| with B = N^{1/3}
+    direction: lower
+    minimum_effect: at most 4 on every toy curve with N in [2^20, 2^28]
+  minimal_test:
+    design: Build three to five prime-order j=0 curves per size, N in [2^20, 2^28], by the CM method (secp256k1_cm_audit
+      tooling or Sage). Compute pi, lambda and a Gauss-reduced basis of (pi-1)Z[omega]; reduce every k
+      by exact CVP and by Babai rounding; record both maxima of Norm/N and the Norm/N histogram (exact
+      CVP must match the uniform-on-hexagon density). Then compute S_B(k) with B = N^{1/3} by trial division
+      and corr(S_B, s) for the frozen battery of coordinate statistics of [k]P. Read RESEARCH_GLV_HNP.md
+      first to record which reduction the repo's GLV code performs.
+    controls:
+    - Label control, S_B against a random permutation of k.
+    - Positive control, the integer lift of k itself in place of the point, where the smoothness statistic
+      applied to the lift must correlate perfectly.
+    - Density control, the Norm/N histogram under exact CVP against the uniform-hexagon prediction.
+    required_metrics:
+    - max Norm/N under exact CVP and under Babai rounding, per curve
+    - fraction of k with Norm(red(k)) B-smooth, with Dickman reference
+    - sqrt(N) |corr(S_B, s)| per statistic, label-control maximum
+    - the reduction variant found in RESEARCH_GLV_HNP.md
+  falsification_conditions:
+  - Exact CVP yields some k with Norm(red(k)) > N/3 + 2 sqrt(N); then (b) or the norm convention is wrong
+    and the record is withdrawn.
+  - A statistic s with sqrt(N)|corr(S_B, s)| >= 6 on three curves at two sizes without decrease; this
+    falsifies the invisibility prediction and escalates.
+  - End(E) not equal to Z[omega] on a constructed curve is an invalid run, not evidence.
+  confounders:
+  - The smoothness rate varies with Norm/N inside the hexagon; correlations use the mean-removed indicator.
+  - Multiple statistics inflate the null maximum; the label control and a Bonferroni threshold bound it.
+  interpretation_limits:
+  - The covering-radius bound is a 2-dimensional geometric fact; it changes no exponent, and GLV literature
+    already bounds |k1|, |k2| by about sqrt(N).
+  - Maurer-Wolf blocks ports whose first operation is a hidden multiplication, not every conceivable use
+    of the module structure.
+  heuristic_assumptions:
+  - id: H1
+    statement: Smoothness of the reduced scalar norm is invisible in the coordinates of the point at the
+      level of cheap statistics.
+    rigorous_support: None; a visible statistic would contradict only the generic model.
+    validation_plan: The census above with both controls; shares one enumeration with the torsor census
+      record.
+  - id: H2
+    statement: An auxiliary elliptic curve over F_N with smooth order exists for each N under test, so
+      Maurer-Wolf applies there unconditionally.
+    rigorous_support: Maurer-Wolf give the reduction conditional on such a curve; existence for a given
+      N is checked, not assumed.
+    validation_plan: For each toy N, find such a curve by random search over F_N and log it.
+  target_complexity:
+    time_exponent: N^{1/2} unchanged; the port stops at a step proven discrete-log-hard
+    memory_exponent: O(1) beyond the point list for the toy census
+    best_known: Pollard rho, Theta(N^{1/2}) group operations, KR-RHO-13bf67
+    hidden_overhead: the smoothness test on a hidden scalar norm
+    tradeoff_note: none; the measured objects are a lattice constant and a correlation
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  dominated_by: KR-IC-5931ee dominates any index-calculus reading; KR-RHO-0528e7 dominates any walk reading
+    of the endomorphism. Neither states the module-quotient port or where it breaks.
+  sota_delta: 'Exponent delta 0. Structural delta: the class-group reduction step is realised exactly
+    with constant 1/3 (3/4 for Babai rounding), and the first non-realisable step is named and tied to
+    Maurer-Wolf.'
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/index-calculus
+    rows_checked:
+    - KR-IC-5931ee
+    - KR-IC-cd159a
+    - KR-IC-5a43e5
+    - KR-RHO-0528e7
+    - KR-RHO-13bf67
+    - KR-RHO-755e35
+    nearest:
+    - ref: KR-IC-5931ee
+      provenance: internal
+      relation: adjacent
+      delta: The row closes additive index calculus over F_p; this record closes the multiplicative class-group
+        port at a different step.
+    - ref: KR-RHO-0528e7
+      provenance: internal
+      relation: adjacent
+      delta: Same endomorphism, used as a Z[omega]-module structure rather than as an orbit symmetry for
+        a walk.
+    searched:
+      corpus_grep:
+      - REPO BRIEF section 2 for Lenstra, class group, GLV, hexagonal, covering radius, Maurer-Wolf, CDH
+      - REPO BRIEF section 1 file list for RESEARCH_GLV_HNP*.md and RESEARCH_SECP256K1_CM.md
+      web: []
+      blocked: []
+    lead: LEAD-EXO-lossy-object-propagation
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: Build three to five prime-order j=0 curves per size, N in [2^20, 2^28], by
+        the CM method (secp256k1_cm_audit tooling or Sage). Compute pi, lambda and a Gauss-reduced basis
+        of (pi-1)Z[omega]; reduce every k by exact CVP and by Babai rounding; record both maxima of Norm/N
+        and the Norm/N histogram (exact CVP must match the uniform-on-hexagon density). Then compute S_B(k)
+        with B = N^{1/3} by trial div'

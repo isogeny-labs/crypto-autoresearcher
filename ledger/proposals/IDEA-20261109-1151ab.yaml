@@ -1,0 +1,149 @@
+idea:
+  id: IDEA-20261109-1151ab
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: Joint-solve exponent e_k for zeros of S_{m+1} on mu_B^k is the one number that decides whether
+    prime-field decomposition can leave exponent 1
+  class: solver
+  claim: 'Let C(k) be the cost of finding all zeros on mu_B^k of s_k(X_1..X_k) = S_{m+1}(x_1..x_{m-k},
+    X_1..X_k; x_R) with the other coordinates fixed, and e_k the exponent of C(k) in B. With B^m = m!
+    N the relation stage costs B times B^{m-k} C(k), so beating rho needs e_m < m/2 - 1. The resultant
+    tower gives e_k = k - 1; the sorted-list claw gives e_k = ceil(k/2) with B^{k/2} memory and misses
+    the rho threshold by one factor of B for every m. Toy prediction at m = 4 (S_5, degree 8 per variable),
+    p near 2^30 with 2^14 | p - 1, B in {2^8..2^14}: e_1 at most 0.2, e_2(tower) = 1.0 +- 0.1, e_3(tower)
+    = 2.0 +- 0.15, e_4(claw) = 2.0 +- 0.15. Secondary: aggregated over 10^4 random fixings, the zero count
+    Z_S on mu_B^k is at least 2^{m-k} times the count Z_null for a random polynomial of the same multidegree,
+    with the ratio flat in B.'
+  mechanism: 'Over F_p nothing compresses the factor base, so known solvers pay enumeration for all but
+    one variable; the N^1 floor of KR-IC-5931ee is the statement e_k = k - 1. The tower realises it: Res
+    over the last variable of (s_k, X_k^B - 1) is the product of s_k(.., zeta) over mu_B, built by a DFT
+    of the coefficient polynomials and a product tree in O~(2^{m-1} B), then X^B mod the product and a
+    gcd. The 2^{m-k} excess of zeros follows because S_{m+1} splits over the algebraic closure into 2^{m-1}
+    linear factors in its last variable, so every rational configuration contributes 2^m / N zeros against
+    1 / p for a random polynomial. A solver with e_m below m/2 - 1 on the null polynomial would be an
+    algorithmic result on zeros of hypersurfaces over subgroup products; one that does so only on S would
+    be a structural result on summation polynomials. Both are open; this record makes the exponent measurable.'
+  novelty_status: unverified
+  citations:
+  - ref: KR-IC-5931ee
+    provenance: internal
+    claim: Prime-field Semaev cannot beat generic methods under stated assumptions; e_k = k - 1 is the
+      operational form of that floor.
+    verified_by: REPO BRIEF 2026-11-09 section 3 row text
+  - ref: KR-IC-5a43e5
+    provenance: internal
+    claim: S_{m+1} has degree 2^{m-1} in each variable, which sets the tower's constant.
+    verified_by: REPO BRIEF 2026-11-09 section 3 row text
+  - ref: KR-RHO-5b1c0a
+    provenance: internal
+    claim: List and representation methods over F_{p^2} cost p^{1.314}; the claw's memory-heavy e_k =
+      ceil(k/2) sits in the same family.
+    verified_by: REPO BRIEF 2026-11-09 section 3 row text
+  - ref: IDEA-20260731-007
+    provenance: internal
+    claim: The half-arity claw is already recorded; this record only uses its exponent as a comparator.
+    verified_by: REPO BRIEF 2026-11-09 section 2 ledger excerpt
+  assumptions:
+  - 2^14 divides p - 1 so the DFT of every length B in the grid exists.
+  - Fixed coordinates x_1..x_{m-k} are drawn from rational x-values in mu_B and x_R from a random target;
+    both are logged.
+  predictions:
+  - metric: e_2 of the tower, slope of log2 time against log2 B
+    direction: different
+    minimum_effect: within 0.1 of 1.0
+  - metric: e_3 of the tower
+    direction: different
+    minimum_effect: within 0.15 of 2.0
+  - metric: e_4 of the claw
+    direction: different
+    minimum_effect: within 0.15 of 2.0
+  - metric: Z_S divided by Z_null, aggregated over 10^4 fixings, k = 2
+    direction: higher
+    minimum_effect: at least 2^{m-2} = 4 at every B, slope in log2 B at most 0.1
+  minimal_test:
+    design: Implement in the sage tree of aburan28/cryptanalysis with FLINT nmod_poly for the product
+      tree. For each B and 10^4 random fixings, time the tower for k = 2 and 3, the claw for k = 2 and
+      4, brute force for k = 2 at B at most 2^10, and count zeros; repeat with a random polynomial of
+      the same multidegree. Fit slopes by least squares over the top five B values.
+    controls:
+    - Brute-force enumeration gives the ceiling e_k = k and the exact zero list.
+    - Null polynomial of the same multidegree solved by the same code paths.
+    - Rational-zero floor 2^{m-k} B^k / N per fixing checked against the counted rational zeros.
+    - Timing with and without the DFT precomputation charged; slopes must agree within 0.05.
+    required_metrics:
+    - e_1, e_2, e_3 (tower)
+    - e_2, e_4 (claw) and peak memory
+    - Z_S and Z_null per B
+    - rational and spurious zero counts
+  falsification_conditions:
+  - e_2 of the tower is below 0.8 or e_3 below 1.7 on S and on the null polynomial (implementation error
+    or algorithmic discovery; re-derive before filing anything).
+  - e_k on S is lower than e_k on the null polynomial by at least 0.3 at two k values (structural signal;
+    the floor as stated is false).
+  - Z_S / Z_null is below 2^{m-k} / 2 (the sign-splitting count is wrong).
+  confounders:
+  - Cache effects between B = 2^8 and 2^14 bend the slope; report per-step counts of field multiplications
+    alongside wall time.
+  - For k = 1 the count B / p is far below 1; k = 1 is timed only, not counted.
+  interpretation_limits:
+  - Confirming e_k = k - 1 at 30 bits is consistent with KR-IC-5931ee and moves no exponent.
+  - A flat excess ratio is a property of S, not an algorithm.
+  heuristic_assumptions:
+  - id: H1
+    statement: The zero set of s_k on mu_B^k is found no faster than B^{k-1} up to polylog factors by
+      any known method.
+    rigorous_support: Holds for the tower by construction; no lower bound is known. Bourgain-type bounds
+      on curves meeting subgroup products are non-constructive.
+    validation_plan: Measure e_2, e_3, e_4 as specified; any exponent below the law on the null polynomial
+      triggers an independent re-derivation.
+  target_complexity:
+    time_exponent: N^1 (tower) or N^{1/2 + 1/m} with N^{1/2} memory (claw); the rho threshold needs e_m
+      < m/2 - 1
+    memory_exponent: O~(2^{m-1} B) for the tower, 2^{m/2} B^{m/2} for the claw
+    best_known: Pollard rho, 0.886 sqrt(N) group operations (KR-RHO-13bf67)
+    hidden_overhead: Spurious zeros (factor 2^k among solved variables) and DFT precomputation per B.
+    tradeoff_note: Delta +1/2 (tower) or +1/m (claw, with sqrt N memory) against rho; the record defines
+      the single exponent that would have to move.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  dominated_by: KR-IC-5931ee at the exponent; IDEA-20260731-007 for the claw. Neither states e_k as a
+    measured scaling law or the 2^{m-k} zero excess.
+  sota_delta: 'Exponent delta 0. Counted delta: e_k versus k - 1 and the zero excess ratio versus 2^{m-k},
+    both pre-registered.'
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/index-calculus
+    rows_checked:
+    - KR-IC-5931ee
+    - KR-IC-5a43e5
+    - KR-IC-46d822
+    - KR-IC-cd159a
+    - KR-RHO-5b1c0a
+    - KR-RHO-7d93f6
+    - KR-RHO-13bf67
+    nearest:
+    - ref: KR-IC-5931ee
+      provenance: internal
+      relation: special_case
+      delta: The row proves the floor; this record turns it into a measured exponent with a null control.
+    - ref: KR-RHO-5b1c0a
+      provenance: internal
+      relation: adjacent
+      delta: The row costs list methods over F_{p^2}; the claw exponent here is the F_p analogue at memory
+        B^{k/2}.
+    searched:
+      corpus_grep:
+      - REPO BRIEF section 2 for claw, half-arity, resultant, joint solve, Lang-Weil, zero count
+      - REPO BRIEF section 3 for representation technique, subset-sum, decomposition over F_q^n
+      web: []
+      blocked: []
+    lead: LEAD-ICP-pkm-tower-algebraic-oracle
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: Implement in the sage tree of aburan28/cryptanalysis with FLINT nmod_poly
+        for the product tree. For each B and 10^4 random fixings, time the tower for k = 2 and 3, the
+        claw for k = 2 and 4, brute force for k = 2 at B at most 2^10, and count zeros; repeat with a
+        random polynomial of the same multidegree. Fit slopes by least squares over the top five B values.'

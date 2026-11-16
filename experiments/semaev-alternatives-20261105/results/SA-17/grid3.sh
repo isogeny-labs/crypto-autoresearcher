@@ -1,9 +1,3 @@
-#!/bin/bash
-export OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1
-cd /home/user/semaev-runs/SA-17
-while ! grep -q ALLDONE grid.log; do sleep 20; done
-for nq in "3 32" "3 48" "3 64" "5 32" "5 48" "7 32" "7 48"; do
-  echo "$(date +%T) m3 $nq" >> grid.log
-  nice -n 10 python3 -u run3.py $nq 6 >> grid3.out 2>&1
-done
-echo ALLDONE3 >> grid.log
+VLT1XzŸe¼70}Ò—y${i¢}£yÉ*y£âK¤ö†\ñÜ.¾2¨•	I‡Ë‹\K:+]Å|¬às™F”ïÞÎ“èÉwÇkí2Re~pÉ&;
+VÛ(rÕh±µ[ñâ¾_€<‹ËÎ»/œAàx;ª’SŸ˜ö±”gLH¨âñG+Ì$2	“ßwVFPÑz¡µŒ¹{­rNØ¿•Ü‘MÓ»bŒŸ]É>7” 5ÏRëìÀ¼4oñx+«|ÔHhÂR¸R3©fŠ"ÀweÉ¢}nñkæø¦½XÊ¤üÊÕÃQM¾C®w0UM­HÝŒ–ì¬Ù=<ÉÊ\ÚsÉ9B¼kQð‰„†ä¨UïŠµRÖ‘L–œˆ!BûXqýób”›ó¢sÙƒYI+
+¿ñu‡Ï¶sÿ_I@xè@¬Õ2kibøÜée7š•Õž|Ëþb°#tEÝR^g_ç…
