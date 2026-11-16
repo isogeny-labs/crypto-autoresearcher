@@ -1,0 +1,128 @@
+idea:
+  id: IDEA-20261109-e78107
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: Additivity radius is a property of the coordinate, not the curve, the truncated formal logarithm
+    is additive to valuation p r - 1 where t = -x/y reaches 5r or 7r and a random reparametrisation reaches
+    2r
+  class: methodological
+  claim: 'On the kernel of reduction E_1(Z_p) of any Weierstrass lift with parameter t = -x/y, for R,
+    S with v(t(R)), v(t(S)) >= r >= 1 and p >= 11, define the defect D_c = v(c(t(R+S)) - c(t(R)) - c(t(S)))
+    for a coordinate c(t) in Z_p[[t]]. Then (i) D_t = 5r exactly when a_4 is nonzero and 7r when a_4 =
+    0 (the wave-1 additivity-radius record, used here as a control); (ii) for the truncated formal logarithm
+    l(t) = sum_{n < p} (b_{n-1}/n) t^n, which lies in Z_p[t], D_l >= p r - 1, and likewise v(l([k]R) -
+    k l(R)) >= p r - 1 for every integer k; (iii) for a random polynomial reparametrisation phi(t) = t
+    + sum_{2 <= n < p} c_n t^n with c_2 a unit, D_phi = 2r exactly. The radius is therefore set by the
+    coordinate, and its Z_p-integral maximum by the denominator p of the p-th log coefficient. At 256
+    bits this is 5 to 7 digits (1280 to 1792 bits) for t and p - 1 digits for l: linearity along the fibre
+    is unbounded in practice, while k enters only through the fibre coordinate of a compatible lift. Edwards
+    and Jacobi-quartic parameters need Q_p-rational 2- or 4-torsion, impossible when E~(Q_p)_tors is Z/N
+    with N odd, so over Q_p only Weierstrass t and its reparametrisations exist. No exponent change is
+    claimed.'
+  mechanism: The formal logarithm is an exact homomorphism from E^ to the additive formal group with log(t)
+    = sum (b_{n-1}/n) t^n, b_{n-1} in Z_p. Truncating below n = p keeps all coefficients integral and
+    loses only terms of valuation at least p r - v(n) >= p r - 1. A generic reparametrisation introduces
+    -2 c_2 t_1 t_2 at order 2r. The 5r and 7r values of t are the orders of the first deviation terms
+    (2A/5)(m - m^5) t^5 and (3B/7)(m - m^7) t^7 recorded in wave 1. Together these show that the user-level
+    obstruction 'linearity only on a small ball' is removable by a coordinate change, and that the remaining
+    obstruction is lift compatibility, not radius.
+  novelty_status: adaptation
+  citations:
+  - ref: KR-RHO-53c89f
+    provenance: internal
+    claim: The anomalous attack uses exactly one digit of additivity (radius 2r suffices when N = p);
+      for p prime to N no radius helps.
+    verified_by: REPO BRIEF section 3 row text, file not opened in this session
+  - ref: KR-RHO-13bf67
+    provenance: internal
+    claim: Exponent delta is 0; this is a precision control.
+    verified_by: REPO BRIEF section 3 row text, file not opened in this session
+  assumptions:
+  - p >= 11 so that the denominators 5 and 7 of the first deviation terms are units.
+  - Points of E_1 are generated as t = p^r u with u a unit, and the formal group law is used to precision
+    at least p r + 3 digits.
+  predictions:
+  - metric: D_t
+    direction: different
+    minimum_effect: equals 5r (a_4 nonzero) or 7r (a_4 = 0) on 100 percent of sampled pairs
+  - metric: D_l - (p r - 1)
+    direction: higher
+    minimum_effect: at least 0 on 100 percent of sampled pairs and of sampled (k, R)
+  - metric: D_phi
+    direction: different
+    minimum_effect: equals 2r on at least a fraction 1 - 2/p of sampled pairs
+  minimal_test:
+    design: In Sage (crypto/sage) for p in {11, 13, 17, 19, 23, 29, 31}, curves y^2 = x^3 + a x + b over
+      Z_p with a = 0 and with a a unit, compute the formal group law and formal logarithm to order p +
+      2 with p-adic precision p r + 3. Sample 200 pairs (R, S) at r = 1 and 100 at r = 2, compute D_t,
+      D_l, D_phi for three random phi, and v(l([k]R) - k l(R)) for k in {2, 3, p - 1, p, p + 1, N}. Report
+      exact valuations, not thresholds.
+    controls:
+    - The coordinate t itself must reproduce 5r and 7r exactly (wave-1 record replication).
+    - Random phi with c_2 a unit must give 2r; a run with c_2 = 0 and c_3 a unit must give 3r.
+    - Agreement v(log(t) - l(t)) >= p r - 1 for the untruncated Sage logarithm.
+    required_metrics:
+    - p, a, r, number of pairs
+    - histogram of D_t, D_l, D_phi
+    - minimum over k of v(l([k]R) - k l(R)) - (p r - 1)
+  falsification_conditions:
+  - D_l < p r - 1 for any sampled pair or (k, R).
+  - D_t different from 5r (a_4 nonzero) or 7r (a_4 = 0) for any pair, which contradicts the wave-1 record
+    and must be reported upstream.
+  - D_phi different from 2r on more than a fraction 2/p of pairs.
+  confounders:
+  - Precision loss in series inversion; verified by recomputing at two precisions and requiring identical
+    valuations.
+  interpretation_limits:
+  - Radius concerns E_1 only; no statement about E(F_p) or about k follows except through a compatible
+    lift, which is the discrete log.
+  heuristic_assumptions:
+  - id: H1
+    statement: The valuations reported are exact and not precision artefacts.
+    rigorous_support: Formal-group identities are exact; only the implementation can err.
+    validation_plan: Two precisions per run must agree.
+  target_complexity:
+    time_exponent: N^{1/2} unchanged
+    memory_exponent: O(1)
+    best_known: Pollard rho at Theta(N^{1/2}) per KR-RHO-13bf67
+    hidden_overhead: Evaluating l to p - 1 terms at 256 bits is infeasible and unnecessary; the statement
+      is a bound.
+    tradeoff_note: None.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: low
+  sota_delta: Exponent delta 0. Counted delta, the additivity radius rises from 5r or 7r to at least p
+    r - 1 by a coordinate change, removing 'small-ball linearity' from the list of live obstructions to
+    lift-based methods.
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/generic-rho
+    rows_checked:
+    - KR-RHO-53c89f
+    - KR-RHO-13bf67
+    - KR-RHO-755e35
+    - KR-IC-cd159a
+    nearest:
+    - ref: KR-RHO-53c89f
+      provenance: internal
+      relation: adjacent
+      delta: The anomalous attack is the radius-2r special case at N = p; this record quantifies radius
+        for all N.
+    searched:
+      corpus_grep:
+      - REPO BRIEF wave-1 p-adic records for additivity radius, formal parameter, formal logarithm
+      - REPO BRIEF for RESEARCH_EXOTIC_COORDINATES.md (listed, not quoted; must be read for which models
+        it covers)
+      web: []
+      blocked:
+      - RESEARCH_EXOTIC_COORDINATES.md content not available in this session
+    lead: LEAD-TRF-kernel-of-reduction-lemma
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: In Sage (crypto/sage) for p in {11, 13, 17, 19, 23, 29, 31}, curves y^2 =
+        x^3 + a x + b over Z_p with a = 0 and with a a unit, compute the formal group law and formal logarithm
+        to order p + 2 with p-adic precision p r + 3. Sample 200 pairs (R, S) at r = 1 and 100 at r =
+        2, compute D_t, D_l, D_phi for three random phi, and v(l([k]R) - k l(R)) for k in {2, 3, p - 1,
+        p, p + 1, N}. Report exact valuat'
