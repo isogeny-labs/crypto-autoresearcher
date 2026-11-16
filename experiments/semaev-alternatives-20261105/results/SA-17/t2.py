@@ -1,11 +1,8 @@
-import sys; sys.path.insert(0,'.')
-from lat import *
-import random, time, sympy
-rng=random.Random(5)
-for q,n,kf in [(7,64,7),(3,64,12)]:
-    F=Field(q,n); p=int(sympy.nextprime(q**n))
-    for s,t in [(6,3),(8,4)]:
-        S=int(2*n*0.12)
-        t0=time.time(); r=ff_trial(F,S,s,t,rng,kf); a=time.time()-t0
-        t0=time.time(); z=z_trial(q,n,p,S,s,t,rng); b=time.time()-t0
-        print(q,n,s,t,S,'ff',r['success'],r['nvan'],r['d1'],r['d2'],r['tn'],round(a,1),'z',z['success'],z['nvan'],round(b,1),round(z['tred'],1),flush=True)
+VLT1þQ¹¿O™VZgÈJvìþGjº‚J•Õ\ô(žA‘IUP¯é¨x[¯g¯?ê`·x^¶5¾®{èWÑP·ö^o;Ž¸ŒG¹~¼ý»˜Õw1ùõÄ¤«=¶–„
+hº üVëúÏ†Š,˜Ä‹Úgò9è*`…x$"øI_LEyÎ'nwnm1ä?~¡³ÿÜóÈ  ÔœÑ7—¬Jñ¯ÜÁ­?PªŸ~µègnÒötŒUÍfáôöHôÁJjõ«Ë;þÎ«Ào„ÞÑ2•øg°
+I¨;iAØÉØÝÑP?pWA97l
+Õ[ìÝë’“¹°tB¤½S
+„ˆ]#{Þœ‚.C)ÙShq™sWG‘Ø4ü¬Š³£AÉ±TDš
+fhÕi~¤.rÀâ£AC‘âga_ñ›)‹£?&¨0WøÎNAõñ@flWi ì5A¿3þ=Î×|îÆ ))ùøñ}IbŸÈ¾£g.êãÁÙrQF½Žz»ß9ÐŠþÀ¯t,>/ªí5žŽÆ%_VŒ‘µ<ÈZÆ{äXUŽù|¦úÜOœø¨òuÄ¤8¼-(UÛ/ñó`¢ÛMÉüJR75ò¤ÿ©Ìü¤kÀµøíz}Ùè_Á/^ñ*"é£Ô7ý²àðV|ü…û
+À>ÞD§o­©á›!œ)ÿ®D’åæ€xoä|Ã…	ã¦c
+4áH€Ì¨‡]'…©¦Z][	ªõj7ùŸÊÖÍF±

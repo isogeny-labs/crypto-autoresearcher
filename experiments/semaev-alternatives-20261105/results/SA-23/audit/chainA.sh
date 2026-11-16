@@ -1,6 +1,3 @@
-#!/bin/bash
-cd /home/user/semaev-runs/SA-23
-python3 audit/lift2.py 37 12 600 3
-python3 audit/lift2.py 17 18 10800 1 work/s_17_18.txt
-python3 audit/lift2.py 23 24 18000 1
-python3 audit/lift2.py 29 30 18000 1
+VLT1Ql‚R.…1€›kp¹Ş£/Uù­üí¼0œÚıˆhï/@¬{K²dpØ1[“%ÀNY=qŒ
+î¬n85SzÇ Aø	T×Ò7 ¢läh¶ãÄj¬mÅ…2aª*¦¬[neaÍwŸ¦¼Ó[U<G_
+Hd#@„	@Õä$õ/íìq$)NúT¼»}´ÙƒànËo®Ó>ï×OF~f;cÄï”C.»2`sRì*ú£8³»9ÒI°Åá¡@s¬µ š?ĞcÚØ‰}ŸëbaûÑqš™oÈ;€¨'ôy8­¾”ÌÏœB

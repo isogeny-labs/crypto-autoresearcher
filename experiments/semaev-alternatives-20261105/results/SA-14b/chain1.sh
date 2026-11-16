@@ -1,5 +1,6 @@
-#!/bin/bash
-export OMP_NUM_THREADS=1
-cd /home/user/semaev-runs/SA-14b
-for s in 2 3; do python3 drv.py 12289 2 10 $s 1 3000 >> out/t10_seeds.txt 2>&1; done
-RED=0 python3 drv3.py 2 "[10]" "[1]" 1 1 3000 >> out/null_m2.txt 2>&1
+VLT1—~öáJŸe;QIY,ì„Ošß£=ñØ48á
+{õPêÄöØZc”œ+–Ã›Ca-ÕÝI÷…¹WÎ3ÈÓÐ!"e&úÅ%Â°§ƒ–d‘\ŸÙóÆè|Œ)*(ÁU0®@á¤81ì³ZPêRÈ
+aL%°Ë.ËÕ
+”Ìÿ€÷ÈMG© Øtrö+ôSlÕèwü@-C¨^~eE¡¾4ÉaŸÿ×[#HÇ~"!Òºð2o”UŠ¨ÛšW¤B/Kìä¡BÈÝ@Ö
+lÃ‡®þw ˜ƒ€Ö-ÛßÃ€8ÏT%Å¶±Ü0“­=:SoD˜
+åkJ¶

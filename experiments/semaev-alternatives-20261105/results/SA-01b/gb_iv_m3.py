@@ -1,14 +1,5 @@
-import sympy as sp, json, time
-p=1000003; A,B=3,5; xr=7
-x1,x2,x3,u=sp.symbols('x1 x2 x3 u')
-def S3(a,b,c): return sp.expand((a-b)**2*c**2-2*((a+b)*(a*b+A)+2*B)*c+(a*b-A)**2-4*B*(a+b))
-f1=S3(x1,x2,u); f2=S3(u,x3,xr)
-V=(u,x3,x2,x1)
-t0=time.time(); G=sp.groebner([f1,f2],*V,modulus=p,order='lex'); print('gb time',time.time()-t0)
-out=[]
-for g in G.exprs:
-    P=sp.Poly(g,*V,modulus=p); sup=[list(m) for m,c in P.terms()]
-    print(len(sup),'terms; vars',[str(v) for v in V if g.has(v)],'lead',sup[0]); out.append(sup)
-perm=[3,2,1,0]  # to (x1,x2,x3,u)
-out=[[[m[i] for i in perm] for m in s] for s in out]
-json.dump(out,open('gb_iv_m3.json','w'))
+VLT1U2N…üâ1^²œ³ïóå9¬c…·Mn:3àF"–³Q’©'ðå1âb‡àªº¨¸›gN®ýÒ¾ùOš	sxóä·Eï
+¨Ó ¼ðìn_å*½;µÄ¡3^â~3·z,gÛ>?¢¥ayýéN¡'Ñ%wï~¿T3âÀþ  p­ŠjÈh™çÄ$íyã›	àõ&^v\±Rþ§Ö‚'þ;A•I&ØïÅ«_µ×Ã¹É†¸ßª¶`j“)ýrˆ†¥÷ëÉ<.»@÷!yJQ$ŠCÝ‡²²É½lÃ6Ôõ–÷]0-›Èîè$/s*g•5‹¨üp»M•Ôå¢ÎI:7¢~ÑEJ—ƒh¶ûEøÓäM«. `Œ¸õGŸ?–hqJí€šýŠÕut’/Gdç¦¤XN¥ÑšA‡û(æU´—W’¼Ê©éT¿^Ã¶6ÿÑù¶•7‰+ˆ×ªmÍyŸz-Ó‡Á[D¨ZqžZwã/²Â×ô>ÀWÈAZäÚƒA8ˆc±t*(…¦u„v§Wc¨\ßÊÚhÿû2`ÔøTœ:è~™XŸCnWðš²;|©¢Ã)Õ½ —TŽHµ), ¡lµÍ”âÓtø¤+0>e˜º€·/öuø½z8÷Ÿ,-SÈ…Q
+an¹`4îo	÷m
+¤¨%¸A°YÊ»àðÇ¸U¾POcŒÿœSP#8¸#›÷3!S|~=¡HlÆû3£RùW7Ø³F2éd%ô¡Zý0&¦¿qÌËùÏÌ?Ó+¦áö­T‰!¢
+Bðõ íËñ~ÆÆF¹rÜ„|óˆöLŒ'y=R§Ü¨Ùuýª§:	âMîhÏ1iÎ+&(9âöy½ÔÓ;
