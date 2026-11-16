@@ -1,0 +1,121 @@
+run:
+  attack_claimed: true
+  result:
+    certificate:
+      kind: discrete_log
+      path: certificate-seal.json
+      verification_method: Producer direct [x]G=Q plus known/negative controls; independent
+        native checker pending
+      verified: true
+    raw_result: raw-result.json
+    executor_receipt: execution-receipt.json
+  id: RUN-ECDLP-fc6e86
+  experiment_id: EXP-ECDLP-ca93ac
+  task_id: TASK-20261106-fb15fa
+  trial_id: complete-public-reference-r52
+  approved_by: DEC-20261106-b4ff0c
+  status: completed
+  status_note: 'Written by tools/experiment_execution.py: the driver exited 0. Completed
+    is not a validity ruling.'
+  code:
+    commit: 51bae1575ab83b2fd7bd2d93d64f8b8eba4b67ff
+    commit_meaning: launch authority commit (launch.json, environment.json)
+    command_file: command.txt
+    command: '["python3", "-B", "harness/classical_ecdlp_public_reference_audit_v4/driver.py",
+      "--repo-root", "/tmp/classical-ecdlp-validation-20261106", "--out", "/tmp/classical-ecdlp-validation-20261106/experiments/EXP-ECDLP-ca93ac/runs/RUN-ECDLP-fc6e86",
+      "--input-manifest", "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/input-manifest.json",
+      "--time-limit", "1200"]'
+    check_command: '["python3", "-B", "harness/classical_ecdlp_public_reference_audit_v4/verify.py",
+      "--repo-root", "/tmp/classical-ecdlp-validation-20261106", "--out", "/tmp/classical-ecdlp-validation-20261106/experiments/EXP-ECDLP-ca93ac/runs/RUN-ECDLP-fc6e86",
+      "--input-manifest", "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/input-manifest.json"]'
+  environment:
+    file: environment.json
+    commit: 51bae1575ab83b2fd7bd2d93d64f8b8eba4b67ff
+    platform: linux
+    python: 3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]
+    runtime_lock: null
+    runtime_lock_sha256: null
+    source_sha256:
+      coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/input-manifest.json: 4c3fc7d06f396065335d60fdae224358f7197a1a94b80935cd852c78c935c811
+      harness/classical_ecdlp_public_reference_audit_v4/driver.py: 99a6a535dda612a762d4b56c3fed8749321ddc849f2200b19474ba1d79010849
+      harness/classical_ecdlp_public_reference_audit_v4/solver.py: d462b17ffb10772852d6024a92be71eb768b27d3d4b619cd582c868f88953031
+      harness/classical_ecdlp_public_reference_audit_v4/verify.py: 2340d748a3e3af4e99c07e87d971aa46de0e38aa866faaf082c0112cc1bb2537
+      tools/artifact_store.py: 8518bbbd385b077f6bf5344503ebe9c0feb8f0b3bb119e8e8a7deea8f461be59
+      tools/experiment_protocol.py: 0f46a2b856bb1df2d155c4a676b46c6118d82c45cf8e5cc0492315aeb45c84e4
+    specification_sha256: a75a1aba17ac41666c9514dbde76127efcbcc0cd762c95e77b849325facf9bc8
+  inputs:
+    trial_plan: experiments/EXP-ECDLP-ca93ac/trial-plan.json
+    plan_sha256: b013854ed2021adf79b059eeb6a3bf1e760c8291506dd80d73d954f1769ae3a1
+    trial_id: complete-public-reference-r52
+    parameters:
+      attack_class: discrete_log
+      domains: 48
+      execution_scope: new_reference_certificate_search_only
+      operation_cost_metrics: false
+      passes:
+      - A
+      - B
+      public_targets: 1536
+      raw_manifest: coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/input-manifest.json
+      target_curves: 24
+      wall_valid: false
+  timing:
+    started_at: '2026-11-06T17:39:04.717403+00:00'
+    finished_at: '2026-11-06T17:39:07.578913+00:00'
+    wall_seconds: 2.86151
+    source: supervisor clock around the driver process
+  artifacts:
+    stdout: stdout.log
+    stderr: stderr.log
+    check_stdout: check.stdout.log
+    check_stderr: check.stderr.log
+  envelope_completion:
+    schema: crypto.autoresearch.run_envelope_completion.v1
+    action: completed
+    driver_shape: nested
+    driver_manifest_sha256: 67c6cb4d25ce20aff5b02362df0d50473711612e9d5bf66b2f05effdcf617f72
+    completed_by: tools/experiment_execution.py
+    added:
+    - run.id
+    - run.experiment_id
+    - run.task_id
+    - run.trial_id
+    - run.approved_by
+    - run.status
+    - run.status_note
+    - run.code.commit
+    - run.code.commit_meaning
+    - run.code.command_file
+    - run.code.command
+    - run.code.check_command
+    - run.environment
+    - run.inputs
+    - run.timing
+    - run.result.raw_result
+    - run.result.executor_receipt
+    - run.artifacts
+    sources:
+      run.id: frozen trial run_id
+      run.experiment_id: frozen plan experiment_id
+      run.task_id: frozen plan task_id
+      run.trial_id: frozen trial id
+      run.approved_by: frozen plan approved_by
+      run.status: 'derived: the driver exited 0'
+      run.status_note: supervisor constant explaining run.status
+      run.code.commit: launch authority commit
+      run.code.commit_meaning: supervisor constant
+      run.code.command_file: supervisor constant (command.txt, written at launch)
+      run.code.command: launched argv, equal to command.txt
+      run.code.check_command: launched checker argv
+      run.environment: 'environment.json, plus file: environment.json'
+      run.inputs: frozen plan path and hash, frozen trial id, seed, parameters, curve_id
+      run.timing: supervisor clock around the driver process
+      run.result.raw_result: supervisor constant (raw-result.json exists)
+      run.result.executor_receipt: supervisor constant; the supervisor writes this
+        file after completion
+      run.artifacts: supervisor constant; stdout.log and stderr.log exist, check.stdout.log
+        and check.stderr.log are written after completion
+    representation: 'published manifest.yaml is a yaml.safe_dump re-serialisation
+      of the driver''s values plus the added keys: comments and source formatting
+      are not kept; the driver''s exact bytes are in the execution receipt''s manifest_completion.driver_manifest_text,
+      hashed in driver_manifest_sha256'

@@ -1,0 +1,144 @@
+idea:
+  id: IDEA-20261109-680a3d
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: 'Exit-dimension theorem: every homomorphic exit from E(F_p)[N] into matrices or algebras over
+    F_p-fields has size at least the embedding degree, and every algebraic exit is an isogeny'
+  class: barrier
+  claim: 'Let E/F_p have prime order N, N not p, and k = ord_N(p). (a) For m, j >= 1 a nontrivial group
+    homomorphism E(F_p) -> GL_m(F_{p^j}) exists iff N divides prod_{i<=m}(p^{ij}-1), iff k divides ij
+    for some i <= m; hence mj >= k. The same bound holds for the unit group of any F_{p^j}-algebra of
+    dimension m (regular representation), for tori T_n(F_{p^j}) (nj >= k) and for the pairing transfer
+    into F_{p^j}^* (j >= k, KR-RHO-53c89f). (b) gcd(N,p) = 1, so no nontrivial homomorphism exists into
+    any p-group: unipotent groups, G_a(F_{p^j}), formal groups, Z_p-modules. (c) For any algebraic group
+    G over F_p, the image of a homomorphism of algebraic groups E -> G is complete and connected, hence
+    an abelian subvariety; every algebraic exit is zero or an isogeny onto a curve in the same isogeny
+    class (equally hard, KR-RHO-755e35). Prediction fixed before computation: for secp256k1, k > 2^100
+    (the SafeCurves transfer criterion ord_N(p) >= (N-1)/100 is recalled as satisfied; the test recomputes
+    k), so no F_p-linear exit of polynomial size exists and the torus, pairing-friendly and matrix-group
+    DLP algorithms cannot be ported by Lagrange''s theorem.'
+  mechanism: 'The fastest non-elliptic DLP algorithms (TNFS on F_{p^n}, hence on tori and pairing images;
+    Menezes-Wu eigenvalue reduction on GL_n(F_q)) exploit one feature: the group sits in the unit group
+    of a finite-dimensional F_p-algebra, so elements lift to a global ring with a multiplicative norm.
+    Any port must first build a homomorphism from the point group into such a unit group. Lagrange on
+    |GL_m(F_{p^j})| = p^{jm(m-1)/2} prod_{i<=m}(p^{ij}-1) forces N to divide some p^{ij}-1, the embedding-degree
+    condition. Completeness of E removes every algebraic homomorphism to an affine group. What remains
+    is isogenies and group-theoretic maps into groups of order divisible by N, whose F_p-linear realisations
+    have size at least k.'
+  novelty_status: unverified
+  citations:
+  - ref: KR-RHO-53c89f
+    provenance: internal
+    claim: Pairing transfer needs small embedding degree; this record proves the same k bounds every matrix
+      or algebra exit.
+    verified_by: REPO BRIEF 2026-11-09 section 3 excerpt; KR yaml not opened
+  - ref: KR-RHO-755e35
+    provenance: internal
+    claim: Isogenous curves are equally hard; (c) shows isogenies are the only algebraic exits.
+    verified_by: REPO BRIEF 2026-11-09 section 3 excerpt; KR yaml not opened
+  - ref: IDEA-20260727-005
+    provenance: recalled
+    claim: Defines exit maps into F_p-points of connected commutative algebraic groups and a neutrality
+      theorem; the next agent must read it to check whether bound (a) is already stated there.
+    verified_by: REPO BRIEF 2026-11-09 section 2 index line only
+  assumptions:
+  - N is prime and different from p; true for secp256k1 and every calibration curve used.
+  - Exits are group homomorphisms on points or homomorphisms of algebraic groups; arbitrary set maps are
+    not exits.
+  predictions:
+  - metric: k = ord_N(p) for secp256k1
+    direction: higher
+    minimum_effect: k > 2^100
+  - metric: per toy curve, smallest d with N dividing |GL_d(F_p)|
+    direction: different
+    minimum_effect: equals k exactly on every curve tested
+  - metric: ledger lanes proposing an F_p-linear exit of size below k
+    direction: different
+    minimum_effect: each receives a closed verdict citing this record or a documented exception
+  minimal_test:
+    design: (1) Factor N-1 for secp256k1 (published; ECM recovers it) and compute k = ord_N(p). (2) For
+      every curve in crypto/docs/ECDLP_CALIBRATION_PRIMES.md compute k and the smallest d with N dividing
+      |GL_d(F_p)|; assert equality. (3) On a toy supersingular curve with k = 2 build the Frey-Ruck map
+      into F_{p^k}^* and confirm the homomorphism appears exactly at j = k. (4) Grep ledger/proposals
+      for exit, embedding, representation, torus, matrix, algebra and tag each lane with verdict (a),
+      (b) or (c).
+    controls:
+    - Supersingular toy curve with k = 2 where the exit exists (positive control for the iff).
+    - Toy curve of composite order to confirm the statement is specific to prime N.
+    required_metrics:
+    - k for secp256k1 and for each calibration curve
+    - smallest d with N dividing |GL_d(F_p)| per curve
+    - count and ids of ledger lanes tagged
+  falsification_conditions:
+  - A curve where the smallest d differs from k; this would be an arithmetic error, since (a) is a theorem,
+    and the record is withdrawn until fixed.
+  - k for secp256k1 at most (log_2 p)^4; then the pairing transfer is live and the scope statement is
+    wrong.
+  - A ledger lane exhibiting a computable homomorphic exit into GL_m(F_{p^j}) with mj < k; impossible
+    under (a), so it exposes a definitional mismatch to be recorded.
+  confounders:
+  - Exits into abelian varieties of dimension >= 2 (Jacobians) are not linear and not covered by (a);
+    they cost at least p by the Gaudry exponent 2-2/g over q >= p.
+  - Z/N-algebras such as Z/N[eps]/(eps^2) receive Z/N as 1 + a eps, but computing that map is the discrete
+    logarithm itself, so they are not exits in the assumed sense.
+  interpretation_limits:
+  - Closes homomorphic exits into F_p-linear targets; does not touch additive decomposition (Semaev) or
+    non-homomorphic representation changes.
+  - Argument (c) concerns F_p-algebraic groups; non-algebraic point maps are constrained only by (a) and
+    (b).
+  heuristic_assumptions:
+  - id: H1
+    statement: k for secp256k1 exceeds 2^100.
+    rigorous_support: Follows from the published factorisation of N-1 once recomputed; recalled here.
+    validation_plan: Step (1) of the test, logged with the factorisation and the order computation.
+  target_complexity:
+    time_exponent: none proposed; barrier record
+    memory_exponent: none
+    best_known: Pollard rho, Theta(N^{1/2}) group operations, KR-RHO-13bf67
+    hidden_overhead: none; one 256-bit factorisation and modular exponentiations
+    tradeoff_note: closes three of six port families (tori, pairing-friendly, matrix groups) for any curve
+      with k above poly(log p)
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: high
+  dominated_by: KR-RHO-53c89f states the pairing special case. No row states the bound for general matrix
+    or algebra exits or the completeness argument for algebraic exits.
+  sota_delta: 'Exponent delta 0. Savings: every lane whose first step is a linear representation, torus
+    embedding or matrix image of the point group is closed by a one-line theorem plus one order computation.'
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/generic-rho
+    rows_checked:
+    - KR-RHO-53c89f
+    - KR-RHO-755e35
+    - KR-RHO-13bf67
+    - KR-RHO-5b1c0a
+    - KR-IC-5ea2f8
+    - KR-IC-46d822
+    nearest:
+    - ref: KR-RHO-53c89f
+      provenance: internal
+      relation: adjacent
+      delta: The row covers the pairing exit into F_{p^k}^*; this record covers all GL_m(F_{p^j}) and
+        algebra exits by the same k and all algebraic exits by completeness.
+    - ref: KR-RHO-755e35
+      provenance: internal
+      relation: adjacent
+      delta: The row says isogenies preserve hardness; this record shows isogenies are the only algebraic
+        exits.
+    searched:
+      corpus_grep:
+      - REPO BRIEF section 2 for exit map, embedding, representation, torus, matrix, algebra, Chevalley
+      - REPO BRIEF section 3 generic-rho and index-calculus rows for transfer and Weil descent
+      web: []
+      blocked: []
+    lead: LEAD-TRF-prime-field-isogeny-to-weak
+    lead_delta:
+      kind: answers_obstruction
+      statement: 'New test: (1) Factor N-1 for secp256k1 (published; ECM recovers it) and compute k =
+        ord_N(p). (2) For every curve in crypto/docs/ECDLP_CALIBRATION_PRIMES.md compute k and the smallest
+        d with N dividing |GL_d(F_p)|; assert equality. (3) On a toy supersingular curve with k = 2 build
+        the Frey-Ruck map into F_{p^k}^* and confirm the homomorphism appears exactly at j = k. (4) Grep
+        ledger/proposals for exit, embe'

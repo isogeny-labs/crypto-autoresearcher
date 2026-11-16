@@ -1,0 +1,129 @@
+idea:
+  id: IDEA-20261109-5114b3
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: Frobenius trace of the Prym of the double cover of E branched at plus-minus P and plus-minus
+    Q along the discrete-log graph, exhaustive at p up to 2^12 against random-pair and shuffled nulls
+  class: representation
+  claim: 'For E of prime order N (so E[2](F_p) = 0) the double cover of E branched at the four points
+    plus-minus P, plus-minus Q is unique, has genus 3, and its Prym is the Jacobian of the genus-2 curve
+    C_{P,Q}: w^2 = (x - x_P)(x - x_Q)(x^3 + ax + b). Define a_1(k) = p + 1 - #C_{P,kP}(F_p). Prediction
+    (null): along k in [1, N-1] the sequence a_1(k) is statistically indistinguishable from a_1 over random
+    pairs, namely Kolmogorov-Smirnov distance below 3 N^{-1/2}, autocorrelation at lags 1 to N^{1/2} below
+    3 N^{-1/2}, and max over nonzero b of |sum_k a_1(k) e(bk/N)| below 3 (4 p^{1/2}) N^{1/2}. The alternative,
+    any excess, would be a scalar-correlated Weil-cohomology statistic in the regime where Deligne equidistribution
+    cannot certify flatness, because the graph {(P, kP)} has bidegree (k^2, 1). No exponent changes.'
+  mechanism: The cover v^2 = (x - x_P)(x - x_Q) over E is the unique square root of O(B) for B the branch
+    divisor since the ambiguity is E[2](F_p) = 0; quotienting by the composite involution gives C_{P,Q},
+    and Riemann-Hurwitz gives genus 3 with Jac isogenous to E times Jac(C). a_1 is a Legendre-symbol sum
+    over x, one pass of O(p) per pair with precomputed chi(x^3 + ax + b). Translation rigidity (RECORD
+    A) does not apply because the cover depends on the branch divisor, not on a functorial correspondence;
+    the k-structure of the branch divisor along the scalar is exactly the hybrid-sum regime the barriers
+    wave measured with additive characters.
+  novelty_status: speculative
+  citations:
+  - ref: KR-RHO-13bf67
+    provenance: internal
+    claim: Exponent delta 0 against the generic bound.
+    verified_by: brief section 3 row text; file not opened
+  - ref: KR-RHO-755e35
+    provenance: internal
+    claim: 'The Prym is a genus-2 Jacobian of order about p^2, not a transfer target: genus-2 index calculus
+      costs about p.'
+    verified_by: brief section 3 row text; file not opened
+  assumptions:
+  - Prime order N, so the double cover is unique and E[2](F_p) = 0.
+  - x_P and x_{kP} distinct; the cases k = plus-minus 1 are excluded and reported.
+  predictions:
+  - metric: Kolmogorov-Smirnov distance between a_1 along the scalar and a_1 over random pairs
+    direction: lower
+    minimum_effect: at most 3 N^{-1/2}
+  - metric: max autocorrelation of a_1(k) at lags 1 to N^{1/2}
+    direction: lower
+    minimum_effect: at most 3 N^{-1/2}
+  - metric: max over nonzero b of |sum_k a_1(k) e(bk/N)| divided by 4 p^{1/2} N^{1/2}
+    direction: lower
+    minimum_effect: at most 3
+  minimal_test:
+    design: Sage or Rust under crypto/sage, receipt layout as in cryptanalysis/experiments/ecdlp-leads-investigation-20261008-r1
+      (next agent reads its receipt format). Twenty prime-order toy curves with p at most 2^12 from crypto/docs/ECDLP_CALIBRATION_PRIMES.md,
+      half with j = 0, three base points P each. For every k compute a_1(k) by one Legendre-symbol pass.
+      Compute the three statistics with pre-registered thresholds. For each curve also compute a_1 over
+      2N random pairs for the null law and verify its Sato-Tate USp(4) shape as a harness check.
+    controls:
+    - Random pairs (P, Q): the full-family null.
+    - Shuffled k: destroys scalar order, keeps the marginal law.
+    - 'Planted sensitivity arm: add c (k mod 2) with c = 0.1 times 4 p^{1/2} to a_1(k) and confirm detection
+      by the Fourier statistic at b = N/2 rounding, giving a power estimate.'
+    required_metrics:
+    - a_1(k) table per curve and base point
+    - KS distance, autocorrelation maxima, Fourier maxima with argmax b
+    - the same statistics for shuffled and random-pair arms
+    - power of the planted arm
+  falsification_conditions:
+  - Any statistic exceeds its threshold on three or more curves while the shuffled and random-pair arms
+    stay below; this falsifies the null and opens a scalar-correlated statistic to be reproduced at the
+    next prime size.
+  - The planted arm is not detected: the harness lacks power and the run is invalid.
+  - Null confirmed at p up to 2^12 is evidence for flatness in the toy regime only; it does not certify
+    flatness at 2^256.
+  confounders:
+  - j = 0 curves have the order-3 automorphism acting on x; report the mu_3-orbit structure separately.
+  - Small k (k below p^{1/4}) are Weil-covered and must not drive the statistics; report them excluded
+    and included.
+  interpretation_limits:
+  - A confirmed null is a toy measurement, not a theorem; a rejected null is a reproducibility task, not
+    an attack.
+  heuristic_assumptions:
+  - id: H1
+    statement: The Frobenius trace of the Prym is equidistributed along the scalar as over random pairs.
+    rigorous_support: Deligne equidistribution over the full two-parameter family (monodromy USp(4) expected);
+      none along the scalar graph for k above p^{1/2}.
+    validation_plan: The exhaustive toy run above; thresholds fixed before the run.
+  target_complexity:
+    time_exponent: p^{1/2} unchanged
+    memory_exponent: unchanged
+    best_known: Pollard rho, Theta(p^{1/2}) group operations
+    hidden_overhead: none claimed
+    tradeoff_note: a probe; no algorithm is defined.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: low
+  dominated_by: The barriers-wave hybrid-sum record for the regime; RECORD A for the functorial case.
+    The Prym statistic is the addition.
+  sota_delta: exponent delta 0; one more pre-registered flatness probe in the Weil-uncovered regime.
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/generic-rho
+    rows_checked:
+    - KR-RHO-13bf67
+    - KR-RHO-755e35
+    - KR-RHO-53c89f
+    - KR-IC-a4dd54
+    - KR-IC-cd159a
+    nearest:
+    - ref: KR-IC-a4dd54
+      provenance: internal
+      relation: orthogonal
+      delta: The row is index calculus on genus-2 Jacobians; here the genus-2 Jacobian is only measured,
+        never used as a target.
+    - ref: KR-RHO-755e35
+      provenance: internal
+      relation: adjacent
+      delta: The row forbids reaching a weak curve by isogeny; the Prym is not isogenous to E and is not
+        a transfer.
+    searched:
+      corpus_grep:
+      - brief section 2 for Prym, double cover, genus 2, branched, hybrid sum
+      - brief prior-waves barriers and transfer sections
+      web: []
+      blocked: []
+    lead: LEAD-TRF-same-field-genus-g-embedding
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: Sage or Rust under crypto/sage, receipt layout as in cryptanalysis/experiments/ecdlp-leads-investigation-20261008-r1
+        (next agent reads its receipt format). Twenty prime-order toy curves with p at most 2^12 from
+        crypto/docs/ECDLP_CALIBRATION_PRIMES.md, half with j = 0, three base points P each. For every
+        k compute a_1(k) by one Legendre-symbol pass. Compute the three statistics with pre-registered '

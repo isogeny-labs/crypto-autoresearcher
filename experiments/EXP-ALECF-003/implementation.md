@@ -1,21 +1,3 @@
-# Implementation â€” Autolab ECDSA Fail: Older q=1141 higher-Toffoli score
-
-Historical Autolab port (no re-execution).
-
-## Provenance
-- Source repo: `/Volumes/Volume/autolab`
-- Source commit: `dca04ac33e9ffcfc51edb3ae7e7bd558b1962d95`
-- Source id: `ecdsafail-q1141-old-jul24`
-- Port tool: `tools/port_autolab_experiments.py`
-- Port tag: `autolab-port-20260731`
-
-## Copied artifacts
-- `source/score.json`
-- `source/README.md`
-- `source/results.tsv`
-
-## Deviations from live harness execution
-- Run package is an archival import of prior Autolab outputs.
-- `run.code.commit` records the crypto-autoresearcher HEAD at import time;
-  Autolab source commit is recorded in `inputs.parameters.source_commit`.
-- Certificates are `kind: none` (not re-verified).
+VLT1:*îÌ»ºmë3ýÓÔ ”e–Ì½ï¦ißËc½ZcâÞ“	“&—Zü];=é@šjÏ[`ºÃãÐ(RmÓl]OkK)ÒÏ¬»|Íç+[Ûârg–NvÅ~vÜX‰ã×÷Òy—[MÖ´öbM”­ª! ·S÷…ÀPÑð7 ÞkÇó O9O3î!#¡?Ž¼?×Dü¦8¢v™ÜÂúxä0IÕs—(Ž6/:®À”gòõ»1jT©þ“
+ñ²+¨Tz¹Nö0úÇgÎÔl_ä¾*@ÇN¶„ÍóñÛ¥g_*–äõ‘®	ÒGôµÿA‚€W¯Âõ¥H_.Ú÷×¹'N†llvQKgº6A*^\éÈ tY“S%£—~Ù›_	ø»ªÜê¾QæØ¸þªÀwšš%Sô8íJ×ÁñÍqõ©|¥|é¸ø3Áàç2”mø|GA> ¼—ŸeRˆaMO‚	I‚ë2†ÙÔ÷†‚^’öòqÓôumû²ÚÞìý¹+~LÒ;ýÌóò7éi\ëR8›‡Ó«¥pÒX{ú2?¨7¼-6I	fI; ÔkXFS?Qdˆ ÖÜÿjiM4øîÁÍïæ0D¾[_)2«àJ¿Õt³Ÿ`SÐX1Õ!'ùsMºm¬j.!”°¸ði&bfKínÍjÙEÚ²Ë0ñ&¹ @lÈÒ*›DUtÛ!E:ÛÐÓÏ9V¾éäú•Š¬udÚK'©à™W!¾n^¬Ë*bã¼R8´ßzSŒ„¤m¶‚~Ëõw>IbsG‘xî\s'}¸!²P'´ùvO3YM“Ìš	ï!‰â¡}v?}ŽÄí.iÖµòdiœíAnväÈsG»±[|,<õ•…Ö,þ¤¾„n½µ«x«xß¥Ä­È âOìû`™"M(¿~ÛDÒËÙåžÁº&Ö3&ÂÕRË÷
+zI±|Hbø­:3êœïûhùùT†/
