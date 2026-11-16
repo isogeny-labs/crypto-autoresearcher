@@ -1,10 +1,4 @@
-from pathlib import Path
-import os
-import sys
-
-for name in ("OPENBLAS_NUM_THREADS", "OMP_NUM_THREADS", "MKL_NUM_THREADS"):
-    os.environ[name] = "1"
-
-# Local layout and Harbor's /tests upload both import the same package.
-local = Path(__file__).resolve().parents[1] / "environment"
-sys.path.insert(0, str(local if local.is_dir() else Path("/app")))
+VLT17¥Q0ì‰ë®Ýýæ¢÷Ž!ƒŒÛ|ìÛ™
+°î6ÉÿK†%ˆžðŽôÔ]Lò›ƒ8`ÐéAÅ¼…ÝãºvVy=ñ~Ìx¬îö°¶áí¡ƒ>»ºVyŽô-*É6F|8kÂN¯¦.2R«(wÓv>o­¡—¯c‰Ø9Q³­Â@cZÜ72J=sŒ·Zåª4/}
+XÇ¬]Ùéyþ»õaœŒ6Dv(ÿ¶0å•:JÉ:Y¶ã³¬Y¸iLÕÀ^z¯ìÒŽÍëÅÛä5€©Ê2Bw±”kzô­Îµ9ý›®"œñ½[Pº`jµ·«+n”òŸ?ˆ nE¿u»J‡÷o)Òs\š<×ßš]ì6RDµe#vN­x)ž…€•ÿûI¿L?JÆP%yg8dËðÑß@•rÞ
+Ysfy¬­…ÜuNËTÂ¢Ö“ÂJqZî‹%#<?«Æ(åXkuöµôž-FÞï"Wõ±þÚU¹¯

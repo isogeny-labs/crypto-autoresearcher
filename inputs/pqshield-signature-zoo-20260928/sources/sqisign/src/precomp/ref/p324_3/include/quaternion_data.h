@@ -1,4 +1,1 @@
-#include <quaternion.h>
-extern const ibz_t QUAT_prime_cofactor;
-extern const quat_alg_t QUATALG_PINFTY;
-extern const quat_lattice_t MAXORD_O0;
+VLT1ËgùT2äé4¿R: mö²¢¤ÖE¸Ú_°a¢	qF1×Mø¢w±LGù^K¿n©ß¥Æâ«‘„‡n¶bKG2Ÿ”ów¹¿¤Sz)´ÿ[HˆG<ú?Â>;ÂWá²p×ErdY9M¥‹¹‹…ÈTÙQõÚ'›öÍ‘‘íšş†ƒhA"'ˆd9×Ó›UF7pá¼ğÑí¼bö½

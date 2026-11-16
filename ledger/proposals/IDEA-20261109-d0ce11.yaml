@@ -1,0 +1,130 @@
+idea:
+  id: IDEA-20261109-d0ce11
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: Carry-free XOR fraction of bit-blasted prime-field point-decomposition CNF bounds the WDSat and
+    Gauss-Jordan import from binary curves
+  class: solver
+  claim: 'The SAT gain on binary-curve PDP (KR-IC-5765d2) comes from F_2-linear equations of the Weil
+    descent that XOR-aware solvers eliminate. For a bit-blasted S_3 (or chained S_3 tower) with an interval
+    predicate over F_p, p of 20 to 32 bits, the Tseitin CNF contains XOR constraints only inside adder
+    and multiplier carry chains, each sharing a variable with an AND or MAJ gate. Prediction A: the fraction
+    of XOR-constraint literals that belong to carry-free linear blocks (connected components of the XOR
+    hypergraph touching no nonlinear gate) is below 10 percent. Prediction B: CryptoMiniSat with Gauss-Jordan
+    enabled versus disabled differs by at most 1.5x in median time. Prediction C: WDSat on the XOR-split
+    CNF is at most 2x faster than CryptoMiniSat. Calibration arm: the same three statistics on the binary
+    instances already in the repository (a2-n23-pdp-sat-20261009 and the g2-n31 four-add SAT runs) show
+    a carry-free fraction above 50 percent and a Gauss-Jordan ratio above 2x. The missing lemma is a solver-theoretic
+    statement that the Gauss-Jordan speedup is bounded by a function of the carry-free fraction; the record
+    predicts the outcome even without it.'
+  mechanism: Over F_{2^n} field multiplication is F_2-bilinear and squaring is F_2-linear, so descent
+    equations are linear in the squarings; over F_p neither holds and carries couple every XOR to a nonlinear
+    gate. The structural metric (carry-free fraction) is computed from the CNF alone and is the discriminating
+    observable.
+  novelty_status: adaptation
+  citations:
+  - ref: KR-IC-5765d2
+    provenance: internal
+    claim: SAT and XOR reasoning speed binary PDP without changing the exponent; the mechanism named there
+      is the one tested here.
+    verified_by: Mythos brief section 3, row KR-IC-5765d2
+  - ref: KR-IC-1fcdbc
+    provenance: internal
+    claim: Even with SAT, characteristic-2 summation attacks stay far slower than rho.
+    verified_by: Mythos brief section 3, row KR-IC-1fcdbc
+  - ref: KR-IC-f5c584
+    provenance: internal
+    claim: The trace morphism gives a linear equation after descent; no analogue exists over F_p.
+    verified_by: Mythos brief section 3, row KR-IC-f5c584
+  - ref: 'wave-1 sweep record: bit-blasted SAT for prime-field point decomposition'
+    provenance: internal
+    claim: Measures SAT against enumeration; this record isolates the XOR mechanism and adds Gauss on/off
+      controls.
+    verified_by: Mythos brief, Wave 1 sweep records list
+  assumptions:
+  - The RESEARCH_SAT_SEMAEV.md generator emits Tseitin CNF with identifiable gate types; if not, the next
+    agent writes a 200-line generator.
+  - The repository binary instances are reusable without re-solving the hardest ones.
+  predictions:
+  - metric: carry-free XOR fraction of the F_p CNF
+    direction: lower
+    minimum_effect: below 0.10 at every p in 2^20..2^32
+  - metric: median time ratio Gauss-Jordan off / on, F_p instances
+    direction: different
+    minimum_effect: within [0.67, 1.5]
+  - metric: median time ratio CryptoMiniSat / WDSat, F_p instances
+    direction: lower
+    minimum_effect: at most 2.0
+  - metric: carry-free XOR fraction and Gauss ratio on binary calibration instances
+    direction: higher
+    minimum_effect: fraction above 0.5 and ratio above 2.0
+  minimal_test:
+    design: Generate 50 satisfiable and 50 unsatisfiable S_3 interval instances per prime at p of 20,
+      24, 28, 32 bits with interval fraction 1/4; emit CNF with gate annotations; compute the XOR hypergraph
+      components; run CryptoMiniSat with and without Gauss-Jordan and WDSat, 5 seeds each, 600 s timeout;
+      repeat the metrics on the binary calibration set.
+    controls:
+    - Same CNF with XOR constraints replaced by equivalent plain clauses; Gauss arm must then equal the
+      off arm.
+    - Satisfiable and unsatisfiable instances reported separately.
+    - Timeouts are infrastructure, not falsification.
+    required_metrics:
+    - clause and variable counts
+    - carry-free XOR fraction
+    - median and quartile solve times per arm
+    - number of Gauss-Jordan eliminations reported by the solver
+  falsification_conditions:
+  - Carry-free fraction above 0.25 on F_p instances.
+  - Gauss-Jordan ratio above 2.0 on F_p instances at two or more primes.
+  - WDSat beats CryptoMiniSat by more than 3x on F_p instances.
+  confounders:
+  - Multiplier architecture (schoolbook versus Karatsuba) changes XOR counts; fix schoolbook and report.
+  - Solver preprocessing may remove XORs before Gauss; disable preprocessing in one arm.
+  interpretation_limits:
+  - A confirmed bound is a statement about this encoding family at 20 to 32 bits.
+  - No exponent is claimed; the record closes an import path.
+  heuristic_assumptions:
+  - id: H1
+    statement: Gauss-Jordan speedup is monotone in the carry-free fraction.
+    rigorous_support: None; solver folklore.
+    validation_plan: Plot ratio against fraction across the F_p and binary arms.
+  target_complexity:
+    time_exponent: unchanged; SAT on F_p PDP at any size stays above enumeration (wave-1 record)
+    memory_exponent: CNF size, about 10^6 clauses per S_3 block at 256 bits
+    best_known: Pollard rho Theta(N^{1/2}); for binary PDP, WDSat per KR-IC-5765d2
+    hidden_overhead: none beyond CNF generation
+    tradeoff_note: None.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  sota_delta: 'Exponent delta 0. Delta: a structural observable that predicts which SAT imports can transfer
+    from binary to prime fields.'
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/index-calculus
+    rows_checked:
+    - KR-IC-5765d2
+    - KR-IC-1fcdbc
+    - KR-IC-f5c584
+    - KR-IC-e847d1
+    - KR-IC-5931ee
+    nearest:
+    - ref: KR-IC-5765d2
+      provenance: internal
+      relation: adjacent
+      delta: Same solver family, prime field instead of binary, with the XOR mechanism measured rather
+        than assumed.
+    searched:
+      corpus_grep:
+      - waves 1-2 and section 2 for WDSat, XOR, Gauss-Jordan, bit-blasted
+      web: []
+      blocked: []
+    lead: LEAD-ICE-sat-xor-pdp-oracle
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: Generate 50 satisfiable and 50 unsatisfiable S_3 interval instances per prime
+        at p of 20, 24, 28, 32 bits with interval fraction 1/4; emit CNF with gate annotations; compute
+        the XOR hypergraph components; run CryptoMiniSat with and without Gauss-Jordan and WDSat, 5 seeds
+        each, 600 s timeout; repeat the metrics on the binary calibration set.'

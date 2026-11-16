@@ -1,0 +1,223 @@
+{
+  "schema": "classical.ecdlp.independent-focused-sampler-review/v1",
+  "task_id": "TASK-20261106-907bb5",
+  "review_attestation": {
+    "task_id": "TASK-20261106-907bb5",
+    "joints_owned": [
+      "J1"
+    ],
+    "sources_read": [
+      "ledger/handoffs/TASK-20261106-907bb5.yaml",
+      "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/claims/TASK-20261106-907bb5.1.claim.json",
+      "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/source-status-contract-v4.json",
+      "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/source-materialization-v4.json",
+      "harness/classical_ecdlp_controlled_followup/engine.py",
+      "harness/classical_ecdlp_public_reference_audit_v4/solver.py",
+      "harness/classical_ecdlp_public_reference_audit_v4/driver.py",
+      "harness/classical_ecdlp_public_reference_audit_v4/verify.py",
+      "harness/classical_ecdlp_public_reference_audit_v3/solver.py",
+      "harness/classical_ecdlp_public_reference_audit_v3/driver.py",
+      "harness/classical_ecdlp_public_reference_audit_v3/verify.py"
+    ],
+    "read_sibling_reports": false,
+    "blind_from_respected": true,
+    "verdicts": {
+      "J1": "holds"
+    },
+    "independent_session": "/root/independent_reference_source_review_20261106",
+    "independence_statement": "Independent of implementer; same prior V1/V2/V3 reviewer, openly post hoc focused delta, not independent replication of own earlier review."
+  },
+  "externally_pinned_handoff": {
+    "path": "ledger/handoffs/TASK-20261106-907bb5.yaml",
+    "actual_sha256": "15259d819a51bbd44f63bf8e0aa0482bc673aa7c189c6c5a2d0daeb366364d0f",
+    "expected_sha256": "15259d819a51bbd44f63bf8e0aa0482bc673aa7c189c6c5a2d0daeb366364d0f",
+    "matches": true
+  },
+  "plan_sorted_compact_sha256": "6485202a281d7de895df79799e5046cd835ea5d39db048472535640ca6c2018a",
+  "claim": {
+    "acquired_at": "2026-11-06T17:28:14Z",
+    "branch": "experiment/classical-ecdlp-endpoint-reuse-20261026",
+    "epoch": 1,
+    "expires_at": "2026-11-06T17:33:14Z",
+    "forced": false,
+    "owner": "independent-reference-sampler-reviewer",
+    "schema": "crypto.autoresearch.task_claim.v1",
+    "session": "independent_reference_source_review_20261106",
+    "supersedes": null,
+    "supersedes_lost_completion": null,
+    "task_id": "TASK-20261106-907bb5",
+    "worktree": "/tmp/classical-ecdlp-validation-20261106",
+    "write_scope": [
+      "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/source-review-v4/report.md",
+      "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/source-review-v4/checks.json",
+      "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/source-review-v4/diagram.svg",
+      "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/source-review-v4/report.pdf",
+      "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/source-review-v4/visual-inspection.json"
+    ]
+  },
+  "supplied_source_commit": "fe720d01b9ded5cd8325b08afa80a4d444ccbf76",
+  "supplied_manifest_commit": "fa66e151d9c440abf6e9dc49c8c2c6fc95c48163",
+  "supplied_claim_publication_commit": "6725a6961ad15eb86150ff0acbef45b1a920513e",
+  "source_sha256": {
+    "harness/classical_ecdlp_public_reference_audit_v4/solver.py": "d462b17ffb10772852d6024a92be71eb768b27d3d4b619cd582c868f88953031",
+    "harness/classical_ecdlp_public_reference_audit_v4/driver.py": "99a6a535dda612a762d4b56c3fed8749321ddc849f2200b19474ba1d79010849",
+    "harness/classical_ecdlp_public_reference_audit_v4/verify.py": "2340d748a3e3af4e99c07e87d971aa46de0e38aa866faaf082c0112cc1bb2537"
+  },
+  "engine_sha256": "22da83d6494ea66c520b0e58eaa4b54e621c822d8f0275deda8822c7179915fb",
+  "solver_driver_byte_equal_v3": {
+    "solver.py": true,
+    "driver.py": true
+  },
+  "checker_AST_equal_v3": {
+    "require_status": true,
+    "is_prime": true,
+    "Projective": true,
+    "canonical_scalar": true,
+    "write_new": true,
+    "main": true
+  },
+  "proves_too_much": {
+    "method": "Static producer-schema/branch analysis, no control execution",
+    "objects": [
+      {
+        "object": "Valid ACCEPTED sampler with REJECTED then ACCEPTED proposals",
+        "assessment": "holds statically",
+        "locations": [
+          "engine.py:356-359,434-442",
+          "verify.py:54-55,109-128,130-146"
+        ],
+        "derivation": "Sampler/proposal values match producer constructors. Required fields pass exact enum/list/object guards; recursive path draw.point_sampling.status and list path draw.point_sampling.proposals.[].status both registered and censused. V3 false rejection is closed."
+      },
+      {
+        "object": "Registered CAPPED_PROPOSALS sampler report",
+        "assessment": "holds statically",
+        "locations": [
+          "engine.py:359",
+          "verify.py:54,109-125,175-180"
+        ],
+        "derivation": "Registered as sampler state; planned pure guard positive uses REJECTED proposal. This is status-schema acceptance, not a claim that capped sampler reports reach normal successful trace emission."
+      },
+      {
+        "object": "Unknown/nontext/missing sampler status; nonlist/missing proposals; bad proposal shape/status",
+        "assessment": "rejects on static control flow",
+        "locations": [
+          "verify.py:58-61,99-122"
+        ],
+        "derivation": "Nonnull sampler must be dict, require_status requires exact str and enum, proposals must be list, every proposal dict and status validated. Missing .get gives None and rejects. No claim branch bypass exists for a provided sampler."
+      },
+      {
+        "object": "Absent/null draw and point_sampling",
+        "assessment": "holds statically",
+        "locations": [
+          "verify.py:94-106,172-183"
+        ],
+        "derivation": "draw_provided/draw_is_null and point_sampling_provided/point_sampling_is_null distinguish missing and null explicitly; neither invents a provided status. Nonobject provided nonnull draw/sampler rejects."
+      },
+      {
+        "object": "Existing strict/predicate/cell/word status gates and unexpected paths",
+        "assessment": "unchanged, holds within prior fixed schema",
+        "locations": [
+          "verify.py:50-53,58-93,123-146",
+          "verify.py:main AST unchanged"
+        ],
+        "derivation": "Only two exact sampler paths added to registry. Other unregistered paths still reject. Required strict/predicate checks and every-cell/every-word call sites remain identical through unchanged main."
+      },
+      {
+        "object": "Runtime controls scheduling",
+        "assessment": "present; unexecuted in review",
+        "locations": [
+          "verify.py:150-209",
+          "verify.py:main unchanged"
+        ],
+        "derivation": "Seven enum groups get registered positives and unknown/empty/null/bool/int/list negatives. Valid accepted/capped records, null sampler, missing status/proposals/proposal status and unknown sampler/proposal cases are scheduled through trace_status_coverage. Called only inside future admitted checker before reference seal."
+      },
+      {
+        "object": "Prior F1/F2/G1-G4 nonregression",
+        "assessment": "unchanged with prior qualifications",
+        "locations": [
+          "solver.py and driver.py byte-identical V3",
+          "verify.py:main and mathematical/canonical/write kernels AST-identical V3"
+        ],
+        "derivation": "F1 incomplete RECOVERED retention, F2 canonical a/b, CPU ledger/original stop, context inventory, source/manifest/native seals and original order are preserved. This does not upgrade unreviewed native enforcement or custody evidence."
+      }
+    ]
+  },
+  "new_material_findings": [],
+  "scientific_execution": {
+    "solver": 0,
+    "control": 0,
+    "fixture": 0,
+    "unit": 0,
+    "benchmark": 0,
+    "raw_scan": 0,
+    "source_import": 0,
+    "syntax_compile": 0,
+    "AST_parse_only": true
+  },
+  "budget": {
+    "claim_acquired_epoch_seconds": 1793986094,
+    "fixed_stop_epoch_seconds": 1793986394,
+    "maximum_wall_seconds": 300,
+    "memory_gib": 4,
+    "extensions": 0,
+    "resets": 0,
+    "review_retries": 0,
+    "memory_compliance": "unverified; reviewer measurement/enforcement not instrumented",
+    "final_artifact_accounting_epoch_seconds": 1793986277.078966,
+    "elapsed_seconds_at_final_accounting": 183.0789659023285,
+    "whole_wall_cap_met": true
+  },
+  "prior_reviews_immutable": {
+    "V1": "J1 breaks;305.14s/300s UNMET, memory unverified",
+    "V2": "J1 breaks;364.42s/600s within cap, memory unverified",
+    "V3": "J1 breaks;213.73s/300s within cap, memory unverified"
+  },
+  "read_accounting": {
+    "actual_this_task_sources": [
+      "ledger/handoffs/TASK-20261106-907bb5.yaml",
+      "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/claims/TASK-20261106-907bb5.1.claim.json",
+      "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/source-status-contract-v4.json",
+      "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/source-materialization-v4.json",
+      "harness/classical_ecdlp_controlled_followup/engine.py",
+      "harness/classical_ecdlp_public_reference_audit_v4/solver.py",
+      "harness/classical_ecdlp_public_reference_audit_v4/driver.py",
+      "harness/classical_ecdlp_public_reference_audit_v4/verify.py",
+      "harness/classical_ecdlp_public_reference_audit_v3/solver.py",
+      "harness/classical_ecdlp_public_reference_audit_v3/driver.py",
+      "harness/classical_ecdlp_public_reference_audit_v3/verify.py"
+    ],
+    "engine_review": "Full rg status/result inventory plus lines1-80 and341-385 reread; prior session reads included attempts81-251,cells279-338,trace emission420-450. Summary/completion status records are other raw members, not trace nested paths. uniform_below40-64 carries no status.",
+    "raw_payload_read": false,
+    "sibling_report_read": false,
+    "Git_or_remote_query_or_mutation": false,
+    "prior_contracts_retained": [
+      "AGENTS.md",
+      "agents/validator.md",
+      ".claude/skills/research-visuals/SKILL.md",
+      "docs/agent-contract-extended.md"
+    ],
+    "primary_reference": "Pinned producer engine is local primary schema source, statically read and verified by this session. Mathematical literature/kernels were assessed previously and remain unchanged."
+  },
+  "scope_qualifications": [
+    "J1 holds ONLY for focused V4 static sampler-status delta and nonregression; no empirical correctness, raw-prefix occurrence or native admission conclusion.",
+    "G1 CPU remains sampled with fixed finalization reserve; G3 wall checks cooperative and hard native process-group/claim/watchdog enforcement external/unverified; G4 requires actual future runtime custody evidence.",
+    "No sampler-distribution, count-consistency, scalar/performance or algorithmic assertion added. Existing source controls remain unexecuted.",
+    "Published commit identities supplied; local source/engine hashes independently match pins, without Git/remote confirmation.",
+    "Canonical scientific graphs outside scope and unchanged."
+  ],
+  "render_and_inspection": {
+    "compile_command": "/workspace/classical-ecdlp-endpoint-reuse/runtime-20261028/bin/python -c \"import typst; typst.compile('/tmp/independent-reference-source-review-v4-render-20261106/report.typ',output='/tmp/independent-reference-source-review-v4-20261106/report.pdf',root='/'); print('Typst compile succeeded')\"",
+    "compile_exit_code": 0,
+    "compile_stdout": "Typst compile succeeded",
+    "compile_attempts": 1,
+    "pdfinfo_command": "pdfinfo /tmp/independent-reference-source-review-v4-20261106/report.pdf",
+    "pdfinfo_result": "Typst0.15.0; PDF1.7; A4;2pages;40554bytes; unencrypted",
+    "raster_command": "pdftoppm -r 80 -png /tmp/independent-reference-source-review-v4-20261106/report.pdf /tmp/independent-reference-source-review-v4-render-20261106/page",
+    "raster_exit_code": 0,
+    "view_tool": "tools.view_image via functions.exec",
+    "pages_actually_viewed": [
+      1,
+      2
+    ]
+  }
+}
