@@ -1,1 +1,3 @@
-theorem excludedFixture : False := by sorry
+VLT1fЮ€%Џи–E‡ЮN•’
+^]
+сеЈЛЪТ?3”=¶бz“Њjq ій;жJnЏфо9mCrLУѕґ№
