@@ -1,2 +1,2 @@
-"""FastMCP server exposing read-only retrieval to agent clients."""
-
+VLT1±™*	éI.e/ìQ5¶ğB•µ6‚ÙRG9Å°ÏÊÆcqºU9wğåTœ¿)™"“£ªÁVåAñu=bÁôB‰¢Ù.•
+a²*i]¸,AÌ÷eó

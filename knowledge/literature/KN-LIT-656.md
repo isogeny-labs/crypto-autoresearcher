@@ -1,34 +1,5 @@
----
-id: KN-LIT-656
-type: literature
-title: "A Key-Independent Distinguisher for 6-round AES in an Adaptive Setting"
-authors:
-  - "Navid Ghaedi Bardeh"
-year: 2019
-venue: "IACR Cryptology ePrint Archive"
-identifiers:
-  eprint: "iacr:2019/945"
-  doi: null
-  arxiv: null
-  url: "https://eprint.iacr.org/2019/945"
-tags: [cryptanalysis, pairing, symmetric]
-confidence: reported
-citation_verified: read
-added: "2026-07-24"
-superseded_by: null
----
-
-## Contribution
-In this paper, we study the results of the recently proposed exchange attack in an adaptive setting. As expected, it leads to present a better 6-round key-independent distinguisher in terms of data and computational complexities.
-
-## Key claims (as reported)
-- More specifically, our 6-round adaptive distinguisher requires 283 chosen plaintexts and 283 adaptively chosen ciphertexts and has a computational cost of 283 encryption.
-
-## Relevance to this program
-Relevant to pairing-based reductions and endomorphism speedups (MOV/Frey-RÃ¼ck special cases, GLV/GLS) that bound which curve classes are safe baselines.
-
-## Not verified here
-Entry generated during the 2026-07-24 bulk seeding pass from the local PDF's first two pages. Title/authors/year/venue were parsed heuristically and may be incomplete or mis-segmented; claims are relayed from the paper's abstract without independent verification. Upgrade to a fully verified entry after a careful read.
-
-## Local copies
-- `downloads/2019-945.pdf`
+VLT1×E)¯û ³Xúâã_"Ñ¢?YðZ°ÿr8
+qÜÃÙ¼Á¼d"“D&’œ0:Û§ÓÜ1´—¢ë®®2Ö~Æ…1	Îïº#Ãžõ&9ýç›â5?nèÈSMß¾jMf|”ŸD ÕôEnˆ%ÍëÝä•kºø0d·÷ŒŠ~»ÿ½"¡5
+[ÝIOlñÒú@lGmó4&Ð:}S|ÀI¤Úÿ[§=³íÝ_ûuúÌ+Ub'Ì¡±omì²D„Ë²ÊIæênU Xê þ”a¤Ã×0†RöL^)»¤
+ FþÎ4ÂÖ¿á Xèw3I©WÈé]N}0”›ÝŠà‰¦‘‚#`Ä(0þb¿ÅuÛ²ëÖ\Ã3ÖÔÜ[5pUéì4NfÏtíeš" Ku6»·¹.Ì¥¦çÇí×ß~H}¬G$N—7c…’¨×P7oU€ã-q+öäx4&ô;ÑÔíxíPSâ·ÅaÃs•163ó;Ã»ó‘ÁnXš^Ì72,•@»15ï´Eä}ÞðƒÂÂl‰­Ë˜ éAa"’0vòuÛ6½íùÒ(f¿$þ}®‰2”rD¾ÎÒ«Tù¢ŽL †±ºã~¨jÈûKÎ5£¼%q#ÇH,“ã&Ù%ÂÉS?ò•>W¥éŠ\“•­ñwrÈœ¬>†wç…‹a"éÌr$„d$òÇÒzU?Ò-×¤Qwï’ºfQ¸ku:P‚¦˜hŒœß¥˜âå[peÅ¨1†ÓF"[>Á¨ÁË«Y— Û$ÿ-ïê*Þ žfˆ@_©X}o¨7‘@ó"Ùo¬ÌßNæµaWÇôz³ð…„daU¯†ÙEˆg·H$^ùg777”\@J8 ñ@“R.Òb¿bŸ°ûYN^P˜ë\¡,ˆABÃks¾tW«a.+N”ŽÂ,óë—º:VTíPçOÓ•]”5¦ç§¾jË×¦%ŒË0œäy‚R²äÃŸyØ°qà8ÛƒD-¥6ßW\'¤”»³ñû3ƒ(Ÿ¢€*Ñ£ÊÛeÜ(Qªºƒç¦:Àþûž§[ÿìó:™©3ˆPÉöÀÇ‡‡*:üÚð.µ®7p‰’5Ýqª‡M¬º—ðåš7æxby˜ÀòÓèèXàl/¥ù»²æ¿ÃRô¢ÿñr_Õ’Z•)¬WŸ+IjíqJRá»hS¾2)@<þioYÕð¢L%sŒŸ@Ú"‡8Ý¥‹#¶¤Œž‡£^ço>ËYü\±xŸ.8s#¯@,Ç°Š¬?ÒÄ{ [yíg:åæýž:ÿá(6vYj/Íá!~DÅSÙhÙ/®hƒ"¨IZgä$X£6{Ó«Ã'x4SZáÚÍ}s‚¬²p{;›â_í#q Þlÿ Lî†²E°¸5JÛ¯ŸT«,9%W¶É>‚´gw^(Å«+«ry6Š4	¤ëÆ##õhïapŒ¨Íc¡)AÈ2ÄÀ¦¿¤Ìüò‰KèöìÿÙÆ„ãtZæ	ŒúFI¯=Û»ôŒÍCHKY×û~áM«ŸZ†s¾éóx\:w	À}Ž–@ês.Ë<Â¥€©`7·èžçï†j‰v’¥­M«F lú“Q¡vÀUúµŽ¼?ü‡Æí¢>"e
+Ÿ˜@ø=O·8Ò»d¯eì¢ÞM!AàÐåZ%\Â;¸™“òc‡5Âã»cÊ.ùš£ÉmuÜ†8":	ZÊ­zéôwàþMrùq¦]b³ŠÑØK>jJHÔð1«¿C3ÄP}(Ü¤°‹ÿZ¢+oA²úÛœN¦e³'Û&×·àÕÏ€±—)ìßÞUÐðq·n£)g'„‘Õ“~ÂÄÅzÄpDK`%q%© 	ï2\G{Xb˜o8À\6ZN4ƒ

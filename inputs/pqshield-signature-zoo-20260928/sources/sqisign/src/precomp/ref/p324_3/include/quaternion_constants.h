@@ -1,13 +1,6 @@
-#include <quaternion.h>
-#include <stddef.h>
-#include <stdint.h>
-#define QUAT_primality_num_iter 64
-#define QUAT_equiv_bound_coeff 15
-#define QUAT_qlapoty_used_power_of_two 322
-#define QUAT_degree_norm_bits 582
-#define QUAT_equiv_norm_bits 178
-#define QUAT_prod_norm_bits 356
-#define QUAT_P_BITS 326
-#define QUAT_SQRT_P_BITS 163
-#define QUAT_P_HEX "2fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
-#define QUAT_SQRT_P_HEX "6ed9eba16132a9cec95d0b5c1e2e0ee249760d331"
+VLT1½-'Æ÷@ îj[#ì/búDpÒf9Ù{\ÔšRØÙÑ™¿ÄJó"¦¯Y«XËÑŠŞ¤¼íeÔú%s¸”fƒ¸ö+ŸŸØvHr6@•.Z
+Í
+íj?a¾nÛ+Œ1¥!NoâÂ–ĞĞ«-˜ÛG,:-“ô¬‘J¡U›±ÔyÏùEå—ÎY{+ù©¸²N<!Cæ¥ÖQ~ŸŞäMµÍJ^ù ßAoà›_À· ‰Z8Â=;ØÅ’S(Yä!V‚ŞÎy­=qWÓ%Z.·åù;Ø(VŒ?(aj¼¼*‚5·¨P™P­×äâœ¥¨;A=p[yZ°tà2<¿0¯á;.ô„07t8¿BÃ[´?›¢wuH_E¡»`°W»(Ì#MOQ&ırVÂÅÂ•ÊKjwÔ›šB ‚[ºÌÄ‡p…ûÒ¾Y7pÙãeB*—6­j(QÙÆ#€«ÿ1D¾K-±Üç}¿uåÃ¡ „ËçŞ#ºÉFê
+Ûõ@¸A„"£EÌì#w\P
+	C@a|éçe²åÅ$ºN_YæÄãáÂì©q÷Q–‡Ô 6­‡áÑzæÉÂè*-üÄz¯Hûğ°×Ìlkòı%£T
+EÇ0)ôÛşXTÀ!“–p³îÙ»Ê‘‹şêõ÷2¶¼oRâ6DØh

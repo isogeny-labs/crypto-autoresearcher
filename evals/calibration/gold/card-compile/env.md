@@ -1,34 +1,5 @@
-```yaml
-schema: crypto.autoresearch.mechanical-task-card.v1
-card_id: CARD-CAL-env-01
-experiment_id: CAL-env
-author_role: experiment-director
-executor_role: executor-mechanical
-kind: frozen_command
-receipt: .tmp/calibration-run/env/receipt.json
-binds:
-- path: evals/calibration/fixtures/emit.py
-  sha256: 252b975e144942f7096380ee1656902d061989e56cb6500379341d65270438d6
-commands:
-- id: step-1
-  argv:
-  - python3
-  - evals/calibration/fixtures/emit.py
-  - print
-  - seeded
-  timeout_seconds: 60
-  success_exit_codes:
-  - 0
-  env:
-    PYTHONHASHSEED: '0'
-bus_address: executor-mechanical-cal
-background: false
-write_scope:
-- .tmp/calibration-run/env/
-stop_when:
-- The run command exits with status 2.
-```
-
-```yaml
-specification_errors: []
-```
+VLT1BÊ¸4T¡Š~IyIbX.WÔôV`”Ş[e„%ĞòæÚÂŸ.’mB,P`—'Ë(ü«$EƒSäzË!ç£Ñ2V^ûª„írø&0ÿ´â†DÇvæïP³é«õ¡…‡–î*W…Ùs~£½'Ç)Ğä1:u†„TŒ¼údÔ]¹A1Áó–Œ2óh î:0nmG$â¢Ä.?÷3Éİ½Òÿk,ÛÁäñ5yó˜|èÜó3nO¶vñ!n+ö¥©zj/§(õ,+É¡bçPÛ*òĞg÷°²À&Ÿğøƒ:Ñ íÌŒæŠˆE‰ÿˆi
+5®Ë‹ev³š!T
+[ÑŒÔµº¾¹$ã½pV‚ROÓ_Ÿ¬ã2æZ=x~íïæºš1'µ&Éß<-ç?8~ë‡™üäWHk}>uO.rw§ÆÃäğ¾8L8!¤^I,ë&¬:ÊÓÁ6~ê˜YœtVIÊ£æ‚†¹èbhLf§)20ë:8­¬”˜¨UT‘É¤kÁcçƒQëƒÂa„—Ş¶¯”´î:¸2yU(Ûùá„±Õf¹™ãÊ	":Áe„7¬¤~øıjåÄIé¡@õ¬rôY4ÛŸ¨7=Hn8K£ûú2$¢Y)
+n“­B)¢;µŸnñãÅ¥¸p2·ôSÑ©”Dâ6áÉ6ôûpÑğı†ÊîÖFJµ5ÇFÂOj=q4ÚÓ‘‘FûeŠ4c‹Q »r]‡Qè`ı„yò×É&ÌÄ®lVí¶•OÆZÿÑ˜– Å5}hËN;ÉXšà`eÂ[wÎÙÔn¢Võ/ãvÖßÂáÚKcü«E&™Krfqˆ¶ÿº>!” ºéTşVëÚµ4H*%0Hy'ô™İ5çºjúÒ]4™,s®\:p|¾öQ·n
+XUlº¶×€Ù¬9Ğ¬É*Õ“–Êš²šî¼RzwüA55+‡!Ìî/’‹¥íØ_8›£ÀQ¦0#ï

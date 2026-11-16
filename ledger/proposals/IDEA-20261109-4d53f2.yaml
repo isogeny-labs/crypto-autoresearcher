@@ -1,0 +1,135 @@
+idea:
+  id: IDEA-20261109-4d53f2
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: 'Canonical Frobenius splitting of the rigid cohomology of E minus {O, P, Q}: the index-N residue
+    lattice dies after tensoring with Z_p, and the Abel-Jacobi block is a Miller-computable coefficient'
+  class: barrier
+  claim: 'Let U = E minus S, S = {O, P, Q}, E/F_p ordinary of prime order N, Q = kP. H^1_rig(U) is 4-dimensional
+    with Frobenius eigenvalues u, p/u (unit root and its conjugate) and p, p (residue part). Since u is
+    a unit and u is not 1, Ext^1 of F-isocrystals vanishes and the eigenvalue-p eigenspace splits the
+    Gysin sequence canonically. The classes [d log g], g with divisor on S, are exact eigenvectors; their
+    residue vectors form L_k = {(a,b,c): a+b+c = 0, b+ck = 0 mod N}, of index N, and L_k tensor Z_p is
+    the whole degree-zero lattice, so the integral F-crystal splits as well and carries no function of
+    k. For the algebraic third-kind form w_P = (y+y_P)/(2(x-x_P)) dx/y on the torsion-section lift one
+    has w_P - (1/N) d log f_P = e(P) w exactly, with w = dx/y and e(P) in Z_p computable by one Miller
+    loop, so F(w_P) - p w_P = e(P)(F - p)(w) in H^1_rig(U). The quantity e(Q) - k e(P) is the coefficient
+    of the algebraic form d log g - w_Q + k w_P, which requires g and hence k. No exponent changes.'
+  mechanism: 'Frobenius on d log g: the lift phi(g) equals g^p times a principal unit, whose log converges,
+    so F[d log g] = p[d log g]. The residue map on log-exact classes has image L_k because a divisor on
+    S is principal iff b + ck = 0 mod N. Over Z_p, N is a unit, so the k-dependence of L_k is invisible.
+    The algebraic identity for w_P follows because both forms have residues +1, -1 at P, O and no other
+    poles, so their difference is holomorphic. On the CM curve of RESEARCH_SECP256K1_CM.md the Frobenius
+    on H^1(E) is known in closed form, so the whole matrix on H^1_rig(E minus S) costs O(|S| log N) ring
+    operations against Tuitman''s O(p |S|).'
+  novelty_status: adaptation
+  citations:
+  - ref: KR-RHO-13bf67
+    provenance: internal
+    claim: Generic lower bound; the record moves no exponent.
+    verified_by: brief section 3 row text; file not opened
+  - ref: KR-RHO-53c89f
+    provenance: internal
+    claim: The only index-N torsion information of P lives at l = N (pairing); here the Z_p-completion
+      kills Z/N.
+    verified_by: brief section 3 row text; file not opened
+  assumptions:
+  - E ordinary (true for every prime-order curve over F_p with p > 3 and N not p + 1).
+  - The wave-2 cohomology record on the Coleman integral of x dx/y between torsion-section lifts exists
+    in ledger/proposals; its id must be found by title grep and cited by the filing agent.
+  predictions:
+  - metric: number of sampled integral residue vectors r whose canonical eigenvalue-p lift is non-integral
+      to precision p^s
+    direction: equal
+    minimum_effect: exactly 0 out of 100
+  - metric: p-adic valuation of F(w_P) - p w_P - e(P)(F - p)(w) in H^1_rig(U) at precision s
+    direction: higher
+    minimum_effect: at least s
+  - metric: wall time of the Miller route for the 4x4 Frobenius matrix against the direct overconvergent
+      reduction, at p = 2^12
+    direction: lower
+    minimum_effect: factor at least 10
+  minimal_test:
+    design: 'Sage under crypto/sage. Toy prime-order curves from crypto/docs/ECDLP_CALIBRATION_PRIMES.md
+      at p in {2^8, 2^10, 2^12}, a j = 0 arm and a random arm, precision s = 6. Route A: compute Frobenius
+      on H^1_rig(U) by overconvergent reduction with log poles at O, P, Q (Tuitman-style, hand-coded;
+      Sage monsky_washnitzer supplies the H^1(E) block). Route B: compute e(P), e(Q) by a p-adic Miller
+      loop on the torsion-section lift and assemble the matrix from the identity in the claim. Compare,
+      check eigenvalues, check integrality of canonical lifts for 100 random residue vectors, and verify
+      e(Q) - k e(P) against the algebraic coefficient computed from g (g built from the known k).'
+    controls:
+    - 'An anomalous toy curve (N = p): u = 1 fails and the record predicts the splitting argument breaks;
+      report what happens.'
+    - 'A non-log form with a double pole as a third puncture class: its canonical lift need not be integral,
+      calibrating the integrality check.'
+    required_metrics:
+    - the 4x4 Frobenius matrix from both routes and their difference
+    - eigenvalues to precision p^s
+    - integrality count over 100 residue vectors
+    - e(P), e(Q), k and the algebraic coefficient of d log g - w_Q + k w_P
+    - wall time per route
+  falsification_conditions:
+  - Routes A and B disagree beyond precision p^{s-1}.
+  - Some integral residue vector has a non-integral canonical lift.
+  - e(Q) - k e(P) is computable from P, Q without g, for example as an F_p-affine function of k on the
+    toy table.
+  confounders:
+  - Precision loss in the reduction can mimic non-integrality; the double-pole control fixes the threshold.
+  interpretation_limits:
+  - A confirmed identity makes the Abel-Jacobi block cheap, not informative; it is the cheapest cohomological
+    object that is provably k-blind.
+  heuristic_assumptions:
+  - id: H1
+    statement: The integral residue (Gysin) sequence for log-crystalline cohomology of a punctured curve
+      is exact.
+    rigorous_support: Standard for curves (log-crystalline comparison); recalled, not opened.
+    validation_plan: Rank computation of the integral lattices in route A at s = 6 on every toy curve.
+  target_complexity:
+    time_exponent: p^{1/2} unchanged
+    memory_exponent: unchanged
+    best_known: Pollard rho, Theta(p^{1/2}) group operations
+    hidden_overhead: none claimed
+    tradeoff_note: The only improvement is in computing a cohomology matrix, O(log N) against O(p), and
+      that matrix is k-blind.
+  estimated_cost:
+    implementation: medium
+    compute: low
+  recommended_priority: medium
+  dominated_by: The wave-2 cohomology Coleman record for the identification of e with the Coleman integral;
+    the wave-2 Cartier lead for the mod-p statement. The Ext-vanishing and integral splitting are the
+    additions.
+  sota_delta: exponent delta 0; closes rigid and log-crystalline cohomology of punctured curves.
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/generic-rho
+    rows_checked:
+    - KR-RHO-13bf67
+    - KR-RHO-53c89f
+    - KR-RHO-755e35
+    - KR-IC-cd159a
+    nearest:
+    - ref: KR-RHO-53c89f
+      provenance: internal
+      relation: adjacent
+      delta: Pairing transfer is the l = N shadow of the residue lattice; this record shows the p-adic
+        shadow is empty.
+    - ref: KR-IC-cd159a
+      provenance: internal
+      relation: orthogonal
+      delta: Xedni lifts to characteristic zero globally; here the lift is local and the obstruction is
+        Z_p-completion, not height.
+    searched:
+      corpus_grep:
+      - brief section 2 for Coleman, crystalline, Cartier, residue, log
+      - brief prior-waves cohomology and p-adic sections
+      web: []
+      blocked: []
+    lead: LEAD-ICP-lattice-ic-relation-construction
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: Sage under crypto/sage. Toy prime-order curves from crypto/docs/ECDLP_CALIBRATION_PRIMES.md
+        at p in {2^8, 2^10, 2^12}, a j = 0 arm and a random arm, precision s = 6. Route A: compute Frobenius
+        on H^1_rig(U) by overconvergent reduction with log poles at O, P, Q (Tuitman-style, hand-coded;
+        Sage monsky_washnitzer supplies the H^1(E) block). Route B: compute e(P), e(Q) by a p-adic Miller
+        loop on the t'
