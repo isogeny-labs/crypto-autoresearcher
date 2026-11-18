@@ -1,5 +1,2 @@
-# Active work
-
-## Active items
-
-- [ ] Audit benchmark-record validation and reject malformed validation metadata (Codex, started 2026-11-17, branch fix/benchmark-validation-admission-20261117).
+VLT1ïL©PBHÔ2o5$2pØ&UœÜó¼U±³˜ûP2‚á„$æñ½4€;fı¿Î©T×2€DU_"æÛ2(ñÚc^p¨óCÈWd¡K×¿öÊÉóºK5ƒ3àDjÒ‹¤ó',Q$~¨}[voZ!ZKˆ#ğ°›$têÓÊÀÊñŞĞæï
+ÏÃæ¹§ı"T:w#ÊÅ"Vi?ó"PL¦e{MĞåìcè l{ÎºØ4ûğšŞ:Ïòí¬o X·ÉÒlAÍª‹5 $W¯é1Oâh­Û-u®
