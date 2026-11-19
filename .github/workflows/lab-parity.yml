@@ -126,6 +126,8 @@ jobs:
           sparse-checkout: |
             /tools/task_card.py
             /tools/test_task_card.py
+            /tools/benchrec.py
+            /tools/test_benchrec.py
             /tools/vault/
       - name: Unlock research vault (AES-256)
         shell: bash
@@ -164,3 +166,7 @@ jobs:
         env:
           GIT_NO_LAZY_FETCH: '1'
         run: python3 -m unittest discover -s tools -p test_task_card.py -v
+      - name: Benchmark record schema and immutable-custody controls
+        env:
+          GIT_NO_LAZY_FETCH: '1'
+        run: python3 -m unittest discover -s tools -p test_benchrec.py -v
