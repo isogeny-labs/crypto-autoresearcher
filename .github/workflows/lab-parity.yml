@@ -128,6 +128,8 @@ jobs:
             /tools/test_task_card.py
             /tools/benchrec.py
             /tools/test_benchrec.py
+            /tools/pcc/pcc.py
+            /tools/pcc/test_pcc.py
             /tools/vault/
       - name: Unlock research vault (AES-256)
         shell: bash
@@ -170,3 +172,7 @@ jobs:
         env:
           GIT_NO_LAZY_FETCH: '1'
         run: python3 -m unittest discover -s tools -p test_benchrec.py -v
+      - name: Canonical owner PCC admission controls
+        env:
+          GIT_NO_LAZY_FETCH: '1'
+        run: python3 -m unittest discover -s tools/pcc -p test_pcc.py -v
