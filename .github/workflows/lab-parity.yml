@@ -115,6 +115,7 @@ jobs:
         run: python3 tools/check_lab_parity.py --repo crypto-autoresearcher
 
   protocol-controls:
+    if: ${{ !github.event.pull_request.draft }}
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
