@@ -301,6 +301,23 @@ force, record that explicitly — "Diem's machinery contains no free closure for
 this family" — and the cluster's closure stays empirical. That record itself
 protects against future re-proposal.
 
+**WP1 outcome (2026-11-20, same day, draft):** the kill criterion fired.
+Full-text extraction of both papers (Cambridge and MSP publisher PDFs, both
+read at statement depth; the previously assumed arXiv posting for Diem II does
+not exist — `KN-LIT-65f76d`'s identifier list should gain the MSP open-access
+URL) is at `notes/diem-obstruction-extraction-draft-20261120.md`. Verdict:
+**no proposition in either paper has prime-field contrapositive force.** The
+strongest citable content is scope admission (Diem II p. 1283: Theorem 2 "does
+not give a nontrivial result if q is set to p"), Condition 2.7 is vacuously
+*satisfiable* at n = 1 (so it cannot obstruct there), and the only n = 1
+phenomenon is a compression degeneracy of Diem's own factor base (it becomes
+the whole group). Per this goal's guard rail, that negative is recorded as:
+**the 05 RELATIONS correspondence closure stays empirical; no theorem import
+is available from Diem I/II, and any future proposal citing "Diem proves an
+n = 1 obstruction" is unsupported by these records.** The draft awaits
+independent review before its KN-LIT records are promoted from abstract depth;
+WP2 is closed-not-executed (no importable theorem exists).
+
 ---
 
 ## Sequencing and portfolio note
