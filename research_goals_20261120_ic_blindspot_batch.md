@@ -103,6 +103,21 @@ object is only the *dictionary to relation-rate heuristics and its use as an
 IC instrument*, and that claim is provisional until the screen is run against
 the additive-combinatorics literature.
 
+**Screen result (2026-11-20, partial).** Two prior-art families must be
+screened before the charter comparison is read as a claim about x-window
+bases: (i) **Petit–Kosters–Messeng-style prime-field factor bases defined by
+preimages of small-degree rational maps** — McGuire–Mueller (`eprint
+2017/1262`, in corpus) describes this as "the first working case for curves
+defined over prime fields", which means the x-window base is *not* the only
+structured prime-field base and a charter result about x-windows does not by
+itself characterize "structured bases" in general; (ii) the public
+`ebarschkis/SemaevSummationPolynomials` package, which enforces explicit
+prime-field factor-base coordinate sets and could serve as an independent
+implementation for the geometric arm. The pilot's generic-set null remains a
+valid null for *x-window vs unstructured*, and its finding (4/8 cells, both
+directions) stands as measured; what is withdrawn is any implication that
+"generic sets" exhaust the structured alternatives.
+
 **Pilot outcome (2026-11-20, same day, unreviewed):** validation hook executed
 at toy tier; artifacts archived at
 `notes/g31-001-terracini-pilot-20261120/` (scripts, frozen config, results).
@@ -117,11 +132,15 @@ Three findings, one correction:
    columns of φ_{m+1}(Pᵢ))`. Verified 3881/3881 witnesses, 4500/4500 residual
    containments, zero converse violations.
 2. **Dimension count confirmed as the supply predictor:** mean decomposition-
-   tuple counts match λ = |B|^m/#G within [0.86, 1.06]; the naive *fraction*
-   formula min(1, |B|^m/p) requires the m!-ordering (Poisson) correction,
-   after which ratios are 0.94–1.13. This charges the G30 relation-rate
-   heuristic geometrically at tested scope, including the correction term
-   the raw heuristic omits.
+   tuple counts match λ = |B|^m/#G within [0.86, 1.06]; the *fraction* formula
+   min(1, |B|^m/p) requires the m!-ordering (Poisson) correction, after which
+   ratios are 0.94–1.13. **Cross-reference, so this is not over-read:** the
+   program already carries the m! factor in its own yield statements
+   (`KN-FIND-c93d45`: yield ≤ B^m/(m!N); `KN-FIND-d4f820`: same with an
+   O(C^m B^{m/2}/N^{...}) error term). The pilot's contribution is therefore
+   *confirmation at geometric scope*, not a new correction to program claims;
+   the earlier chat-level suggestion that the m! factor might silently affect
+   existing G30 predictions is withdrawn — the ledger has it.
 3. **Charter test answered "differently":** x-window base decomposition rates
    fall outside 20-draw generic-set null bands in 4/8 informative cells, in
    **both directions**, with total tuple supply ≈ invariant — a genuine,
@@ -143,60 +162,80 @@ Three findings, one correction:
 **Type:** barrier theorem + one measurement cell. **Depends on:** G30-025 (registration), G30-022 pattern (proof-first, one confirming cell).
 
 **The idea.** F_p is not just a finite field: it is the reduction of Z, and it
-is the *only* structural fact prime fields have that F_{2^n} lacks. The one
-genuinely structured factor base in the published literature comes from that
-side: lift E/F_p to Ẽ/Q, take the factor base from low-height points of
-Ẽ(Q) (Flannery–Lenstra–Wesolowski, *Low points on elliptic curves and
-class groups*: heuristically #{P : ĥ(P) ≤ c} grows like (log p)^{c+1}), and
-decompose the lift of the target. Height supplies what no x-line geometry
-supplies over F_p: an **ordering** on candidate base points. This program has
+is the *only* structural fact prime fields have that F_{2^n} lacks. A
+structured factor base that exploits this side: lift E/F_p to Ẽ/Q, take the
+factor base from points of Ẽ(Q) of bounded height, and decompose the lift of
+the target. Height supplies what no x-line geometry supplies over F_p: an
+**ordering** on candidate base points. This program has
 never touched it: the 2026-09-26 review has zero hits for rational-point /
 height / characteristic-0 lifting as an attack axis, and the 14 "Mordell"
 findings in `knowledge/` are Iwasawa-theory corpus entries, not attack records.
+(The published Isogeny Labs note `notes/index-calculus-three-settings.html`
+likewise frames the prime-field case as "the algebra has nowhere to hide" and
+does not consider the characteristic-0 side — so this is a blind spot in the
+public framing as well as the internal one.)
 
 **Design decision (house rule): staff the barrier, not another negative
-experiment.** The expected wall is known in advance — supply (log p)^{c+1}
-against the n ≈ p^{1/2} requirement, and rank Ẽ(Q) unbounded-but-tiny — so a
-decomposition experiment would be the 762nd predictable null. What has value:
+experiment.** The expected wall is known in advance — bounded-height point
+supply against the n ≈ p^{1/2} requirement, and rank Ẽ(Q) unbounded-but-tiny
+— so a decomposition experiment would be the 762nd predictable null. What has
+value:
 
-- **Theorem arm (primary):** state and prove a *scoped closure certificate*:
-  for any lift Ẽ/Q of the given E/F_p (any integral model, any choice of base
-  defined by height ≤ c(log p)), the number of usable low points available to
-  the decomposition engine at height budget c is O((log p)^{f(c)}) — hence
-  relation density is inverse-polynomial in p at every fixed m, hence
-  characteristic-0-lift factor bases are super-polynomially sub-rho at every
-  height budget polynomial in log p. Conditional on FLW's conjecture, this
-  must be stated with the conjecture *named as a dependency*, and the
-  unconditional weak-supply variant (what is provable with known
-  average-results, e.g. via average rank / parity results) stated separately
-  at its own strength. A conditional barrier with named dependencies is
-  admissible evidence for *this lane only*; it may not be promoted across the
-  D1–D3 family.
-- **Measurement arm (one cell, confirming):** at 20–24 bits, enumerate low
-  height budgets on 2–3 models of toy curves, fit the supply exponent against
-  the FLW prediction, and verify the *scoping* of the barrier — i.e. check no
-  height budget ≤ 6 gives a base large enough to reach even toy relation
-  rates. This cell validates the theorem's hypotheses against practice; it
-  claims nothing else.
+- **Theorem arm (primary, and better than first drafted):** the supply bound
+  does *not* need a heuristic. Masser (*Counting points of small height on
+  elliptic curves*, Bull. SMF 117 (1989)) gives effective upper bounds on the
+  number of points of bounded canonical height over any extension of bounded
+  degree; Dujella (*Uniform bounds for the number of rational points of
+  bounded height*, Acta Arith. 2024) gives the uniform bound
+  exp(C log B / log log B) for curves with rational ℓ-torsion (ℓ = 2 over Q),
+  following Bombieri–Zannier and Naccarato. So the scoped closure certificate
+  can be stated unconditionally: for a fixed height budget B = (log p)^c, the
+  usable base has at most exp(C log B / log log B) = (log p)^{O(1)} points —
+  polylogarithmic in p — hence relation density at fixed m is
+  at most (log p)^{c'm}/p, inverse-polynomial, hence no sub-rho advantage at
+  any height budget polynomial in log p. Two honest caveats to state in the
+  theorem: (i) Masser/Dujella bounds are upper bounds — they *are* the
+  supply side, so this direction is sound; (ii) reaching n ≈ p^{1/2} points
+  requires B = exp(Θ((log p)(log log p))) — a power of p, not a polylog — so
+  the "low height" premise fails quantitatively, and the theorem must say
+  that explicitly rather than only bounding the base. **Citation hygiene:**
+  the author line "Flannery–Lenstra–Wesolowski, *Low points on elliptic
+  curves and class groups*" used in the first draft of this goal is an
+  unverified recollection and is **withdrawn**; it must not be cited until the
+  paper is located and read. The verified supply literature is Masser 1989,
+  Dujella 2024, and Krumm (*Computing points of bounded height*, Math. Comp.
+  2015) for the enumeration side.
+- **Measurement arm (one cell, confirming):** at 20–24 bits, enumerate
+  points of bounded height on 2–3 integral models of toy curves via a
+  Krumm-style bounded-height enumeration, fit the supply exponent, and verify
+  the *scoping* of the barrier — i.e. check no height budget that stays
+  polylogarithmic gives a base large enough to reach even toy relation rates.
+  This cell validates the theorem's hypotheses against practice; it claims
+  nothing else.
 - **Escape hatch (the honest loophole probe):** the model-dependence of the
   lift. Different integral models of the same reduction give different
   Mordell–Weil groups; record whether any model family with unusually small
-  regulator/torsion-free rank interplay produces supply deviating from the
-  fitted law. If one exists, it is the successor goal; if none does across
-  the sampled models with fresh held-out models, that null is part of the
-  closure certificate.
+  regulator/rank interplay produces supply deviating from the fitted law. If
+  one exists, it is the successor goal; if none does across the sampled
+  models with fresh held-out models, that null is part of the closure
+  certificate.
 
 **Falsification / kill criteria:** the barrier is refuted (scoped, at tested
 tier) if any sampled model at any tested size reaches the G30-010 alive
-criterion yield with a height-budget base; the theorem arm fails if the FLW
-dependency cannot be stated crisply, in which case only the measurement cell
-survives and it is filed as census, not barrier.
+criterion yield with a polylog-height base; the theorem arm fails if the
+Masser/Dujella bounds cannot be transplanted to the scoped statement (e.g.
+degree-growth or effectivity problems), in which case only the measurement
+cell survives and it is filed as census, not barrier.
 
-**Novelty screen:** the 2024–2026 line implementing decomposition algorithms
-over E(Q) (Bochníček–Degot–Futamura–Johnston and successors) must be read
-first — if any of them already proves a supply non-existence of the scoped
-form, this goal collapses into a KN-LIT entry with a pointer. That screen is
-the first work package, not an afterthought.
+**Novelty screen (first work package):** the recent line implementing point
+decomposition over E(Q) and bounded-height enumeration must be located and
+read — if any of it already proves a supply non-existence of the scoped form,
+this goal collapses into a KN-LIT entry with a pointer. A Crossref/arXiv
+search for bounded-height decomposition implementations returned nothing
+load-bearing beyond the enumeration literature above; the earlier draft's
+"Bochníček–Degot–Futamura–Johnston" author line was **unverified and is
+withdrawn** — the exact bibliographic identity must come from the screen, not
+from this document.
 
 ---
 
@@ -284,6 +323,27 @@ the paper itself (not the abstract), and screen 2024–2026 ePrint for
 odd-characteristic summation-polynomial computation before claiming the
 census is new. Ingest both into KN-LIT regardless of outcome — that part is
 worth doing even if the census is scooped.
+
+**Screen result (2026-11-20, partial; recorded before any novelty claim).**
+The "no published S₄/S₅ over a moderate prime field" framing used to motivate
+this goal is **over-claimed and is corrected here**: Faugère–Huot–Joux–
+Renault–Vitse (EUROCRYPT 2014, `faugere_huot_joux_renault_vitse_2014_symmetrized`)
+state that "the largest Semaev polynomial ever computed is the 6-th", with
+symmetrized records up to the 8-th. McGuire–Mueller (`eprint 2017/1262`, in
+corpus) also treat S₃–S₆ explicitly. So S₄ is *not* a first computation, and
+this goal's defensible contribution narrows to: (i) **explicit universal
+S₄ over ℤ[a,b] with three independent computations agreeing**, (ii) exhaustive
+zero-set validation against F_{p²}-lift ground truth at odd characteristic,
+(iii) the exact over-ℤ re-derivation of this repo's own `harness/semaev.py`
+`s4_expr`, and (iv) the evaluation-cost curve (WP2). All four are
+verification/instrumentation value, not a novelty claim. Two further prior-art
+items surfaced and must be screened before any "first" language: the public
+`ebarschkis/SemaevSummationPolynomials` SageMath package (exact point
+decomposition with explicit prime-field factor-base coordinate sets,
+char 2 and 3 included — direct prior art for any "exact prime-field
+decomposition harness" claim) and the Petit–Kosters–Messeng line on
+rational-map prime-field factor bases (prior art for factor-base geometry
+claims, see G31-001 screen note). Neither is yet in the corpus.
 
 **WP1 outcome (2026-11-20, same day, unreviewed):** census executed;
 artifacts at `notes/g31-004-odd-char-census-20261120/` (scripts, universal and
