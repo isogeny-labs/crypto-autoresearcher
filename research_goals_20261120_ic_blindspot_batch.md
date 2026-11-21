@@ -274,6 +274,33 @@ rung with the pairing cost charged → closed-scoped; a rung with ratio < 1 →
 scaling study gated through mandatory independent review, same as G30-013/015
 positives.
 
+**Formulation sketch (so WP1 can start from equations, not vibes).** Over a
+prime field with base B = {P : x(P) < N} and target Q ∈ ⟨P⟩, the standard
+m-relation density is ρ_m = |B|^m/(m!·#G) (the repo's own statement, e.g.
+`KN-FIND-c93d45`). The double-large-prime variant fixes a second window
+L = {P : N ≤ x(P) < N'} with |L| = κ|B| and asks for Q = A₁+A₂+C₁+C₂ with
+A_i ∈ B, C_i ∈ L, |C₁|,|C₂| ≥ 1. Then:
+
+- Density: ρ_{2LP} ≈ |B|²|L|²/(#G) · (ordering factors) — a gain of κ² relative
+  to the 4-in-B density, at the price that only the A_i contribute matrix
+  columns (the C_i are matched, not logged).
+- Pairing cost: a table of L+L pairs costs ~|L|² additions to build (one-time
+  per base) and O(1) lookup per candidate; matching requires
+  Q − (A₁+A₂) ∈ L+L, i.e. a second pair table over B+B of size |B|². Net
+  candidate cost ≈ |B|² table lookups per relation attempt, so the charged
+  cost per relation is (1/ρ_{2LP})·(|B|² + |L|²) additions against
+  (1/ρ_m)·|B|^m for the plain engine — the ratio decides.
+- The honest structural question for prime fields: L+L has ~|L|²/2 distinct
+  sums, but the matching condition needs *collisions between two structured
+  sets*, and unlike the binary subfield-vector-space case there is no
+  linear-algebra mechanism forcing those collisions. If the L+L vs B+B
+  intersection behaves like two random sets of the same sizes, the gain is
+  exactly κ² and the cost is κ²·lookup — a wash; any deviation in either
+  direction is the empirical content of the cell.
+
+This is deliberately written so a null ("random-set behaviour, wash") is a
+clean closure certificate and a positive is a measurable κ²-scale effect.
+
 **Novelty screen:** Gaudry's original large-prime-for-ECDLP formulation and
 the Diem–Kochinke special-linear-systems line must be screened first; the
 claimed contribution is the *prime-field counting law under the B1 calculus*,
