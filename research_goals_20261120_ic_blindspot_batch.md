@@ -409,6 +409,39 @@ Z-verified universal S₄ — a free consistency check on a frozen external
 record; (c) the Patault–Plesis full-text novelty screen remains open; (d)
 m ≥ 5 and 2-torsion diagonal branch unexercised, stated as gaps.
 
+**WP2 outcome (2026-11-20, same day, unreviewed):** evaluation-cost curve
+measured; artifacts at `notes/g31-004-wp2-evalcost-20261120/` (bench scripts,
+`semaev_eval.py`, two full result JSONs). Headline numbers:
+
+- **Sieve-mode cost (the ledger-relevant mode):** 245 ns/candidate for S₃ and
+  433 ns for S₄ at p ≈ 2³¹ with window W = 384, decomposing exactly as
+  `362 + 23517/W` ns — the parametric form a cost model needs. One-shot
+  evaluation is 54 µs and pre-tabulated-power evaluation 31 µs; a numpy
+  batched variant is 12 ns. **The same S₄ candidate ranges 12 ns → 54 µs
+  across modes (≈4500×)**, so any quoted ns/candidate is meaningless without
+  its mode; this is now the governing caveat on the whole cost axis.
+- **Curve-shape effect, larger than expected:** on `y² = x³ + 7` (a = 0) the
+  S₄ support collapses from 439 to **191 monomials** (and S₃ from 13 to 9) —
+  every a-bearing term vanishes. Real prime-field targets are largely
+  a ∈ {0, −3} curves, so cost tables computed at a = b = 1 overstate the
+  inner loop roughly twofold. Recorded as a correction to how this program
+  should quote Semaev evaluation costs.
+- **Normalisation:** 0.25 (S₃) and 0.45 (S₄) Python-affine-group-op ratios —
+  explicitly *not* a GOE conversion factor; must be re-measured in harness
+  units. Reported with medians and IQRs; CPU pinning was refused by Mach
+  (`KERN_NOT_SUPPORTED`), and between-run drift is reported (≤5.4% in
+  sieve mode).
+- **Scaling artifact identified:** the 2²⁰ → 2³¹ growth (1.6–2.0×) is a
+  CPython 30-bit-limb boundary effect, not a log p law — cost is flat within
+  a limb class (151 vs 146 ns) and steps at 2³⁰. In a 64-bit C core it should
+  be constant. This matters because a naive fit of Python timings across the
+  limb boundary would manufacture a spurious "cost grows with log p" term in
+  any GOE ledger.
+- Two internal bugs were caught and fixed before timing (F_{p²} oracle
+  truncation; small-operand grids flattering multiplications), and each timed
+  loop is verified value-for-value against a reference — recorded in the
+  report rather than silently repaired.
+
 ---
 
 ## G31-005: Read Diem II's obstruction side — theorem-level closure test for the correspondence-transfer family
