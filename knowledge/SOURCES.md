@@ -25,13 +25,13 @@ a hash it cannot is an assertion by the session that recorded it.
 | — present but carrying no `.sha256` | 8 |
 | — sought and never retrieved | 1 |
 | Seed bibliography entries | 10 |
-| Literature entries (`KN-LIT-*`) | 8146 |
+| Literature entries (`KN-LIT-*`) | 8147 |
 | — with a resolvable external identifier | 2532 |
-| — with no identifier recorded | 5614 |
+| — with no identifier recorded | 5615 |
 
 Primary identifier kinds — one per entry, chosen in eprint > arXiv > DOI > ISBN > URL order, so an entry carrying both an ePrint number and a URL counts once, under ePrint: arxiv 1352, doi 184, eprint 839, isbn 1, url 156. Every identifier an entry carries is kept in `sources.json`.
 
-`citation_verified` distribution: `False` 23, `True` 10, `abstract` 5, `abstract and bibliographic data fetched from eprint.iacr.org (landing page) and link.springer.com (chapter page) on 2026-10-10; PDF not retrieved (eprint.iacr.org/2013/582.pdf returned HTTP 403; HAL hal-01213666 has no file; no PDF on either author's publication page)` 1, `abstract fetched from eprint.iacr.org on 2026-10-10; body figures taken from the Journal of Cryptology HTML full text at link.springer.com (doi 10.1007/s00145-018-9280-5) and its table pages /tables/8, /tables/9, /tables/10 via the fetch tool on 2026-10-10; no PDF retrieved (eprint PDF HTTP 403, HAL hal-01534101 blocked by a bot check)` 1, `body_read_from_user_provided_text` 1, `full-pdf-mechanical-traversal-and-scoped-reading` 1, `full_text` 5, `full_text_supplied` 2, `metadata` 3, `partial` 6, `read` 7561, `secondary_only` 1, `transcription_of_full_text_at_recorded_sha256` 2, `web` 524.
+`citation_verified` distribution: `False` 23, `True` 10, `abstract` 5, `abstract and bibliographic data fetched from eprint.iacr.org (landing page) and link.springer.com (chapter page) on 2026-10-10; PDF not retrieved (eprint.iacr.org/2013/582.pdf returned HTTP 403; HAL hal-01213666 has no file; no PDF on either author's publication page)` 1, `abstract fetched from eprint.iacr.org on 2026-10-10; body figures taken from the Journal of Cryptology HTML full text at link.springer.com (doi 10.1007/s00145-018-9280-5) and its table pages /tables/8, /tables/9, /tables/10 via the fetch tool on 2026-10-10; no PDF retrieved (eprint PDF HTTP 403, HAL hal-01534101 blocked by a bot check)` 1, `body_read_from_user_provided_text` 1, `full-pdf-mechanical-traversal-and-scoped-reading` 1, `full_text` 5, `full_text_supplied` 2, `metadata` 3, `partial` 6, `read` 7562, `secondary_only` 1, `transcription_of_full_text_at_recorded_sha256` 2, `web` 524.
 
 ## 1. Frozen source packages
 
@@ -246,7 +246,7 @@ records that some fetch failed, and says nothing about the file that is here.
 
 ## 5. Literature citations with a resolvable identifier
 
-2532 of 8146 `KN-LIT-*` entries carry an
+2532 of 8147 `KN-LIT-*` entries carry an
 eprint, arXiv, DOI, ISBN or URL identifier.
 
 | ID | Title | Year | Identifier | Verified |
@@ -2786,7 +2786,7 @@ eprint, arXiv, DOI, ISBN or URL identifier.
 
 ## 6. Literature citations with no recorded identifier
 
-5614 entries name a source this index cannot resolve to a
+5615 entries name a source this index cannot resolve to a
 retrievable location. They are listed, not dropped and not backfilled by
 guesswork (AGENTS.md rule 5): closing a row means finding the identifier
 and editing the entry, after which this table shrinks on its own.
@@ -2795,6 +2795,7 @@ and editing the entry, after which this table shrinks on its own.
 |---|---|---|---|---|
 | KN-LIT-0cbb26 | Montgomery Multiplication on the Cell | 2012 | preprint (EPFL) | read |
 | KN-LIT-10be29 | An observation on the security of McEliece's public-key cryptosystem | 1988 | Eurocrypt | false |
+| KN-LIT-136e9b | Extending the special number field sieve | 2006 | Talk slides, 20 September 2006 (venue not stated) | read |
 | KN-LIT-17708c | On minimum distance decoding of linear codes | 1991 | Fifth joint Soviet-Swedish international workshop on information theory | false |
 | KN-LIT-180ad5 | Side-Channel and Fault-Injection Attacks on Kyber and Dilithium: Survey and New Results | 2022 | IACR ePrint 2022/737 (IEEE Trans. Computers venue unconfirmed from ePrint record) | partial |
 | KN-LIT-1966 | (Almost) Optimal Constructions of UOWHFs from 1-to-1, Regular One-way Functions and Beyond |  |  | read |
