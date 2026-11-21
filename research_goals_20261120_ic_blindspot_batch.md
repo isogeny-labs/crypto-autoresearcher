@@ -154,6 +154,55 @@ Three findings, one correction:
    Scope stays toy (p ≤ 2^20, m ≤ 5); the m=5 rate cell was frozen too sparse
    to inform and is recorded as such.
 
+**Replication outcome (2026-11-21, pre-registered, unreviewed): signal NOT
+replicated, and the pilot's effect is fully explained.** Artifacts at
+`notes/g31-001-replication-20261121/` (frozen config, second independent
+counting engine, null calibration, sensitivity runs). Setup: 20 curves (10 per
+size class, distinct j, all prime order so G = E(F_p)), 1000 targets/curve,
+50 symmetric + 50 uniform null draws per cell, freeze at 2026-11-21T05:47:48Z.
+
+- **Verdict on the primary (negation-matched) null:** no cell reaches the
+  frozen bar. Largest |cell z| = 2.22, Holm-adjusted p = 0.43; pooled
+  z = +0.20 over 4 informative cells / 40 curves (24/40 positive). MDE at 80%
+  power = 1.40 per-curve null-sd.
+- **Why the pilot saw "both directions":** the *uniform* null is not
+  exchangeable with a negation-closed base. A negation-closed base has pair
+  count exactly b at O rather than ≈0, so pair-sum mass concentrates and
+  support shrinks — measured |2B| +3.2%, |4B| +8.4%, 20/20 curves. Against the
+  uniform null, x-window looks worse in 37/40 curves (pooled z = −7.5);
+  against a negation-closed random set of the same size it is ordinary
+  (+0.2%, +1.0%, 12/20 signs). The pilot's one positive cell was the maximum
+  of 40 fresh target-set draws (0.6281 vs mean 0.5662, sd 2.82 pp); re-run on
+  fresh targets it gives z = −0.6.
+- **Counting code exonerated:** a second, independent engine (FFT cyclic
+  convolution) matched the pair-sum table on 40 curve-arm blocks × 6 configs
+  with max per-target difference 0, and reproduced the pilot's published
+  fractions to 4 dp. The pilot's arithmetic was right; its null was wrong.
+- **Disclosed deviation:** N3 used round(p^{1/3}) vs the frozen floor
+  (6/20 curves differ, |B_G| by 0 or 2); sensitivity re-run under floor gives
+  +0.24 / +0.12 — verdict unchanged.
+- **Not excluded:** in the two m=4 cells the MDE is 2.7–4.4 pp, so a ~2 pp
+  x-geometry effect is not ruled out. The single follow-up target is
+  13/N3/m=4 (2.2 pp, 9/10 signs, sign-test p = 0.022), which needs the
+  registered larger design: an N = ⌊p^{1/4}⌋ arm, 25–30 curves/cell, 2000
+  targets, negation-matched null.
+
+**Cross-goal finding (metrology; affects G30-010 before it runs).** The
+program's own base-yield experiment compared structured bases against
+`"random_base": "B distinct uniform logs in [0,N)"`
+(`inputs/h100_session/h016_base_yield.json`, H016/H017 conventions) — a null
+that is not negation-closed while the structured bases are. That is exactly
+the confound measured above, and it biases *against* structured bases
+(false-negative direction). Any H016/H028/H032-derived conclusion of the form
+"structured factors show no yield advantage" carries this confound until
+re-scored against a negation-matched null. **Recommendation to the
+Coordinator/owner of G30-010:** before executing `EXP-FB3-001`, replace or
+augment the uniform random base with a negation-closed random base of equal
+size (and state which null is primary), and record the null definition in the
+experiment contract. This is a candidate correction for the G30-001 metrology
+standard, not a claim that G30-010's results are wrong — only that its stated
+null is the wrong exchangeable reference for negation-closed bases.
+
 ---
 
 ## G31-002: Characteristic-0 supply barrier — no Mordell–Weil lift yields sub-rho factor-base supply
