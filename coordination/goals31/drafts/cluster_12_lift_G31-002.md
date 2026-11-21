@@ -65,11 +65,11 @@ Non-duplication and interface rules honored:
      general. The special number field sieve — Schirokauer's weight-based variant
      (2006), Joux–Pierrot's F_{p^n} form, and the tower/exTNFS line — is a
      characteristic-0 *field-representation* lift that provably improves the
-     exponent, and the corpus already digests its descendants (KN-LIT-7084,
-     KN-LIT-1624b6, KN-LIT-2223) while the scouting pass recorded no surviving
-     NFS-on-E/F_p mechanism (scout-algorithmic-nt-smoothness, K3). No conclusion
-     here transfers to field representations, and this goal must never be cited
-     as "characteristic 0 is useless".
+     exponent, and the corpus already digests its descendants (KN-LIT-136e9b,
+     KN-LIT-7084, KN-LIT-1624b6, KN-LIT-2223) while the scouting pass recorded no
+     surviving NFS-on-E/F_p mechanism (scout-algorithmic-nt-smoothness, K3). No
+     conclusion here transfers to field representations, and this goal must never
+     be cited as "characteristic 0 is useless".
   Deliverables: a `derivation` artifact (statement, proof of the lemma application,
   hypothesis ledger, loophole analysis), a supply table on three explicit curves,
   and an N_min(s,b) ledger stated as an operation count against √p and explicitly
