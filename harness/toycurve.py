@@ -162,6 +162,51 @@ class ECDLPInstance:
     def curve(self) -> EllipticCurve:
         return EllipticCurve(self.p, self.a, self.b)
 
+    @property
+    def p_weight(self) -> int:
+        """Signed binary weight of p (see signed_binary_weight)."""
+        return signed_binary_weight(self.p)
+
+
+def signed_binary_weight(n: int) -> int:
+    """Least number of signed powers of two whose sum is n (n >= 1).
+
+    Schirokauer's weight of an integer: the smallest w with
+    n = sum_{i=1..w} eps_i * 2^{c_i}, eps_i in {+1,-1}. The non-adjacent
+    form has no two adjacent non-zero digits and attains that minimum; this
+    returns its number of non-zero digits.
+
+    Weight is not used by any curve attack; it is recorded so that a prime
+    reused in a field-DLP control (F_p^* or F_{p^k}) is not silently treated
+    as a neutral baseline.
+    """
+    if n < 1:
+        raise ValueError("signed_binary_weight is defined for positive n")
+    w = 0
+    while n:
+        if n & 1:
+            n -= 2 - (n & 3)     # +1 if n % 4 == 1, -1 if n % 4 == 3
+            w += 1
+        n >>= 1
+    return w
+
+
+def instance_metadata(inst: "ECDLPInstance") -> dict:
+    """Canonical run-input block for one instance.
+
+    Frozen at generation time so that a later reader can audit structural
+    covariates of the prime (currently its signed binary weight) without
+    re-deriving them from a curve id hash.
+    """
+    return {
+        "p": inst.p,
+        "a": inst.a,
+        "b": inst.b,
+        "field_bits": inst.field_bits,
+        "n": inst.n,
+        "signed_binary_weight": signed_binary_weight(inst.p),
+    }
+
 
 def _seed_int(seed: int, tag: str) -> int:
     h = hashlib.sha256(f"{seed}:{tag}".encode()).hexdigest()

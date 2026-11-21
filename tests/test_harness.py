@@ -15,7 +15,12 @@ import sympy
 
 from harness import rho, semaev
 from harness.runner import RunResult, curve_id, write_run
-from harness.toycurve import EllipticCurve, generate_instance
+from harness.toycurve import (
+    EllipticCurve,
+    generate_instance,
+    instance_metadata,
+    signed_binary_weight,
+)
 
 
 def test_textbook_curve_order_and_group_law():
@@ -195,6 +200,25 @@ def test_run_wrapper_omits_optional_metadata_by_default(tmp_path):
         open(os.path.join(tmp_path, "runs", run_id, "manifest.yaml")))["run"]
     assert "heuristic_validation" not in manifest
     assert "cost_model" not in manifest
+    assert "instance" not in manifest["inputs"]
+
+
+def test_run_wrapper_records_instance_block(tmp_path):
+    inst = generate_instance(seed=7, field_bits=8)
+    block = instance_metadata(inst)
+    rr = RunResult(
+        run_suffix="instmeta-present", curve_id="TOY", seed=7,
+        parameters={"field_bits": 8}, metrics={},
+        certificate={"kind": "none"}, instance=block)
+    run_id = write_run("EXP-SEMAEV-001", "SEMAEV", rr, status="completed_valid",
+                       command="pytest", started=1.0, finished=2.0,
+                       out_root=str(tmp_path))
+    import yaml
+    manifest = yaml.safe_load(
+        open(os.path.join(tmp_path, "runs", run_id, "manifest.yaml")))["run"]
+    assert manifest["inputs"]["instance"] == block
+    assert manifest["inputs"]["instance"]["signed_binary_weight"] == \
+        signed_binary_weight(inst.p)
 
 
 def test_run_wrapper_records_optional_exemplar_metadata(tmp_path):

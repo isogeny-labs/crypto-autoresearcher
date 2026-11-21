@@ -229,6 +229,10 @@ class RunResult:
     # otherwise, so existing runs and manifests are unaffected.
     heuristic_validation: dict | None = None
     cost_model: dict | None = None
+    # Optional instance provenance (p, field_bits, signed_binary_weight).
+    # Recorded under run.inputs when supplied and omitted entirely otherwise,
+    # so legacy callers and existing manifests are unaffected.
+    instance: dict | None = None
 
 
 # ---------------------------------------------------------------------------
@@ -605,6 +609,8 @@ def write_run(exp_id: str, exp_area: str, result: RunResult, *,
                 "curve_id": result.curve_id,
                 "seed": result.seed,
                 "parameters": result.parameters,
+                **({"instance": result.instance}
+                   if result.instance is not None else {}),
             },
             # wall_seconds: for NEW runs the wrapper measures it itself
             # (run_wrapped passes its monotonic-clock delta plus

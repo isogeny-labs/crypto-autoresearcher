@@ -27,7 +27,7 @@ from contextlib import redirect_stdout
 
 from . import rho, semaev
 from .runner import RunResult, curve_id, write_run
-from .toycurve import generate_instance
+from .toycurve import generate_instance, instance_metadata
 
 EXP_ID = "EXP-SEMAEV-001"
 EXP_AREA = "SEMAEV"
@@ -60,7 +60,8 @@ def _rho_run(inst, seed, bits, cmd, out_root) -> str:
                  "iterations": res.iterations, "solved": res.solved},
         certificate=cert, valid=valid, invalid_reason=reason,
         stdout=log.getvalue(),
-        raw={"n": inst.n, "recovered_k": res.k})
+        raw={"n": inst.n, "recovered_k": res.k},
+        instance=instance_metadata(inst))
     return write_run(EXP_ID, EXP_AREA, rr, status=status, command=cmd,
                      started=started, finished=finished, out_root=out_root)
 
@@ -89,7 +90,8 @@ def _gb_run(inst, seed, bits, factor_base, cmd, out_root) -> str:
                  "decomposition_found": m.decomposition_found,
                  "rho_baseline_group_operations": baseline.group_operations},
         certificate=cert, stdout=log.getvalue(),
-        raw={"target_x": m.target_x, "summand_x": m.summand_x})
+        raw={"target_x": m.target_x, "summand_x": m.summand_x},
+        instance=instance_metadata(inst))
     return write_run(EXP_ID, EXP_AREA, rr, status="completed_valid", command=cmd,
                      started=started, finished=finished, out_root=out_root)
 
