@@ -103,6 +103,38 @@ object is only the *dictionary to relation-rate heuristics and its use as an
 IC instrument*, and that claim is provisional until the screen is run against
 the additive-combinatorics literature.
 
+**Pilot outcome (2026-11-20, same day, unreviewed):** validation hook executed
+at toy tier; artifacts archived at
+`notes/g31-001-terracini-pilot-20261120/` (scripts, frozen config, results).
+Three findings, one correction:
+
+1. **Correction (load-bearing).** The dictionary as stated in item 1 above is
+   *false in its literal form*: for the degree-6 embedding, containment sees
+   −ΣPᵢ, and the containment statement only becomes exact at embedding degree
+   d = m+1 (residuals of degree ≥ 2 are base-point-free on genus 1 — the
+   literal m=3/d=6 test failed its own controls, 0/400, as the theory now
+   predicts). The **correct dictionary**: `φ_{m+1}(−Σ Pᵢ) ∈ span(scheme
+   columns of φ_{m+1}(Pᵢ))`. Verified 3881/3881 witnesses, 4500/4500 residual
+   containments, zero converse violations.
+2. **Dimension count confirmed as the supply predictor:** mean decomposition-
+   tuple counts match λ = |B|^m/#G within [0.86, 1.06]; the naive *fraction*
+   formula min(1, |B|^m/p) requires the m!-ordering (Poisson) correction,
+   after which ratios are 0.94–1.13. This charges the G30 relation-rate
+   heuristic geometrically at tested scope, including the correction term
+   the raw heuristic omits.
+3. **Charter test answered "differently":** x-window base decomposition rates
+   fall outside 20-draw generic-set null bands in 4/8 informative cells, in
+   **both directions**, with total tuple supply ≈ invariant — a genuine,
+   small, curve-dependent sumset-structure signal. This is the alive signal
+   G30-010 was looking for, seen from the geometric side; it is not yet a
+   law and does not survive promotion.
+   Successor (to be staffed by Coordinator, not implicitly): (a) replicate the
+   charter signal with a frozen larger null and ≥ 8 curves per cell;
+   (b) run the unexecuted char-2-defectivity arm (the dictionary's other
+   dichotomy); (c) the G30-007 cross-check before any D2 citation.
+   Scope stays toy (p ≤ 2^20, m ≤ 5); the m=5 rate cell was frozen too sparse
+   to inform and is recorded as such.
+
 ---
 
 ## G31-002: Characteristic-0 supply barrier — no Mordell–Weil lift yields sub-rho factor-base supply
