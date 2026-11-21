@@ -44,9 +44,8 @@ jobs:
     name: "${{ github.event_name == 'pull_request_target' && 'post-merge / ' || '' }}changes"
     if: ${{ (github.event.action != 'closed' || github.event.pull_request.merged) && !github.event.pull_request.draft }}
     runs-on: ubuntu-latest
-    # A cold blobless checkout can consume nearly five minutes before scope
-    # detection starts (job 126140552341). Keep the same fail-closed scope
-    # decision while allowing its store pull and controls to finish.
+    # Scope selection reads only the Git diff and event metadata. Keep this
+    # checkout narrow so missing archive objects cannot prevent the decision.
     timeout-minutes: 15
     outputs:
       base: ${{ steps.scope.outputs.base }}
@@ -66,9 +65,6 @@ jobs:
           filter: blob:none
           sparse-checkout: |
             .github/scripts
-            .artifacts
-            tools/artifacts
-            coordination
       - name: Unlock research vault (AES-256)
         shell: bash
         env:
@@ -97,27 +93,6 @@ jobs:
           "$py" "$tool" install-key --quiet
           "$py" "$tool" setup --quiet --script "$tool"
           "$py" "$tool" unlock --quiet
-      - name: Pull store data this workflow reads (tools/artifacts)
-        shell: bash
-        working-directory: ${{ github.workspace }}
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.ARTIFACTS_AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.ARTIFACTS_AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: ${{ vars.ARTIFACTS_AWS_REGION || 'us-west-2' }}
-        run: |
-          if ! command -v aws >/dev/null; then
-            python3 -m venv "$RUNNER_TEMP/artifacts-awscli"
-            artifacts_cli_python="$RUNNER_TEMP/artifacts-awscli/bin/python"
-            artifacts_cli_aws="$RUNNER_TEMP/artifacts-awscli/bin/aws"
-            if [ -d "$RUNNER_TEMP/artifacts-awscli/Scripts" ]; then
-              artifacts_cli_python="$RUNNER_TEMP/artifacts-awscli/Scripts/python.exe"
-              artifacts_cli_aws="$RUNNER_TEMP/artifacts-awscli/Scripts/aws.exe"
-            fi
-            "$artifacts_cli_python" -m pip install --disable-pip-version-check awscli==1.46.2
-            export ARTIFACTS_AWS="$artifacts_cli_aws"
-          fi
-          python3 tools/artifacts/artifacts.py pull --jobs 16 coordination examples/experiment-protocol/ecbench-l2-smoke-subset/session experiments/EXP-ECDLP-00e491/runs/RUN-ECDLP-ee0d23
-          python3 tools/artifacts/artifacts.py verify coordination examples/experiment-protocol/ecbench-l2-smoke-subset/session experiments/EXP-ECDLP-00e491/runs/RUN-ECDLP-ee0d23
       - name: Verify CI scope controls
         run: python3 -m unittest discover -s .github/scripts -p test_ci_scope.py -v
       - id: scope
