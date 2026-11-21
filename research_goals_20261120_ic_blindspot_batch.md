@@ -285,6 +285,43 @@ odd-characteristic summation-polynomial computation before claiming the
 census is new. Ingest both into KN-LIT regardless of outcome — that part is
 worth doing even if the census is scooped.
 
+**WP1 outcome (2026-11-20, same day, unreviewed):** census executed;
+artifacts at `notes/g31-004-odd-char-census-20261120/` (scripts, universal and
+per-prime polynomials, validation logs). Headline numbers:
+
+- **Explicit universal polynomials over Z[a,b]:** S₃ = 13 monomials (total
+  degree 4, deg 2/variable); **S₄ = 540 monomials (total degree 12, deg
+  4/variable, 6 generators)**; per-prime support at (a=b=1, p ∈ {101,127,1009})
+  is 439/625 monomials (70.2% of the degree-box). Three independent
+  computations (Z-resultant→reduce, own Sylvester determinant over F_p,
+  quadratic-resolvent closed form) agree coefficient-for-coefficient.
+  Pipeline cost: ~16 s, <450 MB — the computation is *cheap*, which is itself
+  a datum for the evaluation-cost question.
+- **Validation: zero mismatches.** S₃ exhaustively at p=101 and p=127
+  (≈3.1M tuples) against exact F_{p²}-lift ground truth; S₄ exhaustively over
+  on-curve abscissae at p=101 (7.3M tuples). Off-curve mixed tuples disagree
+  exactly on the predicted [2]-doubling sign branch — counted, not hidden.
+- **Harness cross-check exact over Z:** `harness/semaev.py`'s `s4_expr(1,1)`
+  equals the independently computed universal S₄ — the program's own m=4
+  cells (G30-006, G30-026) now sit on externally re-derived polynomials,
+  which was this goal's de-risking purpose.
+- **Structure results:** exact S_m symmetry over Z; the diagonal restriction
+  identity S₄(x,x,u,v) = (4f(x))²(u−v)²S₃(u,v,x∘[2]) (the (u−v)² factor is a
+  formal-resultant leading-coefficient artifact — recorded because the naive
+  prediction misses it, 1947/2000); independent collinearity-elimination
+  re-derivation reproduces S₃² × diagonal junk with zero misses.
+- **Brief correction:** S₂ in odd characteristic is x₁−x₂, not
+  (f(x₁)−f(x₂))/(x₁−x₂) (the latter is the slope numerator); the repo and
+  Semaev 2004 are right, the WP brief was wrong, documented in the report.
+
+**Successors (Coordinator-staffed):** (a) WP2 — the evaluation-cost curve at
+p ≈ 2³¹ for GOE charging (WP1 showed generation is cheap; evaluation per
+candidate is the open cost axis); (b) reconcile against the frozen
+`SRC-ICPERF-TRIMOSKA-ECICB-2024` fourth-summation benchmark using the now
+Z-verified universal S₄ — a free consistency check on a frozen external
+record; (c) the Patault–Plesis full-text novelty screen remains open; (d)
+m ≥ 5 and 2-torsion diagonal branch unexercised, stated as gaps.
+
 ---
 
 ## G31-005: Read Diem II's obstruction side — theorem-level closure test for the correspondence-transfer family
