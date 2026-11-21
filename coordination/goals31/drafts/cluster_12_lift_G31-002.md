@@ -60,6 +60,16 @@ Non-duplication and interface rules honored:
      channel already excluded in `LEAD-TRF-kernel-of-reduction-lemma`; L3 variable
      K with degree n growing in p, where the bound degrades to (log p)^(nr/2) and
      the barrier needs n·r = o(log p / log log p) — the sharpest open gap.
+     **Scope guard (SNFS).** This barrier concerns *point* supply from a
+     height-bounded Mordell–Weil lattice, never characteristic-0 structure in
+     general. The special number field sieve — Schirokauer's weight-based variant
+     (2006), Joux–Pierrot's F_{p^n} form, and the tower/exTNFS line — is a
+     characteristic-0 *field-representation* lift that provably improves the
+     exponent, and the corpus already digests its descendants (KN-LIT-7084,
+     KN-LIT-1624b6, KN-LIT-2223) while the scouting pass recorded no surviving
+     NFS-on-E/F_p mechanism (scout-algorithmic-nt-smoothness, K3). No conclusion
+     here transfers to field representations, and this goal must never be cited
+     as "characteristic 0 is useless".
   Deliverables: a `derivation` artifact (statement, proof of the lemma application,
   hypothesis ledger, loophole analysis), a supply table on three explicit curves,
   and an N_min(s,b) ledger stated as an operation count against √p and explicitly
@@ -79,7 +89,10 @@ Non-duplication and interface rules honored:
   2^20}; bad primes and primes dividing denominators are censored and listed.
   Heights exact (canonical height; floating point never decides a comparison or a
   fit). Scope is fixed (K, E_K) and the H1–H3 regime — never "index calculus
-  cannot beat rho over prime fields", which no claim tier permits.
+  cannot beat rho over prime fields", which no claim tier permits. Field-
+  representation lifts (SNFS/FFS on F_p^* or F_{p^n}) are explicitly out of scope
+  and are not refuted here; `LEAD-TRF-pairing-target-field-recost` owns that
+  lane and is not duplicated.
 - **Primary metric:** fitted exponent of |B_p(c)| vs log p per curve, with the
   supply table and the N_min(s,b) deficit factor / **Secondary metrics:** exact
   counts per rung, fitted constants, torsion-image count (excluded from supply,
