@@ -205,7 +205,7 @@ null is the wrong exchangeable reference for negation-closed bases.
 
 ---
 
-## G31-002: Characteristic-0 supply barrier — no Mordell–Weil lift yields sub-rho factor-base supply
+## G31-002: Characteristic-0 supply barrier — fixed-length closure, and the reduction to the solver question
 
 **Cluster:** 08 BARRIERS (fourth arm beside D1/D2/D3).
 **Type:** barrier theorem + one measurement cell. **Depends on:** G30-025 (registration), G30-022 pattern (proof-first, one confirming cell).
@@ -237,17 +237,26 @@ value:
   degree; Dujella (*Uniform bounds for the number of rational points of
   bounded height*, Acta Arith. 2024) gives the uniform bound
   exp(C log B / log log B) for curves with rational ℓ-torsion (ℓ = 2 over Q),
-  following Bombieri–Zannier and Naccarato. So the scoped closure certificate
-  can be stated unconditionally: for a fixed height budget B = (log p)^c, the
-  usable base has at most exp(C log B / log log B) = (log p)^{O(1)} points —
-  polylogarithmic in p — hence relation density at fixed m is
-  at most (log p)^{c'm}/p, inverse-polynomial, hence no sub-rho advantage at
-  any height budget polynomial in log p. Two honest caveats to state in the
-  theorem: (i) Masser/Dujella bounds are upper bounds — they *are* the
-  supply side, so this direction is sound; (ii) reaching n ≈ p^{1/2} points
-  requires B = exp(Θ((log p)(log log p))) — a power of p, not a polylog — so
-  the "low height" premise fails quantitatively, and the theorem must say
-  that explicitly rather than only bounding the base. **Citation hygiene:**
+  following Bombieri–Zannier and Naccarato. So the supply side is available
+  without a heuristic — but *only the supply side*. **Theorem-arm outcome
+  (2026-11-21): the screening's stronger conclusion was wrong and is
+  withdrawn.** The counting bound at height h = c log p is
+  exp(Cc log p / log log p) = p^{Cc/log log p+o(1)} — sub-polynomial in p, but
+  **not polylogarithmic**, so with decomposition length m growing like
+  log log p the density ceiling can reach a constant power of p, and the
+  standard cost formula `p/N^{m-1}` then reads sub-rho *if the per-candidate
+  decomposition solver is free*. That solver assumption is the whole question
+  on prime fields, and counting cannot supply it. What the arm does establish
+  is a **scoped closure**: fixed m (the computable Semaev range), bounded rank
+  and bounded lifting degree, polynomial height ⇒ density
+  ≤ p^{-1+Cc·m/loglog p+o(1)} ⇒ relation collection ≥ p^{1-o(1)} ≫ p^{1/2}; plus
+  the quantitative required-height lemma (|B| ≥ p^{1/(2m)} needs
+  h ≥ (log p)(log log p)/(2mC)). The general case **reduces to** the
+  prime-field solver question (G30-005/006, KN-OPEN-002) rather than being
+  closed by it. Full statement, proof, and the four explicitly-open doors are
+  in `notes/g31-002-char0-barrier-20261121.md`. A statement of the form
+  "lifting to ℚ cannot help" must not be filed without the fixed-m and
+  bounded-rank qualifiers. **Citation hygiene:**
   the author line "Flannery–Lenstra–Wesolowski, *Low points on elliptic
   curves and class groups*" used in the first draft of this goal is an
   unverified recollection and is **withdrawn**; it must not be cited until the
@@ -271,10 +280,14 @@ value:
 
 **Falsification / kill criteria:** the barrier is refuted (scoped, at tested
 tier) if any sampled model at any tested size reaches the G30-010 alive
-criterion yield with a polylog-height base; the theorem arm fails if the
-Masser/Dujella bounds cannot be transplanted to the scoped statement (e.g.
-degree-growth or effectivity problems), in which case only the measurement
-cell survives and it is filed as census, not barrier.
+criterion yield with a polylog-height base; the theorem arm is already
+partially resolved (2026-11-21): the supply transplant succeeds, the
+*free-solver* step fails, and the result is the scoped closure above. It is
+refuted outright if a decomposition algorithm exists with per-candidate cost
+o(p/N^{m-1}) that does not reduce to the extension-field mechanism; such an
+algorithm would reopen the entire lane and is worth more than the barrier.
+The measurement cell survives independently and is filed as census, not
+barrier, if the theorem is withdrawn.
 
 **Novelty screen (first work package):** the recent line implementing point
 decomposition over E(Q) and bounded-height enumeration must be located and
