@@ -1,0 +1,1423 @@
+{
+  "frozen_utc": "2026-11-21T05:47:48Z",
+  "master_seed": "g31-001-rep-v1",
+  "purpose": "pre-registered replication of the pilot signal 'x-window factor base is not exchangeable with a same-size generic set' (notes/g31-001-terracini-pilot-20261120)",
+  "sizes": [
+    13,
+    17
+  ],
+  "n_curves_per_size": 10,
+  "curve_rule": "p = nextprime(2^bits + sha256(master|bits|slot|'p') mod 2^(bits-6)); attempts t=1,2,... with a,b from sha256; ACCEPT iff #E is prime (cofactor 1) and j unseen in this size class; rejected slots are recorded, never re-tuned; #E certified by BSGS+lcm order in the Hasse window and then by an independent naive O(p) point count. Acceptance depends only on #E's factorisation and j novelty, never on any rate statistic.",
+  "arms": {
+    "N3": "floor(p^(1/3))",
+    "N2": "floor(sqrt(p))"
+  },
+  "m_values": [
+    3,
+    4
+  ],
+  "n_targets_per_cell": 1000,
+  "n_null_draws": 50,
+  "null_kinds": {
+    "uniform": "b distinct uniform points of G",
+    "symmetric": "b/2 distinct uniform points of G together with their negatives (uniform over negation-closed b-subsets; b even)"
+  },
+  "primary_null": "symmetric",
+  "primary_null_reason": "B_G is PROVABLY negation-closed: the x-window contains both y-signs, so B_raw = -B_raw; multiplication by the cofactor is a homomorphism, so B_G = -B_G; O is removed, so |B_G| is even. A uniform set is not negation-closed, and for m=4 the m-fold sumset of a symmetric set factors as (B+B)+(B+B) -- a squared measure with strictly larger count variance, hence lower coverage at equal tuple supply. The uniform null is therefore confounded with a provable structural difference that is not the property under test. Verdicts use the symmetric null; the uniform null is reported as the pilot-comparable secondary.",
+  "secondary_null": "uniform",
+  "target_rule": "targets for a curve: 1000 points g^k with k uniform on [1,n) from Random(sha256(master|bits|slot|'targets')); the same target multiset is used for every arm, every m and every null draw of that curve (paired comparison)",
+  "statistic": "r = #targets admitting >=1 ordered m-tuple from B summing to the target, divided by n_targets; ordered (repetitions allowed)",
+  "per_curve_z": "(r_x - mean_j r_j) / sd_j, sd_j = sample sd (ddof=1) over 50 draws",
+  "cell_z": "mean_c(z_c) / (sd_c(z_c)/sqrt(10)) over the 10 curves; two-sided p from Student t with 9 df",
+  "sign_consistency": "#curves with r_x > mean_j r_j, out of 10",
+  "testability_rule": "cell is TESTABLE iff predicted coverage 1-exp(-b^m/(m! n)) <= 0.995 for every curve in the cell (computed at freeze time from b, m, n only)",
+  "decision_rule": "REPLICATED iff, in the Holm-corrected family of designed cells (all 8; saturated cells score p=1 and cannot pass), >= 2 cells have |cell_z| >= 2.5 AND are Holm-significant at family alpha=0.05 AND each has sign consistency >= 7/10. Otherwise NOT REPLICATED at this power, and the achieved MDE is reported. Secondary (pilot-comparable) verdict uses the uniform null; disagreements are reported explicitly.",
+  "family": "all 8 designed (bits x arm x m) cells",
+  "alpha": 0.05,
+  "holm": true,
+  "min_abs_cell_z": 2.5,
+  "min_sign_consistency": 7,
+  "mde_rule": "per-cell MDE in per-curve null-sd units at 80% power, family alpha=0.05 with Holm over 8 cells: (z_{1-alpha/16} + z_{0.8})/sqrt(10) = (2.734+0.842)/3.1623 = 1.13 per-curve sigma; reported in fraction units as 1.13 * mean_c(sd_null_c) / sqrt(10)... i.e. 1.13*sigma_per_curve/sqrt(10) is the MDE on the CELL MEAN of r",
+  "design_note": "the N2 arm is predicted saturated at both sizes by the dimension count (lam_ordered = b^m/n = 2.6e2 .. 3.6e2 for m=3), so the informative family is the 4 N3 cells; this is a design computation from b, m, n, not a result",
+  "prediction_noise": "FFT convolution counts; residual |c-round(c)| is recorded per cell and required < 0.1; counts are cross-checked against the pilot's group-law pair-table engine (verify.py)",
+  "curves": [
+    {
+      "bits": 13,
+      "slot": 0,
+      "attempt": 14,
+      "p": 8237,
+      "a": 1407,
+      "b": 2224,
+      "nE": 8167,
+      "n": 8167,
+      "cofactor": 1,
+      "j": 7746,
+      "order_method": "naive+naive-verified",
+      "cm": {
+        "t": 71,
+        "four_p_minus_t2": 27907,
+        "squarefree_part": 27907,
+        "conductor": 1,
+        "D": -27907,
+        "absD": 27907,
+        "is_special": false
+      },
+      "arms": {
+        "N3": {
+          "N": 20,
+          "abs_B_raw": 22,
+          "b": 22,
+          "negclosed": true,
+          "pred": {
+            "3": {
+              "b": 22,
+              "lam_ordered": 1.303783519040039,
+              "lam_task": 0.21729725317333984,
+              "frac_pred": 0.19530926312462982
+            },
+            "4": {
+              "b": 22,
+              "lam_ordered": 28.68323741888086,
+              "lam_task": 1.1951348924533691,
+              "frac_pred": 0.6973368755430085
+            }
+          }
+        },
+        "N2": {
+          "N": 90,
+          "abs_B_raw": 88,
+          "b": 88,
+          "negclosed": true,
+          "pred": {
+            "3": {
+              "b": 88,
+              "lam_ordered": 83.4421452185625,
+              "lam_task": 13.90702420309375,
+              "frac_pred": 0.9999990874511357
+            },
+            "4": {
+              "b": 88,
+              "lam_ordered": 7342.9087792335,
+              "lam_task": 305.9545324680625,
+              "frac_pred": 1.0
+            }
+          }
+        }
+      }
+    },
+    {
+      "bits": 13,
+      "slot": 1,
+      "attempt": 8,
+      "p": 8231,
+      "a": 6303,
+      "b": 676,
+      "nE": 8209,
+      "n": 8209,
+      "cofactor": 1,
+      "j": 1965,
+      "order_method": "naive+naive-verified",
+      "cm": {
+        "t": 23,
+        "four_p_minus_t2": 32395,
+        "squarefree_part": 32395,
+        "conductor": 1,
+        "D": -32395,
+        "absD": 32395,
+        "is_special": false
+      },
+      "arms": {
+        "N3": {
+          "N": 20,
+          "abs_B_raw": 24,
+          "b": 24,
+          "negclosed": true,
+          "pred": {
+            "3": {
+              "b": 24,
+              "lam_ordered": 1.6840053599707638,
+              "lam_task": 0.2806675599951273,
+              "frac_pred": 0.2447206211701518
+            },
+            "4": {
+              "b": 24,
+              "lam_ordered": 40.41612863929833,
+              "lam_task": 1.6840053599707636,
+              "frac_pred": 0.814371025827483
+            }
+          }
+        },
+        "N2": {
+          "N": 90,
+          "abs_B_raw": 98,
+          "b": 98,
+          "negclosed": true,
+          "pred": {
+            "3": {
+              "b": 98,
+              "lam_ordered": 114.65367279814838,
+              "lam_task": 19.108945466358062,
+              "frac_pred": 0.999999994975528
+            },
+            "4": {
+              "b": 98,
+              "lam_ordered": 11236.059934218541,
+              "lam_task": 468.1691639257726,
+              "frac_pred": 1.0
+            }
+          }
+        }
+      }
+    },
+    {
+      "bits": 13,
+      "slot": 2,
+      "attempt": 8,
+      "p": 8219,
+      "a": 912,
+      "b": 3439,
+      "nE": 8087,
+      "n": 8087,
+      "cofactor": 1,
+      "j": 2339,
+      "order_method": "naive+naive-verified",
+      "cm": {
+        "t": 133,
+        "four_p_minus_t2": 15187,
+        "squarefree_part": 15187,
+        "conductor": 1,
+        "D": -15187,
+        "absD": 15187,
+        "is_special": false
+      },
+      "arms": {
+        "N3": {
+          "N": 20,
+          "abs_B_raw": 28,
+          "b": 28,
+          "negclosed": true,
+          "pred": {
+            "3": {
+              "b": 28,
+              "lam_ordered": 2.7144800296772598,
+              "lam_task": 0.4524133382795433,
+              "frac_pred": 0.3639088054600079
+            },
+            "4": {
+              "b": 28,
+              "lam_ordered": 76.00544083096328,
+              "lam_task": 3.166893367956803,
+              "frac_pred": 0.957865709471541
+            }
+          }
+        },
+        "N2": {
+          "N": 90,
+          "abs_B_raw": 102,
+          "b": 102,
+          "negclosed": true,
+          "pred": {
+            "3": {
+              "b": 102,
+              "lam_ordered": 131.2239396562384,
+              "lam_task": 21.870656609373068,
+              "frac_pred": 0.999999999682536
+            },
+            "4": {
+              "b": 102,
+              "lam_ordered": 13384.841844936318,
+              "lam_task": 557.7017435390133,
+              "frac_pred": 1.0
+            }
+          }
+        }
+      }
+    },
+    {
+      "bits": 13,
+      "slot": 3,
+      "attempt": 50,
+      "p": 8263,
+      "a": 1858,
+      "b": 2585,
+      "nE": 8219,
+      "n": 8219,
+      "cofactor": 1,
+      "j": 4403,
+      "order_method": "naive+naive-verified",
+      "cm": {
+        "t": 45,
+        "four_p_minus_t2": 31027,
+        "squarefree_part": 31027,
+        "conductor": 1,
+        "D": -31027,
+        "absD": 31027,
+        "is_special": false
+      },
+      "arms": {
+        "N3": {
+          "N": 20,
+          "abs_B_raw": 24,
+          "b": 24,
+          "negclosed": true,
+          "pred": {
+            "3": {
+              "b": 24,
+              "lam_ordered": 1.6819564423895852,
+              "lam_task": 0.2803260737315975,
+              "frac_pred": 0.24446265959449354
+            },
+            "4": {
+              "b": 24,
+              "lam_ordered": 40.36695461735004,
+              "lam_task": 1.681956442389585,
+              "frac_pred": 0.8139902974513865
+            }
+          }
+        },
+        "N2": {
+          "N": 90,
+          "abs_B_raw": 68,
+          "b": 68,
+          "negclosed": true,
+          "pred": {
+            "3": {
+              "b": 68,
+              "lam_ordered": 38.25672222898163,
+              "lam_task": 6.376120371496938,
+              "frac_pred": 0.9982982878224381
+            },
+            "4": {
+              "b": 68,
+              "lam_ordered": 2601.457111570751,
+              "lam_task": 108.39404631544795,
+              "frac_pred": 1.0
+            }
+          }
+        }
+      }
+    },
+    {
+      "bits": 13,
+      "slot": 4,
+      "attempt": 22,
+      "p": 8219,
+      "a": 6571,
+      "b": 632,
+      "nE": 8297,
+      "n": 8297,
+      "cofactor": 1,
+      "j": 5932,
+      "order_method": "naive+naive-verified",
+      "cm": {
+        "t": -77,
+        "four_p_minus_t2": 26947,
+        "squarefree_part": 26947,
+        "conductor": 1,
+        "D": -26947,
+        "absD": 26947,
+        "is_special": false
+      },
+      "arms": {
+        "N3": {
+          "N": 20,
+          "abs_B_raw": 18,
+          "b": 18,
+          "negclosed": true,
+          "pred": {
+            "3": {
+              "b": 18,
+              "lam_ordered": 0.7029046643365072,
+              "lam_task": 0.11715077738941787,
+              "frac_pred": 0.11054892605835154
+            },
+            "4": {
+              "b": 18,
+              "lam_ordered": 12.65228395805713,
+              "lam_task": 0.5271784982523804,
+              "frac_pred": 0.4097319352615376
+            }
+          }
+        },
+        "N2": {
+          "N": 90,
+          "abs_B_raw": 100,
+          "b": 100,
+          "negclosed": true,
+          "pred": {
+            "3": {
+              "b": 100,
+              "lam_ordered": 120.5254911413764,
+              "lam_task": 20.08758185689607,
+              "frac_pred": 0.9999999981116867
+            },
+            "4": {
+              "b": 100,
+              "lam_ordered": 12052.54911413764,
+              "lam_task": 502.1895464224017,
+              "frac_pred": 1.0
+            }
+          }
+        }
+      }
+    },
+    {
+      "bits": 13,
+      "slot": 5,
+      "attempt": 20,
+      "p": 8287,
+      "a": 3387,
+      "b": 4403,
+      "nE": 8467,
+      "n": 8467,
+      "cofactor": 1,
+      "j": 879,
+      "order_method": "naive+naive-verified",
+      "cm": {
+        "t": -179,
+        "four_p_minus_t2": 1107,
+        "squarefree_part": 123,
+        "conductor": 3,
+        "D": -123,
+        "absD": 123,
+        "is_special": false
+      },
+      "arms": {
+        "N3": {
+          "N": 20,
+          "abs_B_raw": 26,
+          "b": 26,
+          "negclosed": true,
+          "pred": {
+            "3": {
+              "b": 26,
+              "lam_ordered": 2.0758237864651,
+              "lam_task": 0.34597063107751663,
+              "frac_pred": 0.2924667337089788
+            },
+            "4": {
+              "b": 26,
+              "lam_ordered": 53.97141844809259,
+              "lam_task": 2.248809102003858,
+              "frac_pred": 0.894475180942537
+            }
+          }
+        },
+        "N2": {
+          "N": 91,
+          "abs_B_raw": 104,
+          "b": 104,
+          "negclosed": true,
+          "pred": {
+            "3": {
+              "b": 104,
+              "lam_ordered": 132.8527223337664,
+              "lam_task": 22.142120388961064,
+              "frac_pred": 0.9999999997580089
+            },
+            "4": {
+              "b": 104,
+              "lam_ordered": 13816.683122711704,
+              "lam_task": 575.6951301129876,
+              "frac_pred": 1.0
+            }
+          }
+        }
+      }
+    },
+    {
+      "bits": 13,
+      "slot": 6,
+      "attempt": 23,
+      "p": 8209,
+      "a": 3923,
+      "b": 2447,
+      "nE": 8233,
+      "n": 8233,
+      "cofactor": 1,
+      "j": 3564,
+      "order_method": "naive+naive-verified",
+      "cm": {
+        "t": -23,
+        "four_p_minus_t2": 32307,
+        "squarefree_part": 267,
+        "conductor": 11,
+        "D": -267,
+        "absD": 267,
+        "is_special": false
+      },
+      "arms": {
+        "N3": {
+          "N": 20,
+          "abs_B_raw": 24,
+          "b": 24,
+          "negclosed": true,
+          "pred": {
+            "3": {
+              "b": 24,
+              "lam_ordered": 1.6790963196890563,
+              "lam_task": 0.2798493866148427,
+              "frac_pred": 0.24410241882384942
+            },
+            "4": {
+              "b": 24,
+              "lam_ordered": 40.29831167253735,
+              "lam_task": 1.6790963196890563,
+              "frac_pred": 0.8134575253449972
+            }
+          }
+        },
+        "N2": {
+          "N": 90,
+          "abs_B_raw": 94,
+          "b": 94,
+          "negclosed": true,
+          "pred": {
+            "3": {
+              "b": 94,
+              "lam_ordered": 100.88473217539172,
+              "lam_task": 16.814122029231953,
+              "frac_pred": 0.9999999501437529
+            },
+            "4": {
+              "b": 94,
+              "lam_ordered": 9483.164824486821,
+              "lam_task": 395.1318676869509,
+              "frac_pred": 1.0
+            }
+          }
+        }
+      }
+    },
+    {
+      "bits": 13,
+      "slot": 7,
+      "attempt": 15,
+      "p": 8219,
+      "a": 5006,
+      "b": 7992,
+      "nE": 8081,
+      "n": 8081,
+      "cofactor": 1,
+      "j": 7335,
+      "order_method": "naive+naive-verified",
+      "cm": {
+        "t": 139,
+        "four_p_minus_t2": 13555,
+        "squarefree_part": 13555,
+        "conductor": 1,
+        "D": -13555,
+        "absD": 13555,
+        "is_special": false
+      },
+      "arms": {
+        "N3": {
+          "N": 20,
+          "abs_B_raw": 18,
+          "b": 18,
+          "negclosed": true,
+          "pred": {
+            "3": {
+              "b": 18,
+              "lam_ordered": 0.7216928597945799,
+              "lam_task": 0.12028214329909664,
+              "frac_pred": 0.11332976664263361
+            },
+            "4": {
+              "b": 18,
+              "lam_ordered": 12.990471476302439,
+              "lam_task": 0.541269644845935,
+              "frac_pred": 0.41799116144531445
+            }
+          }
+        },
+        "N2": {
+          "N": 90,
+          "abs_B_raw": 88,
+          "b": 88,
+          "negclosed": true,
+          "pred": {
+            "3": {
+              "b": 88,
+              "lam_ordered": 84.33015715876748,
+              "lam_task": 14.055026193127913,
+              "frac_pred": 0.9999992129910318
+            },
+            "4": {
+              "b": 88,
+              "lam_ordered": 7421.053829971538,
+              "lam_task": 309.2105762488141,
+              "frac_pred": 1.0
+            }
+          }
+        }
+      }
+    },
+    {
+      "bits": 13,
+      "slot": 8,
+      "attempt": 40,
+      "p": 8263,
+      "a": 4030,
+      "b": 3044,
+      "nE": 8179,
+      "n": 8179,
+      "cofactor": 1,
+      "j": 3179,
+      "order_method": "naive+naive-verified",
+      "cm": {
+        "t": 85,
+        "four_p_minus_t2": 25827,
+        "squarefree_part": 25827,
+        "conductor": 1,
+        "D": -25827,
+        "absD": 25827,
+        "is_special": false
+      },
+      "arms": {
+        "N3": {
+          "N": 20,
+          "abs_B_raw": 14,
+          "b": 14,
+          "negclosed": true,
+          "pred": {
+            "3": {
+              "b": 14,
+              "lam_ordered": 0.3354933365937156,
+              "lam_task": 0.0559155560989526,
+              "frac_pred": 0.05438101572506904
+            },
+            "4": {
+              "b": 14,
+              "lam_ordered": 4.6969067123120185,
+              "lam_task": 0.1957044463463341,
+              "frac_pred": 0.17774478069676813
+            }
+          }
+        },
+        "N2": {
+          "N": 90,
+          "abs_B_raw": 84,
+          "b": 84,
+          "negclosed": true,
+          "pred": {
+            "3": {
+              "b": 84,
+              "lam_ordered": 72.46656070424257,
+              "lam_task": 12.077760117373762,
+              "frac_pred": 0.9999943154586849
+            },
+            "4": {
+              "b": 84,
+              "lam_ordered": 6087.191099156376,
+              "lam_task": 253.63296246484902,
+              "frac_pred": 1.0
+            }
+          }
+        }
+      }
+    },
+    {
+      "bits": 13,
+      "slot": 9,
+      "attempt": 27,
+      "p": 8263,
+      "a": 5262,
+      "b": 1271,
+      "nE": 8219,
+      "n": 8219,
+      "cofactor": 1,
+      "j": 5765,
+      "order_method": "naive+naive-verified",
+      "cm": {
+        "t": 45,
+        "four_p_minus_t2": 31027,
+        "squarefree_part": 31027,
+        "conductor": 1,
+        "D": -31027,
+        "absD": 31027,
+        "is_special": false
+      },
+      "arms": {
+        "N3": {
+          "N": 20,
+          "abs_B_raw": 24,
+          "b": 24,
+          "negclosed": true,
+          "pred": {
+            "3": {
+              "b": 24,
+              "lam_ordered": 1.6819564423895852,
+              "lam_task": 0.2803260737315975,
+              "frac_pred": 0.24446265959449354
+            },
+            "4": {
+              "b": 24,
+              "lam_ordered": 40.36695461735004,
+              "lam_task": 1.681956442389585,
+              "frac_pred": 0.8139902974513865
+            }
+          }
+        },
+        "N2": {
+          "N": 90,
+          "abs_B_raw": 88,
+          "b": 88,
+          "negclosed": true,
+          "pred": {
+            "3": {
+              "b": 88,
+              "lam_ordered": 82.9142231415014,
+              "lam_task": 13.819037190250233,
+              "frac_pred": 0.999999003520421
+            },
+            "4": {
+              "b": 88,
+              "lam_ordered": 7296.451636452123,
+              "lam_task": 304.01881818550515,
+              "frac_pred": 1.0
+            }
+          }
+        }
+      }
+    },
+    {
+      "bits": 17,
+      "slot": 0,
+      "attempt": 20,
+      "p": 131437,
+      "a": 114782,
+      "b": 84759,
+      "nE": 131231,
+      "n": 131231,
+      "cofactor": 1,
+      "j": 14494,
+      "order_method": "bsgs+naive-verified",
+      "cm": {
+        "t": 207,
+        "four_p_minus_t2": 482899,
+        "squarefree_part": 482899,
+        "conductor": 1,
+        "D": -482899,
+        "absD": 482899,
+        "is_special": false
+      },
+      "arms": {
+        "N3": {
+          "N": 51,
+          "abs_B_raw": 40,
+          "b": 40,
+          "negclosed": true,
+          "pred": {
+            "3": {
+              "b": 40,
+              "lam_ordered": 0.4876896465012078,
+              "lam_task": 0.0812816077502013,
+              "frac_pred": 0.07806596888319317
+            },
+            "4": {
+              "b": 40,
+              "lam_ordered": 19.507585860048312,
+              "lam_task": 0.812816077502013,
+              "frac_pred": 0.5563929262962661
+            }
+          }
+        },
+        "N2": {
+          "N": 362,
+          "abs_B_raw": 364,
+          "b": 364,
+          "negclosed": true,
+          "pred": {
+            "3": {
+              "b": 364,
+              "lam_ordered": 367.5087746035617,
+              "lam_task": 61.251462433926946,
+              "frac_pred": 1.0
+            },
+            "4": {
+              "b": 364,
+              "lam_ordered": 133773.19395569645,
+              "lam_task": 5573.883081487352,
+              "frac_pred": 1.0
+            }
+          }
+        }
+      }
+    },
+    {
+      "bits": 17,
+      "slot": 1,
+      "attempt": 5,
+      "p": 132863,
+      "a": 111709,
+      "b": 132556,
+      "nE": 132661,
+      "n": 132661,
+      "cofactor": 1,
+      "j": 108825,
+      "order_method": "bsgs+naive-verified",
+      "cm": {
+        "t": 203,
+        "four_p_minus_t2": 490243,
+        "squarefree_part": 490243,
+        "conductor": 1,
+        "D": -490243,
+        "absD": 490243,
+        "is_special": false
+      },
+      "arms": {
+        "N3": {
+          "N": 51,
+          "abs_B_raw": 38,
+          "b": 38,
+          "negclosed": true,
+          "pred": {
+            "3": {
+              "b": 38,
+              "lam_ordered": 0.4136257076307279,
+              "lam_task": 0.06893761793845465,
+              "frac_pred": 0.0666150952633312
+            },
+            "4": {
+              "b": 38,
+              "lam_ordered": 15.717776889967661,
+              "lam_task": 0.6549073704153192,
+              "frac_pred": 0.4805098194818911
+            }
+          }
+        },
+        "N2": {
+          "N": 364,
+          "abs_B_raw": 362,
+          "b": 362,
+          "negclosed": true,
+          "pred": {
+            "3": {
+              "b": 362,
+              "lam_ordered": 357.58759545005694,
+              "lam_task": 59.59793257500949,
+              "frac_pred": 1.0
+            },
+            "4": {
+              "b": 362,
+              "lam_ordered": 129446.7095529206,
+              "lam_task": 5393.612898038358,
+              "frac_pred": 1.0
+            }
+          }
+        }
+      }
+    },
+    {
+      "bits": 17,
+      "slot": 2,
+      "attempt": 5,
+      "p": 132589,
+      "a": 116490,
+      "b": 53620,
+      "nE": 132911,
+      "n": 132911,
+      "cofactor": 1,
+      "j": 78612,
+      "order_method": "bsgs+naive-verified",
+      "cm": {
+        "t": -321,
+        "four_p_minus_t2": 427315,
+        "squarefree_part": 427315,
+        "conductor": 1,
+        "D": -427315,
+        "absD": 427315,
+        "is_special": false
+      },
+      "arms": {
+        "N3": {
+          "N": 51,
+          "abs_B_raw": 46,
+          "b": 46,
+          "negclosed": true,
+          "pred": {
+            "3": {
+              "b": 46,
+              "lam_ordered": 0.7323396859552633,
+              "lam_task": 0.12205661432587722,
+              "frac_pred": 0.11490174215705296
+            },
+            "4": {
+              "b": 46,
+              "lam_ordered": 33.68762555394211,
+              "lam_task": 1.403651064747588,
+              "frac_pred": 0.7543017359362555
+            }
+          }
+        },
+        "N2": {
+          "N": 364,
+          "abs_B_raw": 350,
+          "b": 350,
+          "negclosed": true,
+          "pred": {
+            "3": {
+              "b": 350,
+              "lam_ordered": 322.584285725034,
+              "lam_task": 53.764047620839,
+              "frac_pred": 1.0
+            },
+            "4": {
+              "b": 350,
+              "lam_ordered": 112904.50000376192,
+              "lam_task": 4704.354166823413,
+              "frac_pred": 1.0
+            }
+          }
+        }
+      }
+    },
+    {
+      "bits": 17,
+      "slot": 3,
+      "attempt": 20,
+      "p": 131671,
+      "a": 25919,
+      "b": 32226,
+      "nE": 131477,
+      "n": 131477,
+      "cofactor": 1,
+      "j": 43114,
+      "order_method": "bsgs+naive-verified",
+      "cm": {
+        "t": 195,
+        "four_p_minus_t2": 488659,
+        "squarefree_part": 488659,
+        "conductor": 1,
+        "D": -488659,
+        "absD": 488659,
+        "is_special": false
+      },
+      "arms": {
+        "N3": {
+          "N": 51,
+          "abs_B_raw": 44,
+          "b": 44,
+          "negclosed": true,
+          "pred": {
+            "3": {
+              "b": 44,
+              "lam_ordered": 0.6479003932246705,
+              "lam_task": 0.10798339887077842,
+              "frac_pred": 0.10235750181415126
+            },
+            "4": {
+              "b": 44,
+              "lam_ordered": 28.5076173018855,
+              "lam_task": 1.1878173875785625,
+              "frac_pred": 0.6951140136718297
+            }
+          }
+        },
+        "N2": {
+          "N": 362,
+          "abs_B_raw": 352,
+          "b": 352,
+          "negclosed": true,
+          "pred": {
+            "3": {
+              "b": 352,
+              "lam_ordered": 331.7250013310313,
+              "lam_task": 55.28750022183855,
+              "frac_pred": 1.0
+            },
+            "4": {
+              "b": 352,
+              "lam_ordered": 116767.200468523,
+              "lam_task": 4865.300019521792,
+              "frac_pred": 1.0
+            }
+          }
+        }
+      }
+    },
+    {
+      "bits": 17,
+      "slot": 4,
+      "attempt": 11,
+      "p": 132833,
+      "a": 130109,
+      "b": 130452,
+      "nE": 132709,
+      "n": 132709,
+      "cofactor": 1,
+      "j": 113247,
+      "order_method": "bsgs+naive-verified",
+      "cm": {
+        "t": 125,
+        "four_p_minus_t2": 515707,
+        "squarefree_part": 515707,
+        "conductor": 1,
+        "D": -515707,
+        "absD": 515707,
+        "is_special": false
+      },
+      "arms": {
+        "N3": {
+          "N": 51,
+          "abs_B_raw": 54,
+          "b": 54,
+          "negclosed": true,
+          "pred": {
+            "3": {
+              "b": 54,
+              "lam_ordered": 1.1865359546074494,
+              "lam_task": 0.1977559924345749,
+              "frac_pred": 0.1794299459872859
+            },
+            "4": {
+              "b": 54,
+              "lam_ordered": 64.07294154880226,
+              "lam_task": 2.669705897866761,
+              "frac_pred": 0.9307274044681428
+            }
+          }
+        },
+        "N2": {
+          "N": 364,
+          "abs_B_raw": 368,
+          "b": 368,
+          "negclosed": true,
+          "pred": {
+            "3": {
+              "b": 368,
+              "lam_ordered": 375.52865291728517,
+              "lam_task": 62.58810881954753,
+              "frac_pred": 1.0
+            },
+            "4": {
+              "b": 368,
+              "lam_ordered": 138194.54427356095,
+              "lam_task": 5758.106011398373,
+              "frac_pred": 1.0
+            }
+          }
+        }
+      }
+    },
+    {
+      "bits": 17,
+      "slot": 5,
+      "attempt": 6,
+      "p": 132851,
+      "a": 49390,
+      "b": 14807,
+      "nE": 133379,
+      "n": 133379,
+      "cofactor": 1,
+      "j": 3871,
+      "order_method": "bsgs+naive-verified",
+      "cm": {
+        "t": -527,
+        "four_p_minus_t2": 253675,
+        "squarefree_part": 10147,
+        "conductor": 5,
+        "D": -10147,
+        "absD": 10147,
+        "is_special": false
+      },
+      "arms": {
+        "N3": {
+          "N": 51,
+          "abs_B_raw": 40,
+          "b": 40,
+          "negclosed": true,
+          "pred": {
+            "3": {
+              "b": 40,
+              "lam_ordered": 0.47983565628772146,
+              "lam_task": 0.0799726093812869,
+              "frac_pred": 0.07685836853920713
+            },
+            "4": {
+              "b": 40,
+              "lam_ordered": 19.193426251508857,
+              "lam_task": 0.7997260938128691,
+              "frac_pred": 0.5505479450425478
+            }
+          }
+        },
+        "N2": {
+          "N": 364,
+          "abs_B_raw": 338,
+          "b": 338,
+          "negclosed": true,
+          "pred": {
+            "3": {
+              "b": 338,
+              "lam_ordered": 289.50938303631006,
+              "lam_task": 48.25156383938501,
+              "frac_pred": 1.0
+            },
+            "4": {
+              "b": 338,
+              "lam_ordered": 97854.1714662728,
+              "lam_task": 4077.2571444280334,
+              "frac_pred": 1.0
+            }
+          }
+        }
+      }
+    },
+    {
+      "bits": 17,
+      "slot": 6,
+      "attempt": 14,
+      "p": 131701,
+      "a": 118807,
+      "b": 11568,
+      "nE": 132169,
+      "n": 132169,
+      "cofactor": 1,
+      "j": 71214,
+      "order_method": "bsgs+naive-verified",
+      "cm": {
+        "t": -467,
+        "four_p_minus_t2": 308715,
+        "squarefree_part": 308715,
+        "conductor": 1,
+        "D": -308715,
+        "absD": 308715,
+        "is_special": false
+      },
+      "arms": {
+        "N3": {
+          "N": 51,
+          "abs_B_raw": 58,
+          "b": 58,
+          "negclosed": true,
+          "pred": {
+            "3": {
+              "b": 58,
+              "lam_ordered": 1.476231188856691,
+              "lam_task": 0.24603853147611518,
+              "frac_pred": 0.21810790311161377
+            },
+            "4": {
+              "b": 58,
+              "lam_ordered": 85.62140895368807,
+              "lam_task": 3.56755870640367,
+              "frac_pred": 0.9717753256428525
+            }
+          }
+        },
+        "N2": {
+          "N": 362,
+          "abs_B_raw": 386,
+          "b": 386,
+          "negclosed": true,
+          "pred": {
+            "3": {
+              "b": 386,
+              "lam_ordered": 435.1433089453654,
+              "lam_task": 72.52388482422757,
+              "frac_pred": 1.0
+            },
+            "4": {
+              "b": 386,
+              "lam_ordered": 167965.31725291105,
+              "lam_task": 6998.55488553796,
+              "frac_pred": 1.0
+            }
+          }
+        }
+      }
+    },
+    {
+      "bits": 17,
+      "slot": 7,
+      "attempt": 3,
+      "p": 131581,
+      "a": 121215,
+      "b": 3835,
+      "nE": 131909,
+      "n": 131909,
+      "cofactor": 1,
+      "j": 85836,
+      "order_method": "bsgs+naive-verified",
+      "cm": {
+        "t": -327,
+        "four_p_minus_t2": 419395,
+        "squarefree_part": 419395,
+        "conductor": 1,
+        "D": -419395,
+        "absD": 419395,
+        "is_special": false
+      },
+      "arms": {
+        "N3": {
+          "N": 51,
+          "abs_B_raw": 50,
+          "b": 50,
+          "negclosed": true,
+          "pred": {
+            "3": {
+              "b": 50,
+              "lam_ordered": 0.9476229825106702,
+              "lam_task": 0.15793716375177838,
+              "frac_pred": 0.1460965636289715
+            },
+            "4": {
+              "b": 50,
+              "lam_ordered": 47.38114912553351,
+              "lam_task": 1.9742145468972296,
+              "frac_pred": 0.8611296544391256
+            }
+          }
+        },
+        "N2": {
+          "N": 362,
+          "abs_B_raw": 370,
+          "b": 370,
+          "negclosed": true,
+          "pred": {
+            "3": {
+              "b": 370,
+              "lam_ordered": 383.99957546490384,
+              "lam_task": 63.99992924415064,
+              "frac_pred": 1.0
+            },
+            "4": {
+              "b": 370,
+              "lam_ordered": 142079.84292201442,
+              "lam_task": 5919.993455083934,
+              "frac_pred": 1.0
+            }
+          }
+        }
+      }
+    },
+    {
+      "bits": 17,
+      "slot": 8,
+      "attempt": 35,
+      "p": 133073,
+      "a": 3905,
+      "b": 130303,
+      "nE": 133183,
+      "n": 133183,
+      "cofactor": 1,
+      "j": 73455,
+      "order_method": "bsgs+naive-verified",
+      "cm": {
+        "t": -109,
+        "four_p_minus_t2": 520411,
+        "squarefree_part": 520411,
+        "conductor": 1,
+        "D": -520411,
+        "absD": 520411,
+        "is_special": false
+      },
+      "arms": {
+        "N3": {
+          "N": 51,
+          "abs_B_raw": 48,
+          "b": 48,
+          "negclosed": true,
+          "pred": {
+            "3": {
+              "b": 48,
+              "lam_ordered": 0.8303762492209966,
+              "lam_task": 0.13839604153683277,
+              "frac_pred": 0.1292462312123961
+            },
+            "4": {
+              "b": 48,
+              "lam_ordered": 39.85805996260784,
+              "lam_task": 1.6607524984419932,
+              "frac_pred": 0.8100040453647988
+            }
+          }
+        },
+        "N2": {
+          "N": 364,
+          "abs_B_raw": 372,
+          "b": 372,
+          "negclosed": true,
+          "pred": {
+            "3": {
+              "b": 372,
+              "lam_ordered": 386.5271693834799,
+              "lam_task": 64.42119489724665,
+              "frac_pred": 1.0
+            },
+            "4": {
+              "b": 372,
+              "lam_ordered": 143788.10701065452,
+              "lam_task": 5991.171125443939,
+              "frac_pred": 1.0
+            }
+          }
+        }
+      }
+    },
+    {
+      "bits": 17,
+      "slot": 9,
+      "attempt": 3,
+      "p": 131371,
+      "a": 14206,
+      "b": 80634,
+      "nE": 131839,
+      "n": 131839,
+      "cofactor": 1,
+      "j": 100049,
+      "order_method": "bsgs+naive-verified",
+      "cm": {
+        "t": -467,
+        "four_p_minus_t2": 307395,
+        "squarefree_part": 3795,
+        "conductor": 9,
+        "D": -3795,
+        "absD": 3795,
+        "is_special": false
+      },
+      "arms": {
+        "N3": {
+          "N": 51,
+          "abs_B_raw": 46,
+          "b": 46,
+          "negclosed": true,
+          "pred": {
+            "3": {
+              "b": 46,
+              "lam_ordered": 0.7382944348789053,
+              "lam_task": 0.12304907247981756,
+              "frac_pred": 0.11577972938522962
+            },
+            "4": {
+              "b": 46,
+              "lam_ordered": 33.96154400442965,
+              "lam_task": 1.415064333517902,
+              "frac_pred": 0.7570900143078596
+            }
+          }
+        },
+        "N2": {
+          "N": 362,
+          "abs_B_raw": 368,
+          "b": 368,
+          "negclosed": true,
+          "pred": {
+            "3": {
+              "b": 368,
+              "lam_ordered": 378.00675065799953,
+              "lam_task": 63.00112510966659,
+              "frac_pred": 1.0
+            },
+            "4": {
+              "b": 368,
+              "lam_ordered": 139106.48424214384,
+              "lam_task": 5796.103510089327,
+              "frac_pred": 1.0
+            }
+          }
+        }
+      }
+    }
+  ],
+  "predicted_cells": [
+    {
+      "bits": 13,
+      "arm": "N3",
+      "m": 3,
+      "b_min": 14,
+      "b_max": 28,
+      "frac_pred_min": 0.05438101572506904,
+      "frac_pred_max": 0.3639088054600079,
+      "lam_ordered_min": 0.3354933365937156,
+      "lam_ordered_max": 2.7144800296772598,
+      "testable": true
+    },
+    {
+      "bits": 13,
+      "arm": "N3",
+      "m": 4,
+      "b_min": 14,
+      "b_max": 28,
+      "frac_pred_min": 0.17774478069676813,
+      "frac_pred_max": 0.957865709471541,
+      "lam_ordered_min": 4.6969067123120185,
+      "lam_ordered_max": 76.00544083096328,
+      "testable": true
+    },
+    {
+      "bits": 13,
+      "arm": "N2",
+      "m": 3,
+      "b_min": 68,
+      "b_max": 104,
+      "frac_pred_min": 0.9982982878224381,
+      "frac_pred_max": 0.9999999997580089,
+      "lam_ordered_min": 38.25672222898163,
+      "lam_ordered_max": 132.8527223337664,
+      "testable": false
+    },
+    {
+      "bits": 13,
+      "arm": "N2",
+      "m": 4,
+      "b_min": 68,
+      "b_max": 104,
+      "frac_pred_min": 1.0,
+      "frac_pred_max": 1.0,
+      "lam_ordered_min": 2601.457111570751,
+      "lam_ordered_max": 13816.683122711704,
+      "testable": false
+    },
+    {
+      "bits": 17,
+      "arm": "N3",
+      "m": 3,
+      "b_min": 38,
+      "b_max": 58,
+      "frac_pred_min": 0.0666150952633312,
+      "frac_pred_max": 0.21810790311161377,
+      "lam_ordered_min": 0.4136257076307279,
+      "lam_ordered_max": 1.476231188856691,
+      "testable": true
+    },
+    {
+      "bits": 17,
+      "arm": "N3",
+      "m": 4,
+      "b_min": 38,
+      "b_max": 58,
+      "frac_pred_min": 0.4805098194818911,
+      "frac_pred_max": 0.9717753256428525,
+      "lam_ordered_min": 15.717776889967661,
+      "lam_ordered_max": 85.62140895368807,
+      "testable": true
+    },
+    {
+      "bits": 17,
+      "arm": "N2",
+      "m": 3,
+      "b_min": 338,
+      "b_max": 386,
+      "frac_pred_min": 1.0,
+      "frac_pred_max": 1.0,
+      "lam_ordered_min": 289.50938303631006,
+      "lam_ordered_max": 435.1433089453654,
+      "testable": false
+    },
+    {
+      "bits": 17,
+      "arm": "N2",
+      "m": 4,
+      "b_min": 338,
+      "b_max": 386,
+      "frac_pred_min": 1.0,
+      "frac_pred_max": 1.0,
+      "lam_ordered_min": 97854.1714662728,
+      "lam_ordered_max": 167965.31725291105,
+      "testable": false
+    }
+  ]
+}
