@@ -1,0 +1,134 @@
+{
+  "seed": 31004,
+  "curves": [
+    [
+      101,
+      1,
+      1
+    ],
+    [
+      127,
+      1,
+      1
+    ],
+    [
+      1009,
+      1,
+      1
+    ]
+  ],
+  "S3_validation_p101": {
+    "p": 101,
+    "mode": "exhaustive",
+    "tuples_checked": 1030301,
+    "S3_zeros_total": 10109,
+    "S3_zeros_all_x_on_curve": 5356,
+    "S3_zeros_with_some_x_off_curve": 4753,
+    "truth_ext_true_count": 10109,
+    "truth_fp_true_count": 5356,
+    "mismatches_vs_ext_truth": 0,
+    "mismatch_examples": [],
+    "mismatches_vs_fp_truth_on_all_onc_tuples": 0,
+    "fp_truth_vs_ext_truth_disagree_on_all_onc": 0,
+    "mixed_zeros_not_explained_by_ext_truth": 0,
+    "seconds": 0.3
+  },
+  "S3_validation_p127": {
+    "p": 127,
+    "mode": "exhaustive",
+    "tuples_checked": 2048383,
+    "S3_zeros_total": 16006,
+    "S3_zeros_all_x_on_curve": 7750,
+    "S3_zeros_with_some_x_off_curve": 8256,
+    "truth_ext_true_count": 16006,
+    "truth_fp_true_count": 7750,
+    "mismatches_vs_ext_truth": 0,
+    "mismatch_examples": [],
+    "mismatches_vs_fp_truth_on_all_onc_tuples": 0,
+    "fp_truth_vs_ext_truth_disagree_on_all_onc": 0,
+    "mixed_zeros_not_explained_by_ext_truth": 0,
+    "seconds": 0.6
+  },
+  "S3_validation_p1009": {
+    "p": 1009,
+    "mode": "random20000",
+    "tuples_checked": 20000,
+    "S3_zeros_in_sample": 22,
+    "mismatches_vs_ext_truth": 0,
+    "examples": []
+  },
+  "S4_random20k_p101": {
+    "mismatches_vs_ext_truth": 0,
+    "examples": [],
+    "zeros_in_sample": 220,
+    "seconds": 1.1
+  },
+  "S4_random4k_forced_diagonal_p101": {
+    "mismatches_vs_ext_truth": 0
+  },
+  "S4_exhaustive_oncurve_x_p101": {
+    "x_on_curve_count": 52,
+    "tuples": 7311616,
+    "mismatches_group_vs_vanishing": 0,
+    "note": "both sides restricted to tuples where every x_i is an F_p abscissa (mirrors repo tests/test_semaev_s4_exact.py)",
+    "seconds": 0.1
+  },
+  "S4_resformula_vs_census_poly_p101": {
+    "samples": 2000,
+    "mismatches": 0
+  },
+  "harness_crosscheck": {
+    "note": "repo imported read-only under python -B (no bytecode written)",
+    "S4_universal_specialized_equals_repo_Z_exact": true,
+    "101": {
+      "S3_coeff_dicts_identical_modp": true,
+      "S4_coeff_dicts_identical_modp": true,
+      "S4_monomial_count_modp": 439,
+      "zero_agreement_S3_10k": "10000/10000",
+      "zero_agreement_S4_10k": "10000/10000",
+      "zero_rate_S3_sample": 0.0091,
+      "zero_rate_S4_sample": 0.0085
+    },
+    "127": {
+      "S3_coeff_dicts_identical_modp": true,
+      "S4_coeff_dicts_identical_modp": true,
+      "S4_monomial_count_modp": 439,
+      "zero_agreement_S3_10k": "10000/10000",
+      "zero_agreement_S4_10k": "10000/10000",
+      "zero_rate_S3_sample": 0.0078,
+      "zero_rate_S4_sample": 0.0061
+    },
+    "1009": {
+      "S3_coeff_dicts_identical_modp": true,
+      "S4_coeff_dicts_identical_modp": true,
+      "S4_monomial_count_modp": 439,
+      "zero_agreement_S3_10k": "10000/10000",
+      "zero_agreement_S4_10k": "10000/10000",
+      "zero_rate_S3_sample": 0.0013,
+      "zero_rate_S4_sample": 0.0009
+    }
+  },
+  "symmetry_numeric_p101": {
+    "S4_perm_violations": 0,
+    "S3_perm_violations": 0,
+    "note": "exact Z-symmetry also checked in census.py (24/6 perms)"
+  },
+  "S3_diagonal_duplication_p101": {
+    "checked_x": 101,
+    "root_matches_doubling": 101,
+    "torsion_x_constant_nonzero": 0,
+    "row_truth_agrees": 101,
+    "failures": []
+  },
+  "S4_diagonal_identity_p101": {
+    "statement": "S4(x,x,u,v) = (4f(x))^2 * (u-v)^2 * S3(u,v,x([2]P))",
+    "samples": 2000,
+    "mismatches": 0
+  },
+  "own_arith_vs_repo_toycurve": {
+    "samples": 3000,
+    "mismatches": 0
+  },
+  "peak_rss_bytes": 425541632,
+  "total_seconds": 10.1
+}

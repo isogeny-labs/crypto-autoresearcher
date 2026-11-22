@@ -113,3 +113,67 @@ jobs:
         run: python3 tools/check_skills_parity.py
       - name: Shared-code lock
         run: python3 tools/check_lab_parity.py --repo crypto-autoresearcher
+
+  protocol-controls:
+    if: ${{ !github.event.pull_request.draft }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 1
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /tools/task_card.py
+            /tools/test_task_card.py
+            /tools/benchrec.py
+            /tools/test_benchrec.py
+            /tools/pcc/pcc.py
+            /tools/pcc/test_pcc.py
+            /tools/vault/
+      - name: Unlock research vault (AES-256)
+        shell: bash
+        env:
+          KEY: ${{ secrets.KEY }}
+          PYTHONDONTWRITEBYTECODE: "1"
+        run: |
+          set -euo pipefail
+          set +x
+          umask 077
+          if [ -z "${KEY:-}" ]; then
+            echo "vault: KEY is unavailable; refusing to run on ciphertext" >&2
+            exit 1
+          fi
+          tool="$RUNNER_TEMP/cavault.py"
+          git show "HEAD:tools/vault/vaultctl.py" > "$tool"
+          py=python3
+          if ! "$py" -c 'from cryptography.hazmat.primitives.ciphers.aead import AESSIV; c=AESSIV(bytes(64)); assert c.decrypt(c.encrypt(b"", None), None) == b""' >/dev/null 2>&1; then
+            venv="$RUNNER_TEMP/cavault-venv"
+            if "$py" -m venv "$venv" >/dev/null 2>&1; then
+              py="$venv/bin/python"
+              "$py" -m pip install --quiet --disable-pip-version-check 'cryptography>=46'
+            else
+              "$py" -m pip install --quiet --disable-pip-version-check --break-system-packages 'cryptography>=46'
+            fi
+          fi
+          "$py" "$tool" install-key --quiet
+          "$py" "$tool" setup --quiet --script "$tool"
+          "$py" "$tool" unlock --quiet
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0
+        with:
+          python-version: '3.13'
+      - name: Install the task card YAML parser
+        run: python3 -m pip install --disable-pip-version-check PyYAML==6.0.3
+      - name: Original owner detached-step and relay controls
+        env:
+          GIT_NO_LAZY_FETCH: '1'
+        run: python3 -m unittest discover -s tools -p test_task_card.py -v
+      - name: Benchmark record schema and immutable-custody controls
+        env:
+          GIT_NO_LAZY_FETCH: '1'
+        run: python3 -m unittest discover -s tools -p test_benchrec.py -v
+      - name: Canonical owner PCC admission controls
+        env:
+          GIT_NO_LAZY_FETCH: '1'
+        run: python3 -m unittest discover -s tools/pcc -p test_pcc.py -v
