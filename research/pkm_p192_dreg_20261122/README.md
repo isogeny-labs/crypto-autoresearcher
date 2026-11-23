@@ -40,13 +40,16 @@ msolve 0.11.0 F4, DRL order, three seeds per cell.
 | 2 | 6 | 5 | 66 |
 | 2 | 7 | 5 | 130 |
 | 2 | 8 | 5* | 258 |
+| 2 | 9 | 5 | 514 |
 | 3 | 3 | 6 | 12 |
 | 3 | 4 | 6* | 20 |
-| 3 | 5 | 6* | 36* |
+| 3 | 5 | 7* | 36 |
 
-`*` marks a 60 s per-solve cap; the value is a lower bound. The chain
-encoding holds a constant degree of regularity while the dense encoding grows
-as `2^L + 2` (m=2) or `2^L + 4` (m=3).
+`*` marks a 60 s (base table) or 300 s (supplement) per-solve cap; the value is
+a lower bound. The m=2 chain arm completed at L=9 with d_reg 5, while the dense
+arm completed at 514. The m=3 chain arm reached 7 before the 300 s cap at L=5;
+the dense arm completed at 36. The dense encoding grows as `2^L + 2` (m=2) or
+`2^L + 4` (m=3); the chain encoding stays small.
 
 **Scope:** this is a degree-of-regularity advantage, not a total F4 wall-clock
 or index-calculus advantage. At these toy sizes the chain system has more
@@ -63,6 +66,7 @@ cargo build --release --offline
 cd ../dreg-pkm
 cargo build --release --offline
 ./target/release/dreg-pkm > ../results/dreg-results.jsonl
+DREG_MODE=supp ./target/release/dreg-pkm > ../results/dreg-supplement.jsonl
 ```
 
 `dreg-pkm` invokes `msolve` from `PATH`; the measurements above used msolve
@@ -75,6 +79,7 @@ cargo build --release --offline
   expansion, msolve driver and F4 round parser.
 - `results/pkm-p192-results.json` — raw construction/census output.
 - `results/dreg-results.jsonl` — one JSON row per (m, L, seed) cell.
+- `results/dreg-supplement.jsonl` — L=9 (m=2) and L=5 (m=3) at the 300 s cap.
 - `reports/PKM-P192.md`, `reports/DREG.md` — detailed tables and limits.
 - `cases/m2L3/A.ms`, `cases/m2L3/B.ms` — one representative pair of inputs.
 

@@ -554,23 +554,29 @@ fn run_case(m: usize, l: usize, seed: u64, timeout: u64) -> Value {
 
 fn main() {
     let mut out = Vec::new();
-    let configs = [
-        (2usize, 3usize), (2, 4), (2, 5), (2, 6), (2, 7), (2, 8),
-        (3, 3), (3, 4), (3, 5),
-    ];
+    let supplement = std::env::var("DREG_MODE").map(|v| v == "supp").unwrap_or(false);
+    let configs: Vec<(usize, usize)> = if supplement {
+        vec![(2, 9), (3, 5)]
+    } else {
+        vec![(2, 3), (2, 4), (2, 5), (2, 6), (2, 7), (2, 8), (3, 3), (3, 4), (3, 5)]
+    };
+    let reps = if supplement { 1u64 } else { 3u64 };
+    let timeout = if supplement { 300u64 } else { 60u64 };
     for &(m, l) in &configs {
-        for rep in 0..3u64 {
+        for rep in 0..reps {
             let seed = 0x1234_5678_9abc_def0u64
                 ^ ((m as u64) << 40)
                 ^ ((l as u64) << 8)
                 ^ (rep + 1);
-            let v = run_case(m, l, seed, 60);
+            let v = run_case(m, l, seed, timeout);
             println!("{}", serde_json::to_string(&v).unwrap());
             out.push(v);
         }
     }
-    fs::write(
-        "/Volumes/SSD990/llm/tmp/opencode/dreg-pkm/results.json",
-        serde_json::to_string_pretty(&out).unwrap(),
-    ).unwrap();
+    let path = if supplement {
+        "/Volumes/SSD990/llm/tmp/opencode/dreg-pkm/results-supp.json"
+    } else {
+        "/Volumes/SSD990/llm/tmp/opencode/dreg-pkm/results.json"
+    };
+    fs::write(path, serde_json::to_string_pretty(&out).unwrap()).unwrap();
 }
