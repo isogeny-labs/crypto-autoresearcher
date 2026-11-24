@@ -133,6 +133,12 @@ per-candidate cost o(p/N^{m−1}), which is exactly L5's question.
   over a group of order `N=Θ(p)` has `Ω(p)` entries, hence `Ω(p)` output
   bits/time; FFT gives `Θ(p log p)`, dominated by rho by `~p^{1/2}/log p`.
   Sparse/partial-slice methods are explicitly not covered.
+- **L1–L3 — pre-registered designs done.** `crypto/research_notes/pre_registration_l1_l3_20261124/`
+  (PR `crypto#5155`): L1 fixes the 13/N3/m=4 replication at 25–30 curves,
+  2000 targets, `N=floor(p^{1/4})`, negation-matched null, CI+Holm+1.0 pp rule;
+  L2 states the char-2 span test with a Frobenius-stable null (negation is
+  vacuous in char 2); L3 fixes the bounded-height ladder and the falsification
+  rule. No results claimed; each run is ≤25 min and independently stoppable.
 - New sub-lead **L25** (spawned by L13): controlled window-vs-pullback
   comparison at matched *solution count* — the k=30 runs differ in ideal degree
   (49 vs 37) because each family uses its own decomposable target, so their
