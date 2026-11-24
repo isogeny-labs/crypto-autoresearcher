@@ -123,6 +123,16 @@ per-candidate cost o(p/N^{m−1}), which is exactly L5's question.
   rescued; H016's no-advantage conclusion stands. **Contract note:**
   `EXP-FB3-001` should state whether "same size" means B logs or B distinct x
   (an x-matched null uses 2B logs).
+- **L7 — done.** `crypto/research_notes/l7_l8_sign_kummer_omega_20261124/`
+  (PR `crypto#5154`): G30-013, G30-015, G31-003's arm, and the executed
+  x-tuple Semaev/F4 engines declare no `sign_convention`; stated densities are
+  full x-density. The kill condition is not met. Add `sign_convention ∈
+  {full, kummer, one_rep}` with multipliers `1, 1, 2^-m` beside every density
+  number.
+- **L8 — done.** Same record: a dense full m-fold sumset/decomposition table
+  over a group of order `N=Θ(p)` has `Ω(p)` entries, hence `Ω(p)` output
+  bits/time; FFT gives `Θ(p log p)`, dominated by rho by `~p^{1/2}/log p`.
+  Sparse/partial-slice methods are explicitly not covered.
 - New sub-lead **L25** (spawned by L13): controlled window-vs-pullback
   comparison at matched *solution count* — the k=30 runs differ in ideal degree
   (49 vs 37) because each family uses its own decomposable target, so their
