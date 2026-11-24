@@ -96,7 +96,9 @@ per-candidate cost o(p/N^{m−1}), which is exactly L5's question.
 - **L5 — partially unblocked.** The target cell is now expressible: k = 40 runs
   in 165 s, k = 50 does not finish in 15 min. Remaining decision is budget (a
   longer run) or a cheaper decomposition (e.g. exploiting the membership
-  structure rather than generic F4), not instrumentation.
+  structure rather than generic F4), not instrumentation. L25 says the
+  cost-relevant control at fixed k is the x-space solution count, so the next
+  k=50 attempt should select a low-count target before buying a longer timeout.
 - New sub-lead **L25** (spawned by L13): controlled window-vs-pullback
   comparison at matched *solution count* — the k=30 runs differ in ideal degree
   (49 vs 37) because each family uses its own decomposable target, so their
@@ -108,3 +110,11 @@ per-candidate cost o(p/N^{m−1}), which is exactly L5's question.
   window/pullback gap (30.4 vs 24.5 s) is explained as a solution-count
   artifact. Matching *point*-tuple counts is insufficient (3 vs 3 still gave
   degrees 42 vs 45).
+- **L25 — k=30 confirmation.** `crypto/research_notes/l25_matched_count_k30_20261124/`
+  (PR `crypto#5150`): matched x-space count 30 at k=30, same target xQ=3106,
+  msolve ideal degree 30 for both, **window 17.99 s vs pullback 18.32 s**
+  (mean of 2 alternating 8-thread reps at p=4099; ratio 1.02, ordering flips).
+  The L13 30.4-vs-24.5 gap is therefore a solution-count artifact at the
+  requested k=30, not only at k=20. Control: matching quotient degree alone
+  (60/60 but x-space counts 27/6) still leaves a 1.23x gap, so the control
+  variable is x-space count, not quotient degree.
