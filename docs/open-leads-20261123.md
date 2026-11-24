@@ -139,3 +139,9 @@ per-candidate cost o(p/N^{m−1}), which is exactly L5's question.
   `crypto-autoresearcher#3463`): full-sumset/decomposition-table methods cost
   Ω(p) and are dominated by rho by ~p^{1/2}; closes the recurring "GPU sieve"
   proposal. Leaves sliced/structured computation explicitly open.
+
+- **L7 — done.** `docs/sign-kummer-audit-20261124.md` (PR
+  `crypto-autoresearcher#3464`): the density law counts x-tuples and is correct
+  as written; the 2^m factor belongs in the **verification cost** (engines pay
+  4 or 8 sign trials per candidate). Recommendation: add
+  `sign_convention ∈ {full, kummer, one_rep}` to the experiment contract.
