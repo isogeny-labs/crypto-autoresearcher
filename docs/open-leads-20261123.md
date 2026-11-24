@@ -112,20 +112,17 @@ per-candidate cost o(p/N^{m−1}), which is exactly L5's question.
   `t_per_iter ≈ 6.74e-8 s × active_cols` (R²=0.99984), with
   `iters/unknowns ≈ 0.41–0.50`. Machine-specific empirical fit, not an
   asymptotic law.
-- **L22/L23 — blocked on a schema decision.** `inputs/h100_session/h016_base_yield.json`
-  is VLT1 at rest; it decrypts with `tools/vault/vaultctl.py smudge` when `$KEY`
-  is present. A negation-closed random base was implemented and the four H016
-  cells were re-scored with 50 draws of 800 fresh targets per cell. The stored
-  `random` base reproduces the uniform null (e.g. 0.1862 vs 0.1845 at 14/8287).
-  But **"equal size" is undefined**: a B-log symmetric base `{±sG}` has only
-  B/2 distinct x-values, while H016's `small_mult`/`qr` bases are built as B
-  distinct x-values. Under the B-log convention the stored `qr` z moves from
-  0.66/0.18/0.68/0.61 (uniform) to 1.47/0.21/1.77/1.05 (symmetric); an
-  x-support-matched null would use 2B logs and is a different object. Until the
-  G30-010/`EXP-FB3-001` contract states whether "same size" means B logs or B
-  distinct x (and which null is primary), L23 has no unique re-score.
-  **Decision needed:** size convention for a negation-closed null, then freeze
-  and re-run. No raw H016 plaintext is committed.
+- **L22/L23 — done (B-log convention).** `crypto/research_notes/h016_negation_null_20261124/`
+  (PR `crypto#5153`): H016 is VLT1 at rest and decrypts with
+  `tools/vault/vaultctl.py smudge` (`$KEY`); no plaintext committed. Using
+  H016's own convention (`random_base` = B logs), the negation-closed null is
+  B/2 log pairs `{±sG}`. Four cells, 50 draws, 800 fresh targets: the stored
+  `random` base reproduces the uniform null; the symmetric null lowers the
+  mean by ~0.01–0.02 (halved x-support) and moves stored `qr` z from 0.18–0.68
+  to 0.21–1.77. The direction matches G31-001, but no signal is created or
+  rescued; H016's no-advantage conclusion stands. **Contract note:**
+  `EXP-FB3-001` should state whether "same size" means B logs or B distinct x
+  (an x-matched null uses 2B logs).
 - New sub-lead **L25** (spawned by L13): controlled window-vs-pullback
   comparison at matched *solution count* — the k=30 runs differ in ideal degree
   (49 vs 37) because each family uses its own decomposable target, so their
