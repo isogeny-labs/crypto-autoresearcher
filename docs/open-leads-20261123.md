@@ -81,3 +81,23 @@ G31-005 WP2 is closed-not-executed (no importable Diem theorem), and the
 characteristic-0 barrier is scoped as stated (fixed m, bounded rank, bounded
 lifting degree) — reopening it requires a decomposition algorithm with
 per-candidate cost o(p/N^{m−1}), which is exactly L5's question.
+
+---
+
+## Status updates (2026-11-23)
+
+- **L14 — done.** `crypto/tests/f4_fp_calibration.rs` (PR `isogeny-labs/crypto#5134`):
+  1 test, 8/8 semi-regular cells, passes; fails loudly on timeout. The d_reg
+  metric is now guarded against drift.
+- **L13 — done.** `crypto/scripts/ic_semaev_msolve.py` (PR `isogeny-labs/crypto#5137`).
+  msolve reaches k ≤ 40 in ≤ 165 s at p = 4099; k = 12 costs 0.62 s where the
+  in-repo F4 timed out at 120 s; k = 50 (the target |B| ≈ (30p)^{1/3}) exceeds
+  900 s.
+- **L5 — partially unblocked.** The target cell is now expressible: k = 40 runs
+  in 165 s, k = 50 does not finish in 15 min. Remaining decision is budget (a
+  longer run) or a cheaper decomposition (e.g. exploiting the membership
+  structure rather than generic F4), not instrumentation.
+- New sub-lead **L25** (spawned by L13): controlled window-vs-pullback
+  comparison at matched *solution count* — the k=30 runs differ in ideal degree
+  (49 vs 37) because each family uses its own decomposable target, so their
+  times are not comparable.
