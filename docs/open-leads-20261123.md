@@ -127,3 +127,15 @@ per-candidate cost o(p/N^{m−1}), which is exactly L5's question.
 - New sub-lead **L26**: locate the threshold with q_bits = 40, 44 at fixed
   p = 56 bits, >= 5 repeats per cell (attempt counts vary: the 28-bit cell ran
   1340 Lanczos iterations against a 669-column base).
+
+- **L26 — done, and it corrects L16.** Fixed p = 56 bits, q_bits 36/40/44/46,
+  5 repeats each: 0.125 / 0.121 / 0.132 / 0.119 s, identical iteration counts.
+  No threshold. The 48-bit safe prime re-run directly solves in **0.02 s**; the
+  earlier ">9 min" was the safe-prime *search* in that probe, not the solver.
+  L16's threshold claim is **withdrawn**; corrected statement: cost is flat in
+  `log q` across 28–47 bits at p = 48–56, governed by p (factor-base size and
+  relation count), not by the large factor. PR `cryptanalysis#1970`.
+- **L8 — done.** `docs/no-one-pass-sieving-20261124.md` (PR
+  `crypto-autoresearcher#3463`): full-sumset/decomposition-table methods cost
+  Ω(p) and are dominated by rho by ~p^{1/2}; closes the recurring "GPU sieve"
+  proposal. Leaves sliced/structured computation explicitly open.
