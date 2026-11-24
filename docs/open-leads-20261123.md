@@ -145,3 +145,38 @@ per-candidate cost o(p/N^{m−1}), which is exactly L5's question.
   as written; the 2^m factor belongs in the **verification cost** (engines pay
   4 or 8 sign trials per candidate). Recommendation: add
   `sign_convention ∈ {full, kummer, one_rep}` to the experiment contract.
+
+- **L5 — m=3 k=50 cheaper method.** `crypto/scripts/l5_direct_enumeration.py`
+  (PR `crypto#5152`): at p=4099, k=50, enumerating the k^3 point triples
+  (0.057 s) and evaluating S4 over the k^3 x-triples (0.105 s) decides and
+  counts the cell; the min-point target has 12 triples, x-space S4 count
+  204/219. Generic F4 still exceeds 900 s, but is not needed for the m=3
+  existence/count question. Limits: m=3 only.
+- **L15/L16 — independent 31-bit fixed-factor series.** `cryptanalysis/experiments/ic-fpstar-scaling-20261121/fixed_q31_20261124/`
+  (PR `cryptanalysis#1969`): p=kq+1 with q=2^31-1 fixed, k 2^24-smooth,
+  40/44/48/52/56 bits; linalg 0.014/0.040/0.089/0.199/0.437 s, sieve
+  <=0.004 s; per-iteration fit 6.74e-8 s * active_cols (R2=0.99984). This is a
+  different fixed-factor control from the 28-bit series; both are consistent
+  with cost being governed by p at these sizes.
+- **L17 — done.** `cryptanalysis/experiments/ic-fpstar-scaling-20261121/rexp_q31_20261124/`
+  (PR `cryptanalysis#1971`): at the same fixed 31-bit factor, `--method rexp`
+  is ~2.0-2.2x faster in total time than lsieve over 40-56 bits (0.267 vs
+  0.441 s at 56 bits), at the cost of B*3/2 and partial log verification
+  (163/176 .. 858/950, always > half). The engine rejects p >= 2^63, so the
+  64-bit regime is unsupported, not merely untested.
+- **L22/L23 — done (B-log convention).** `crypto/research_notes/h016_negation_null_20261124/`
+  (PR `crypto#5153`): H016 decrypts via the vault filter; the negation-closed
+  B-log null lowers the mean by ~0.01-0.02 (halved x-support) and moves stored
+  qr z from 0.18-0.68 to 0.21-1.77. Direction matches G31-001, but no signal is
+  created or rescued; H016's no-advantage conclusion stands. Contract note:
+  EXP-FB3-001 should state whether "same size" means B logs or B distinct x.
+- **L1-L3 — pre-registered designs done.** `crypto/research_notes/pre_registration_l1_l3_20261124/`
+  (PR `crypto#5155`): L1 fixed 25-30 curves/cell, 2000 targets, N4 arm,
+  negation-matched null; L2 char-2 span test with a Frobenius-stable null; L3
+  bounded-height ladder with a falsification rule.
+- **L1 — done: not replicated at 30 curves/size.** `crypto-autoresearcher/notes/g31-001-replication-20261121/l1_n4_20261124/`
+  (PR `crypto-autoresearcher#3462`): N3 and N4 arms, 30 curves/size, 2000
+  targets, 50 negation-closed nulls. The 13/N3/m=4 near-miss attenuates from
+  +2.23 pp / z=+2.22 / 9-1 signs (10 curves) to +0.94 pp / z=+2.13 / 18-12
+  signs / Holm p=0.166 (30 curves). N4 is null (max +1.63). L1 closes as a
+  recorded negative at this power; the uniform null keeps its negative bias.
