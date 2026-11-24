@@ -139,13 +139,14 @@ per-candidate cost o(p/N^{m−1}), which is exactly L5's question.
   L2 states the char-2 span test with a Frobenius-stable null (negation is
   vacuous in char 2); L3 fixes the bounded-height ladder and the falsification
   rule. No results claimed; each run is ≤25 min and independently stoppable.
-- **L1 — partial execution (N4 arm).** `crypto-autoresearcher/notes/g31-001-replication-20261121/l1_n4_20261124/`
-  (PR `crypto-autoresearcher#3462`): 20 frozen curves (10 per size), 2000
-  targets, 50 symmetric + 50 uniform null draws, `N=floor(p^{1/4})`. Against
-  the negation-matched null no cell reaches `|cell_z| >= 2.5` (max +1.41;
-  Holm-4 p >= 0.76); the uniform null keeps its negative bias (0/10 signs at
-  m=4). This is 10 curves/cell, not the pre-registered 25–30, so the full L1
-  verdict (including the 13/N3/m=4 near-miss) remains open.
+- **L1 — N4 arm done (30 curves/size).** `crypto-autoresearcher/notes/g31-001-replication-20261121/l1_n4_20261124/`
+  (PR `crypto-autoresearcher#3462`): 30 curves/size at 13/17 bits, 2000
+  targets, 50 negation-closed null draws, `N=floor(p^{1/4})`. No cell reaches
+  `|cell_z| >= 2.5`; largest is 13/N4/m=4 at +1.63 (19/11 signs, Holm-4
+  p=0.457). The uniform secondary null keeps its negative bias (0/10 signs at
+  m=4, z=-5.3 to -6.4). The N4 arm is a recorded negative. The **N3** arm is
+  still at the frozen 10 curves/size, so the 13/N3/m=4 near-miss is not
+  re-tested at 25–30 curves; the full L1 verdict remains open.
 - New sub-lead **L25** (spawned by L13): controlled window-vs-pullback
   comparison at matched *solution count* — the k=30 runs differ in ideal degree
   (49 vs 37) because each family uses its own decomposable target, so their
