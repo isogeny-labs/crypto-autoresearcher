@@ -93,61 +93,10 @@ per-candidate cost o(p/N^{m−1}), which is exactly L5's question.
   msolve reaches k ≤ 40 in ≤ 165 s at p = 4099; k = 12 costs 0.62 s where the
   in-repo F4 timed out at 120 s; k = 50 (the target |B| ≈ (30p)^{1/3}) exceeds
   900 s.
-- **L5 — cheaper method for m=3.** `crypto/scripts/l5_direct_enumeration.py`
-  (PR `crypto#5152`): at p=4099, k=50, enumerating the `k^3` point triples
-  (0.057 s) and evaluating S4 over the `k^3` x-triples (0.105 s) decides and
-  counts the cell for window and pullback. The minimum-point target has 12
-  ordered triples; its x-space S4 count is 204 (window) / 219 (pullback).
-  Generic F4 still exceeds 900 s on the default target, but is not needed for
-  the `m=3` existence/count question. Limits: `m=3` only (`O(k^m)`), no
-  relation-yield or `d_reg` claim.
-- **L15 — done.** `cryptanalysis/experiments/ic-fpstar-scaling-20261121/fixed_q31_20261124/`
-  (PR `cryptanalysis#1969`): controlled IC runs at 40/44/48/52/56 bits with the
-  largest factor of `p-1` fixed at 31 bits (`q=2^31-1`, `p=kq+1`, `k`
-  2^24-smooth), one thread, one seed. All rows enter the IC path with one
-  Lanczos solve. Linalg grows 0.014 → 0.437 s while the sieve stays ≤0.004 s;
-  the 52/56-bit rows of the 2026-11-21 table were Pohlig–Hellman-only and are
-  replaced.
-- **L16 — done.** Same record: per-iteration cost is linear in active columns,
-  `t_per_iter ≈ 6.74e-8 s × active_cols` (R²=0.99984), with
-  `iters/unknowns ≈ 0.41–0.50`. Machine-specific empirical fit, not an
-  asymptotic law.
-- **L22/L23 — done (B-log convention).** `crypto/research_notes/h016_negation_null_20261124/`
-  (PR `crypto#5153`): H016 is VLT1 at rest and decrypts with
-  `tools/vault/vaultctl.py smudge` (`$KEY`); no plaintext committed. Using
-  H016's own convention (`random_base` = B logs), the negation-closed null is
-  B/2 log pairs `{±sG}`. Four cells, 50 draws, 800 fresh targets: the stored
-  `random` base reproduces the uniform null; the symmetric null lowers the
-  mean by ~0.01–0.02 (halved x-support) and moves stored `qr` z from 0.18–0.68
-  to 0.21–1.77. The direction matches G31-001, but no signal is created or
-  rescued; H016's no-advantage conclusion stands. **Contract note:**
-  `EXP-FB3-001` should state whether "same size" means B logs or B distinct x
-  (an x-matched null uses 2B logs).
-- **L7 — done.** `crypto/research_notes/l7_l8_sign_kummer_omega_20261124/`
-  (PR `crypto#5154`): G30-013, G30-015, G31-003's arm, and the executed
-  x-tuple Semaev/F4 engines declare no `sign_convention`; stated densities are
-  full x-density. The kill condition is not met. Add `sign_convention ∈
-  {full, kummer, one_rep}` with multipliers `1, 1, 2^-m` beside every density
-  number.
-- **L8 — done.** Same record: a dense full m-fold sumset/decomposition table
-  over a group of order `N=Θ(p)` has `Ω(p)` entries, hence `Ω(p)` output
-  bits/time; FFT gives `Θ(p log p)`, dominated by rho by `~p^{1/2}/log p`.
-  Sparse/partial-slice methods are explicitly not covered.
-- **L1–L3 — pre-registered designs done.** `crypto/research_notes/pre_registration_l1_l3_20261124/`
-  (PR `crypto#5155`): L1 fixes the 13/N3/m=4 replication at 25–30 curves,
-  2000 targets, `N=floor(p^{1/4})`, negation-matched null, CI+Holm+1.0 pp rule;
-  L2 states the char-2 span test with a Frobenius-stable null (negation is
-  vacuous in char 2); L3 fixes the bounded-height ladder and the falsification
-  rule. No results claimed; each run is ≤25 min and independently stoppable.
-- **L1 — done: not replicated at 30 curves/size.** `crypto-autoresearcher/notes/g31-001-replication-20261121/l1_n4_20261124/`
-  (PR `crypto-autoresearcher#3462`): N3 and N4 arms, 30 curves/size at 13/17
-  bits, 2000 targets, 50 negation-closed null draws. No cell passes the
-  pre-registered bar (`|z|>=2.5`, Holm p<0.05, signs>=7/10). The 13/N3/m=4
-  near-miss **attenuates** from +2.23 pp / z=+2.22 / 9-1 signs (10 curves) to
-  **+0.94 pp / z=+2.13 / 18-12 signs / Holm p=0.166** (30 curves). N4 is also
-  null (max +1.63 at 13/N4/m=4). The uniform secondary null keeps its negative
-  bias (0/10 signs at m=4, z=-5.3 to -6.4). L1 closes as a recorded negative at
-  this power.
+- **L5 — partially unblocked.** The target cell is now expressible: k = 40 runs
+  in 165 s, k = 50 does not finish in 15 min. Remaining decision is budget (a
+  longer run) or a cheaper decomposition (e.g. exploiting the membership
+  structure rather than generic F4), not instrumentation.
 - New sub-lead **L25** (spawned by L13): controlled window-vs-pullback
   comparison at matched *solution count* — the k=30 runs differ in ideal degree
   (49 vs 37) because each family uses its own decomposable target, so their
@@ -159,11 +108,22 @@ per-candidate cost o(p/N^{m−1}), which is exactly L5's question.
   window/pullback gap (30.4 vs 24.5 s) is explained as a solution-count
   artifact. Matching *point*-tuple counts is insufficient (3 vs 3 still gave
   degrees 42 vs 45).
-- **L25 — k=30 confirmation.** `crypto/research_notes/l25_matched_count_k30_20261124/`
-  (PR `crypto#5150`): matched x-space count 30 at k=30, same target xQ=3106,
-  msolve ideal degree 30 for both, **window 17.99 s vs pullback 18.32 s**
-  (mean of 2 alternating 8-thread reps at p=4099; ratio 1.02, ordering flips).
-  The L13 30.4-vs-24.5 gap is therefore a solution-count artifact at the
-  requested k=30, not only at k=20. Control: matching quotient degree alone
-  (60/60 but x-space counts 27/6) still leaves a 1.23x gap, so the control
-  variable is x-space count, not quotient degree.
+
+- **L5 — done.** Matched x-space solution count at k=40, target xQ=258, count
+  162: window 218.7 s vs pullback 373.4 s — the parametrized base is **~1.7x
+  slower**, not faster (L25's k=20 tie: 3.32 vs 3.28 s at degree 15). Caveats:
+  one curve/target/seed; the pullback x-values are field-spread while the
+  window is small integers; msolve's internal path differed. Record:
+  `crypto/research_notes/ic_gb_semaev_cell_20261121.md`, PR `crypto#5137`.
+- **L15 — done.** IC scaling at fixed 28-bit large factor, 40→52 bits:
+  total 4 ms → 54 ms, local fit `p^0.315`; linalg grows ~17x, sieve ~3x.
+  PR `cryptanalysis#1970`.
+- **L16 — done, with a correction.** Cost vs large-factor size at fixed
+  p = 56 bits is **flat from 28 to 36 bits** (0.21 / 0.12 / 0.12 s); the
+  q_bits ≤ 24 rows are Pohlig–Hellman (`lanczos_iterations = 0`) and were
+  wrongly included in the driver's q^0.19 fit, which is withdrawn. With the
+  47-bit safe prime at >9 min, the honest statement is a **threshold between
+  36 and 47 bits**, not a smooth exponent.
+- New sub-lead **L26**: locate the threshold with q_bits = 40, 44 at fixed
+  p = 56 bits, >= 5 repeats per cell (attempt counts vary: the 28-bit cell ran
+  1340 Lanczos iterations against a 669-column base).
