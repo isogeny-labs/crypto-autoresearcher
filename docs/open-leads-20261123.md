@@ -101,3 +101,10 @@ per-candidate cost o(p/N^{m−1}), which is exactly L5's question.
   comparison at matched *solution count* — the k=30 runs differ in ideal degree
   (49 vs 37) because each family uses its own decomposable target, so their
   times are not comparable.
+- **L25 — done.** `matchedx` mode in `crypto/scripts/ic_semaev_msolve.py`
+  (PR `crypto#5137`, second commit): matched x-space solution count at k=20,
+  target xQ=1402, count 15 → msolve ideal degree 15 for both families,
+  **window 3.32 s vs pullback 3.28 s** (within 1%). The earlier k=30
+  window/pullback gap (30.4 vs 24.5 s) is explained as a solution-count
+  artifact. Matching *point*-tuple counts is insufficient (3 vs 3 still gave
+  degrees 42 vs 45).
