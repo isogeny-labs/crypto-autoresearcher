@@ -101,6 +101,17 @@ per-candidate cost o(p/N^{m−1}), which is exactly L5's question.
   Generic F4 still exceeds 900 s on the default target, but is not needed for
   the `m=3` existence/count question. Limits: `m=3` only (`O(k^m)`), no
   relation-yield or `d_reg` claim.
+- **L15 — done.** `cryptanalysis/experiments/ic-fpstar-scaling-20261121/fixed_q31_20261124/`
+  (PR `cryptanalysis#1969`): controlled IC runs at 40/44/48/52/56 bits with the
+  largest factor of `p-1` fixed at 31 bits (`q=2^31-1`, `p=kq+1`, `k`
+  2^24-smooth), one thread, one seed. All rows enter the IC path with one
+  Lanczos solve. Linalg grows 0.014 → 0.437 s while the sieve stays ≤0.004 s;
+  the 52/56-bit rows of the 2026-11-21 table were Pohlig–Hellman-only and are
+  replaced.
+- **L16 — done.** Same record: per-iteration cost is linear in active columns,
+  `t_per_iter ≈ 6.74e-8 s × active_cols` (R²=0.99984), with
+  `iters/unknowns ≈ 0.41–0.50`. Machine-specific empirical fit, not an
+  asymptotic law.
 - New sub-lead **L25** (spawned by L13): controlled window-vs-pullback
   comparison at matched *solution count* — the k=30 runs differ in ideal degree
   (49 vs 37) because each family uses its own decomposable target, so their
