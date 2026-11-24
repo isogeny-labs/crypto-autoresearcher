@@ -93,12 +93,14 @@ per-candidate cost o(p/N^{m−1}), which is exactly L5's question.
   msolve reaches k ≤ 40 in ≤ 165 s at p = 4099; k = 12 costs 0.62 s where the
   in-repo F4 timed out at 120 s; k = 50 (the target |B| ≈ (30p)^{1/3}) exceeds
   900 s.
-- **L5 — partially unblocked.** The target cell is now expressible: k = 40 runs
-  in 165 s, k = 50 does not finish in 15 min. Remaining decision is budget (a
-  longer run) or a cheaper decomposition (e.g. exploiting the membership
-  structure rather than generic F4), not instrumentation. L25 says the
-  cost-relevant control at fixed k is the x-space solution count, so the next
-  k=50 attempt should select a low-count target before buying a longer timeout.
+- **L5 — cheaper method for m=3.** `crypto/scripts/l5_direct_enumeration.py`
+  (PR `crypto#5152`): at p=4099, k=50, enumerating the `k^3` point triples
+  (0.057 s) and evaluating S4 over the `k^3` x-triples (0.105 s) decides and
+  counts the cell for window and pullback. The minimum-point target has 12
+  ordered triples; its x-space S4 count is 204 (window) / 219 (pullback).
+  Generic F4 still exceeds 900 s on the default target, but is not needed for
+  the `m=3` existence/count question. Limits: `m=3` only (`O(k^m)`), no
+  relation-yield or `d_reg` claim.
 - New sub-lead **L25** (spawned by L13): controlled window-vs-pullback
   comparison at matched *solution count* — the k=30 runs differ in ideal degree
   (49 vs 37) because each family uses its own decomposable target, so their
