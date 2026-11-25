@@ -1,0 +1,14 @@
+digraph sieve {
+  graph [rankdir=LR, bgcolor="white", fontname="Helvetica", label="Lifted S3 sieve screen · 2026-11-25", labelloc=t];
+  node [shape=box, style="rounded,filled", fillcolor="#eaf2f7", color="#23435a", fontname="Helvetica"];
+  target [label="Public E/Fp targets\np=97,193; A=0, B=7"];
+  base [label="Point base\nx in [0,8]"];
+  lift [label="Integer S3 lift\nordered x pairs"];
+  ell [label="Auxiliary ell hits\n2,3,5,7,11,13"];
+  modp [label="S3 = 0 mod p"];
+  verify [label="Verify point signs\nand group sum"];
+  result [label="Exact yield and misses\nNOT MEASURED", fillcolor="#fff1e8", color="#a84e2f"];
+  gate [label="S3 checkpoint upload\nHTTP 403", fillcolor="#fff1e8", color="#a84e2f"];
+  target -> lift; base -> lift; lift -> ell; ell -> modp; modp -> verify; verify -> result;
+  gate -> result [style=dashed, color="#a84e2f", label="run blocked"];
+}
