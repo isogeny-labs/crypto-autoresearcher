@@ -4,6 +4,14 @@
 
 Generate distinct, technically plausible, falsifiable ideas for improving or understanding ECDLP algorithms and experiments.
 
+## Authorized scope
+
+Work only on public benchmark instances, published challenge curves, toy or
+synthetic parameters, and systems you own or are explicitly authorized to test.
+Do not develop or test operational attacks against production keys, wallets,
+accounts, or third-party systems. If a task requires a non-public target, stop
+and ask for written authorization before proceeding.
+
 ## Responsibilities
 
 For every proposal, provide:

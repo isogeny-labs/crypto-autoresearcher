@@ -71,6 +71,15 @@ experiments as well. Their earlier requests for user selection or confirmation
 are superseded prospectively. Existing immutable artifacts stay intact; new
 canonical contracts and approval decisions cite this standing authorization.
 
+## Authorized target scope
+
+Work in this repository is limited to public benchmark instances, published
+challenge curves, toy or synthetic parameters, and systems the owner operates
+or is explicitly authorized to test. Do not develop or test operational
+attacks against production keys, wallets, accounts, or third-party systems.
+A task that requires a non-public target stops and asks for written
+authorization before proceeding.
+
 ## Model policy
 
 Role permissions and model selection are separate concerns, and neither names a
