@@ -12,6 +12,14 @@ description: >-
 Run the ideation stage of the research lifecycle (`docs/task-lifecycle.md`,
 step 2).
 
+## Scope and authorized use
+
+This skill is for authorized, defensive cryptanalysis research on public
+benchmark instances, published challenge curves, toy or synthetic parameters,
+and systems you own or are explicitly authorized to test. Do not use it on
+production keys, wallets, accounts, or third-party systems. If a task requires
+a non-public target, stop and ask for written authorization before proceeding.
+
 ## Steps
 
 1. Identify the target research question. If the user named an `RQ-*` ID,
@@ -25,6 +33,11 @@ step 2).
    entries from `knowledge/` (grep by area tags), existing hypotheses in
    `ledger/hypotheses/`, and existing proposals in `ledger/proposals/` so
    duplicates are avoided.
+   **Context sources.** Use the generated indexes (`ledger/.index/*.jsonl`),
+   the rendered frontier map (`knowledge/frontiers/ecdlp/`) and, where present,
+   the lead atlas (`knowledge/leads/ecdlp/`) for prior art. Do not read
+   `inputs/archive/*_ledger*.md`; those are frozen historical snapshots and
+   are not part of the current context.
 3. Dispatch the **idea-generator** subagent with a handoff that includes the
    research question, the context found above, how many ideas are wanted
    (default 3–5), and any user constraints. Remind it that every idea record
@@ -81,3 +94,5 @@ pulls in `main` and surfaces the new proposals as a PR:
 - Do not strip or soften `heuristic_assumptions` or `target_complexity` when
   filing ideas: a conditional claim must stay conditional, with its validation
   route and exponents intact.
+- Never load the archived raw ledgers in `inputs/archive/`; use
+  `ledger/.index` and `knowledge/frontiers/` instead.

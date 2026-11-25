@@ -2,8 +2,8 @@
 """Build a machine-readable inventory of every ledger ID in both copied ledgers.
 
 Inputs (copied into workspace on 2026-07-19):
-  inputs/main_research_ledger.md        (autolab/research_ledger.md, 2026-07-18 19:35)
-  inputs/index_calculus_research_ledger.md (ecdlp_index_calculus_state/research_ledger.md)
+  inputs/archive/main_research_ledger.md        (autolab/research_ledger.md, 2026-07-18 19:35)
+  inputs/archive/index_calculus_research_ledger.md (ecdlp_index_calculus_state/research_ledger.md)
 
 Output:
   inputs/ledger_inventory_20260719.json  -- one record per ledger ID with the 13
@@ -19,8 +19,8 @@ ROOT = Path(__file__).resolve().parent.parent
 INP = ROOT / "inputs"
 
 LEDGERS = [
-    ("autolab_main", INP / "main_research_ledger.md"),
-    ("ecdlp_index_calculus", INP / "index_calculus_research_ledger.md"),
+    ("autolab_main", INP / "archive" / "main_research_ledger.md"),
+    ("ecdlp_index_calculus", INP / "archive" / "index_calculus_research_ledger.md"),
 ]
 
 ID_RE = re.compile(
