@@ -1,0 +1,182 @@
+# Open leads — consolidated inventory (2026-11-23)
+
+**Status:** index only. Nothing here is evidence or a status change. Every item
+links to the record that defines it. Purpose: one place where the open threads
+from the G31/G32 batches, the IC/GB work in `crypto`/`cryptanalysis`, and the
+process proposals can be seen together, with duplication flags.
+
+Merged context: `#3351` (G31 batch, pilot, Diem read, census, WP2),
+`#3358` (G32 batch + pullback pilot + G30-004 status),
+`isogeny-labs/crypto#4891` (Semaev+F4 cell, calibration),
+`isogeny-labs/cryptanalysis#1887` (F_p* IC scaling), `#1918` (IC correction),
+`#1919` (graph tree-skip).
+
+---
+
+## 1. Experiment leads with a defined next action
+
+| # | Lead | Record | Next action | Blocker |
+|---|---|---|---|---|
+| L1 | Charter-signal follow-up cell 13/N3/m=4 (2.2 pp, 9/10 signs, sign-test p=0.022) | `notes/g31-001-replication-20261121/RESULTS.md` | N=⌊p^{1/4}⌋ arm, 25–30 curves/cell, 2000 targets, negation-matched null | none |
+| L2 | Char-2 defectivity arm of the secant dictionary | `research_goals_20261120_ic_blindspot_batch.md` G31-001 | build the char-2 analogue of the span test; compare subfield-vector-space bases against a negation-matched null | none |
+| L3 | Bounded-height supply measurement (validates the required-height lemma) | `notes/g31-002-char0-barrier-20261121.md` §5 | Krumm-style enumeration at 20–24 bits on 2–3 models; check no polylog budget reaches toy relation rates | none |
+| L4 | Large-prime arm on prime-field engines | G31-003, incl. formulation sketch | toy test: does L+L ∩ (Q−B−B) behave like random sets at 2¹⁷–2²⁰? negation-matched null | G30-014 counting law (soft) |
+| L5 | Parametrized-base solver question (WP2) | G32-001; `crypto#4891` calibration | |B| ≈ (30p)^{1/3} ≈ 50 cell; **dense F4 wall at k ≥ 12 (120 s)** — needs msolve for the dense steps | instrument port |
+| L6 | Deuring isogeny-factor-base probe | G32-002 | coverage of ≤m small-prime isogeny compositions vs degree-matched random walk | G30-019 machinery |
+| L7 | Sign/Kummer bookkeeping audit | G32-003 | per engine, state `sign_convention` and the 2^m factor in its density claim | none |
+| L8 | Ω(p) no-one-pass-sieving closure | G32-004 | two-paragraph lemma + information-theoretic argument | none |
+| L9 | Target-side large primes / list decomposition | G32-005 | extend the B1 counting law with an error-set term; charge descent too | G31-003 |
+| L10 | Trimoska frozen-benchmark reconciliation | G31-004 successor (b) | specialise the Z-verified universal S₄ onto `SRC-ICPERF-TRIMOSKA-ECICB-2024` instances | none |
+| L11 | Patault–Plesis novelty screen | G31-004 screen result | full-text screen; ingest to KN-LIT | none |
+| L12 | m ≥ 5 summation-polynomial census | G31-004 gaps | extend the census beyond S₄ | compute cost |
+
+## 2. IC/GB leads in `crypto` / `cryptanalysis`
+
+| # | Lead | Record | Next action | Blocker |
+|---|---|---|---|---|
+| L13 | msolve port for large-|B| Semaev cells | `crypto/research_notes/ic_gb_semaev_cell_20261121.md` §"Scaling wall" | write msolve input from the S₄+membership system; keep `f4_fp` as the small-k reference | none |
+| L14 | Freeze the d_reg calibration as a test | same note, "Next" 3 | port `examples/ic_gb_calibrate.rs` into a `#[test]` so the metric cannot drift | none |
+| L15 | Controlled IC scaling at fixed `log(largest factor of p−1)` | `cryptanalysis/experiments/ic-fpstar-scaling-20261121/README.md` | re-run 40–56 bits holding the large factor size fixed; a 48-bit safe prime did not finish in 9 min | none |
+| L16 | Sparse-solve cost model over the large factor | same | the engine's cost lives in Lanczos over the largest factor; measure it directly | L15 |
+| L17 | `--method rexp` and 64-bit regimes untested | same, "Not done here" | run both; compare against lsieve | none |
+| L18 | Graph per-component parallelism | `#1919` | only relevant if a many-component regime is ever wanted; currently one giant component | none (low value) |
+| L19 | G30-004 harness integration | `#3358` G30-004 status | `f4_fp` lives in `crypto`; `crypto-autoresearcher/harness` still has no d_reg backend — decide whether to vendor or call out | architecture decision |
+
+## 3. Process leads (cheap, durable)
+
+| # | Lead | Record | Next action |
+|---|---|---|---|
+| L20 | Gate A: computation-of-record before "first/unpublished" | G32 §3 | adopt as a G30-001 metrology rule |
+| L21 | Gate B: null exchangeability | G32 §3; G31-001 replication | adopt; state the structured object's invariances and require the null to share them |
+| L22 | H016/G30-010 null fix | G31-001 cross-goal finding | replace/augment `"random_base"` with a negation-closed base before `EXP-FB3-001` |
+| L23 | Re-score H016 under the matched null | same | reproduce the three base families and compare yields under both nulls |
+| L24 | Merged PRs shipped with failing checks | `#3351`, `#3358`: `records`, `parity`, `gate` failed at merge | determine whether the failures are repo-wide or caused by the added files |
+
+## 4. Duplication flags — being handled elsewhere, do not race
+
+| # | Work | Where |
+|---|---|---|
+| D1 | PKM / M31 auxiliary-isogeny pilot (overlaps L5's construction) | `isogeny-labs/cryptanalysis#1966` + `suite/examples/pkm_tower_pilot.rs` |
+| D2 | G33 F4 frozen-input timing (overlaps L13/L14's instrument work) | `isogeny-labs/crypto#5133`, `src/bin/five_leads_mixed_f4.rs` |
+| D3 | Low-hardware Semaev shape sweeps | `crypto/research_notes/low_hw_semaev_shapes_20261122/` |
+
+---
+
+## Recommended order
+
+1. **L14** (freeze calibration) and **L13** (msolve port) — they unblock L5, the
+   only degree-axis experiment with a calibrated instrument behind it.
+2. **L15 → L16** — the IC engine's real cost variable is now known to be
+   `log(largest factor of p−1)`; without a controlled re-run, every IC number in
+   the repo is unscoped.
+3. **L22 → L23** — cheapest way to prevent a wrong null from generating another
+   false signal in G30-010.
+4. **L7, L8** — small, closable in one sitting, and they permanently retire two
+   recurring ideas (sign bookkeeping and GPU sieving).
+5. **L1, L2, L3** — real experiments, but each needs a pre-registered design.
+
+## What is *not* an open lead
+
+G31-005 WP2 is closed-not-executed (no importable Diem theorem), and the
+characteristic-0 barrier is scoped as stated (fixed m, bounded rank, bounded
+lifting degree) — reopening it requires a decomposition algorithm with
+per-candidate cost o(p/N^{m−1}), which is exactly L5's question.
+
+---
+
+## Status updates (2026-11-23)
+
+- **L14 — done.** `crypto/tests/f4_fp_calibration.rs` (PR `isogeny-labs/crypto#5134`):
+  1 test, 8/8 semi-regular cells, passes; fails loudly on timeout. The d_reg
+  metric is now guarded against drift.
+- **L13 — done.** `crypto/scripts/ic_semaev_msolve.py` (PR `isogeny-labs/crypto#5137`).
+  msolve reaches k ≤ 40 in ≤ 165 s at p = 4099; k = 12 costs 0.62 s where the
+  in-repo F4 timed out at 120 s; k = 50 (the target |B| ≈ (30p)^{1/3}) exceeds
+  900 s.
+- **L5 — partially unblocked.** The target cell is now expressible: k = 40 runs
+  in 165 s, k = 50 does not finish in 15 min. Remaining decision is budget (a
+  longer run) or a cheaper decomposition (e.g. exploiting the membership
+  structure rather than generic F4), not instrumentation.
+- New sub-lead **L25** (spawned by L13): controlled window-vs-pullback
+  comparison at matched *solution count* — the k=30 runs differ in ideal degree
+  (49 vs 37) because each family uses its own decomposable target, so their
+  times are not comparable.
+- **L25 — done.** `matchedx` mode in `crypto/scripts/ic_semaev_msolve.py`
+  (PR `crypto#5137`, second commit): matched x-space solution count at k=20,
+  target xQ=1402, count 15 → msolve ideal degree 15 for both families,
+  **window 3.32 s vs pullback 3.28 s** (within 1%). The earlier k=30
+  window/pullback gap (30.4 vs 24.5 s) is explained as a solution-count
+  artifact. Matching *point*-tuple counts is insufficient (3 vs 3 still gave
+  degrees 42 vs 45).
+
+- **L5 — done.** Matched x-space solution count at k=40, target xQ=258, count
+  162: window 218.7 s vs pullback 373.4 s — the parametrized base is **~1.7x
+  slower**, not faster (L25's k=20 tie: 3.32 vs 3.28 s at degree 15). Caveats:
+  one curve/target/seed; the pullback x-values are field-spread while the
+  window is small integers; msolve's internal path differed. Record:
+  `crypto/research_notes/ic_gb_semaev_cell_20261121.md`, PR `crypto#5137`.
+- **L15 — done.** IC scaling at fixed 28-bit large factor, 40→52 bits:
+  total 4 ms → 54 ms, local fit `p^0.315`; linalg grows ~17x, sieve ~3x.
+  PR `cryptanalysis#1970`.
+- **L16 — done, with a correction.** Cost vs large-factor size at fixed
+  p = 56 bits is **flat from 28 to 36 bits** (0.21 / 0.12 / 0.12 s); the
+  q_bits ≤ 24 rows are Pohlig–Hellman (`lanczos_iterations = 0`) and were
+  wrongly included in the driver's q^0.19 fit, which is withdrawn. With the
+  47-bit safe prime at >9 min, the honest statement is a **threshold between
+  36 and 47 bits**, not a smooth exponent.
+- New sub-lead **L26**: locate the threshold with q_bits = 40, 44 at fixed
+  p = 56 bits, >= 5 repeats per cell (attempt counts vary: the 28-bit cell ran
+  1340 Lanczos iterations against a 669-column base).
+
+- **L26 — done, and it corrects L16.** Fixed p = 56 bits, q_bits 36/40/44/46,
+  5 repeats each: 0.125 / 0.121 / 0.132 / 0.119 s, identical iteration counts.
+  No threshold. The 48-bit safe prime re-run directly solves in **0.02 s**; the
+  earlier ">9 min" was the safe-prime *search* in that probe, not the solver.
+  L16's threshold claim is **withdrawn**; corrected statement: cost is flat in
+  `log q` across 28–47 bits at p = 48–56, governed by p (factor-base size and
+  relation count), not by the large factor. PR `cryptanalysis#1970`.
+- **L8 — done.** `docs/no-one-pass-sieving-20261124.md` (PR
+  `crypto-autoresearcher#3463`): full-sumset/decomposition-table methods cost
+  Ω(p) and are dominated by rho by ~p^{1/2}; closes the recurring "GPU sieve"
+  proposal. Leaves sliced/structured computation explicitly open.
+
+- **L7 — done.** `docs/sign-kummer-audit-20261124.md` (PR
+  `crypto-autoresearcher#3464`): the density law counts x-tuples and is correct
+  as written; the 2^m factor belongs in the **verification cost** (engines pay
+  4 or 8 sign trials per candidate). Recommendation: add
+  `sign_convention ∈ {full, kummer, one_rep}` to the experiment contract.
+
+- **L5 — m=3 k=50 cheaper method.** `crypto/scripts/l5_direct_enumeration.py`
+  (PR `crypto#5152`): at p=4099, k=50, enumerating the k^3 point triples
+  (0.057 s) and evaluating S4 over the k^3 x-triples (0.105 s) decides and
+  counts the cell; the min-point target has 12 triples, x-space S4 count
+  204/219. Generic F4 still exceeds 900 s, but is not needed for the m=3
+  existence/count question. Limits: m=3 only.
+- **L15/L16 — independent 31-bit fixed-factor series.** `cryptanalysis/experiments/ic-fpstar-scaling-20261121/fixed_q31_20261124/`
+  (PR `cryptanalysis#1969`): p=kq+1 with q=2^31-1 fixed, k 2^24-smooth,
+  40/44/48/52/56 bits; linalg 0.014/0.040/0.089/0.199/0.437 s, sieve
+  <=0.004 s; per-iteration fit 6.74e-8 s * active_cols (R2=0.99984). This is a
+  different fixed-factor control from the 28-bit series; both are consistent
+  with cost being governed by p at these sizes.
+- **L17 — done.** `cryptanalysis/experiments/ic-fpstar-scaling-20261121/rexp_q31_20261124/`
+  (PR `cryptanalysis#1971`): at the same fixed 31-bit factor, `--method rexp`
+  is ~2.0-2.2x faster in total time than lsieve over 40-56 bits (0.267 vs
+  0.441 s at 56 bits), at the cost of B*3/2 and partial log verification
+  (163/176 .. 858/950, always > half). The engine rejects p >= 2^63, so the
+  64-bit regime is unsupported, not merely untested.
+- **L22/L23 — done (B-log convention).** `crypto/research_notes/h016_negation_null_20261124/`
+  (PR `crypto#5153`): H016 decrypts via the vault filter; the negation-closed
+  B-log null lowers the mean by ~0.01-0.02 (halved x-support) and moves stored
+  qr z from 0.18-0.68 to 0.21-1.77. Direction matches G31-001, but no signal is
+  created or rescued; H016's no-advantage conclusion stands. Contract note:
+  EXP-FB3-001 should state whether "same size" means B logs or B distinct x.
+- **L1-L3 — pre-registered designs done.** `crypto/research_notes/pre_registration_l1_l3_20261124/`
+  (PR `crypto#5155`): L1 fixed 25-30 curves/cell, 2000 targets, N4 arm,
+  negation-matched null; L2 char-2 span test with a Frobenius-stable null; L3
+  bounded-height ladder with a falsification rule.
+- **L1 — done: not replicated at 30 curves/size.** `crypto-autoresearcher/notes/g31-001-replication-20261121/l1_n4_20261124/`
+  (PR `crypto-autoresearcher#3462`): N3 and N4 arms, 30 curves/size, 2000
+  targets, 50 negation-closed nulls. The 13/N3/m=4 near-miss attenuates from
+  +2.23 pp / z=+2.22 / 9-1 signs (10 curves) to +0.94 pp / z=+2.13 / 18-12
+  signs / Holm p=0.166 (30 curves). N4 is null (max +1.63). L1 closes as a
+  recorded negative at this power; the uniform null keeps its negative bias.
